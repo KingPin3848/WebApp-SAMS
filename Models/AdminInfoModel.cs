@@ -2,13 +2,13 @@
 {
     public class AdminInfoModel
     {
-        protected string? adminID { get; private set; }
-        protected string? adminFirstNameMod { get; private set; }
-        protected string? adminMiddleNameMod { get; private set; }
-        protected string? adminLastNameMod { get; private set; }
-        protected string? adminPreferredNameMod { get; private set; }
-        protected string? adminEmailMod { get; private set; }
-        protected string? adminPhoneMod { get; private set; }
-        protected string? adminLabelMod { get; set; }
+        protected string? adminID { get; }
+        protected string? adminFirstNameMod { get; }
+        protected string? adminMiddleNameMod { get; }
+        protected string? adminLastNameMod { get; }
+        protected string? adminPreferredNameMod { get; }
+        protected string? adminEmailMod { get; }
+        protected string? adminPhoneMod { get; }
+        protected string? adminLabelMod { get; }
     }
 }

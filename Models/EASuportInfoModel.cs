@@ -2,13 +2,13 @@
 {
     public class EASuportInfoModel
     {
-        protected string? eaID { get; private set; }
-        protected string? eaFirstNameMod { get; set; }
-        protected string? eaMiddleNameMod { get; set; }
-        protected string? eaLastNameMod { get; set; }
-        protected string? eaPreferredNameMod { get; set; }
-        protected string? eaEmailMod { get; set; }
-        protected string? eaPhoneMod { get; set; }
-        public string? eaStudentManaged { get; set; }
+        protected string? eaID { get; }
+        protected string? eaFirstNameMod { get; }
+        protected string? eaMiddleNameMod { get; }
+        protected string? eaLastNameMod { get; }
+        protected string? eaPreferredNameMod { get; }
+        protected string? eaEmailMod { get; }
+        protected string? eaPhoneMod { get; }
+        public string? eaStudentManaged { get; private set; }
     }
 }
