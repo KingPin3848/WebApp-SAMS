@@ -1,6 +1,8 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using SAMS.Data;
+using System.Drawing.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
@@ -12,17 +14,27 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
+//Account Confirmed Service
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddAuthentication()
-   .AddGoogle(options =>
+//Google Authentication Service
+builder.Services.AddAuthentication().AddGoogle(googleOptions =>
    {
        IConfigurationSection googleAuthNSection = builder.Configuration.GetSection("Authentication:Google");
-       options.ClientId = configuration["Authentication:Google:ClientId"];
-       options.ClientSecret = configuration["Authentication:Google:ClientSecret"];
+       googleOptions.ClientId = configuration["Authentication:Google:ClientId"];
+       googleOptions.ClientSecret = configuration["Authentication:Google:ClientSecret"];
    });
+
+//Fallback authorization policy requires all users to be authenticated, except for Razor Pages, controllers, or action methods with an authorization attribute.
+//Read more here at https://learn.microsoft.com/en-us/aspnet/core/security/authorization/secure-data?view=aspnetcore-8.0
+/*builder.Services.AddAuthorization(options =>
+{
+    options.FallbackPolicy = new AuthorizationPolicyBuilder()
+        .RequireAuthenticatedUser()
+        .Build();
+});*/
 
 var app = builder.Build();
 

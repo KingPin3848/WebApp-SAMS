@@ -7,9 +7,9 @@
 
 <h3>@ViewData["Title"]</h3>
 
-<div class="row">
+ <div class="row">
     <div class="col-md-6">
-        <p>Your account contains personal data that you have given us. This page allows you to download or delete that data.</p>
+        <p>Your account contains personal data that you have given us. This page allows you to send a request to download or delete that data. You cannot request the download or deletion as defined by the FERPA Act. You must be at least 18 years of age.</p>
         <p>
             <strong>Deleting this data will permanently remove your account, and this cannot be recovered.</strong>
         </p>
@@ -20,7 +20,7 @@
             <a id="delete" asp-page="DeletePersonalData" class="btn btn-danger">Delete</a>
         </p>
     </div>
-</div>
+</div> 
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

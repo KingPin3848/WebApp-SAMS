@@ -3,7 +3,7 @@
     public class PassRequestInfoModel
     {
         protected int? studentID { get; private set; }
-        protected string? studentNameMod { get; private set; protected set; }
+        protected string? studentNameMod { get; private set; }
         protected string? hallPassAssignedBy { get; private set; }
         protected string? hallPassAddressee { get; private set; }
         public TimeSpan? StartTime { get; protected set; }

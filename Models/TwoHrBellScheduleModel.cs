@@ -1,6 +1,6 @@
 ﻿namespace SAMS.Models
 {
-    public class _2HrDelayBellScheduleModel
+    public class TwoHrDelayBellScheduleModel
     {
         public string? BellName { get; }
         public TimeSpan? StartTime { get; }
