@@ -8,7 +8,7 @@
         protected string? courseTeacherName { get; }
         protected string? courseTeacherEmailAddress { get; }
         protected int? roomNumber { get; }
-        protected string? windName { get; }
+        protected string? wingName { get; }
         protected string? courseBellNumber { get; }
     }
 }
