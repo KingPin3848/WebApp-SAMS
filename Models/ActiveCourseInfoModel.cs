@@ -1,14 +1,19 @@
-﻿namespace SAMS.Models
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
+
+namespace SAMS.Models
 {
     public class ActiveCourseInfoModel
     {
-        protected string? courseName { get; }
-        protected string? courseCode { get; }
-        protected string? courseLevel { get; }
-        protected string? courseTeacherName { get; }
-        protected string? courseTeacherEmailAddress { get; }
-        protected int? roomNumber { get; }
-        protected string? wingName { get; }
-        protected string? courseBellNumber { get; }
+        [Key]
+        public string courseId { get; set; } = null!;
+        public string courseName { get; set; } = null!;
+        public string courseCode { get; set; } = null!;
+        public string courseLevel { get; set; } = null!;
+        public string courseTeacherName { get; set; } = null!;
+        public string courseTeacherEmailAddress { get; set; } = null!;
+        public int roomNumber { get; set; } = 0!;
+        public string wingName { get; set; } = null!;
+        public string courseBellNumber { get; set; } = null!;
     }
 }

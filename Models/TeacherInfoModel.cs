@@ -1,13 +1,16 @@
-﻿namespace SAMS.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace SAMS.Models
 {
     public class TeacherInfoModel
     {
-        protected string? teacherID { get; }
-        protected string? teacherFirstNameMod { get; }
-        protected string? teacherMiddleNameMod { get; }
-        protected string? teacherLastNameMod { get; }
-        protected string? teacherPreferredNameMod { get; }
-        protected string? teacherEmailMod { get; }
-        protected string? teacherPhoneMod { get; }
+        [Key]
+        public string teacherID { get; set; } = null!;
+        public string teacherFirstNameMod { get; set; } = null!;
+        public string teacherMiddleNameMod { get; set; } = null!;
+        public string teacherLastNameMod { get; set; } = null!;
+        public string teacherPreferredNameMod { get; set; } = null!;
+        public string teacherEmailMod { get; set; } = null!;
+        public string teacherPhoneMod { get; set; } = null!;
     }
 }

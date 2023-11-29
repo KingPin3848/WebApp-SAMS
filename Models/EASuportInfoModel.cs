@@ -1,14 +1,17 @@
-﻿namespace SAMS.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace SAMS.Models
 {
     public class EASuportInfoModel
     {
-        protected string? eaID { get; }
-        protected string? eaFirstNameMod { get; }
-        protected string? eaMiddleNameMod { get; }
-        protected string? eaLastNameMod { get; }
-        protected string? eaPreferredNameMod { get; }
-        protected string? eaEmailMod { get; }
-        protected string? eaPhoneMod { get; }
-        public string? eaStudentManaged { get; private set; }
+        [Key]
+        public string eaID { get; set; } = null!;
+        public string eaFirstNameMod { get; set; } = null!;
+        public string eaMiddleNameMod { get; set; } = null!;
+        public string eaLastNameMod { get; set; } = null!;
+        public string eaPreferredNameMod { get; set; } = null!;
+        public string eaEmailMod { get; set; } = null!;
+        public string eaPhoneMod { get; set; } = null!;
+        public string eaStudentManaged { get; set; } = null!;
     }
 }

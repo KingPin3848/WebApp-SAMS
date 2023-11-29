@@ -1,12 +1,15 @@
-﻿namespace SAMS.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace SAMS.Models
 {
     public class DeveloperInfoModel
     {
-        protected int? developerID { get; }
-        protected string? developerFirstNameMod { get; }
-        protected string? developerMiddleNameMod { get; }
-        protected string? developerLastNameMod { get; }
-        protected string? developerPreferredNameMod { get; private set; }
-        protected string? developerEmailMod { get; }
+        [Key]
+        public int developerID { get; set; } = 0!;
+        public string developerFirstNameMod { get; set; } = null!;
+        public string developerMiddleNameMod { get; set; } = null!;
+        public string developerLastNameMod { get; set; } = null!;
+        public string developerPreferredNameMod { get; set; } = null!;
+        public string developerEmailMod { get; set; } = null!;
     }
 }

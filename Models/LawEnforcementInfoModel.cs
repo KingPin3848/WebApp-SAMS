@@ -1,13 +1,16 @@
-﻿namespace SAMS.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace SAMS.Models
 {
     public class LawEnforcementInfoModel
     {
-        protected string? lawenfID { get; private set; }
-        protected string? laweFirstNameMod { get; private set; }
-        protected string? laweMiddleNameMod { get; private set; }
-        protected string? laweLastNameMod { get; private set; }
-        protected string? lawePreferredNameMod { get; private set; }
-        protected string? laweEmailMod { get; private set; }
-        protected string? lawePhoneMod { get; private set; }
+        [Key]
+        public string lawenfID { get; set; } = null!;
+        public string laweFirstNameMod { get; set; } = null!;
+        public string laweMiddleNameMod { get; set; } = null!;
+        public string laweLastNameMod { get; set; } = null!;
+        public string lawePreferredNameMod { get; set; } = null!;
+        public string laweEmailMod { get; set; } = null!;
+        public string lawePhoneMod { get; set; } = null!;
     }
 }

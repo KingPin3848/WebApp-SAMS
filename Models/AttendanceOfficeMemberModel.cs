@@ -1,13 +1,16 @@
-﻿namespace SAMS.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace SAMS.Models
 {
     public class AttendanceOfficeMemberModel
     {
-        protected string? aoMemberID { get; }
-        protected string? aoMemberFirstNameMod { get; }
-        protected string? aoMemberMiddleNameMod { get; }
-        protected string? aoMemberLastNameMod { get; }
-        protected string? aoMemberPreferredNameMod { get; }
-        protected string? aoMemberEmailMod { get; }
-        protected string? aoMemberPhoneMod { get; }
+        [Key]
+        public string aoMemberID { get; set; } = null!;
+        public string aoMemberFirstNameMod { get; set; } = null!;
+        public string aoMemberMiddleNameMod { get; set; } = null!;
+        public string aoMemberLastNameMod { get; set; } = null!;
+        public string aoMemberPreferredNameMod { get; set; } = null!;
+        public string aoMemberEmailMod { get; set; } = null!;
+        public string aoMemberPhoneMod { get; set; } = null!;
     }
 }

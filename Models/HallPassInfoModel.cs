@@ -1,17 +1,20 @@
-﻿namespace SAMS.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace SAMS.Models
 {
     public class HallPassInfoModel
     {
-        protected int? studentID { get; private set; }
-        protected string? HallPassID { get; private set; }
-        protected string? studentNameMod { get; private set; }
-        public TimeSpan? StartTime { get; protected set; }
-        public TimeSpan? EndTime { get; protected set; }
-        public TimeSpan? Duration { get; protected set; }
-        public int? bellNumber { get; protected set; }
-        protected string? hallPassAssignedBy { get; private set; }
-        protected string? hallPassAddressee { get; private set; }
-        public string? startLocation { get; private set; }
-        public string? endLocation { get; set; }
+        public int studentID { get; set; } = 0!;
+        [Key]
+        public string HallPassID { get; set; } = null!;
+        public string studentNameMod { get; set; } = null!;
+        public TimeSpan StartTime { get; set; }
+        public TimeSpan EndTime { get; set; }
+        public TimeSpan Duration { get; set; }
+        public int bellNumber { get; set; } = 0!;
+        public string hallPassAssignedBy { get; set; } = null!;
+        public string hallPassAddressee { get; set; } = null!;
+        public string startLocation { get; set; } = null!;
+        public string endLocation { get; set; } = null!;
     }
 }

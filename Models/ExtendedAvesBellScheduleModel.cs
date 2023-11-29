@@ -1,10 +1,13 @@
-﻿namespace SAMS.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace SAMS.Models
 {
     public class ExtendedAvesBellScheduleModel
     {
-        public string? BellName { get; }
-        public TimeSpan? StartTime { get; }
-        public TimeSpan? EndTime { get; }
-        public TimeSpan? Duration { get; }
+        public string BellName { get; set; } = null!;
+        [Key]
+        public TimeSpan StartTime { get; set; }
+        public TimeSpan EndTime { get; set; }
+        public TimeSpan Duration { get; set; }
     }
 }

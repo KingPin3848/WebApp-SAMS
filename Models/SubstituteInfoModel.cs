@@ -1,14 +1,17 @@
-﻿namespace SAMS.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace SAMS.Models
 {
     public class SubstituteInfoModel
     {
-        protected string? subID { get; }
-        protected string? subFirstNameMod { get; }
-        protected string? subMiddleNameMod { get; }
-        protected string? subLastNameMod { get; }
-        protected string? subPreferredNameMod { get; }
-        protected string? subEmailMod { get; }
-        protected string? subPhoneMod { get; }
-        protected string? managedTeacherMod { get; private set; }
+        [Key]
+        public string subID { get; set; } = null!;
+        public string subFirstNameMod { get; set; } = null!;
+        public string subMiddleNameMod { get; set; } = null!;
+        public string subLastNameMod { get; set; } = null!;
+        public string subPreferredNameMod { get; set; } = null!;
+        public string subEmailMod { get; set; } = null!;
+        public string subPhoneMod { get; set; } = null!;
+        public string managedTeacherMod { get; set; } = null!;
     }
 }
