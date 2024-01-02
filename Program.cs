@@ -16,7 +16,9 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 //Account Confirmed Service
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-    .AddEntityFrameworkStores<ApplicationDbContext>();
+    .AddRoles<IdentityRole>()
+    .AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddDefaultTokenProviders();
 builder.Services.AddControllersWithViews();
 
 //Google Authentication Service
@@ -26,15 +28,6 @@ builder.Services.AddAuthentication().AddGoogle(googleOptions =>
        googleOptions.ClientId = configuration["Authentication:Google:ClientId"];
        googleOptions.ClientSecret = configuration["Authentication:Google:ClientSecret"];
    });
-
-//Fallback authorization policy requires all users to be authenticated, except for Razor Pages, controllers, or action methods with an authorization attribute.
-//Read more here at https://learn.microsoft.com/en-us/aspnet/core/security/authorization/secure-data?view=aspnetcore-8.0
-/*builder.Services.AddAuthorization(options =>
-{
-    options.FallbackPolicy = new AuthorizationPolicyBuilder()
-        .RequireAuthenticatedUser()
-        .Build();
-});*/
 
 var app = builder.Build();
 

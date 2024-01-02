@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SAMS.Data;
 
@@ -11,9 +12,10 @@ using SAMS.Data;
 namespace SAMS.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231212191725_ActivationModel")]
+    partial class ActivationModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -222,6 +224,19 @@ namespace SAMS.Data.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
+                });
+
+            modelBuilder.Entity("SAMS.Models.ActivationModel", b =>
+                {
+                    b.Property<string>("ActivationCode")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<bool>("EnableUserExperience")
+                        .HasColumnType("bit");
+
+                    b.HasKey("ActivationCode");
+
+                    b.ToTable("ActivationModel");
                 });
 
             modelBuilder.Entity("SAMS.Models.ActiveCourseInfoModel", b =>
@@ -778,10 +793,6 @@ namespace SAMS.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("studentLastNameMod")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("studentMiddleNameMod")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
