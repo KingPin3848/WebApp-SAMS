@@ -15,5 +15,6 @@ namespace SAMS.Models
 
         //Navigation properties
         public CourseEnrollmentModel? CourseEnrollment { get; set; }
+        public StudentInfoModel? StudentInfo { get; set; }
     }
 }
