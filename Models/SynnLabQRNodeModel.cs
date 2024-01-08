@@ -5,12 +5,15 @@ namespace SAMS.Models
     public class SynnLabQRNodeModel
     {
         [Key]
-        public string scannerID { get; set; } = null!;
-        public string synnlabRoomMod { get; set; } = null!;
-        public string synnlabRoomSubject { get; set; } = null!;
-        public string scannerMacAddressMod { get; set; } = null!;
-        public string modelNumberMod { get; set; } = null!;
-        public string scannerDeviceIPAddressMod { get; set; } = null!;
-        public string scannerLabelMod { get; set; } = null!;
+        public string ScannerID { get; set; } = null!;
+        public string SynnlabRoomMod { get; set; } = null!;
+        public string SynnlabRoomSubject { get; set; } = null!;
+        public string ScannerMacAddressMod { get; set; } = null!;
+        public string ModelNumberMod { get; set; } = null!;
+        public string ScannerDeviceIPAddressMod { get; set; } = null!;
+        public string ScannerLabelMod { get; set; } = null!;
+
+        //Navigation properties
+        public RoomLocationInfoModel? Room {  get; set; }
     }
 }

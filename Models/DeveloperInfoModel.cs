@@ -5,11 +5,11 @@ namespace SAMS.Models
     public class DeveloperInfoModel
     {
         [Key]
-        public int developerID { get; set; } = 0!;
-        public string developerFirstNameMod { get; set; } = null!;
-        public string developerMiddleNameMod { get; set; } = null!;
-        public string developerLastNameMod { get; set; } = null!;
-        public string developerPreferredNameMod { get; set; } = null!;
-        public string developerEmailMod { get; set; } = null!;
+        public int DeveloperID { get; set; } = 0!;
+        public string DeveloperFirstNameMod { get; set; } = null!;
+        public string DeveloperMiddleNameMod { get; set; } = null!;
+        public string DeveloperLastNameMod { get; set; } = null!;
+        public string DeveloperPreferredNameMod { get; set; } = null!;
+        public string DeveloperEmailMod { get; set; } = null!;
     }
 }

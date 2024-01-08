@@ -5,13 +5,16 @@ namespace SAMS.Models
     public class EASuportInfoModel
     {
         [Key]
-        public string eaID { get; set; } = null!;
-        public string eaFirstNameMod { get; set; } = null!;
-        public string eaMiddleNameMod { get; set; } = null!;
-        public string eaLastNameMod { get; set; } = null!;
-        public string eaPreferredNameMod { get; set; } = null!;
-        public string eaEmailMod { get; set; } = null!;
-        public string eaPhoneMod { get; set; } = null!;
-        public string eaStudentManaged { get; set; } = null!;
+        public string EaID { get; set; } = null!;
+        public string EaFirstNameMod { get; set; } = null!;
+        public string EaMiddleNameMod { get; set; } = null!;
+        public string EaLastNameMod { get; set; } = null!;
+        public string EaPreferredNameMod { get; set; } = null!;
+        public string EaEmailMod { get; set; } = null!;
+        public string EaPhoneMod { get; set; } = null!;
+        public string EaStudentManaged { get; set; } = null!;
+
+        //Navigation properties
+        public StudentInfoModel? Student { get; set; }
     }
 }

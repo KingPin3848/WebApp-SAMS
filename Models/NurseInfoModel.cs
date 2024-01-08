@@ -1,16 +1,22 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 
 namespace SAMS.Models
 {
     public class NurseInfoModel
     {
         [Key]
-        public string nurseID { get; set; } = null!;
-        public string nurseFirstNameMod { get; set; } = null!;
-        public string nurseMiddleNameMod { get; set; } = null!;
-        public string nurseLastNameMod { get; set; } = null!;
-        public string nursePreferredNameMod { get; set; } = null!;
-        public string nurseEmailMod { get; set; } = null!;
-        public string nursePhoneMod { get; set; } = null!;
+        public string NurseID { get; set; } = null!;
+        public string NurseFirstNameMod { get; set; } = null!;
+        [AllowNull]
+        public string NurseMiddleNameMod { get; set; } = null!;
+        public string NurseLastNameMod { get; set; } = null!;
+        public string NursePreferredNameMod { get; set; } = null!;
+        public string NurseEmailMod { get; set; } = null!;
+        public string NursePhoneMod { get; set; } = null!;
+
+        //Navigation properties
+        public ICollection<HallPassInfoModel>? AssignedHallPasses { get; set; }
+        public ICollection<HallPassInfoModel>? AddressedHallPasses { get; set; }
     }
 }

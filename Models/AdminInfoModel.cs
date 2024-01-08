@@ -5,13 +5,17 @@ namespace SAMS.Models
     public class AdminInfoModel
     {
         [Key]
-        public string adminID { get; set; } = null!;
-        protected string adminFirstNameMod { get; set; } = null!;
-        protected string adminMiddleNameMod { get; set; } = null!;
-        protected string adminLastNameMod { get; set; } = null!;
-        protected string adminPreferredNameMod { get; set; } = null!;
-        protected string adminEmailMod { get; set; } = null!;
-        protected string adminPhoneMod { get; set; } = null!;
-        protected string adminLabelMod { get; set; } = null!;
+        public string AdminID { get; set; } = null!;
+        protected string AdminFirstNameMod { get; set; } = null!;
+        protected string AdminMiddleNameMod { get; set; } = null!;
+        protected string AdminLastNameMod { get; set; } = null!;
+        protected string AdminPreferredNameMod { get; set; } = null!;
+        protected string AdminEmailMod { get; set; } = null!;
+        protected string AdminPhoneMod { get; set; } = null!;
+        protected string AdminLabelMod { get; set; } = null!;
+
+        //Navigation properties
+        public ICollection<HallPassInfoModel>? AssignedHallPasses { get; set; }
+        public ICollection<HallPassInfoModel>? AddressedHallPasses { get; set; }
     }
 }

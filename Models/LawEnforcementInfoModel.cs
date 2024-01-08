@@ -5,12 +5,16 @@ namespace SAMS.Models
     public class LawEnforcementInfoModel
     {
         [Key]
-        public string lawenfID { get; set; } = null!;
-        public string laweFirstNameMod { get; set; } = null!;
-        public string laweMiddleNameMod { get; set; } = null!;
-        public string laweLastNameMod { get; set; } = null!;
-        public string lawePreferredNameMod { get; set; } = null!;
-        public string laweEmailMod { get; set; } = null!;
-        public string lawePhoneMod { get; set; } = null!;
+        public string LawenfID { get; set; } = null!;
+        public string LaweFirstNameMod { get; set; } = null!;
+        public string LaweMiddleNameMod { get; set; } = null!;
+        public string LaweLastNameMod { get; set; } = null!;
+        public string LawePreferredNameMod { get; set; } = null!;
+        public string LaweEmailMod { get; set; } = null!;
+        public string LawePhoneMod { get; set; } = null!;
+
+        //Navigation properties
+        public ICollection<HallPassInfoModel>? AssignedHallPasses { get; set; }
+        public ICollection<HallPassInfoModel>? AddressedHallPasses { get; set; }
     }
 }

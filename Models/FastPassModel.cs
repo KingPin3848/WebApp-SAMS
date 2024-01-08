@@ -4,15 +4,20 @@ namespace SAMS.Models
 {
     public class FastPassModel
     {
-        public int studentID { get; set; } = 0!;
         [Key]
-        public string fastPassIDMod { get; set; } = null!;
-        public string studentNameMod { get; set; } = null!;
-        public TimeSpan StartTime { get; set; }
-        public TimeSpan EndTime { get; set; }
-        public TimeSpan Duration { get; set; }
-        public int bellNumber { get; set; } = 0!;
-        public string startLocation { get; set; } = null!;
-        public string endLocation { get; set; } = null!;
+        public string FastPassIDMod { get; set; } = null!;
+        public int StudentID { get; set; } = 0!;
+        public string StudentNameMod { get; set; } = null!;
+        public DateTime StartDateTime { get; set; }
+        public DateTime EndDateTime { get; set; }
+        public TimeSpan Duration { get { return Duration; } set { Duration = EndDateTime - StartDateTime; } }
+        public int BellNumber { get; set; } = 0!;
+        public string StartLocation { get; set; } = null!;
+        public string EndLocation { get; set; } = null!;
+
+
+
+        //Navigation properties
+        public StudentInfoModel? Student {  get; set; }
     }
 }

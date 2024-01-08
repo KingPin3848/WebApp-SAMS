@@ -5,12 +5,16 @@ namespace SAMS.Models
     public class AttendanceOfficeMemberModel
     {
         [Key]
-        public string aoMemberID { get; set; } = null!;
-        public string aoMemberFirstNameMod { get; set; } = null!;
-        public string aoMemberMiddleNameMod { get; set; } = null!;
-        public string aoMemberLastNameMod { get; set; } = null!;
-        public string aoMemberPreferredNameMod { get; set; } = null!;
-        public string aoMemberEmailMod { get; set; } = null!;
-        public string aoMemberPhoneMod { get; set; } = null!;
+        public string AoMemberID { get; set; } = null!;
+        public string AoMemberFirstNameMod { get; set; } = null!;
+        public string AoMemberMiddleNameMod { get; set; } = null!;
+        public string AoMemberLastNameMod { get; set; } = null!;
+        public string AoMemberPreferredNameMod { get; set; } = null!;
+        public string AoMemberEmailMod { get; set; } = null!;
+        public string AoMemberPhoneMod { get; set; } = null!;
+
+        //Navigation properties
+        public ICollection<HallPassInfoModel>? AssignedHallPasses { get; set; }
+        public ICollection<HallPassInfoModel>? AddressedHallPasses { get; set; }
     }
 }
