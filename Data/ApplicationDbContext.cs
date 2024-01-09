@@ -90,6 +90,68 @@ namespace SAMS.Data
                 .HasForeignKey(c => c.HallPassAddressedBy);
 
             //Bell Attendance Model Relationships
+            modelBuilder.Entity<BellAttendanceModel>()
+                .HasOne(a => a.StudentScheduleInfoModel)
+                .WithOne(b => b.BellAttendance)
+                .HasForeignKey<StudentScheduleInfoModel>(c => c.StudentID);
+
+            modelBuilder.Entity<BellAttendanceModel>()
+                .HasOne(a => a.StudentInfo)
+                .WithMany(b => b.BellAttendances)
+                .HasForeignKey(c => c.StudentId);
+
+            //Counselor Model Relationships
+            modelBuilder.Entity<CounselorModel>()
+                .HasMany(a => a.AssignedHallPasses)
+                .WithOne(b => b.AssignedByCounselor)
+                .HasForeignKey(c => c.HallPassAssignedBy);
+
+            modelBuilder.Entity<CounselorModel>()
+                .HasMany(a => a.AddressedHallPasses)
+                .WithOne(b => b.AddressedByCounselor)
+                .HasForeignKey(c => c.HallPassAddressedBy);
+
+            modelBuilder.Entity<CounselorModel>()
+                .HasMany(a => a.CounselorManagedStudents)
+                .WithOne(b => b.Counselor)
+                .HasForeignKey(c => c.StudentCounselorID);
+
+            //Course Enrollment Model Relationships
+            modelBuilder.Entity<CourseEnrollmentModel>()
+                .HasOne(a => a.Student)
+                .WithMany(b => b.CourseEnrollments)
+                .HasForeignKey(c => c.EnrollmentStudentId);
+
+            modelBuilder.Entity<CourseEnrollmentModel>()
+                .HasOne(a => a.ActiveCourses)
+                .WithMany(b => b.CourseEnrollments)
+                .HasForeignKey(c => c.EnrollmentCourseId);
+
+            //Daily Attendance Model Relationships
+            modelBuilder.Entity<DailyAttendanceModel>()
+                .HasOne(a => a.Student)
+                .WithMany(b => b.DailyAttendances)
+                .HasForeignKey(c => c.StudentId);
+
+            //Daily Bell Schedule Model Relationships - NA
+
+            //Developer Info Model Relationships - NA
+
+            //EA Support Info Model
+            modelBuilder.Entity<EASuportInfoModel>()
+                .HasOne(a => a.Student)
+                .WithOne(b => b.EASuport)
+                .HasForeignKey<EASuportInfoModel>(c => c.EaStudentManaged);
+
+            //Extended Aves Bell Schedule Model - NA
+
+            //Fast Pass Model Relationships
+            modelBuilder.Entity<FastPassModel>()
+                .HasOne(a => a.Student)
+                .WithMany(b => b.FastPasses)
+                .HasForeignKey(c => c.StudentID);
+
+
 
             base.OnModelCreating(modelBuilder);
         }

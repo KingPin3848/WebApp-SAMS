@@ -12,12 +12,13 @@ namespace SAMS.Models
         public DateTime EndDateTime { get; set; }
         public TimeSpan Duration { get { return Duration; } set { Duration = EndDateTime - StartDateTime; } }
         public int BellNumber { get; set; } = 0!;
-        public string StartLocation { get; set; } = null!;
-        public string EndLocation { get; set; } = null!;
+        public int StartLocationID { get; set; } = 0!;
+        public int EndLocationID { get; set; } = 0!;
 
 
 
         //Navigation properties
         public StudentInfoModel? Student {  get; set; }
+        public RoomLocationInfoModel? Room { get; set; }
     }
 }

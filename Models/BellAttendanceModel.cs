@@ -7,14 +7,14 @@ namespace SAMS.Models
         [Key]
         public string BellAttendanceId { get; set; } = null!;
         public int StudentId { get; set; } = 0!;
-        public int EnrollmentId { get; set; } = 0!;
-        public DateTime Date { get; set; }
+        public DateTime DateTime { get; set; }
         public string Status { get; set; } = null!;
         public string ReasonForAbsence { get; set; } = null!;
         public int BellNumId { get; set; } = 0!;
+        public string CourseName { get; set; } = null!;
 
         //Navigation properties
-        public CourseEnrollmentModel? CourseEnrollment { get; set; }
+        public StudentScheduleInfoModel? StudentScheduleInfoModel { get; set; }
         public StudentInfoModel? StudentInfo { get; set; }
     }
 }

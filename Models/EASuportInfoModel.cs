@@ -12,7 +12,7 @@ namespace SAMS.Models
         public string EaPreferredNameMod { get; set; } = null!;
         public string EaEmailMod { get; set; } = null!;
         public string EaPhoneMod { get; set; } = null!;
-        public string EaStudentManaged { get; set; } = null!;
+        public int EaStudentManaged { get; set; } = 0!;
 
         //Navigation properties
         public StudentInfoModel? Student { get; set; }
