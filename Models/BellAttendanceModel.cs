@@ -4,13 +4,20 @@ namespace SAMS.Models
 {
     public class BellAttendanceModel
     {
+        [Display(Name = ("Att. ID"))]
         public string BellAttendanceId { get; set; } = null!;
         [Key]
+        [Display(Name = ("Student ID"))]
         public int StudentId { get; set; } = 0!;
+        [Display(Name = ("Date/Time"))]
         public DateTime DateTime { get; set; }
+        [Display(Name = ("Status"))]
         public string Status { get; set; } = null!;
+        [Display(Name = ("Reason For Absence"))]
         public string ReasonForAbsence { get; set; } = null!;
+        [Display(Name = ("Bell Number"))]
         public int BellNumId { get; set; } = 0!;
+        [Display(Name = ("Course Name"))]
         public string CourseName { get; set; } = null!;
 
         //Navigation properties

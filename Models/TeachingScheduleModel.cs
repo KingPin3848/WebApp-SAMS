@@ -5,8 +5,11 @@ namespace SAMS.Models
     public class TeachingScheduleModel
     {
         [Key]
+        [Display(Name = ("Schedule ID"))]
         public int ScheduleID { get; set; } = 0!;
+        [Display(Name = ("Teacher ID"))]
         public string TeacherID { get; set; } = null!;
+        [Display(Name = ("Teaching Days"))]
         public string DaysOfWeek { get; set; } = null!;
 
         

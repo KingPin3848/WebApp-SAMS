@@ -36,7 +36,7 @@ namespace SAMS.Controllers
             }
 
             var activationModel = await _context.activationModels
-                .FirstOrDefaultAsync(m => m.CodeId == id);
+                .FirstOrDefaultAsync(m => m.StudId == id);
             if (activationModel == null)
             {
                 return NotFound();
@@ -56,7 +56,7 @@ namespace SAMS.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("CodeId,Code,StudId")] ActivationModel activationModel)
+        public async Task<IActionResult> Create([Bind("StudId,Code")] ActivationModel activationModel)
         {
             if (ModelState.IsValid)
             {
@@ -88,9 +88,9 @@ namespace SAMS.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("CodeId,Code,StudId")] ActivationModel activationModel)
+        public async Task<IActionResult> Edit(int id, [Bind("StudId,Code,StudId")] ActivationModel activationModel)
         {
-            if (id != activationModel.CodeId)
+            if (id != activationModel.StudId)
             {
                 return NotFound();
             }
@@ -104,7 +104,7 @@ namespace SAMS.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ActivationModelExists(activationModel.CodeId))
+                    if (!ActivationModelExists(activationModel.StudId))
                     {
                         return NotFound();
                     }
@@ -127,7 +127,7 @@ namespace SAMS.Controllers
             }
 
             var activationModel = await _context.activationModels
-                .FirstOrDefaultAsync(m => m.CodeId == id);
+                .FirstOrDefaultAsync(m => m.StudId == id);
             if (activationModel == null)
             {
                 return NotFound();
@@ -157,7 +157,7 @@ namespace SAMS.Controllers
 
         private bool ActivationModelExists(int id)
         {
-          return (_context.activationModels?.Any(e => e.CodeId == id)).GetValueOrDefault();
+          return (_context.activationModels?.Any(e => e.StudId == id)).GetValueOrDefault();
         }
     }
 }

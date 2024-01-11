@@ -7,23 +7,39 @@ namespace SAMS.Models
     {
         [Key]
         [DisallowNull]
+        [Display(Name = ("Student ID"))]
         public int StudentID { get; set; } = 0!;
+        [Display(Name = ("First Name"))]
         public string StudentFirstNameMod { get; set; } = null!;
+        [Display(Name = ("Middle Name"))]
         public string StudentMiddleNameMod { get; set; } = null!;
+        [Display(Name = ("Last Name"))]
         public string StudentLastNameMod { get; set; } = null!;
+        [Display(Name = ("Preferred Name"))]
         public string StudentPreferredNameMod { get; set; } = null!;
+        [Display(Name = ("Email Address"))]
         public string StudentEmailMod { get; set; } = null!;
+        [Display(Name = ("Phone Number"))]
         public string StudentPhoneMod { get; set; } = null!;
+        [Display(Name = ("Graduation Year"))]
         public DateTime StudentGradYearMod { get; set; }
+        [Display(Name = ("Counselor"))]
         public string StudentCounselorID { get; set; } = null!;
         [DisallowNull]
+        [Display(Name = ("EA Support?"))]
         public Boolean HasEASupport { get; set; }
         [AllowNull]
+        [Display(Name = ("EA ID"))]
         public string StudentEAID { get; set; } = null!;
+        [Display(Name = ("Parent/Guardian 1 Name"))]
         public string Parentguard1NameMod { get; set; } = null!;
+        [Display(Name = ("Parent/Guardian 1 Email Address"))]
         public string Parentguard1EmailMod { get; set; } = null!;
+        [Display(Name = ("Parent/Guardian 2 Name"))]
         public string Parentguard2NameMod { get; set; } = null!;
+        [Display(Name = ("Parent/Guardian 2 Email Address"))]
         public string Parentguard2EmailMod { get; set; } = null!;
+        [Display(Name = ("Assigned Activation Code"))]
         public int ActivationCodeId { get; set; } = 0!;
 
 

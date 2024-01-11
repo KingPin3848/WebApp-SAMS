@@ -5,16 +5,26 @@ namespace SAMS.Models
 {
     public class HallPassInfoModel
     {
+        [Display(Name = ("Student ID"))]
         public int StudentID { get; set; } = 0!;
         [Key]
+        [Display(Name = ("Hall Pass ID"))]
         public string HallPassID { get; set; } = null!;
+        [Display(Name = ("Issued"))]
         public DateTime StartDateTime { get; set; }
+        [Display(Name = ("Expiration"))]
         public DateTime EndDateTime { get; set; }
+        [Display(Name = ("Duration"))]
         public TimeSpan Duration { get { return Duration; } set { Duration = EndDateTime - StartDateTime; } }
+        [Display(Name = ("Bell"))]
         public int BellNumber { get; set; } = 0!;
+        [Display(Name = ("Assigned By"))]
         public string HallPassAssignedByID { get; set; } = null!;
+        [Display(Name = ("Addressed To"))]
         public string HallPassAddressedByID { get; set; } = null!;
+        [Display(Name = ("Start Location"))]
         public string StartLocation { get; set; } = null!;
+        [Display(Name = ("End Location"))]
         public string EndLocation { get; set; } = null!;
 
         //Navigation properties
