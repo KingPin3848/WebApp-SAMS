@@ -15,11 +15,11 @@ namespace SAMS.Models
         public string StudentEmailMod { get; set; } = null!;
         public string StudentPhoneMod { get; set; } = null!;
         public DateTime StudentGradYearMod { get; set; }
-        public int StudentCounselorID { get; set; } = 0!;
+        public string StudentCounselorID { get; set; } = null!;
         [DisallowNull]
         public Boolean HasEASupport { get; set; }
         [AllowNull]
-        public int StudentEAID { get; set; } = 0!;
+        public string StudentEAID { get; set; } = null!;
         public string Parentguard1NameMod { get; set; } = null!;
         public string Parentguard1EmailMod { get; set; } = null!;
         public string Parentguard2NameMod { get; set; } = null!;
@@ -41,5 +41,7 @@ namespace SAMS.Models
         public ICollection<BellAttendanceModel>? BellAttendances { get; set; }
         public ICollection<DailyAttendanceModel>? DailyAttendances { get; set; }
         public EASuportInfoModel? EASuport { get; set; }
+        public ICollection<PassRequestInfoModel>? PassRequestsForStudent { get; set; }
+        public StudentScheduleInfoModel? StudentSchedule { get; set; }
     }
 }

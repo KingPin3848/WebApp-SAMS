@@ -6,8 +6,7 @@ namespace SAMS.Models
     {
         [Key]
         public string ScannerID { get; set; } = null!;
-        public string SynnlabRoomMod { get; set; } = null!;
-        public string SynnlabRoomSubject { get; set; } = null!;
+        public int SynnlabRoomIDMod { get; set; } = 0!;
         public string ScannerMacAddressMod { get; set; } = null!;
         public string ModelNumberMod { get; set; } = null!;
         public string ScannerDeviceIPAddressMod { get; set; } = null!;

@@ -9,7 +9,7 @@ namespace SAMS.Models
         public int StudentID { get; set; } = 0!;
         public string StudentNameMod { get; set; } = null!;
         public string HallPassAssignedBy { get; set; } = null!;
-        public string HallPassAddressee { get; set; } = null!;
+        public string HallPassAddressedBy { get; set; } = null!;
         public DateTime StartDateTime { get; set; }
         public DateTime EndDateTime { get; set; }
         public TimeSpan Duration { get { return Duration; } set { Duration = EndDateTime - StartDateTime; } }

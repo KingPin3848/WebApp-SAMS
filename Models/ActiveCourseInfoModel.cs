@@ -7,11 +7,11 @@ namespace SAMS.Models
     public class ActiveCourseInfoModel
     {
         [Key]
-        public string CourseId { get; set; } = null!;
+        public int CourseId { get; set; } = 0!;
         public string CourseName { get; set; } = null!;
         public string CourseCode { get; set; } = null!;
         public string CourseLevel { get; set; } = null!;
-        public int CourseTeacherID { get; set; } = 0!;
+        public string CourseTeacherID { get; set; } = null!;
         public int CourseRoomID { get; set; } = 0!;
         public string CourseBellNumber { get; set; } = null!;
         public string CourseLength { get; set; } = null!;
@@ -21,5 +21,6 @@ namespace SAMS.Models
         public RoomLocationInfoModel? Room { get; set; }
         [AllowNull]
         public ICollection<CourseEnrollmentModel> CourseEnrollments { get; set; }
+        public SubstituteInfoModel? Substitute { get; set; }
     }
 }

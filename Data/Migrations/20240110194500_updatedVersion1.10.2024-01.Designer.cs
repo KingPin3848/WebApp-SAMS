@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SAMS.Data;
 
@@ -11,9 +12,10 @@ using SAMS.Data;
 namespace SAMS.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240110194500_updatedVersion1.10.2024-01")]
+    partial class updatedVersion110202401
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -616,8 +618,26 @@ namespace SAMS.Data.Migrations
                     b.Property<string>("HallPassID")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("AdminInfoModelAdminID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("AdminInfoModelAdminID1")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("AttendanceOfficeMemberModelAoMemberID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("AttendanceOfficeMemberModelAoMemberID1")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<int>("BellNumber")
                         .HasColumnType("int");
+
+                    b.Property<string>("CounselorModelCounselorId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("CounselorModelCounselorId1")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<TimeSpan>("Duration")
                         .HasColumnType("time");
@@ -631,10 +651,22 @@ namespace SAMS.Data.Migrations
 
                     b.Property<string>("HallPassAddressedByID")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("HallPassAssignedByID")
                         .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LawEnforcementInfoModelLawenfID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("LawEnforcementInfoModelLawenfID1")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("NurseInfoModelNurseID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("NurseInfoModelNurseID1")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("StartDateTime")
@@ -647,13 +679,39 @@ namespace SAMS.Data.Migrations
                     b.Property<int>("StudentID")
                         .HasColumnType("int");
 
+                    b.Property<string>("TeacherInfoModelTeacherID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("TeacherInfoModelTeacherID1")
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("HallPassID");
 
-                    b.HasIndex("HallPassAddressedByID");
+                    b.HasIndex("AdminInfoModelAdminID");
 
-                    b.HasIndex("HallPassAssignedByID");
+                    b.HasIndex("AdminInfoModelAdminID1");
+
+                    b.HasIndex("AttendanceOfficeMemberModelAoMemberID");
+
+                    b.HasIndex("AttendanceOfficeMemberModelAoMemberID1");
+
+                    b.HasIndex("CounselorModelCounselorId");
+
+                    b.HasIndex("CounselorModelCounselorId1");
+
+                    b.HasIndex("LawEnforcementInfoModelLawenfID");
+
+                    b.HasIndex("LawEnforcementInfoModelLawenfID1");
+
+                    b.HasIndex("NurseInfoModelNurseID");
+
+                    b.HasIndex("NurseInfoModelNurseID1");
 
                     b.HasIndex("StudentID");
+
+                    b.HasIndex("TeacherInfoModelTeacherID");
+
+                    b.HasIndex("TeacherInfoModelTeacherID1");
 
                     b.ToTable("hallPassInfoModels");
                 });
@@ -1305,77 +1363,45 @@ namespace SAMS.Data.Migrations
 
             modelBuilder.Entity("SAMS.Models.HallPassInfoModel", b =>
                 {
-                    b.HasOne("SAMS.Models.AdminInfoModel", "AddressedByAdmin")
+                    b.HasOne("SAMS.Models.AdminInfoModel", null)
                         .WithMany("AddressedHallPasses")
-                        .HasForeignKey("HallPassAddressedByID")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                        .HasForeignKey("AdminInfoModelAdminID");
 
-                    b.HasOne("SAMS.Models.AttendanceOfficeMemberModel", "AddressedByAttendanceOfficeMember")
+                    b.HasOne("SAMS.Models.AdminInfoModel", null)
+                        .WithMany("AssignedHallPasses")
+                        .HasForeignKey("AdminInfoModelAdminID1");
+
+                    b.HasOne("SAMS.Models.AttendanceOfficeMemberModel", null)
                         .WithMany("AddressedHallPasses")
-                        .HasForeignKey("HallPassAddressedByID")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                        .HasForeignKey("AttendanceOfficeMemberModelAoMemberID");
 
-                    b.HasOne("SAMS.Models.CounselorModel", "AddressedByCounselor")
+                    b.HasOne("SAMS.Models.AttendanceOfficeMemberModel", null)
+                        .WithMany("AssignedHallPasses")
+                        .HasForeignKey("AttendanceOfficeMemberModelAoMemberID1");
+
+                    b.HasOne("SAMS.Models.CounselorModel", null)
                         .WithMany("AddressedHallPasses")
-                        .HasForeignKey("HallPassAddressedByID")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                        .HasForeignKey("CounselorModelCounselorId");
 
-                    b.HasOne("SAMS.Models.LawEnforcementInfoModel", "AddressedByLawEnf")
+                    b.HasOne("SAMS.Models.CounselorModel", null)
+                        .WithMany("AssignedHallPasses")
+                        .HasForeignKey("CounselorModelCounselorId1");
+
+                    b.HasOne("SAMS.Models.LawEnforcementInfoModel", null)
                         .WithMany("AddressedHallPasses")
-                        .HasForeignKey("HallPassAddressedByID")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                        .HasForeignKey("LawEnforcementInfoModelLawenfID");
 
-                    b.HasOne("SAMS.Models.NurseInfoModel", "AddressedByNurse")
+                    b.HasOne("SAMS.Models.LawEnforcementInfoModel", null)
+                        .WithMany("AssignedHallPasses")
+                        .HasForeignKey("LawEnforcementInfoModelLawenfID1");
+
+                    b.HasOne("SAMS.Models.NurseInfoModel", null)
                         .WithMany("AddressedHallPasses")
-                        .HasForeignKey("HallPassAddressedByID")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                        .HasForeignKey("NurseInfoModelNurseID");
 
-                    b.HasOne("SAMS.Models.TeacherInfoModel", "AddressedByTeacher")
-                        .WithMany("AddressedHallPasses")
-                        .HasForeignKey("HallPassAddressedByID")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("SAMS.Models.AdminInfoModel", "AssignedByAdmin")
+                    b.HasOne("SAMS.Models.NurseInfoModel", null)
                         .WithMany("AssignedHallPasses")
-                        .HasForeignKey("HallPassAssignedByID")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("SAMS.Models.AttendanceOfficeMemberModel", "AssignedByAttendanceOfficeMember")
-                        .WithMany("AssignedHallPasses")
-                        .HasForeignKey("HallPassAssignedByID")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("SAMS.Models.CounselorModel", "AssignedByCounselor")
-                        .WithMany("AssignedHallPasses")
-                        .HasForeignKey("HallPassAssignedByID")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("SAMS.Models.LawEnforcementInfoModel", "AssignedByLawEnf")
-                        .WithMany("AssignedHallPasses")
-                        .HasForeignKey("HallPassAssignedByID")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("SAMS.Models.NurseInfoModel", "AssignedByNurse")
-                        .WithMany("AssignedHallPasses")
-                        .HasForeignKey("HallPassAssignedByID")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("SAMS.Models.TeacherInfoModel", "AssignedByTeacher")
-                        .WithMany("AssignedHallPasses")
-                        .HasForeignKey("HallPassAssignedByID")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                        .HasForeignKey("NurseInfoModelNurseID1");
 
                     b.HasOne("SAMS.Models.StudentInfoModel", "Student")
                         .WithMany("HallPasses")
@@ -1383,29 +1409,13 @@ namespace SAMS.Data.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.Navigation("AddressedByAdmin");
+                    b.HasOne("SAMS.Models.TeacherInfoModel", null)
+                        .WithMany("AddressedHallPasses")
+                        .HasForeignKey("TeacherInfoModelTeacherID");
 
-                    b.Navigation("AddressedByAttendanceOfficeMember");
-
-                    b.Navigation("AddressedByCounselor");
-
-                    b.Navigation("AddressedByLawEnf");
-
-                    b.Navigation("AddressedByNurse");
-
-                    b.Navigation("AddressedByTeacher");
-
-                    b.Navigation("AssignedByAdmin");
-
-                    b.Navigation("AssignedByAttendanceOfficeMember");
-
-                    b.Navigation("AssignedByCounselor");
-
-                    b.Navigation("AssignedByLawEnf");
-
-                    b.Navigation("AssignedByNurse");
-
-                    b.Navigation("AssignedByTeacher");
+                    b.HasOne("SAMS.Models.TeacherInfoModel", null)
+                        .WithMany("AssignedHallPasses")
+                        .HasForeignKey("TeacherInfoModelTeacherID1");
 
                     b.Navigation("Student");
                 });
@@ -1415,73 +1425,73 @@ namespace SAMS.Data.Migrations
                     b.HasOne("SAMS.Models.AdminInfoModel", "AddressedByAdmin")
                         .WithMany("RequestAddressedHallPasses")
                         .HasForeignKey("HallPassAddressedBy")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("SAMS.Models.AttendanceOfficeMemberModel", "AddressedByAttendanceOfficeMember")
                         .WithMany("RequestAddressedHallPasses")
                         .HasForeignKey("HallPassAddressedBy")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("SAMS.Models.CounselorModel", "AddressedByCounselor")
                         .WithMany("RequestAddressedHallPasses")
                         .HasForeignKey("HallPassAddressedBy")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("SAMS.Models.LawEnforcementInfoModel", "AddressedByLawEnf")
                         .WithMany("RequestAddressedHallPasses")
                         .HasForeignKey("HallPassAddressedBy")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("SAMS.Models.NurseInfoModel", "AddressedByNurse")
                         .WithMany("RequestAddressedHallPasses")
                         .HasForeignKey("HallPassAddressedBy")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("SAMS.Models.TeacherInfoModel", "AddressedByTeacher")
                         .WithMany("RequestAddressedHallPasses")
                         .HasForeignKey("HallPassAddressedBy")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("SAMS.Models.AdminInfoModel", "AssignedByAdmin")
                         .WithMany("RequestAssignedHallPasses")
                         .HasForeignKey("HallPassAssignedBy")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("SAMS.Models.AttendanceOfficeMemberModel", "AssignedByAttendanceOfficeMember")
                         .WithMany("RequestAssignedHallPasses")
                         .HasForeignKey("HallPassAssignedBy")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("SAMS.Models.CounselorModel", "AssignedByCounselor")
                         .WithMany("RequestAssignedHallPasses")
                         .HasForeignKey("HallPassAssignedBy")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("SAMS.Models.LawEnforcementInfoModel", "AssignedByLawEnf")
                         .WithMany("RequestAssignedHallPasses")
                         .HasForeignKey("HallPassAssignedBy")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("SAMS.Models.NurseInfoModel", "AssignedByNurse")
                         .WithMany("RequestAssignedHallPasses")
                         .HasForeignKey("HallPassAssignedBy")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("SAMS.Models.TeacherInfoModel", "AssignedByTeacher")
                         .WithMany("RequestAssignedHallPasses")
                         .HasForeignKey("HallPassAssignedBy")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("SAMS.Models.StudentInfoModel", "Student")

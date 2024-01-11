@@ -17,5 +17,7 @@ namespace SAMS.Models
         //Navigation properties
         public ICollection<HallPassInfoModel>? AssignedHallPasses { get; set; }
         public ICollection<HallPassInfoModel>? AddressedHallPasses { get; set; }
+        public ICollection<PassRequestInfoModel>? RequestAssignedHallPasses { get; set; }
+        public ICollection<PassRequestInfoModel>? RequestAddressedHallPasses { get; set; }
     }
 }

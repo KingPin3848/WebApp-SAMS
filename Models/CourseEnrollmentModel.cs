@@ -13,5 +13,6 @@ namespace SAMS.Models
         //Navigation properties
         public StudentInfoModel Student { get; set; } = null!;
         public ActiveCourseInfoModel? ActiveCourses { get; set; } = null!;
+        public StudentScheduleInfoModel? StudentSchedules { get; set;}
     }
 }

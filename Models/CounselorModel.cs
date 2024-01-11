@@ -6,7 +6,7 @@ namespace SAMS.Models
     public class CounselorModel
     {
         [Key]
-        public int CounselorId { get; set; }
+        public string CounselorId { get; set; } = null!;
         public string CounselorFirstName { get; set; } = null!;
         public string CounselorMiddleName { get; set; } = null!;
         public string CounselorLastName { get; set; } = null!;
@@ -18,5 +18,7 @@ namespace SAMS.Models
         public ICollection<StudentInfoModel>? CounselorManagedStudents { get; set; }
         public ICollection<HallPassInfoModel>? AssignedHallPasses { get; set; }
         public ICollection<HallPassInfoModel>? AddressedHallPasses { get; set; }
+        public ICollection<PassRequestInfoModel>? RequestAssignedHallPasses { get; set; }
+        public ICollection<PassRequestInfoModel>? RequestAddressedHallPasses { get; set; }
     }
 }

@@ -1,11 +1,17 @@
-﻿namespace SAMS.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace SAMS.Models
 {
     public class TeachingScheduleModel
     {
-        public int ScheduleID { get; set; }
-        public List<string> DaysOfWeek { get; set; } = null!;
+        [Key]
+        public int ScheduleID { get; set; } = 0!;
+        public string TeacherID { get; set; } = null!;
+        public string DaysOfWeek { get; set; } = null!;
+
         
         //Navigation properties
-        public ICollection<TeacherInfoModel>? Teachers { get; set; }
+        public TeacherInfoModel? Teacher { get; set; }
+        public RoomScheduleModel? RoomSchedule { get; set; }
     }
 }

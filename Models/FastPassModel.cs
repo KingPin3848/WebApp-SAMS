@@ -14,11 +14,15 @@ namespace SAMS.Models
         public int BellNumber { get; set; } = 0!;
         public int StartLocationID { get; set; } = 0!;
         public int EndLocationID { get; set; } = 0!;
+        public int CourseIDFromStudentSchedule { get; set; } = 0!;
 
 
 
         //Navigation properties
         public StudentInfoModel? Student {  get; set; }
+
+        //REVIEW THIS ONE ABOUT ROOM LOCATION INFO MODEL AND IF THIS SHOULD BE AN ICOLLECTION OR A SINGULAR
         public RoomLocationInfoModel? Room { get; set; }
+        public StudentScheduleInfoModel? StudentSchedule { get; set; }
     }
 }

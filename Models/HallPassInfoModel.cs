@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SAMS.Models
 {
@@ -11,8 +12,8 @@ namespace SAMS.Models
         public DateTime EndDateTime { get; set; }
         public TimeSpan Duration { get { return Duration; } set { Duration = EndDateTime - StartDateTime; } }
         public int BellNumber { get; set; } = 0!;
-        public string HallPassAssignedBy { get; set; } = null!;
-        public string HallPassAddressedBy { get; set; } = null!;
+        public string HallPassAssignedByID { get; set; } = null!;
+        public string HallPassAddressedByID { get; set; } = null!;
         public string StartLocation { get; set; } = null!;
         public string EndLocation { get; set; } = null!;
 
@@ -24,11 +25,13 @@ namespace SAMS.Models
         public NurseInfoModel? AddressedByNurse { get; set; }
         public TeacherInfoModel? AssignedByTeacher { get; set; }
         public TeacherInfoModel? AddressedByTeacher { get; set; }
-        public LawEnforcementInfoModel? AssignedByLawEnf {  get; set; }
+        public LawEnforcementInfoModel? AssignedByLawEnf { get; set; }
         public LawEnforcementInfoModel? AddressedByLawEnf { get; set; }
         public AttendanceOfficeMemberModel? AssignedByAttendanceOfficeMember { get; set; }
         public AttendanceOfficeMemberModel? AddressedByAttendanceOfficeMember { get; set; }
         public CounselorModel? AssignedByCounselor { get; set; }
         public CounselorModel? AddressedByCounselor { get; set; }
+
+
     }
 }

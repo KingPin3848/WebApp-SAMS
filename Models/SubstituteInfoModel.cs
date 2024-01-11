@@ -12,10 +12,11 @@ namespace SAMS.Models
         public string SubPreferredNameMod { get; set; } = null!;
         public string SubEmailMod { get; set; } = null!;
         public string SubPhoneMod { get; set; } = null!;
-        public int ManagedClassIdMod { get; set; } = 0!;
+        public string ManagedTeacherIdMod { get; set; } = null!;
+        public DateTime ScheduledDate { get; set; }
 
         //Navigation properties
-        public ActiveCourseInfoModel? ClassManaged {  get; set; }
+        public TeacherInfoModel? TeacherManaged {  get; set; }
 
     }
 }

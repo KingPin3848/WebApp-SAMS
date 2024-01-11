@@ -4,8 +4,8 @@ namespace SAMS.Models
 {
     public class BellAttendanceModel
     {
-        [Key]
         public string BellAttendanceId { get; set; } = null!;
+        [Key]
         public int StudentId { get; set; } = 0!;
         public DateTime DateTime { get; set; }
         public string Status { get; set; } = null!;
