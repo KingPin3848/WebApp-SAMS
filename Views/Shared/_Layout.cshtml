@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - SAMS</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/SAMS.styles.css" asp-append-version="true" />
 </head>
@@ -31,7 +31,7 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="StudentManagement" asp-action="Index">Manage Students</a>
                         </li>
-                        @if (User.Identity.IsAuthenticated && User.IsInRole("Developer"))
+                        @if ((User?.Identity?.IsAuthenticated == true) && (User?.IsInRole("Developer") == true))
                         {
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="ActivationModels" asp-action="Index">Activation</a>
@@ -54,12 +54,20 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2023 - SAMS - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2023 - SAMS - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a><a class="btn" id="themeButton">&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Dark Mode - <img src="/images/DarkMode.png" class="navbar-toggler-icon" style="border-radius:20rem;" /></a>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+
+    <script>
+        document.getElementById('themeButton').addEventListener('click', function () {
+            var currentTheme = document.documentElement.getAttribute('data-bs-theme');
+            var newTheme = (currentTheme === 'dark') ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-bs-theme', newTheme);
+        });
+    </script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
