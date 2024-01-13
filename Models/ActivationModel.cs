@@ -5,7 +5,7 @@ namespace SAMS.Models
     public class ActivationModel
     {
         [Key]
-        [Display(Name = "Student ID")]
+        [Display(Name = "Code ID")]
         public int StudId { get; set; } = 0!;
         [Display(Name = "Activation Code")]
         public string Code { get; set; } = string.Empty;

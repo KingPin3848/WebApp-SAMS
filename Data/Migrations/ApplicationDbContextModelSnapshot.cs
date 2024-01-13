@@ -879,7 +879,7 @@ namespace SAMS.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("StudentID"), 1L, 1);
 
-                    b.Property<int>("ActivationCodeId")
+                    b.Property<int>("ActivationCode")
                         .HasColumnType("int");
 
                     b.Property<string>("EASuportEaID")
@@ -941,7 +941,7 @@ namespace SAMS.Data.Migrations
 
                     b.HasKey("StudentID");
 
-                    b.HasIndex("ActivationCodeId")
+                    b.HasIndex("ActivationCode")
                         .IsUnique();
 
                     b.HasIndex("EASuportEaID");
@@ -1560,7 +1560,7 @@ namespace SAMS.Data.Migrations
                 {
                     b.HasOne("SAMS.Models.ActivationModel", "ActivationCodes")
                         .WithOne("Student")
-                        .HasForeignKey("SAMS.Models.StudentInfoModel", "ActivationCodeId")
+                        .HasForeignKey("SAMS.Models.StudentInfoModel", "ActivationCode")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 

@@ -49,7 +49,7 @@ namespace SAMS.Data
             modelBuilder.Entity<ActivationModel>()
                 .HasOne(a => a.Student)
                 .WithOne(b => b.ActivationCodes)
-                .HasForeignKey<StudentInfoModel>(c => c.ActivationCodeId)
+                .HasForeignKey<StudentInfoModel>(c => c.ActivationCode)
                 .OnDelete(DeleteBehavior.NoAction);
 
 
@@ -452,5 +452,7 @@ namespace SAMS.Data
 
             base.OnModelCreating(modelBuilder);
         }
+
+        public DbSet<SAMS.Models.TeachingScheduleModel>? TeachingScheduleModel { get; set; }
     }
 }

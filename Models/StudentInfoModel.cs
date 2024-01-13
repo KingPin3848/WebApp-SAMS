@@ -40,7 +40,7 @@ namespace SAMS.Models
         [Display(Name = ("Parent/Guardian 2 Email Address"))]
         public string Parentguard2EmailMod { get; set; } = null!;
         [Display(Name = ("Assigned Activation Code"))]
-        public int ActivationCodeId { get; set; } = 0!;
+        public int ActivationCode { get; set; } = 0!;
 
 
         //WE NEED TO FIND OUT HOW WE CAN INCLUDE IMAGES IN THIS MODEL. EITHER WE STORE IT IN THE

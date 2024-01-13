@@ -67,57 +67,6 @@ namespace SAMS.Controllers
             return View(activationModel);
         }
 
-        // GET: ActivationModels/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null || _context.activationModels == null)
-            {
-                return NotFound();
-            }
-
-            var activationModel = await _context.activationModels.FindAsync(id);
-            if (activationModel == null)
-            {
-                return NotFound();
-            }
-            return View(activationModel);
-        }
-
-        // POST: ActivationModels/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("StudId,Code,StudId")] ActivationModel activationModel)
-        {
-            if (id != activationModel.StudId)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(activationModel);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ActivationModelExists(activationModel.StudId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(activationModel);
-        }
-
         // GET: ActivationModels/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {

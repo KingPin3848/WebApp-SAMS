@@ -1,0 +1,77 @@
+﻿@model IEnumerable<SAMS.Models.SubstituteInfoModel>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.SubFirstNameMod)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SubMiddleNameMod)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SubLastNameMod)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SubPreferredNameMod)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SubEmailMod)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SubPhoneMod)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ScheduledDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TeacherManaged)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.SubFirstNameMod)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SubMiddleNameMod)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SubLastNameMod)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SubPreferredNameMod)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SubEmailMod)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SubPhoneMod)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ScheduledDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TeacherManaged.TeacherID)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.SubID">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.SubID">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.SubID">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

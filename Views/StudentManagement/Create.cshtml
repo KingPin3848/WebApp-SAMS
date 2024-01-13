@@ -13,6 +13,11 @@
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
+                <label asp-for="StudentID" class="control-label"></label>
+                <input asp-for="StudentID" class="form-control" />
+                <span asp-validation-for="StudentID" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <label asp-for="StudentFirstNameMod" class="control-label"></label>
                 <input asp-for="StudentFirstNameMod" class="form-control" />
                 <span asp-validation-for="StudentFirstNameMod" class="text-danger"></span>
@@ -81,8 +86,8 @@
                 <span asp-validation-for="Parentguard2EmailMod" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ActivationCodeId" class="control-label"></label>
-                <select asp-for="ActivationCodeId" class ="form-control" asp-items="ViewBag.ActivationCodeId"></select>
+                <label asp-for="ActivationCode" class="control-label"></label>
+                <select asp-for="ActivationCode" class ="form-control" asp-items="ViewBag.ActivationCode"></select>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />

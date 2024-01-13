@@ -50,7 +50,7 @@ namespace SAMS.Controllers
         // GET: StudentManagement/Create
         public IActionResult Create()
         {
-            ViewData["ActivationCodeId"] = new SelectList(_context.activationModels, "CodeId", "CodeId");
+            ViewData["ActivationCode"] = new SelectList(_context.activationModels, "Code", "Code");
             ViewData["StudentEAID"] = new SelectList(_context.eASuportInfoModels, "EaID", "EaID");
             ViewData["StudentCounselorID"] = new SelectList(_context.counselorModels, "CounselorId", "CounselorId");
             return View();
@@ -61,7 +61,7 @@ namespace SAMS.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("StudentID,StudentFirstNameMod,StudentMiddleNameMod,StudentLastNameMod,StudentPreferredNameMod,StudentEmailMod,StudentPhoneMod,StudentGradYearMod,StudentCounselorID,HasEASupport,StudentEAID,Parentguard1NameMod,Parentguard1EmailMod,Parentguard2NameMod,Parentguard2EmailMod,ActivationCodeId")] StudentInfoModel studentInfoModel)
+        public async Task<IActionResult> Create([Bind("StudentID,StudentFirstNameMod,StudentMiddleNameMod,StudentLastNameMod,StudentPreferredNameMod,StudentEmailMod,StudentPhoneMod,StudentGradYearMod,StudentCounselorID,HasEASupport,StudentEAID,Parentguard1NameMod,Parentguard1EmailMod,Parentguard2NameMod,Parentguard2EmailMod,ActivationCode")] StudentInfoModel studentInfoModel)
         {
             if (ModelState.IsValid)
             {
@@ -69,7 +69,7 @@ namespace SAMS.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ActivationCodeId"] = new SelectList(_context.activationModels, "CodeId", "CodeId", studentInfoModel.ActivationCodeId);
+            ViewData["ActivationCode"] = new SelectList(_context.activationModels, "StudId", "StudId", studentInfoModel.ActivationCode);
             ViewData["StudentEAID"] = new SelectList(_context.eASuportInfoModels, "EaID", "EaID", studentInfoModel.StudentEAID);
             ViewData["StudentCounselorID"] = new SelectList(_context.counselorModels, "CounselorId", "CounselorId", studentInfoModel.StudentCounselorID);
             return View(studentInfoModel);
@@ -88,7 +88,7 @@ namespace SAMS.Controllers
             {
                 return NotFound();
             }
-            ViewData["ActivationCodeId"] = new SelectList(_context.activationModels, "CodeId", "CodeId", studentInfoModel.ActivationCodeId);
+            ViewData["ActivationCode"] = new SelectList(_context.activationModels, "StudId", "StudId", studentInfoModel.ActivationCode);
             ViewData["StudentEAID"] = new SelectList(_context.eASuportInfoModels, "EaID", "EaID", studentInfoModel.StudentEAID);
             ViewData["StudentCounselorID"] = new SelectList(_context.counselorModels, "CounselorId", "CounselorId", studentInfoModel.StudentCounselorID);
             return View(studentInfoModel);
@@ -99,7 +99,7 @@ namespace SAMS.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("StudentID,StudentFirstNameMod,StudentMiddleNameMod,StudentLastNameMod,StudentPreferredNameMod,StudentEmailMod,StudentPhoneMod,StudentGradYearMod,StudentCounselorID,HasEASupport,StudentEAID,Parentguard1NameMod,Parentguard1EmailMod,Parentguard2NameMod,Parentguard2EmailMod,ActivationCodeId")] StudentInfoModel studentInfoModel)
+        public async Task<IActionResult> Edit(int id, [Bind("StudentID,StudentFirstNameMod,StudentMiddleNameMod,StudentLastNameMod,StudentPreferredNameMod,StudentEmailMod,StudentPhoneMod,StudentGradYearMod,StudentCounselorID,HasEASupport,StudentEAID,Parentguard1NameMod,Parentguard1EmailMod,Parentguard2NameMod,Parentguard2EmailMod,ActivationCode")] StudentInfoModel studentInfoModel)
         {
             if (id != studentInfoModel.StudentID)
             {
@@ -126,7 +126,7 @@ namespace SAMS.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ActivationCodeId"] = new SelectList(_context.activationModels, "CodeId", "CodeId", studentInfoModel.ActivationCodeId);
+            ViewData["ActivationCode"] = new SelectList(_context.activationModels, "StudId", "StudId", studentInfoModel.ActivationCode);
             ViewData["StudentEAID"] = new SelectList(_context.eASuportInfoModels, "EaID", "EaID", studentInfoModel.StudentEAID);
             ViewData["StudentCounselorID"] = new SelectList(_context.counselorModels, "CounselorId", "CounselorId", studentInfoModel.StudentCounselorID);
             return View(studentInfoModel);
