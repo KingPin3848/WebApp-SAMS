@@ -16,6 +16,9 @@
                 @Html.DisplayNameFor(model => model.BellName)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.StartTime)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.EndTime)
             </th>
             <th>
@@ -29,6 +32,9 @@
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.BellName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StartTime)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.EndTime)

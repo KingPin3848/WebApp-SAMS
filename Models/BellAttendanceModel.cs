@@ -5,7 +5,7 @@ namespace SAMS.Models
     public class BellAttendanceModel
     {
         [Display(Name = ("Att. ID"))]
-        public string BellAttendanceId { get; set; } = null!;
+        public int BellAttendanceId { get; set; } = 0!;
         [Key]
         [Display(Name = ("Student ID"))]
         public int StudentId { get; set; } = 0!;

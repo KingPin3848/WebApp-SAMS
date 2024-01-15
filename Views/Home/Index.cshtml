@@ -17,14 +17,20 @@
 {
 
     //STUDENT VIEW
-    <div class="card" style="width: 10rem; border-radius:35px;">
-        <a href="#" class="btn">
-            <img src="/images/ScanQRCode.png" class="card-img-top" alt="Phone Call" style="border-radius:35px;">
-            <div class="card-body">
-                <h5 class="card-title">Scan</h5>
-            </div>
-        </a>
-    </div>
+    <table class="table-borderless">
+        <tr class="row">
+            <td class="col-5">
+                <div class="card" style="width: 10rem; border-radius:35px;">
+                    <a href="#" class="btn">
+                        <img src="/images/ScanQRCode.png" class="card-img-top" alt="Phone Call" style="border-radius:35px;">
+                        <div class="card-body">
+                            <h5 class="card-title">Scan</h5>
+                        </div>
+                    </a>
+                </div>
+            </td>
+        </tr>
+    </table>
     //SECTION DIVIDER
     <br />
     <br />
@@ -33,41 +39,53 @@
     <br />
     //BELL SCHEDULES SECTION
     //DAILY BELL SCHEDULE INDEX
-    <div class="card" style="width: 10rem; border-radius:35px;">
-        <a class="btn" asp-area="" asp-controller="DailyBellScheduleModels" asp-action="Index">
-            <img src="/images/ScanQRCode.png" class="card-img-top" alt="Phone Call" style="border-radius:35px;">
-            <div class="card-body">
-                <h5 class="card-title">Daily Bell Schedule</h5>
-            </div>
-        </a>
-    </div>
-                //EXTENDED AVES BELL SCHEDULE INDEX
-    <div class="card" style="width: 10rem; border-radius:35px;">
-        <a class="btn" asp-area="" asp-controller="ExtendedAvesBellSchedule" asp-action="Index">
-            <img src="/images/ScanQRCode.png" class="card-img-top" alt="Phone Call" style="border-radius:35px;">
-            <div class="card-body">
-                <h5 class="card-title">Extended Aves Bell Schedule</h5>
-            </div>
-        </a>
-    </div>
-    //PEP RALLY BELL SCHEDULE INDEX
-    <div class="card" style="width: 10rem; border-radius:35px;">
-        <a class="btn" asp-area="" asp-controller="PepRallyBellSchedule" asp-action="Index">
-            <img src="/images/ScanQRCode.png" class="card-img-top" alt="Phone Call" style="border-radius:35px;">
-            <div class="card-body">
-                <h5 class="card-title">Pep Rally Bell Schedule</h5>
-            </div>
-        </a>
-    </div>
-    //TWO HR DELAY BELL SCHEDULE INDEX
-    <div class="card" style="width: 10rem; border-radius:35px;">
-        <a class="btn" asp-area="" asp-controller="TwoHrDelayBellSchedule" asp-action="Index">
-            <img src="/images/ScanQRCode.png" class="card-img-top" alt="Phone Call" style="border-radius:35px;">
-            <div class="card-body">
-                <h5 class="card-title">Two Hr. Delay Bell Schedule</h5>
-            </div>
-        </a>
-    </div>
+    <table class="table-borderless">
+        <tr class="row">
+            <td class="col">
+                <div class="card" style="width: 10rem; border-radius:35px;">
+                    <a class="btn" asp-area="" asp-controller="DailyBellScheduleModels" asp-action="Index">
+                        <img src="/images/ScanQRCode.png" class="card-img-top" alt="Phone Call" style="border-radius:35px;">
+                        <div class="card-body">
+                            <h5 class="card-title">Daily Bell Schedule</h5>
+                        </div>
+                    </a>
+                </div>
+            </td>
+            <td class="col">
+                <!--EXTENDED AVES BELL SCHEDULE INDEX-->
+                <div class="card" style="width: 10rem; border-radius:35px;">
+                    <a class="btn" asp-area="" asp-controller="ExtendedAvesBellSchedule" asp-action="Index">
+                        <img src="/images/ScanQRCode.png" class="card-img-top" alt="Phone Call" style="border-radius:35px;">
+                        <div class="card-body">
+                            <h5 class="card-title">Extended Aves Bell Schedule</h5>
+                        </div>
+                    </a>
+                </div>
+            </td>
+            <td class="col">
+                <!--PEP RALLY BELL SCHEDULE INDEX-->
+                <div class="card" style="width: 10rem; border-radius:35px;">
+                    <a class="btn" asp-area="" asp-controller="PepRallyBellSchedule" asp-action="Index">
+                        <img src="/images/ScanQRCode.png" class="card-img-top" alt="Phone Call" style="border-radius:35px;">
+                        <div class="card-body">
+                            <h5 class="card-title">Pep Rally Bell Schedule</h5>
+                        </div>
+                    </a>
+                </div>
+            </td>
+            <td class="col">
+                <!--TWO HR DELAY BELL SCHEDULE INDEX-->
+                <div class="card" style="width: 10rem; border-radius:35px;">
+                    <a class="btn" asp-area="" asp-controller="TwoHrDelayBellSchedule" asp-action="Index">
+                        <img src="/images/ScanQRCode.png" class="card-img-top" alt="Phone Call" style="border-radius:35px;">
+                        <div class="card-body">
+                            <h5 class="card-title">Two Hr. Delay Bell Schedule</h5>
+                        </div>
+                    </a>
+                </div>
+            </td>
+        </tr>
+    </table>
     //SECTION DIVIDER
     <br />
     <br />
@@ -75,221 +93,280 @@
     <br />
     <br />
     //ADMIN SECTION
-    //ACTIVATION MODELS INDEX
-    <div class="card" style="width: 10rem; border-radius:35px;">
-        <a class="btn" asp-area="" asp-controller="ActivationModels" asp-action="Index">
-            <img src="/images/ScanQRCode.png" class="card-img-top" alt="Phone Call" style="border-radius:35px;">
-            <div class="card-body">
-                <h5 class="card-title">Activation Codes</h5>
-            </div>
-        </a>
-    </div>
-    //STUDENT MANAGEMENT INDEX
-    <div class="card" style="width: 10rem; border-radius:35px;">
-        <a class="btn" asp-area="" asp-controller="StudentManagement" asp-action="Index">
-            <img src="/images/ScanQRCode.png" class="card-img-top" alt="Phone Call" style="border-radius:35px;">
-            <div class="card-body">
-                <h5 class="card-title">Student Management</h5>
-            </div>
-        </a>
-    </div>
-    //ADMIN INFO INDEX
-    <div class="card" style="width: 10rem; border-radius:35px;">
-        <a class="btn" asp-area="" asp-controller="AdminInfo" asp-action="Index">
-            <img src="/images/ScanQRCode.png" class="card-img-top" alt="Phone Call" style="border-radius:35px;">
-            <div class="card-body">
-                <h5 class="card-title">Admin Info</h5>
-            </div>
-        </a>
-    </div>
-    //ACTIVE COURSES INDEX
-    <div class="card" style="width: 10rem; border-radius:35px;">
-        <a class="btn" asp-area="" asp-controller="ActiveCourses" asp-action="Index">
-            <img src="/images/ScanQRCode.png" class="card-img-top" alt="Phone Call" style="border-radius:35px;">
-            <div class="card-body">
-                <h5 class="card-title">Active Courses</h5>
-            </div>
-        </a>
-    </div>
-    //ATTENDANCE OFFICE MEMBER INDEX
-    <div class="card" style="width: 10rem; border-radius:35px;">
-        <a class="btn" asp-area="" asp-controller="AttendanceOfficeMember" asp-action="Index">
-            <img src="/images/ScanQRCode.png" class="card-img-top" alt="Phone Call" style="border-radius:35px;">
-            <div class="card-body">
-                <h5 class="card-title">Attendance Off. Member</h5>
-            </div>
-        </a>
-    </div>
-    //BELL ATTENDANCE
-    <div class="card" style="width: 10rem; border-radius:35px;">
-        <a class="btn" asp-area="" asp-controller="BellAttendance" asp-action="Index">
-            <img src="/images/ScanQRCode.png" class="card-img-top" alt="Phone Call" style="border-radius:35px;">
-            <div class="card-body">
-                <h5 class="card-title">Bell Attendance</h5>
-            </div>
-        </a>
-    </div>
-    //COUNSELOR INDEX
-    <div class="card" style="width: 10rem; border-radius:35px;">
-        <a class="btn" asp-area="" asp-controller="CounselorModels" asp-action="Index">
-            <img src="/images/ScanQRCode.png" class="card-img-top" alt="Phone Call" style="border-radius:35px;">
-            <div class="card-body">
-                <h5 class="card-title">Counselors</h5>
-            </div>
-        </a>
-    </div>
-    //COURSE ENROLLMENT INDEX
-    <div class="card" style="width: 10rem; border-radius:35px;">
-        <a class="btn" asp-area="" asp-controller="CourseEnrollment" asp-action="Index">
-            <img src="/images/ScanQRCode.png" class="card-img-top" alt="Phone Call" style="border-radius:35px;">
-            <div class="card-body">
-                <h5 class="card-title">Course Enrollment</h5>
-            </div>
-        </a>
-    </div>
-    //DAILY ATTENDANCE INDEX
-    <div class="card" style="width: 10rem; border-radius:35px;">
-        <a class="btn" asp-area="" asp-controller="DailyAttendance" asp-action="Index">
-            <img src="/images/ScanQRCode.png" class="card-img-top" alt="Phone Call" style="border-radius:35px;">
-            <div class="card-body">
-                <h5 class="card-title">Daily Attendance</h5>
-            </div>
-        </a>
-    </div>
-    //DEVELOPER INFO INDEX
-    <div class="card" style="width: 10rem; border-radius:35px;">
-        <a class="btn" asp-area="" asp-controller="DeveloperInfo" asp-action="Index">
-            <img src="/images/ScanQRCode.png" class="card-img-top" alt="Phone Call" style="border-radius:35px;">
-            <div class="card-body">
-                <h5 class="card-title">Developer</h5>
-            </div>
-        </a>
-    </div>
-    //EA SUPPORT INFO INDEX
-    <div class="card" style="width: 10rem; border-radius:35px;">
-        <a class="btn" asp-area="" asp-controller="EASuportInfo" asp-action="Index">
-            <img src="/images/ScanQRCode.png" class="card-img-top" alt="Phone Call" style="border-radius:35px;">
-            <div class="card-body">
-                <h5 class="card-title">EA Support</h5>
-            </div>
-        </a>
-    </div>
-    //FASTPASS INDEX
-    <div class="card" style="width: 10rem; border-radius:35px;">
-        <a class="btn" asp-area="" asp-controller="FastPass" asp-action="Index">
-            <img src="/images/ScanQRCode.png" class="card-img-top" alt="Phone Call" style="border-radius:35px;">
-            <div class="card-body">
-                <h5 class="card-title">FastPass</h5>
-            </div>
-        </a>
-    </div>
-    //HALLPASS INFO INDEX
-    <div class="card" style="width: 10rem; border-radius:35px;">
-        <a class="btn" asp-area="" asp-controller="HallPassInfo" asp-action="Index">
-            <img src="/images/ScanQRCode.png" class="card-img-top" alt="Phone Call" style="border-radius:35px;">
-            <div class="card-body">
-                <h5 class="card-title">Hall Pass</h5>
-            </div>
-        </a>
-    </div>
-    //LAW ENFORCEMENT INFO INDEX
-    <div class="card" style="width: 10rem; border-radius:35px;">
-        <a class="btn" asp-area="" asp-controller="LawEnforcementInfo" asp-action="Index">
-            <img src="/images/ScanQRCode.png" class="card-img-top" alt="Phone Call" style="border-radius:35px;">
-            <div class="card-body">
-                <h5 class="card-title">Law Enf.</h5>
-            </div>
-        </a>
-    </div>
-    //NURSE INFO INDEX
-    <div class="card" style="width: 10rem; border-radius:35px;">
-        <a class="btn" asp-area="" asp-controller="NurseInfo" asp-action="Index">
-            <img src="/images/ScanQRCode.png" class="card-img-top" alt="Phone Call" style="border-radius:35px;">
-            <div class="card-body">
-                <h5 class="card-title">Nurse</h5>
-            </div>
-        </a>
-    </div>
-    //PASS REQUEST INDEX
-    <div class="card" style="width: 10rem; border-radius:35px;">
-        <a class="btn" asp-area="" asp-controller="PassRequestInfo" asp-action="Index">
-            <img src="/images/ScanQRCode.png" class="card-img-top" alt="Phone Call" style="border-radius:35px;">
-            <div class="card-body">
-                <h5 class="card-title">Pass Request</h5>
-            </div>
-        </a>
-    </div>
-    //ROOM LOCATION INFO INDEX
-    <div class="card" style="width: 10rem; border-radius:35px;">
-        <a class="btn" asp-area="" asp-controller="RoomLocationInfo" asp-action="Index">
-            <img src="/images/ScanQRCode.png" class="card-img-top" alt="Phone Call" style="border-radius:35px;">
-            <div class="card-body">
-                <h5 class="card-title">Room Location</h5>
-            </div>
-        </a>
-    </div>
-    //ROOM SCHEDULE INDEX
-    <div class="card" style="width: 10rem; border-radius:35px;">
-        <a class="btn" asp-area="" asp-controller="RoomSchedule" asp-action="Index">
-            <img src="/images/ScanQRCode.png" class="card-img-top" alt="Phone Call" style="border-radius:35px;">
-            <div class="card-body">
-                <h5 class="card-title">Room Schedule</h5>
-            </div>
-        </a>
-    </div>
-    //STUDENT MANAGEMENT INDEX
-    <div class="card" style="width: 10rem; border-radius:35px;">
-        <a class="btn" asp-area="" asp-controller="StudentManagement" asp-action="Index">
-            <img src="/images/ScanQRCode.png" class="card-img-top" alt="Phone Call" style="border-radius:35px;">
-            <div class="card-body">
-                <h5 class="card-title">Student Management</h5>
-            </div>
-        </a>
-    </div>
-    //STUDENT SCHEDULE INFO INDEX
-    <div class="card" style="width: 10rem; border-radius:35px;">
-        <a class="btn" asp-area="" asp-controller="StudentScheduleInfo" asp-action="Index">
-            <img src="/images/ScanQRCode.png" class="card-img-top" alt="Phone Call" style="border-radius:35px;">
-            <div class="card-body">
-                <h5 class="card-title">Student Schedule</h5>
-            </div>
-        </a>
-    </div>
-    //SUBSTITUTE INFO INDEX
-    <div class="card" style="width: 10rem; border-radius:35px;">
-        <a class="btn" asp-area="" asp-controller="SubstituteInfo" asp-action="Index">
-            <img src="/images/ScanQRCode.png" class="card-img-top" alt="Phone Call" style="border-radius:35px;">
-            <div class="card-body">
-                <h5 class="card-title">Substitute Teacher</h5>
-            </div>
-        </a>
-    </div>
-    //SYNNLAB QR NODE INDEX
-    <div class="card" style="width: 10rem; border-radius:35px;">
-        <a class="btn" asp-area="" asp-controller="SynnLabQRNode" asp-action="Index">
-            <img src="/images/ScanQRCode.png" class="card-img-top" alt="Phone Call" style="border-radius:35px;">
-            <div class="card-body">
-                <h5 class="card-title">SynnLab QR Node</h5>
-            </div>
-        </a>
-    </div>
-    //TEACHER INFO INDEX
-    <div class="card" style="width: 10rem; border-radius:35px;">
-        <a class="btn" asp-area="" asp-controller="TeacherInfo" asp-action="Index">
-            <img src="/images/ScanQRCode.png" class="card-img-top" alt="Phone Call" style="border-radius:35px;">
-            <div class="card-body">
-                <h5 class="card-title">Teacher</h5>
-            </div>
-        </a>
-    </div>
-    //TEACHING SCHEDULE INDEX
-    <div class="card" style="width: 10rem; border-radius:35px;">
-        <a class="btn" asp-area="" asp-controller="TeachingSchedule" asp-action="Index">
-            <img src="/images/ScanQRCode.png" class="card-img-top" alt="Phone Call" style="border-radius:35px;">
-            <div class="card-body">
-                <h5 class="card-title">Teaching Schedule</h5>
-            </div>
-        </a>
-    </div>
-
+    <table class="table-borderless">
+        <tr class="row">
+            <td class="col">
+                <!--ACTIVATION MODELS INDEX-->
+                <div class="card" style="width: 10rem; border-radius:35px;">
+                    <a class="btn" asp-area="" asp-controller="ActivationModels" asp-action="Index">
+                        <img src="/images/ScanQRCode.png" class="card-img-top" alt="Phone Call" style="border-radius:35px;">
+                        <div class="card-body">
+                            <h5 class="card-title">Activation Codes</h5>
+                        </div>
+                    </a>
+                </div>
+            </td>
+            <td class="col">
+                <!--STUDENT MANAGEMENT INDEX-->
+                <div class="card" style="width: 10rem; border-radius:35px;">
+                    <a class="btn" asp-area="" asp-controller="StudentManagement" asp-action="Index">
+                        <img src="/images/ScanQRCode.png" class="card-img-top" alt="Phone Call" style="border-radius:35px;">
+                        <div class="card-body">
+                            <h5 class="card-title">Student Management</h5>
+                        </div>
+                    </a>
+                </div>
+            </td>
+            <td class="col">
+                <!--ADMIN INFO INDEX-->
+                <div class="card" style="width: 10rem; border-radius:35px;">
+                    <a class="btn" asp-area="" asp-controller="AdminInfo" asp-action="Index">
+                        <img src="/images/ScanQRCode.png" class="card-img-top" alt="Phone Call" style="border-radius:35px;">
+                        <div class="card-body">
+                            <h5 class="card-title">Admin Info</h5>
+                        </div>
+                    </a>
+                </div>
+            </td>
+            <td class="col">
+                <!--ACTIVE COURSES INDEX-->
+                <div class="card" style="width: 10rem; border-radius:35px;">
+                    <a class="btn" asp-area="" asp-controller="ActiveCourses" asp-action="Index">
+                        <img src="/images/ScanQRCode.png" class="card-img-top" alt="Phone Call" style="border-radius:35px;">
+                        <div class="card-body">
+                            <h5 class="card-title">Active Courses</h5>
+                        </div>
+                    </a>
+                </div>
+            </td>
+            <td class="col">
+                <!--ATTENDANCE OFFICE MEMBER INDEX-->
+                <div class="card" style="width: 10rem; border-radius:35px;">
+                    <a class="btn" asp-area="" asp-controller="AttendanceOfficeMember" asp-action="Index">
+                        <img src="/images/ScanQRCode.png" class="card-img-top" alt="Phone Call" style="border-radius:35px;">
+                        <div class="card-body">
+                            <h5 class="card-title">Attendance Off. Member</h5>
+                        </div>
+                    </a>
+                </div>
+            </td>
+        </tr>
+        <tr class="row pt-5">
+            <td class="col">
+                <!--BELL ATTENDANCE-->
+                <div class="card" style="width: 10rem; border-radius:35px;">
+                    <a class="btn" asp-area="" asp-controller="BellAttendance" asp-action="Index">
+                        <img src="/images/ScanQRCode.png" class="card-img-top" alt="Phone Call" style="border-radius:35px;">
+                        <div class="card-body">
+                            <h5 class="card-title">Bell Att.</h5>
+                        </div>
+                    </a>
+                </div>
+            </td>
+            <td class="col">
+                <!--COUNSELOR INDEX-->
+                <div class="card" style="width: 10rem; border-radius:35px;">
+                    <a class="btn" asp-area="" asp-controller="CounselorModels" asp-action="Index">
+                        <img src="/images/ScanQRCode.png" class="card-img-top" alt="Phone Call" style="border-radius:35px;">
+                        <div class="card-body">
+                            <h5 class="card-title">Counselors</h5>
+                        </div>
+                    </a>
+                </div>
+            </td>
+            <td class="col">
+                <!--COURSE ENROLLMENT INDEX-->
+                <div class="card" style="width: 10rem; border-radius:35px;">
+                    <a class="btn" asp-area="" asp-controller="CourseEnrollment" asp-action="Index">
+                        <img src="/images/ScanQRCode.png" class="card-img-top" alt="Phone Call" style="border-radius:35px;">
+                        <div class="card-body">
+                            <h5 class="card-title">Course Enrollment</h5>
+                        </div>
+                    </a>
+                </div>
+            </td>
+            <td class="col">
+                <!--DAILY ATTENDANCE INDEX-->
+                <div class="card" style="width: 10rem; border-radius:35px;">
+                    <a class="btn" asp-area="" asp-controller="DailyAttendance" asp-action="Index">
+                        <img src="/images/ScanQRCode.png" class="card-img-top" alt="Phone Call" style="border-radius:35px;">
+                        <div class="card-body">
+                            <h5 class="card-title">Daily Att.</h5>
+                        </div>
+                    </a>
+                </div>
+            </td>
+            <td class="col">
+                <!--DEVELOPER INFO INDEX-->
+                <div class="card" style="width: 10rem; border-radius:35px;">
+                    <a class="btn" asp-area="" asp-controller="DeveloperInfo" asp-action="Index">
+                        <img src="/images/ScanQRCode.png" class="card-img-top" alt="Phone Call" style="border-radius:35px;">
+                        <div class="card-body">
+                            <h5 class="card-title">Developer</h5>
+                        </div>
+                    </a>
+                </div>
+            </td>
+        </tr>
+        <tr class="row pt-5">
+            <td class="col">
+                <!--EA SUPPORT INFO INDEX-->
+                <div class="card" style="width: 10rem; border-radius:35px;">
+                    <a class="btn" asp-area="" asp-controller="EASuportInfo" asp-action="Index">
+                        <img src="/images/ScanQRCode.png" class="card-img-top" alt="Phone Call" style="border-radius:35px;">
+                        <div class="card-body">
+                            <h5 class="card-title">EA Support</h5>
+                        </div>
+                    </a>
+                </div>
+            </td>
+            <td class="col">
+                <!--FASTPASS INDEX-->
+                <div class="card" style="width: 10rem; border-radius:35px;">
+                    <a class="btn" asp-area="" asp-controller="FastPass" asp-action="Index">
+                        <img src="/images/ScanQRCode.png" class="card-img-top" alt="Phone Call" style="border-radius:35px;">
+                        <div class="card-body">
+                            <h5 class="card-title">FastPass</h5>
+                        </div>
+                    </a>
+                </div>
+            </td>
+            <td class="col">
+                <!--HALLPASS INFO INDEX-->
+                <div class="card" style="width: 10rem; border-radius:35px;">
+                    <a class="btn" asp-area="" asp-controller="HallPassInfo" asp-action="Index">
+                        <img src="/images/ScanQRCode.png" class="card-img-top" alt="Phone Call" style="border-radius:35px;">
+                        <div class="card-body">
+                            <h5 class="card-title">Hall Pass</h5>
+                        </div>
+                    </a>
+                </div>
+            </td>
+            <td class="col">
+                <!--LAW ENFORCEMENT INFO INDEX-->
+                <div class="card" style="width: 10rem; border-radius:35px;">
+                    <a class="btn" asp-area="" asp-controller="LawEnforcementInfo" asp-action="Index">
+                        <img src="/images/ScanQRCode.png" class="card-img-top" alt="Phone Call" style="border-radius:35px;">
+                        <div class="card-body">
+                            <h5 class="card-title">Law Enf.</h5>
+                        </div>
+                    </a>
+                </div>
+            </td>
+            <td class="col">
+                <!--NURSE INFO INDEX-->
+                <div class="card" style="width: 10rem; border-radius:35px;">
+                    <a class="btn" asp-area="" asp-controller="NurseInfo" asp-action="Index">
+                        <img src="/images/ScanQRCode.png" class="card-img-top" alt="Phone Call" style="border-radius:35px;">
+                        <div class="card-body">
+                            <h5 class="card-title">Nurse</h5>
+                        </div>
+                    </a>
+                </div>
+            </td>
+        </tr>
+        <tr class="row pt-5">
+            <td class="col">
+                <!--PASS REQUEST INDEX-->
+                <div class="card" style="width: 10rem; border-radius:35px;">
+                    <a class="btn" asp-area="" asp-controller="PassRequestInfo" asp-action="Index">
+                        <img src="/images/ScanQRCode.png" class="card-img-top" alt="Phone Call" style="border-radius:35px;">
+                        <div class="card-body">
+                            <h5 class="card-title">Pass Request</h5>
+                        </div>
+                    </a>
+                </div>
+            </td>
+            <td class="col">
+                <!--ROOM LOCATION INFO INDEX-->
+                <div class="card" style="width: 10rem; border-radius:35px;">
+                    <a class="btn" asp-area="" asp-controller="RoomLocationInfo" asp-action="Index">
+                        <img src="/images/ScanQRCode.png" class="card-img-top" alt="Phone Call" style="border-radius:35px;">
+                        <div class="card-body">
+                            <h5 class="card-title">Room Location</h5>
+                        </div>
+                    </a>
+                </div>
+            </td>
+            <td class="col">
+                <!--ROOM SCHEDULE INDEX-->
+                <div class="card" style="width: 10rem; border-radius:35px;">
+                    <a class="btn" asp-area="" asp-controller="RoomSchedule" asp-action="Index">
+                        <img src="/images/ScanQRCode.png" class="card-img-top" alt="Phone Call" style="border-radius:35px;">
+                        <div class="card-body">
+                            <h5 class="card-title">Room Schedule</h5>
+                        </div>
+                    </a>
+                </div>
+            </td>
+            <td class="col">
+                <!--STUDENT MANAGEMENT INDEX-->
+                <div class="card" style="width: 10rem; border-radius:35px;">
+                    <a class="btn" asp-area="" asp-controller="StudentManagement" asp-action="Index">
+                        <img src="/images/ScanQRCode.png" class="card-img-top" alt="Phone Call" style="border-radius:35px;">
+                        <div class="card-body">
+                            <h5 class="card-title">Student Management</h5>
+                        </div>
+                    </a>
+                </div>
+            </td>
+            <td class="col">
+                <!--STUDENT SCHEDULE INFO INDEX-->
+                <div class="card" style="width: 10rem; border-radius:35px;">
+                    <a class="btn" asp-area="" asp-controller="StudentScheduleInfo" asp-action="Index">
+                        <img src="/images/ScanQRCode.png" class="card-img-top" alt="Phone Call" style="border-radius:35px;">
+                        <div class="card-body">
+                            <h5 class="card-title">Student Schedule</h5>
+                        </div>
+                    </a>
+                </div>
+            </td>
+        </tr>
+        <tr class="row pt-5">
+            <td class="col">
+                <!--SUBSTITUTE INFO INDEX-->
+                <div class="card" style="width: 10rem; border-radius:35px;">
+                    <a class="btn" asp-area="" asp-controller="SubstituteInfo" asp-action="Index">
+                        <img src="/images/ScanQRCode.png" class="card-img-top" alt="Phone Call" style="border-radius:35px;">
+                        <div class="card-body">
+                            <h5 class="card-title">Substitute Teacher</h5>
+                        </div>
+                    </a>
+                </div>
+            </td>
+            <td class="col">
+                <!--SYNNLAB QR NODE INDEX-->
+                <div class="card" style="width: 10rem; border-radius:35px;">
+                    <a class="btn" asp-area="" asp-controller="SynnLabQRNode" asp-action="Index">
+                        <img src="/images/ScanQRCode.png" class="card-img-top" alt="Phone Call" style="border-radius:35px;">
+                        <div class="card-body">
+                            <h5 class="card-title">SynnLab QR Node</h5>
+                        </div>
+                    </a>
+                </div>
+            </td>
+            <td class="col">
+                <!--TEACHER INFO INDEX-->
+                <div class="card" style="width: 10rem; border-radius:35px;">
+                    <a class="btn" asp-area="" asp-controller="TeacherInfo" asp-action="Index">
+                        <img src="/images/ScanQRCode.png" class="card-img-top" alt="Phone Call" style="border-radius:35px;">
+                        <div class="card-body">
+                            <h5 class="card-title">Teacher</h5>
+                        </div>
+                    </a>
+                </div>
+            </td>
+            <td class="col">
+                <!--TEACHING SCHEDULE INDEX-->
+                <div class="card" style="width: 10rem; border-radius:35px;">
+                    <a class="btn" asp-area="" asp-controller="TeachingSchedule" asp-action="Index">
+                        <img src="/images/ScanQRCode.png" class="card-img-top" alt="Phone Call" style="border-radius:35px;">
+                        <div class="card-body">
+                            <h5 class="card-title">Teaching Schedule</h5>
+                        </div>
+                    </a>
+                </div>
+            </td>
+        </tr>
+    </table>
 }
