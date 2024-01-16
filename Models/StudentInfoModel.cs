@@ -31,9 +31,8 @@ namespace SAMS.Models
         [DisallowNull]
         [Display(Name = ("EA Support?"))]
         public Boolean HasEASupport { get; set; }
-        [AllowNull]
         [Display(Name = ("EA ID"))]
-        public string StudentEAID { get; set; } = null!;
+        public string? StudentEAID { get; set; } = null!;
         [Display(Name = ("Parent/Guardian 1 Name"))]
         public string Parentguard1NameMod { get; set; } = null!;
         [Display(Name = ("Parent/Guardian 1 Email Address"))]

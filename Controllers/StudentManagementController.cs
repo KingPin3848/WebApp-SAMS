@@ -65,6 +65,10 @@ namespace SAMS.Controllers
         {
             if (ModelState.IsValid)
             {
+                if (string.IsNullOrEmpty(studentInfoModel.StudentEAID))
+                {
+                    studentInfoModel.StudentEAID = null;
+                }
                 _context.Add(studentInfoModel);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -110,6 +114,10 @@ namespace SAMS.Controllers
             {
                 try
                 {
+                    if (string.IsNullOrEmpty(studentInfoModel.StudentEAID))
+                    {
+                        studentInfoModel.StudentEAID = null;
+                    }
                     _context.Update(studentInfoModel);
                     await _context.SaveChangesAsync();
                 }
@@ -131,6 +139,7 @@ namespace SAMS.Controllers
             ViewData["StudentCounselorID"] = new SelectList(_context.counselorModels, "CounselorId", "CounselorId", studentInfoModel.StudentCounselorID);
             return View(studentInfoModel);
         }
+
 
         // GET: StudentManagement/Delete/5
         public async Task<IActionResult> Delete(int? id)
