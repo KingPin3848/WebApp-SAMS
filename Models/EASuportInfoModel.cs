@@ -20,9 +20,9 @@ namespace SAMS.Models
         [Display(Name = ("Phone"))]
         public string EaPhoneMod { get; set; } = null!;
         [Display(Name = ("Student Managed"))]
-        public int EaStudentManaged { get; set; } = 0!;
+        public int? EaStudentManaged { get; set; } = 0!;
 
         //Navigation properties
-        public StudentInfoModel? Student { get; set; }
+        public ICollection<StudentInfoModel>? Students { get; set; }
     }
 }
