@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace SAMS.Models
 {
-    [Keyless]
     public class StudentInfoModel
     {
         [Key]
