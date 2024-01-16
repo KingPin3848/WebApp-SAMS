@@ -44,7 +44,7 @@ namespace SAMS.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-
+            
             //Activation Model Relationships
             modelBuilder.Entity<ActivationModel>()
                 .HasOne(a => a.Student)

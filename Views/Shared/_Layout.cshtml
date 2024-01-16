@@ -47,11 +47,27 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
 
     <script>
-        document.getElementById('themeButton').addEventListener('click', function () {
+        //Check for saved theme preference in localStorage
+        let theme = localStorage.getItem('theme');
+
+        //Apply the saved theme preference
+        if (theme) {
+            document.documentElement.setAttribute('data-bs-theme', theme)
+        } else {
+            // If there is no saved preference, you can default to light mode
+            document.documentElement.setAttribute('data-bs-theme', 'light');
+        }
+
+        //Function to switch themes
+        function switchTheme() {
             var currentTheme = document.documentElement.getAttribute('data-bs-theme');
             var newTheme = (currentTheme === 'dark') ? 'light' : 'dark';
             document.documentElement.setAttribute('data-bs-theme', newTheme);
-        });
+            localStorage.setItem('theme', newTheme);
+        }
+
+        //Add event listener to theme button
+        document.getElementById('themeButton').addEventListener('click', switchTheme);
     </script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>

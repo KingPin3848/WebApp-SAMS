@@ -1,13 +1,17 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace SAMS.Models
 {
+    [Keyless]
     public class StudentInfoModel
     {
         [Key]
         [DisallowNull]
         [Display(Name = ("Student ID"))]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int StudentID { get; set; } = 0!;
         [Display(Name = ("First Name"))]
         public string StudentFirstNameMod { get; set; } = null!;
