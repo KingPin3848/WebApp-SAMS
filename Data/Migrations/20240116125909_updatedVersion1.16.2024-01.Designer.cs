@@ -12,8 +12,8 @@ using SAMS.Data;
 namespace SAMS.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240115214103_updatedVersion1.15.2024-01")]
-    partial class updatedVersion115202401
+    [Migration("20240116125909_updatedVersion1.16.2024-01")]
+    partial class updatedVersion116202401
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -301,6 +301,34 @@ namespace SAMS.Data.Migrations
                     b.Property<string>("AdminID")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("AdminEmailMod")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("AdminFirstNameMod")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("AdminLabelMod")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("AdminLastNameMod")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("AdminMiddleNameMod")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("AdminPhoneMod")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("AdminPreferredNameMod")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("AdminID");
 
                     b.ToTable("adminInfoModels");
@@ -541,7 +569,7 @@ namespace SAMS.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("EaStudentManaged")
+                    b.Property<int?>("EaStudentManaged")
                         .HasColumnType("int");
 
                     b.HasKey("EaID");
@@ -875,10 +903,7 @@ namespace SAMS.Data.Migrations
             modelBuilder.Entity("SAMS.Models.StudentInfoModel", b =>
                 {
                     b.Property<int>("StudentID")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("StudentID"), 1L, 1);
 
                     b.Property<int>("ActivationCode")
                         .HasColumnType("int");
@@ -910,7 +935,6 @@ namespace SAMS.Data.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("StudentEAID")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("StudentEmailMod")
@@ -949,8 +973,7 @@ namespace SAMS.Data.Migrations
 
                     b.HasIndex("StudentCounselorID");
 
-                    b.HasIndex("StudentEAID")
-                        .IsUnique();
+                    b.HasIndex("StudentEAID");
 
                     b.ToTable("studentInfoModels");
                 });
@@ -1576,10 +1599,9 @@ namespace SAMS.Data.Migrations
                         .IsRequired();
 
                     b.HasOne("SAMS.Models.EASuportInfoModel", "AssignedEASuport")
-                        .WithOne("Student")
-                        .HasForeignKey("SAMS.Models.StudentInfoModel", "StudentEAID")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                        .WithMany("Students")
+                        .HasForeignKey("StudentEAID")
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.Navigation("ActivationCodes");
 
@@ -1694,7 +1716,7 @@ namespace SAMS.Data.Migrations
 
             modelBuilder.Entity("SAMS.Models.EASuportInfoModel", b =>
                 {
-                    b.Navigation("Student");
+                    b.Navigation("Students");
                 });
 
             modelBuilder.Entity("SAMS.Models.LawEnforcementInfoModel", b =>

@@ -409,8 +409,8 @@ namespace SAMS.Data
 
             modelBuilder.Entity<StudentInfoModel>()
                 .HasOne(a => a.AssignedEASuport)
-                .WithOne(b => b.Student)
-                .HasForeignKey<StudentInfoModel>(c => c.StudentEAID)
+                .WithMany(b => b.Students)
+                .HasForeignKey(c => c.StudentEAID)
                 .OnDelete(DeleteBehavior.NoAction);
 
             //Student Schedule Info Model Relationships

@@ -12,8 +12,8 @@ using SAMS.Data;
 namespace SAMS.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240111185930_updatedVersion1.11.2024-01")]
-    partial class updatedVersion111202401
+    [Migration("20240116042019_updatedVersion1.15.2024-01")]
+    partial class updatedVersion115202401
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -345,9 +345,8 @@ namespace SAMS.Data.Migrations
                     b.Property<int>("StudentId")
                         .HasColumnType("int");
 
-                    b.Property<string>("BellAttendanceId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("BellAttendanceId")
+                        .HasColumnType("int");
 
                     b.Property<int>("BellNumId")
                         .HasColumnType("int");
@@ -876,10 +875,7 @@ namespace SAMS.Data.Migrations
             modelBuilder.Entity("SAMS.Models.StudentInfoModel", b =>
                 {
                     b.Property<int>("StudentID")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("StudentID"), 1L, 1);
 
                     b.Property<int>("ActivationCode")
                         .HasColumnType("int");
@@ -911,7 +907,6 @@ namespace SAMS.Data.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("StudentEAID")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("StudentEmailMod")
@@ -950,8 +945,7 @@ namespace SAMS.Data.Migrations
 
                     b.HasIndex("StudentCounselorID");
 
-                    b.HasIndex("StudentEAID")
-                        .IsUnique();
+                    b.HasIndex("StudentEAID");
 
                     b.ToTable("studentInfoModels");
                 });
@@ -1577,10 +1571,9 @@ namespace SAMS.Data.Migrations
                         .IsRequired();
 
                     b.HasOne("SAMS.Models.EASuportInfoModel", "AssignedEASuport")
-                        .WithOne("Student")
-                        .HasForeignKey("SAMS.Models.StudentInfoModel", "StudentEAID")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                        .WithMany("Students")
+                        .HasForeignKey("StudentEAID")
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.Navigation("ActivationCodes");
 
@@ -1695,7 +1688,7 @@ namespace SAMS.Data.Migrations
 
             modelBuilder.Entity("SAMS.Models.EASuportInfoModel", b =>
                 {
-                    b.Navigation("Student");
+                    b.Navigation("Students");
                 });
 
             modelBuilder.Entity("SAMS.Models.LawEnforcementInfoModel", b =>

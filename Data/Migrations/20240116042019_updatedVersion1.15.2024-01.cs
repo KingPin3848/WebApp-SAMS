@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace SAMS.Data.Migrations
 {
-    public partial class updatedVersion111202401 : Migration
+    public partial class updatedVersion115202401 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -215,8 +215,7 @@ namespace SAMS.Data.Migrations
                 name: "studentInfoModels",
                 columns: table => new
                 {
-                    StudentID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    StudentID = table.Column<int>(type: "int", nullable: false),
                     StudentFirstNameMod = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     StudentMiddleNameMod = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     StudentLastNameMod = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -226,7 +225,7 @@ namespace SAMS.Data.Migrations
                     StudentGradYearMod = table.Column<DateTime>(type: "datetime2", nullable: false),
                     StudentCounselorID = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     HasEASupport = table.Column<bool>(type: "bit", nullable: false),
-                    StudentEAID = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    StudentEAID = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     Parentguard1NameMod = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Parentguard1EmailMod = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Parentguard2NameMod = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -329,7 +328,7 @@ namespace SAMS.Data.Migrations
                 columns: table => new
                 {
                     StudentId = table.Column<int>(type: "int", nullable: false),
-                    BellAttendanceId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    BellAttendanceId = table.Column<int>(type: "int", nullable: false),
                     DateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ReasonForAbsence = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -839,8 +838,7 @@ namespace SAMS.Data.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_studentInfoModels_StudentEAID",
                 table: "studentInfoModels",
-                column: "StudentEAID",
-                unique: true);
+                column: "StudentEAID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_substituteInfoModels_ManagedTeacherIdMod",

@@ -56,7 +56,7 @@ namespace SAMS.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("AdminID")] AdminInfoModel adminInfoModel)
+        public async Task<IActionResult> Create([Bind("AdminID,AdminFirstNameMod,AdminMiddleNameMod,AdminLastNameMod,AdminPreferredNameMod,AdminEmailMod,AdminPhoneMod,AdminLabelMod")] AdminInfoModel adminInfoModel)
         {
             if (ModelState.IsValid)
             {
@@ -88,7 +88,7 @@ namespace SAMS.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("AdminID")] AdminInfoModel adminInfoModel)
+        public async Task<IActionResult> Edit(string id, [Bind("AdminID,AdminFirstNameMod,AdminMiddleNameMod,AdminLastNameMod,AdminPreferredNameMod,AdminEmailMod,AdminPhoneMod,AdminLabelMod")] AdminInfoModel adminInfoModel)
         {
             if (id != adminInfoModel.AdminID)
             {
