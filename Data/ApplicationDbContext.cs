@@ -5,15 +5,20 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using SAMS.Models;
+using SAMS.Controllers;
 
 namespace SAMS.Data
 {
-    public class ApplicationDbContext : IdentityDbContext
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
             : base(options)
         {
         }
+
+        public DbSet<ApplicationUser> ApplicationUsers { get; set; }
 
         public DbSet<ActiveCourseInfoModel> activeCourseInfoModels { get; set; } = null!;
         public DbSet<AdminInfoModel> adminInfoModels { get; set; } = null!;
@@ -35,7 +40,6 @@ namespace SAMS.Data
         public DbSet<SynnLabQRNodeModel> synnLabQRNodeModels { get; set; } = null!;
         public DbSet<TeacherInfoModel> teacherInfoModels { get; set; } = null!;
         public DbSet<TwoHrDelayBellScheduleModel> twoHrDelayBellScheduleModels { get; set; } = null!;
-        public DbSet<ActivationModel> activationModels { get; set; } = null!;
         public DbSet<BellAttendanceModel> bellAttendanceModels { get;  set; } = null!;
         public DbSet<CounselorModel> counselorModels { get; set; } = null!;
         public DbSet<CourseEnrollmentModel> courseEnrollmentModels { get; set; } = null!;
@@ -44,14 +48,6 @@ namespace SAMS.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            
-            //Activation Model Relationships
-            modelBuilder.Entity<ActivationModel>()
-                .HasOne(a => a.Student)
-                .WithOne(b => b.ActivationCodes)
-                .HasForeignKey<StudentInfoModel>(c => c.ActivationCode)
-                .OnDelete(DeleteBehavior.NoAction);
-
 
             //Active Course Info Model Relationships
             modelBuilder.Entity<ActiveCourseInfoModel>()

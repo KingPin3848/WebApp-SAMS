@@ -55,7 +55,6 @@ namespace SAMS.Models
         public ICollection<HallPassInfoModel>? HallPasses { get; set; }
         public ICollection<FastPassModel>? FastPasses { get; set; }
         public ICollection<CourseEnrollmentModel>? CourseEnrollments { get; set; }
-        public ActivationModel? ActivationCodes { get; set; }
         public ICollection<BellAttendanceModel>? BellAttendances { get; set; }
         public ICollection<DailyAttendanceModel>? DailyAttendances { get; set; }
         public EASuportInfoModel? EASuport { get; set; }

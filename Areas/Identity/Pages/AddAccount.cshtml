@@ -1,0 +1,57 @@
+﻿@page
+@model SAMS.Areas.Identity.Pages.AddAccountModel
+@{
+    ViewData["Title"] = "Add Account";
+}
+
+<title>@ViewData["Title"] - SAMS</title>
+
+<div class="row">
+    <div class="col-md-4">
+        <form id="registerForm" method="post">
+            <h2>Create a new account.</h2>
+            <hr />
+            <div asp-validation-summary="ModelOnly" class="text-danger pb-2"></div>
+            <div class="form-floating pb-2">
+                <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" />
+                <label asp-for="Input.Email"></label>
+                <span asp-validation-for="Input.Email" class="text-danger"></span>
+            </div>
+            <div class="form-floating pb-2">
+                <input asp-for="Input.SchoolIssuedId" class="form-control" aria-required="true" />
+                <label asp-for="Input.SchoolIssuedId"></label>
+                <span asp-validation-for="Input.SchoolIssuedId" class="text-danger"></span>
+            </div>
+            <div class="form-floating pb-2">
+                <input asp-for="Input.ActivationCode" class="form-control" autocomplete="new-password" aria-required="true" />
+                <label asp-for="Input.ActivationCode"></label>
+                <span asp-validation-for="Input.ActivationCode" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Input.AssignedRole" class="form-label"></label>
+                <div class="form-floating">
+                    <select asp-for="Input.AssignedRole" class="form-select">
+                        <option value="HS School Admin">HS School Admin</option>
+                        <option value="Synnovation Lab Admin">Synnovation Lab Admin</option>
+                        <option value="Education Support (EA)">Education Support (EA)</option>
+                        <option value="Attendance Office Member">Attendance Office Member</option>
+                        <option value="Nurse">Nurse</option>
+                        <option value="Law Enforcement">Law Enforcement</option>
+                        <option value="Synnovation Lab QR Code Scanner Management">Synnovation Lab QR Code Scanner Management</option>
+                        <option value="Teacher">Teacher</option>
+                        <option value="Substitute Teacher">Substitute Teacher</option>
+                        <option value="Student">Student</option>
+                        <option value="District Admin">District Admin</option>
+                        <option value="Developer">Developer</option>
+                    </select>
+                    <span asp-validation-for="Input.AssignedRole" class="text-danger"></span>
+                </div>
+            </div>
+            <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Add Account</button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
