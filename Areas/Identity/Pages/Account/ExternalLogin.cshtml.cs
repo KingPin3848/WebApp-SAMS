@@ -114,7 +114,7 @@ namespace SAMS.Areas.Identity.Pages.Account
             }
 
             var dbuser = await _userManager.FindByEmailAsync(email);
-            var dbuseremail = dbuser.Email.ToLower();
+            var dbuseremail = dbuser.Email;
             if (dbuseremail != null)
             {
                 if (dbuseremail == email)

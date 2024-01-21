@@ -7,6 +7,7 @@ using SAMS.Controllers;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication;
+using System.Security.Claims;
 
 namespace SAMS.Areas.Identity.Pages.Activation
 {
@@ -15,15 +16,17 @@ namespace SAMS.Areas.Identity.Pages.Activation
     {
         private readonly UserManager<ApplicationUser>? _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly ILogger<ActivateModel> _logger;
 
         [TempData]
         public string? StatusMessage { get; set; }
 
-        public ActivateModel(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
+        public ActivateModel(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, ILogger<ActivateModel> logger)
         {
             _userManager = userManager;
             Input = new InputModel();
             _signInManager = signInManager;
+            _logger = logger;
         }
 
         public void OnGet()
@@ -128,18 +131,35 @@ namespace SAMS.Areas.Identity.Pages.Activation
                 throw new InvalidOperationException($"Unexpected error occurred loading external login info.");
             }
 
-            var result = await _userManager.AddLoginAsync(foundUser, info);
-            if (!result.Succeeded)
+            var email = info.Principal.FindFirstValue(ClaimTypes.Email);
+            var dbuser = await _userManager.FindByEmailAsync(email);
+            var dbuseremail = dbuser.Email;
+            if (dbuseremail != null)
             {
-                StatusMessage = "The external login was not added. External logins can only be associated with one account.";
-                return RedirectToPage("../../../../../");
+                if (dbuseremail == email)
+                {
+                    var result = await _userManager.AddLoginAsync(foundUser, info);
+                    if (!result.Succeeded)
+                    {
+                        StatusMessage = "The external login was not added. External logins can only be associated with one account.";
+                        return RedirectToPage("../../../../../");
+                    }
+                    // Clear the existing external cookie to ensure a clean login process
+                    await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
+                    StatusMessage = "The external login was added.";
+                    return RedirectToPage("ActivationSuccessfull");
+                }
+                else
+                {
+                    _logger.LogInformation("The email address from the Google Account was not found with the one in the database.");
+                    return RedirectToPage("UserNotFound");
+                }
             }
-
-            // Clear the existing external cookie to ensure a clean login process
-            await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
-
-            StatusMessage = "The external login was added.";
-            return RedirectToPage("ActivationSuccessfull");
+            else
+            {
+                _logger.LogInformation("Couldn't find the user from the Google Account email address in our database.");
+                return RedirectToPage("UserNotFound");
+            }
         }
     }
 }
