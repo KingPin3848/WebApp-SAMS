@@ -96,8 +96,8 @@ namespace SAMS.Data
             //Bell Attendance Model Relationships
             modelBuilder.Entity<BellAttendanceModel>()
                 .HasOne(a => a.StudentScheduleInfoModel)
-                .WithOne(b => b.BellAttendance)
-                .HasForeignKey<StudentScheduleInfoModel>(c => c.StudentID)
+                .WithMany(b => b.BellAttendance)
+                .HasForeignKey(c => c.ScheduleId)
                 .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<BellAttendanceModel>()
@@ -423,11 +423,7 @@ namespace SAMS.Data
                 .OnDelete(DeleteBehavior.NoAction);
 
             //Substitute Info Model Relationships
-            modelBuilder.Entity<SubstituteInfoModel>()
-                .HasOne(a => a.TeacherManaged)
-                .WithOne(b => b.SubTeachers)
-                .HasForeignKey<SubstituteInfoModel>(c => c.ManagedTeacherIdMod)
-                .OnDelete(DeleteBehavior.NoAction);
+            //MAY BRING AN ERROR HERE WHEN ACTUALLY IMPLEMENTING THE SUBSTITUTE TEACHER ALGORITHM
 
             //SynnLab QR Node Model Relationships
             modelBuilder.Entity<SynnLabQRNodeModel>()
@@ -436,7 +432,11 @@ namespace SAMS.Data
                 .HasForeignKey<SynnLabQRNodeModel>(c => c.SynnlabRoomIDMod)
                 .OnDelete(DeleteBehavior.NoAction);
 
-            //Teacher Info Model Relationships - NA Anymore
+            //Teacher Info Model Relationships
+            modelBuilder.Entity<TeacherInfoModel>()
+                .HasOne(a => a.SubTeacher)
+                .WithMany(b => b.TeacherManaged)
+                .HasForeignKey(c => c.AssignedSubID);
 
             //Teaching Schedule Model Relationships
             modelBuilder.Entity<TeachingScheduleModel>()

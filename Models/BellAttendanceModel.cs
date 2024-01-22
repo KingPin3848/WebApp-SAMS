@@ -18,7 +18,7 @@ namespace SAMS.Models
         [Display(Name = ("Bell Number"))]
         public int BellNumId { get; set; } = 0!;
         [Display(Name = ("Course Name"))]
-        public string CourseName { get; set; } = null!;
+        public int ScheduleId { get; set; } = 0!;
 
         //Navigation properties
         public StudentScheduleInfoModel? StudentScheduleInfoModel { get; set; }

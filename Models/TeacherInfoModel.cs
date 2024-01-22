@@ -23,11 +23,12 @@ namespace SAMS.Models
         public Boolean Teaches5Days { get; set; }
         [Display(Name = ("Teaching Schedule ID"))]
         public int TeachingScheduleID { get; set; } = 0!;
-
+        [Display(Name = "Substitute Teacher")]
+        public string? AssignedSubID { get; set; } = null!;
 
         //Navigation properties
         public ICollection<ActiveCourseInfoModel>? ActiveCourses { get; set; }
-        public SubstituteInfoModel? SubTeachers { get; set; }
+        public SubstituteInfoModel? SubTeacher { get; set; }
         public RoomLocationInfoModel? Room {  get; set; }
         public ICollection<RoomScheduleModel>? RoomSchedules { get; set; }
         public TeachingScheduleModel? TeachingSchedule { get; set; }

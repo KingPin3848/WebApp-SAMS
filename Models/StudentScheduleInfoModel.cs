@@ -30,7 +30,7 @@ namespace SAMS.Models
         //Navigation properties
         public StudentInfoModel? Student {  get; set; }
         public ICollection<CourseEnrollmentModel>? CourseEnrollments { get; set; }
-        public BellAttendanceModel? BellAttendance { get; set; }
+        public ICollection<BellAttendanceModel>? BellAttendance { get; set; }
         public ICollection<FastPassModel>? FastPasses { get; set; }
     }
 }

@@ -25,7 +25,7 @@ namespace SAMS.Models
         public DateTime ScheduledDate { get; set; }
 
         //Navigation properties
-        public TeacherInfoModel? TeacherManaged {  get; set; }
+        public ICollection<TeacherInfoModel>? TeacherManaged {  get; set; }
 
     }
 }
