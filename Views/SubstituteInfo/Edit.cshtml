@@ -1,0 +1,66 @@
+﻿@model SAMS.Models.SubstituteInfoModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>SubstituteInfoModel</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="SubID" />
+            <div class="form-group">
+                <label asp-for="SubFirstNameMod" class="control-label"></label>
+                <input asp-for="SubFirstNameMod" class="form-control" />
+                <span asp-validation-for="SubFirstNameMod" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SubMiddleNameMod" class="control-label"></label>
+                <input asp-for="SubMiddleNameMod" class="form-control" />
+                <span asp-validation-for="SubMiddleNameMod" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SubLastNameMod" class="control-label"></label>
+                <input asp-for="SubLastNameMod" class="form-control" />
+                <span asp-validation-for="SubLastNameMod" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SubPreferredNameMod" class="control-label"></label>
+                <input asp-for="SubPreferredNameMod" class="form-control" />
+                <span asp-validation-for="SubPreferredNameMod" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SubEmailMod" class="control-label"></label>
+                <input asp-for="SubEmailMod" class="form-control" />
+                <span asp-validation-for="SubEmailMod" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SubPhoneMod" class="control-label"></label>
+                <input asp-for="SubPhoneMod" class="form-control" />
+                <span asp-validation-for="SubPhoneMod" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ManagedTeacherIdMod" class="control-label"></label>
+                <input asp-for="ManagedTeacherIdMod" class="form-control" />
+                <span asp-validation-for="ManagedTeacherIdMod" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ScheduledDate" class="control-label"></label>
+                <input asp-for="ScheduledDate" class="form-control" />
+                <span asp-validation-for="ScheduledDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+

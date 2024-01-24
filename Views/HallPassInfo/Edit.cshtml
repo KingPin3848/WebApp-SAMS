@@ -1,0 +1,71 @@
+﻿@model SAMS.Models.HallPassInfoModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>HallPassInfoModel</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="StudentID" class="control-label"></label>
+                <select asp-for="StudentID" class="form-control" asp-items="ViewBag.StudentID"></select>
+                <span asp-validation-for="StudentID" class="text-danger"></span>
+            </div>
+            <input type="hidden" asp-for="HallPassID" />
+            <div class="form-group">
+                <label asp-for="StartDateTime" class="control-label"></label>
+                <input asp-for="StartDateTime" class="form-control" />
+                <span asp-validation-for="StartDateTime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="EndDateTime" class="control-label"></label>
+                <input asp-for="EndDateTime" class="form-control" />
+                <span asp-validation-for="EndDateTime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Duration" class="control-label"></label>
+                <input asp-for="Duration" class="form-control" />
+                <span asp-validation-for="Duration" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="BellNumber" class="control-label"></label>
+                <input asp-for="BellNumber" class="form-control" />
+                <span asp-validation-for="BellNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="HallPassAssignedByID" class="control-label"></label>
+                <select asp-for="HallPassAssignedByID" class="form-control" asp-items="ViewBag.HallPassAssignedByID"></select>
+                <span asp-validation-for="HallPassAssignedByID" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="HallPassAddressedByID" class="control-label"></label>
+                <select asp-for="HallPassAddressedByID" class="form-control" asp-items="ViewBag.HallPassAddressedByID"></select>
+                <span asp-validation-for="HallPassAddressedByID" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="StartLocation" class="control-label"></label>
+                <input asp-for="StartLocation" class="form-control" />
+                <span asp-validation-for="StartLocation" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="EndLocation" class="control-label"></label>
+                <input asp-for="EndLocation" class="form-control" />
+                <span asp-validation-for="EndLocation" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+

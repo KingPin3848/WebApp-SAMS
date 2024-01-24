@@ -1,0 +1,56 @@
+﻿@model SAMS.Models.AttendanceOfficeMemberModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>AttendanceOfficeMemberModel</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="AoMemberID" />
+            <div class="form-group">
+                <label asp-for="AoMemberFirstNameMod" class="control-label"></label>
+                <input asp-for="AoMemberFirstNameMod" class="form-control" />
+                <span asp-validation-for="AoMemberFirstNameMod" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="AoMemberMiddleNameMod" class="control-label"></label>
+                <input asp-for="AoMemberMiddleNameMod" class="form-control" />
+                <span asp-validation-for="AoMemberMiddleNameMod" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="AoMemberLastNameMod" class="control-label"></label>
+                <input asp-for="AoMemberLastNameMod" class="form-control" />
+                <span asp-validation-for="AoMemberLastNameMod" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="AoMemberPreferredNameMod" class="control-label"></label>
+                <input asp-for="AoMemberPreferredNameMod" class="form-control" />
+                <span asp-validation-for="AoMemberPreferredNameMod" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="AoMemberEmailMod" class="control-label"></label>
+                <input asp-for="AoMemberEmailMod" class="form-control" />
+                <span asp-validation-for="AoMemberEmailMod" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="AoMemberPhoneMod" class="control-label"></label>
+                <input asp-for="AoMemberPhoneMod" class="form-control" />
+                <span asp-validation-for="AoMemberPhoneMod" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+

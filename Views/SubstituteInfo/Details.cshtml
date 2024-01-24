@@ -1,0 +1,66 @@
+﻿@model SAMS.Models.SubstituteInfoModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>SubstituteInfoModel</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.SubFirstNameMod)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.SubFirstNameMod)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.SubMiddleNameMod)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.SubMiddleNameMod)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.SubLastNameMod)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.SubLastNameMod)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.SubPreferredNameMod)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.SubPreferredNameMod)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.SubEmailMod)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.SubEmailMod)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.SubPhoneMod)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.SubPhoneMod)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.ManagedTeacherIdMod)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.ManagedTeacherIdMod)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.ScheduledDate)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.ScheduledDate)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.SubID">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

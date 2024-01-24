@@ -1,0 +1,57 @@
+﻿@model SAMS.Models.NurseInfoModel
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h1>Delete</h1>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>NurseInfoModel</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.NurseFirstNameMod)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.NurseFirstNameMod)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.NurseMiddleNameMod)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.NurseMiddleNameMod)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.NurseLastNameMod)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.NurseLastNameMod)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.NursePreferredNameMod)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.NursePreferredNameMod)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.NurseEmailMod)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.NurseEmailMod)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.NursePhoneMod)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.NursePhoneMod)
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="NurseID" />
+        <input type="submit" value="Delete" class="btn btn-danger" /> |
+        <a asp-action="Index">Back to List</a>
+    </form>
+</div>
