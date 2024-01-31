@@ -46,6 +46,7 @@ namespace SAMS.Data
         public DbSet<DailyAttendanceModel> dailyAttendanceModels { get; set; } = null!;
         public DbSet<RoomScheduleModel> roomScheduleModels { get; set; } = null!;
         public DbSet<ChosenBellSchedModel> chosenBellSchedModels { get; set; } = null!;
+        public DbSet<RoomQRCodeModel> roomQRCodeModels { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -446,6 +447,11 @@ namespace SAMS.Data
                 .HasForeignKey<TeachingScheduleModel>(c => c.TeacherID)
                 .OnDelete(DeleteBehavior.NoAction);
 
+            //Room QR Code Model Relationships
+            modelBuilder.Entity<RoomQRCodeModel>()
+                .HasOne(a => a.Room)
+                .WithOne(b => b.RoomQRCode)
+                .HasForeignKey<RoomQRCodeModel>(c => c.RoomId);
 
             base.OnModelCreating(modelBuilder);
         }

@@ -8,24 +8,25 @@ using Microsoft.EntityFrameworkCore;
 using SAMS.Data;
 using SAMS.Models;
 
-namespace SAMS.Controllers.InfoManagement
+namespace SAMS.Controllers
 {
-    public class DeveloperInfoController : Controller
+    public class RoomQRCodeController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public DeveloperInfoController(ApplicationDbContext context)
+        public RoomQRCodeController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: DeveloperInfo
+        // GET: RoomQRCode
         public async Task<IActionResult> Index()
         {
-            return View(await _context.developerInfoModels.ToListAsync());
+            var applicationDbContext = _context.roomQRCodeModels.Include(r => r.Room);
+            return View(await applicationDbContext.ToListAsync());
         }
 
-        // GET: DeveloperInfo/Details/5
+        // GET: RoomQRCode/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -33,39 +34,42 @@ namespace SAMS.Controllers.InfoManagement
                 return NotFound();
             }
 
-            var developerInfoModel = await _context.developerInfoModels
-                .FirstOrDefaultAsync(m => m.DeveloperID == id);
-            if (developerInfoModel == null)
+            var roomQRCodeModel = await _context.roomQRCodeModels
+                .Include(r => r.Room)
+                .FirstOrDefaultAsync(m => m.ID == id);
+            if (roomQRCodeModel == null)
             {
                 return NotFound();
             }
 
-            return View(developerInfoModel);
+            return View(roomQRCodeModel);
         }
 
-        // GET: DeveloperInfo/Create
+        // GET: RoomQRCode/Create
         public IActionResult Create()
         {
+            ViewData["RoomId"] = new SelectList(_context.roomLocationInfoModels, "RoomId", "RoomId");
             return View();
         }
 
-        // POST: DeveloperInfo/Create
+        // POST: RoomQRCode/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("DeveloperID,DeveloperFirstNameMod,DeveloperMiddleNameMod,DeveloperLastNameMod,DeveloperPreferredNameMod,DeveloperEmailMod")] DeveloperInfoModel developerInfoModel)
+        public async Task<IActionResult> Create([Bind("ID,RoomId,Code")] RoomQRCodeModel roomQRCodeModel)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(developerInfoModel);
+                _context.Add(roomQRCodeModel);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(developerInfoModel);
+            ViewData["RoomId"] = new SelectList(_context.roomLocationInfoModels, "RoomId", "RoomId", roomQRCodeModel.RoomId);
+            return View(roomQRCodeModel);
         }
 
-        // GET: DeveloperInfo/Edit/5
+        // GET: RoomQRCode/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -73,22 +77,23 @@ namespace SAMS.Controllers.InfoManagement
                 return NotFound();
             }
 
-            var developerInfoModel = await _context.developerInfoModels.FindAsync(id);
-            if (developerInfoModel == null)
+            var roomQRCodeModel = await _context.roomQRCodeModels.FindAsync(id);
+            if (roomQRCodeModel == null)
             {
                 return NotFound();
             }
-            return View(developerInfoModel);
+            ViewData["RoomId"] = new SelectList(_context.roomLocationInfoModels, "RoomId", "RoomId", roomQRCodeModel.RoomId);
+            return View(roomQRCodeModel);
         }
 
-        // POST: DeveloperInfo/Edit/5
+        // POST: RoomQRCode/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("DeveloperID,DeveloperFirstNameMod,DeveloperMiddleNameMod,DeveloperLastNameMod,DeveloperPreferredNameMod,DeveloperEmailMod")] DeveloperInfoModel developerInfoModel)
+        public async Task<IActionResult> Edit(int id, [Bind("ID,RoomId,Code")] RoomQRCodeModel roomQRCodeModel)
         {
-            if (id != developerInfoModel.DeveloperID)
+            if (id != roomQRCodeModel.ID)
             {
                 return NotFound();
             }
@@ -97,12 +102,12 @@ namespace SAMS.Controllers.InfoManagement
             {
                 try
                 {
-                    _context.Update(developerInfoModel);
+                    _context.Update(roomQRCodeModel);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!DeveloperInfoModelExists(developerInfoModel.DeveloperID))
+                    if (!RoomQRCodeModelExists(roomQRCodeModel.ID))
                     {
                         return NotFound();
                     }
@@ -113,10 +118,11 @@ namespace SAMS.Controllers.InfoManagement
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(developerInfoModel);
+            ViewData["RoomId"] = new SelectList(_context.roomLocationInfoModels, "RoomId", "RoomId", roomQRCodeModel.RoomId);
+            return View(roomQRCodeModel);
         }
 
-        // GET: DeveloperInfo/Delete/5
+        // GET: RoomQRCode/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -124,34 +130,35 @@ namespace SAMS.Controllers.InfoManagement
                 return NotFound();
             }
 
-            var developerInfoModel = await _context.developerInfoModels
-                .FirstOrDefaultAsync(m => m.DeveloperID == id);
-            if (developerInfoModel == null)
+            var roomQRCodeModel = await _context.roomQRCodeModels
+                .Include(r => r.Room)
+                .FirstOrDefaultAsync(m => m.ID == id);
+            if (roomQRCodeModel == null)
             {
                 return NotFound();
             }
 
-            return View(developerInfoModel);
+            return View(roomQRCodeModel);
         }
 
-        // POST: DeveloperInfo/Delete/5
+        // POST: RoomQRCode/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var developerInfoModel = await _context.developerInfoModels.FindAsync(id);
-            if (developerInfoModel != null)
+            var roomQRCodeModel = await _context.roomQRCodeModels.FindAsync(id);
+            if (roomQRCodeModel != null)
             {
-                _context.developerInfoModels.Remove(developerInfoModel);
+                _context.roomQRCodeModels.Remove(roomQRCodeModel);
             }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool DeveloperInfoModelExists(int id)
+        private bool RoomQRCodeModelExists(int id)
         {
-            return _context.developerInfoModels.Any(e => e.DeveloperID == id);
+            return _context.roomQRCodeModels.Any(e => e.ID == id);
         }
     }
 }

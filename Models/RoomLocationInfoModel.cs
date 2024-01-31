@@ -24,5 +24,6 @@ namespace SAMS.Models
         public ICollection<FastPassModel>? FastPassesIssued { get; set; }
         public RoomScheduleModel? RoomSchedule { get; set; }
         public SynnLabQRNodeModel? SynnLabQRNode { get; set; }
+        public RoomQRCodeModel RoomQRCode { get; set; } = null!;
     }
 }

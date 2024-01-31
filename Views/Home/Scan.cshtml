@@ -53,7 +53,10 @@
     // ####### Web Cam Scanning #######
     const scanner = new QrScanner(
         video,
-        (result) => setResult(camQrResult, result),
+        (result) => { 
+            setResult(camQrResult, result);
+                sendScannedData(result);
+        },
         {
             onDecodeError: (error) => {
                 camQrResult.textContent = error;
@@ -124,9 +127,34 @@
     document.getElementById("stop-button").addEventListener("click", () => {
         scanner.stop();
     });
-    var schooliD = @ViewBag.Schoolid;
+    
+    function sendScannedData(result) {
+        var schooliD = @ViewBag.Schoolid;
+
+        //Transferring qr code string to controller
+        var qrCodeData = result.data;
+        var qrCodeDataTimestamp = new Date().toString();
+
+        var data = {
+            'ScannedCode': qrCodeData,
+            'ScannedCodeTimestamp': qrCodeDataTimestamp,
+            'issuedSchoolId': schoolId
+        };
+
+        $.ajax({
+            url: '/Home/Scan',
+            type: 'POST',
+            data: data,
+            success: function (response) {
+                console.log(response);
+            }, error: function (response) {
+                console.log(response);
+            }
+        });
+    }
+
     //Transering qr code string to controller
-    var qrCodeData = camQrResult.textContent
+    var qrCodeData = camQrResult.textContent;
     var qrCodeDataTimestamp = camQrResultTimestamp.textContent;
 
     var data = {
