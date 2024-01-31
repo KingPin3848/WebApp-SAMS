@@ -451,7 +451,8 @@ namespace SAMS.Data
             modelBuilder.Entity<RoomQRCodeModel>()
                 .HasOne(a => a.Room)
                 .WithOne(b => b.RoomQRCode)
-                .HasForeignKey<RoomQRCodeModel>(c => c.RoomId);
+                .HasForeignKey<RoomQRCodeModel>(c => c.RoomId)
+                .OnDelete(DeleteBehavior.NoAction);
 
             base.OnModelCreating(modelBuilder);
         }
