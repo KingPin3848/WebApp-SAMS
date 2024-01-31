@@ -17,7 +17,7 @@ namespace SAMS.Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.24")
+                .HasAnnotation("ProductVersion", "8.0.1")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -369,10 +369,6 @@ namespace SAMS.Data.Migrations
                     b.Property<int>("BellNumId")
                         .HasColumnType("int");
 
-                    b.Property<string>("CourseName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTime>("DateTime")
                         .HasColumnType("datetime2");
 
@@ -380,13 +376,35 @@ namespace SAMS.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("ScheduleId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("StudentId");
 
+                    b.HasIndex("ScheduleId");
+
                     b.ToTable("bellAttendanceModels", (string)null);
+                });
+
+            modelBuilder.Entity("SAMS.Models.ChosenBellSchedModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ChosenBellSchedModel", (string)null);
                 });
 
             modelBuilder.Entity("SAMS.Models.CounselorModel", b =>
@@ -1010,7 +1028,7 @@ namespace SAMS.Data.Migrations
 
                     b.Property<string>("ManagedTeacherIdMod")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("ScheduledDate")
                         .HasColumnType("datetime2");
@@ -1040,9 +1058,6 @@ namespace SAMS.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("SubID");
-
-                    b.HasIndex("ManagedTeacherIdMod")
-                        .IsUnique();
 
                     b.ToTable("substituteInfoModels", (string)null);
                 });
@@ -1084,6 +1099,9 @@ namespace SAMS.Data.Migrations
                     b.Property<string>("TeacherID")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("AssignedSubID")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("TeacherEmailMod")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -1115,6 +1133,8 @@ namespace SAMS.Data.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("TeacherID");
+
+                    b.HasIndex("AssignedSubID");
 
                     b.ToTable("teacherInfoModels", (string)null);
                 });
@@ -1241,6 +1261,12 @@ namespace SAMS.Data.Migrations
 
             modelBuilder.Entity("SAMS.Models.BellAttendanceModel", b =>
                 {
+                    b.HasOne("SAMS.Models.StudentScheduleInfoModel", "StudentScheduleInfoModel")
+                        .WithMany("BellAttendance")
+                        .HasForeignKey("ScheduleId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
                     b.HasOne("SAMS.Models.StudentInfoModel", "StudentInfo")
                         .WithMany("BellAttendances")
                         .HasForeignKey("StudentId")
@@ -1248,6 +1274,8 @@ namespace SAMS.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("StudentInfo");
+
+                    b.Navigation("StudentScheduleInfoModel");
                 });
 
             modelBuilder.Entity("SAMS.Models.CourseEnrollmentModel", b =>
@@ -1599,26 +1627,7 @@ namespace SAMS.Data.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("SAMS.Models.BellAttendanceModel", "BellAttendance")
-                        .WithOne("StudentScheduleInfoModel")
-                        .HasForeignKey("SAMS.Models.StudentScheduleInfoModel", "StudentID")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("BellAttendance");
-
                     b.Navigation("Student");
-                });
-
-            modelBuilder.Entity("SAMS.Models.SubstituteInfoModel", b =>
-                {
-                    b.HasOne("SAMS.Models.TeacherInfoModel", "TeacherManaged")
-                        .WithOne("SubTeachers")
-                        .HasForeignKey("SAMS.Models.SubstituteInfoModel", "ManagedTeacherIdMod")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("TeacherManaged");
                 });
 
             modelBuilder.Entity("SAMS.Models.SynnLabQRNodeModel", b =>
@@ -1630,6 +1639,15 @@ namespace SAMS.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Room");
+                });
+
+            modelBuilder.Entity("SAMS.Models.TeacherInfoModel", b =>
+                {
+                    b.HasOne("SAMS.Models.SubstituteInfoModel", "SubTeacher")
+                        .WithMany("TeacherManaged")
+                        .HasForeignKey("AssignedSubID");
+
+                    b.Navigation("SubTeacher");
                 });
 
             modelBuilder.Entity("SAMS.Models.TeachingScheduleModel", b =>
@@ -1668,11 +1686,6 @@ namespace SAMS.Data.Migrations
                     b.Navigation("RequestAddressedHallPasses");
 
                     b.Navigation("RequestAssignedHallPasses");
-                });
-
-            modelBuilder.Entity("SAMS.Models.BellAttendanceModel", b =>
-                {
-                    b.Navigation("StudentScheduleInfoModel");
                 });
 
             modelBuilder.Entity("SAMS.Models.CounselorModel", b =>
@@ -1745,9 +1758,16 @@ namespace SAMS.Data.Migrations
 
             modelBuilder.Entity("SAMS.Models.StudentScheduleInfoModel", b =>
                 {
+                    b.Navigation("BellAttendance");
+
                     b.Navigation("CourseEnrollments");
 
                     b.Navigation("FastPasses");
+                });
+
+            modelBuilder.Entity("SAMS.Models.SubstituteInfoModel", b =>
+                {
+                    b.Navigation("TeacherManaged");
                 });
 
             modelBuilder.Entity("SAMS.Models.TeacherInfoModel", b =>
@@ -1765,8 +1785,6 @@ namespace SAMS.Data.Migrations
                     b.Navigation("Room");
 
                     b.Navigation("RoomSchedules");
-
-                    b.Navigation("SubTeachers");
 
                     b.Navigation("TeachingSchedule");
                 });

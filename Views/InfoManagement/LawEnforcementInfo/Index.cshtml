@@ -1,0 +1,65 @@
+﻿@model IEnumerable<SAMS.Models.LawEnforcementInfoModel>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.LaweFirstNameMod)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LaweMiddleNameMod)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LaweLastNameMod)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LawePreferredNameMod)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LaweEmailMod)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LawePhoneMod)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.LaweFirstNameMod)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LaweMiddleNameMod)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LaweLastNameMod)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LawePreferredNameMod)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LaweEmailMod)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LawePhoneMod)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.LawenfID">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.LawenfID">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.LawenfID">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

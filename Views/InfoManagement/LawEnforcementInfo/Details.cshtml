@@ -1,0 +1,54 @@
+﻿@model SAMS.Models.LawEnforcementInfoModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>LawEnforcementInfoModel</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.LaweFirstNameMod)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.LaweFirstNameMod)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.LaweMiddleNameMod)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.LaweMiddleNameMod)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.LaweLastNameMod)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.LaweLastNameMod)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.LawePreferredNameMod)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.LawePreferredNameMod)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.LaweEmailMod)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.LaweEmailMod)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.LawePhoneMod)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.LawePhoneMod)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.LawenfID">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

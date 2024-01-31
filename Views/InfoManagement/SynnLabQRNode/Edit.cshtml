@@ -1,0 +1,51 @@
+﻿@model SAMS.Models.SynnLabQRNodeModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>SynnLabQRNodeModel</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="ScannerID" />
+            <div class="form-group">
+                <label asp-for="SynnlabRoomIDMod" class="control-label"></label>
+                <select asp-for="SynnlabRoomIDMod" class="form-control" asp-items="ViewBag.SynnlabRoomIDMod"></select>
+                <span asp-validation-for="SynnlabRoomIDMod" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ScannerMacAddressMod" class="control-label"></label>
+                <input asp-for="ScannerMacAddressMod" class="form-control" />
+                <span asp-validation-for="ScannerMacAddressMod" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ModelNumberMod" class="control-label"></label>
+                <input asp-for="ModelNumberMod" class="form-control" />
+                <span asp-validation-for="ModelNumberMod" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ScannerDeviceIPAddressMod" class="control-label"></label>
+                <input asp-for="ScannerDeviceIPAddressMod" class="form-control" />
+                <span asp-validation-for="ScannerDeviceIPAddressMod" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ScannerLabelMod" class="control-label"></label>
+                <input asp-for="ScannerLabelMod" class="form-control" />
+                <span asp-validation-for="ScannerLabelMod" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+

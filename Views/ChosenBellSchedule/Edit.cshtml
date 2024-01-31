@@ -1,0 +1,36 @@
+﻿@model SAMS.Models.ChosenBellSchedModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>ChosenBellSchedModel</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group pb-2">
+                <label asp-for="Name" class="control-label"></label>
+                <select asp-for="Name" class="form-control">
+                    <option value="Daily Bell Schedule">Daily Bell Schedule</option>
+                    <option value="Pep Rally Bell Schedule">Pep Rally Bell Schedule</option>
+                    <option value="2 Hour Delay Bell Schedule">2 Hour Delay Bell Schedule</option>
+                    <option value="Extended Aves Bell Schedule">Extended Aves Bell Schedule</option>
+                </select>
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+

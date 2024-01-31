@@ -1,0 +1,71 @@
+﻿@model IEnumerable<SAMS.Models.AdminInfoModel>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.AdminFirstNameMod)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AdminMiddleNameMod)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AdminLastNameMod)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AdminPreferredNameMod)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AdminEmailMod)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AdminPhoneMod)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AdminLabelMod)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.AdminFirstNameMod)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AdminMiddleNameMod)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AdminLastNameMod)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AdminPreferredNameMod)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AdminEmailMod)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AdminPhoneMod)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AdminLabelMod)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.AdminID">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.AdminID">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.AdminID">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

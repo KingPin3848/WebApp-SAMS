@@ -1,0 +1,157 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using SAMS.Data;
+using SAMS.Models;
+
+namespace SAMS.Controllers
+{
+    public class ChosenBellScheduleController : Controller
+    {
+        private readonly ApplicationDbContext _context;
+
+        public ChosenBellScheduleController(ApplicationDbContext context)
+        {
+            _context = context;
+        }
+
+        // GET: ChosenBellSchedule
+        public async Task<IActionResult> Index()
+        {
+            return View(await _context.ChosenBellSchedModel.ToListAsync());
+        }
+
+        // GET: ChosenBellSchedule/Details/5
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var chosenBellSchedModel = await _context.ChosenBellSchedModel
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (chosenBellSchedModel == null)
+            {
+                return NotFound();
+            }
+
+            return View(chosenBellSchedModel);
+        }
+
+        // GET: ChosenBellSchedule/Create
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        // POST: ChosenBellSchedule/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create([Bind("Id,Name")] ChosenBellSchedModel chosenBellSchedModel)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Add(chosenBellSchedModel);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            return View(chosenBellSchedModel);
+        }
+
+        // GET: ChosenBellSchedule/Edit/5
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var chosenBellSchedModel = await _context.ChosenBellSchedModel.FindAsync(id);
+            if (chosenBellSchedModel == null)
+            {
+                return NotFound();
+            }
+            return View(chosenBellSchedModel);
+        }
+
+        // POST: ChosenBellSchedule/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] ChosenBellSchedModel chosenBellSchedModel)
+        {
+            if (id != chosenBellSchedModel.Id)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(chosenBellSchedModel);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!ChosenBellSchedModelExists(chosenBellSchedModel.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            return View(chosenBellSchedModel);
+        }
+
+        // GET: ChosenBellSchedule/Delete/5
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var chosenBellSchedModel = await _context.ChosenBellSchedModel
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (chosenBellSchedModel == null)
+            {
+                return NotFound();
+            }
+
+            return View(chosenBellSchedModel);
+        }
+
+        // POST: ChosenBellSchedule/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var chosenBellSchedModel = await _context.ChosenBellSchedModel.FindAsync(id);
+            if (chosenBellSchedModel != null)
+            {
+                _context.ChosenBellSchedModel.Remove(chosenBellSchedModel);
+            }
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+        private bool ChosenBellSchedModelExists(int id)
+        {
+            return _context.ChosenBellSchedModel.Any(e => e.Id == id);
+        }
+    }
+}

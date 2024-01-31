@@ -1,0 +1,78 @@
+﻿@model SAMS.Models.StudentScheduleInfoModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>StudentScheduleInfoModel</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Bell1EnrollmentCodeMod)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Bell1EnrollmentCodeMod)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Bell2EnrollmentCodeMod)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Bell2EnrollmentCodeMod)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Bell3EnrollmentCodeMod)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Bell3EnrollmentCodeMod)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Bell4EnrollmentCodeMod)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Bell4EnrollmentCodeMod)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Bell5EnrollmentCodeMod)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Bell5EnrollmentCodeMod)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Bell6EnrollmentCodeMod)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Bell6EnrollmentCodeMod)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Bell7EnrollmentCodeMod)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Bell7EnrollmentCodeMod)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.AvesBellRoomCodeMod)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.AvesBellRoomCodeMod)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.LunchCodeMod)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.LunchCodeMod)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Student)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Student.StudentID)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.StudentID">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

@@ -45,6 +45,7 @@ namespace SAMS.Data
         public DbSet<CourseEnrollmentModel> courseEnrollmentModels { get; set; } = null!;
         public DbSet<DailyAttendanceModel> dailyAttendanceModels { get; set; } = null!;
         public DbSet<RoomScheduleModel> roomScheduleModels { get; set; } = null!;
+        public DbSet<ChosenBellSchedModel> chosenBellSchedModels { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -450,5 +451,6 @@ namespace SAMS.Data
         }
 
         public DbSet<SAMS.Models.TeachingScheduleModel>? TeachingScheduleModel { get; set; }
+        public DbSet<SAMS.Models.ChosenBellSchedModel> ChosenBellSchedModel { get; set; } = default!;
     }
 }
