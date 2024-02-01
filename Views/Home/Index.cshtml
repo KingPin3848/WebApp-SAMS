@@ -13,7 +13,7 @@
 <div class="pb-5">
 </div>
 
-@if (User?.IsInRole("Developer") == true)
+@if (User?.IsInRole("Developer") == true || User?.IsInRole("Student") == true)
 {
 
     //STUDENT VIEW
