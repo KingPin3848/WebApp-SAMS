@@ -129,7 +129,7 @@
     });
     
     function sendScannedData(result) {
-        var schooliD = @ViewBag.Schoolid;
+        var schoolId = @ViewBag.Schoolid;
 
         //Transferring qr code string to controller
         var qrCodeData = result.data;
@@ -142,36 +142,38 @@
         };
 
         $.ajax({
-            url: '/Home/Scan',
+            url: '@Url.Action("Scan","Home")',
             type: 'POST',
             data: data,
             success: function (response) {
-                console.log(response);
+                if (response.redirectUrl) {
+                    window.location.href = response.redirectUrl;
+                }
             }, error: function (response) {
                 console.log(response);
             }
         });
     }
 
-    //Transering qr code string to controller
-    var qrCodeData = camQrResult.textContent;
-    var qrCodeDataTimestamp = camQrResultTimestamp.textContent;
+    // //Transering qr code string to controller
+    // var qrCodeData = camQrResult.textContent;
+    // var qrCodeDataTimestamp = camQrResultTimestamp.textContent;
 
-    var data = {
-        'ScannedCode': qrCodeData,
-        'ScannedCodeTimestamp': qrCodeDataTimestamp,
-        'issuedSchoolId': schoolId
-    };
-    $.ajax({
-        url: '/Home/Scan',
-        type: 'POST',
-        data: data,
-        success: function (response) {
-            console.log(response);
-        }, error: function (response) {
-            console.log(response);
-        }
-    });
+    // var data = {
+    //     'ScannedCode': qrCodeData,
+    //     'ScannedCodeTimestamp': qrCodeDataTimestamp,
+    //     'issuedSchoolId': schoolId
+    // };
+    // $.ajax({
+    //     url: '/Home/Scan',
+    //     type: 'POST',
+    //     data: data,
+    //     success: function (response) {
+    //         console.log(response);
+    //     }, error: function (response) {
+    //         console.log(response);
+    //     }
+    // });
 </script>
 <style>
     div {
