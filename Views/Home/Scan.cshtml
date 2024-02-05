@@ -9,6 +9,8 @@
 <div id="video-container">
     <video id="qr-video"></video>
 </div>
+<br />
+<h5 id="textdanger" class="text-danger"></h5>
 
 <b>Detected QR code: </b>
 <span id="cam-qr-result">None</span>
@@ -150,7 +152,11 @@
                     window.location.href = response.redirectUrl;
                 }
             }, error: function (response) {
-                console.log(response);
+                if (response.dangertext) {
+                    alert(response.textdanger);
+                    document.getElementById("textdanger").textContent = response.textdanger;
+                    console.log(response);
+                }
             }
         });
     }

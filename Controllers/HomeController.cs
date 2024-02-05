@@ -69,7 +69,8 @@ namespace SAMS.Controllers
             var schoolIDdb = user.SchoolId;
             if (schoolIDdb == null)
             {
-                return NotFound($"Unable to find the school id with the user with ID '{_userManager.GetUserId(User)}'.");
+                return Json(new { dangertext = $"Unable to find the school id with the user with ID '{_userManager.GetUserId(User)}'."});
+                //return NotFound($"Unable to find the school id with the user with ID '{_userManager.GetUserId(User)}'.");
             }
             else
             {
@@ -79,9 +80,16 @@ namespace SAMS.Controllers
                 }
                 else
                 {
-                    return NotFound("The School ID was not found and wasn't the same as in our records. Please try again or contact the developers for additional assistance.");
+                    return Json(new { dangertext = "The School ID was not found and wasn't the same as in our records. Please try again or contact the developers for additional assistance." });
+                    //return NotFound("The School ID was not found and wasn't the same as in our records. Please try again or contact the developers for additional assistance.");
                 }
             }
+
+            //var roomCodes = _context.roomQRCodeModels.Select(a => a.Code).ToList();
+            //if (roomCodes.Count == 0)
+            //{
+            //    return Json(new { dangertext = "Room Codes table is completely empty. Please check in with the developers to resolve this issue asap." });
+            //}
 
             return Json(new { redirectUrl = Url.Action("Index") });
         }

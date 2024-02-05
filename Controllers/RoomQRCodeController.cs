@@ -13,10 +13,12 @@ namespace SAMS.Controllers
     public class RoomQRCodeController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly ILogger<RoomQRCodeController> _logger;
 
-        public RoomQRCodeController(ApplicationDbContext context)
+        public RoomQRCodeController(ApplicationDbContext context, ILogger<RoomQRCodeController> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         // GET: RoomQRCode
@@ -36,7 +38,7 @@ namespace SAMS.Controllers
 
             var roomQRCodeModel = await _context.roomQRCodeModels
                 .Include(r => r.Room)
-                .FirstOrDefaultAsync(m => m.ID == id);
+                .FirstOrDefaultAsync(m => m.RoomId == id);
             if (roomQRCodeModel == null)
             {
                 return NotFound();
@@ -57,7 +59,7 @@ namespace SAMS.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,RoomId,Code")] RoomQRCodeModel roomQRCodeModel)
+        public async Task<IActionResult> Create([Bind("RoomId,Code")] RoomQRCodeModel roomQRCodeModel)
         {
             if (ModelState.IsValid)
             {
@@ -65,6 +67,18 @@ namespace SAMS.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+
+            // Log ModelState errors
+            foreach (var modelState in ModelState.Values)
+            {
+                foreach (var error in modelState.Errors)
+                {
+                    // Log or inspect the error messages
+                    Console.WriteLine(error.ErrorMessage);
+                    _logger.LogInformation(error.ErrorMessage);
+                }
+            }
+
             ViewData["RoomId"] = new SelectList(_context.roomLocationInfoModels, "RoomId", "RoomId", roomQRCodeModel.RoomId);
             return View(roomQRCodeModel);
         }
@@ -91,9 +105,9 @@ namespace SAMS.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,RoomId,Code")] RoomQRCodeModel roomQRCodeModel)
+        public async Task<IActionResult> Edit(int id, [Bind("RoomId,Code")] RoomQRCodeModel roomQRCodeModel)
         {
-            if (id != roomQRCodeModel.ID)
+            if (id != roomQRCodeModel.RoomId)
             {
                 return NotFound();
             }
@@ -107,7 +121,7 @@ namespace SAMS.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!RoomQRCodeModelExists(roomQRCodeModel.ID))
+                    if (!RoomQRCodeModelExists(roomQRCodeModel.RoomId))
                     {
                         return NotFound();
                     }
@@ -132,7 +146,7 @@ namespace SAMS.Controllers
 
             var roomQRCodeModel = await _context.roomQRCodeModels
                 .Include(r => r.Room)
-                .FirstOrDefaultAsync(m => m.ID == id);
+                .FirstOrDefaultAsync(m => m.RoomId == id);
             if (roomQRCodeModel == null)
             {
                 return NotFound();
@@ -158,7 +172,7 @@ namespace SAMS.Controllers
 
         private bool RoomQRCodeModelExists(int id)
         {
-            return _context.roomQRCodeModels.Any(e => e.ID == id);
+            return _context.roomQRCodeModels.Any(e => e.RoomId == id);
         }
     }
 }

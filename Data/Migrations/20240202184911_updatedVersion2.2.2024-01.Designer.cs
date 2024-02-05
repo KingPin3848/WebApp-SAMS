@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SAMS.Data;
 
@@ -11,9 +12,11 @@ using SAMS.Data;
 namespace SAMS.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240202184911_updatedVersion2.2.2024-01")]
+    partial class updatedVersion22202401
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -283,7 +286,7 @@ namespace SAMS.Data.Migrations
 
                     b.HasIndex("SubstituteSubID");
 
-                    b.ToTable("activeCourseInfoModels", (string)null);
+                    b.ToTable("activeCourseInfoModels");
                 });
 
             modelBuilder.Entity("SAMS.Models.AdminInfoModel", b =>
@@ -321,7 +324,7 @@ namespace SAMS.Data.Migrations
 
                     b.HasKey("AdminID");
 
-                    b.ToTable("adminInfoModels", (string)null);
+                    b.ToTable("adminInfoModels");
                 });
 
             modelBuilder.Entity("SAMS.Models.AttendanceOfficeMemberModel", b =>
@@ -355,7 +358,7 @@ namespace SAMS.Data.Migrations
 
                     b.HasKey("AoMemberID");
 
-                    b.ToTable("attendanceOfficeMemberModels", (string)null);
+                    b.ToTable("attendanceOfficeMemberModels");
                 });
 
             modelBuilder.Entity("SAMS.Models.BellAttendanceModel", b =>
@@ -387,7 +390,7 @@ namespace SAMS.Data.Migrations
 
                     b.HasIndex("ScheduleId");
 
-                    b.ToTable("bellAttendanceModels", (string)null);
+                    b.ToTable("bellAttendanceModels");
                 });
 
             modelBuilder.Entity("SAMS.Models.ChosenBellSchedModel", b =>
@@ -404,7 +407,7 @@ namespace SAMS.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ChosenBellSchedModel", (string)null);
+                    b.ToTable("ChosenBellSchedModel");
                 });
 
             modelBuilder.Entity("SAMS.Models.CounselorModel", b =>
@@ -437,7 +440,7 @@ namespace SAMS.Data.Migrations
 
                     b.HasKey("CounselorId");
 
-                    b.ToTable("counselorModels", (string)null);
+                    b.ToTable("counselorModels");
                 });
 
             modelBuilder.Entity("SAMS.Models.CourseEnrollmentModel", b =>
@@ -463,7 +466,7 @@ namespace SAMS.Data.Migrations
 
                     b.HasIndex("EnrollmentStudentId");
 
-                    b.ToTable("courseEnrollmentModels", (string)null);
+                    b.ToTable("courseEnrollmentModels");
                 });
 
             modelBuilder.Entity("SAMS.Models.DailyAttendanceModel", b =>
@@ -492,7 +495,7 @@ namespace SAMS.Data.Migrations
 
                     b.HasIndex("StudentId");
 
-                    b.ToTable("dailyAttendanceModels", (string)null);
+                    b.ToTable("dailyAttendanceModels");
                 });
 
             modelBuilder.Entity("SAMS.Models.DailyBellScheduleModel", b =>
@@ -512,7 +515,7 @@ namespace SAMS.Data.Migrations
 
                     b.HasKey("StartTime");
 
-                    b.ToTable("dailyBellScheduleModels", (string)null);
+                    b.ToTable("dailyBellScheduleModels");
                 });
 
             modelBuilder.Entity("SAMS.Models.DeveloperInfoModel", b =>
@@ -545,7 +548,7 @@ namespace SAMS.Data.Migrations
 
                     b.HasKey("DeveloperID");
 
-                    b.ToTable("developerInfoModels", (string)null);
+                    b.ToTable("developerInfoModels");
                 });
 
             modelBuilder.Entity("SAMS.Models.EASuportInfoModel", b =>
@@ -582,7 +585,7 @@ namespace SAMS.Data.Migrations
 
                     b.HasKey("EaID");
 
-                    b.ToTable("eASuportInfoModels", (string)null);
+                    b.ToTable("eASuportInfoModels");
                 });
 
             modelBuilder.Entity("SAMS.Models.ExtendedAvesBellScheduleModel", b =>
@@ -602,7 +605,7 @@ namespace SAMS.Data.Migrations
 
                     b.HasKey("StartTime");
 
-                    b.ToTable("extendedAvesModels", (string)null);
+                    b.ToTable("extendedAvesModels");
                 });
 
             modelBuilder.Entity("SAMS.Models.FastPassModel", b =>
@@ -646,7 +649,7 @@ namespace SAMS.Data.Migrations
 
                     b.HasIndex("StudentID");
 
-                    b.ToTable("fastPassModels", (string)null);
+                    b.ToTable("fastPassModels");
                 });
 
             modelBuilder.Entity("SAMS.Models.HallPassInfoModel", b =>
@@ -693,7 +696,7 @@ namespace SAMS.Data.Migrations
 
                     b.HasIndex("StudentID");
 
-                    b.ToTable("hallPassInfoModels", (string)null);
+                    b.ToTable("hallPassInfoModels");
                 });
 
             modelBuilder.Entity("SAMS.Models.LawEnforcementInfoModel", b =>
@@ -727,7 +730,7 @@ namespace SAMS.Data.Migrations
 
                     b.HasKey("LawenfID");
 
-                    b.ToTable("lawEnforcementInfoModels", (string)null);
+                    b.ToTable("lawEnforcementInfoModels");
                 });
 
             modelBuilder.Entity("SAMS.Models.NurseInfoModel", b =>
@@ -761,7 +764,7 @@ namespace SAMS.Data.Migrations
 
                     b.HasKey("NurseID");
 
-                    b.ToTable("nurseInfoModels", (string)null);
+                    b.ToTable("nurseInfoModels");
                 });
 
             modelBuilder.Entity("SAMS.Models.PassRequestInfoModel", b =>
@@ -819,7 +822,7 @@ namespace SAMS.Data.Migrations
 
                     b.HasIndex("StudentID");
 
-                    b.ToTable("passRequestInfoModels", (string)null);
+                    b.ToTable("passRequestInfoModels");
                 });
 
             modelBuilder.Entity("SAMS.Models.PepRallyBellScheduleModel", b =>
@@ -839,7 +842,7 @@ namespace SAMS.Data.Migrations
 
                     b.HasKey("StartTime");
 
-                    b.ToTable("pepRallyBellScheduleModels", (string)null);
+                    b.ToTable("pepRallyBellScheduleModels");
                 });
 
             modelBuilder.Entity("SAMS.Models.RoomLocationInfoModel", b =>
@@ -874,7 +877,7 @@ namespace SAMS.Data.Migrations
                     b.HasIndex("RoomAssignedToTeacherID")
                         .IsUnique();
 
-                    b.ToTable("roomLocationInfoModels", (string)null);
+                    b.ToTable("roomLocationInfoModels");
                 });
 
             modelBuilder.Entity("SAMS.Models.RoomQRCodeModel", b =>
@@ -888,7 +891,7 @@ namespace SAMS.Data.Migrations
 
                     b.HasKey("RoomId");
 
-                    b.ToTable("roomQRCodeModels", (string)null);
+                    b.ToTable("roomQRCodeModels");
                 });
 
             modelBuilder.Entity("SAMS.Models.RoomScheduleModel", b =>
@@ -919,7 +922,7 @@ namespace SAMS.Data.Migrations
 
                     b.HasIndex("TeacherID");
 
-                    b.ToTable("roomScheduleModels", (string)null);
+                    b.ToTable("roomScheduleModels");
                 });
 
             modelBuilder.Entity("SAMS.Models.StudentInfoModel", b =>
@@ -994,7 +997,7 @@ namespace SAMS.Data.Migrations
 
                     b.HasIndex("StudentEAID");
 
-                    b.ToTable("studentInfoModels", (string)null);
+                    b.ToTable("studentInfoModels");
                 });
 
             modelBuilder.Entity("SAMS.Models.StudentScheduleInfoModel", b =>
@@ -1032,7 +1035,7 @@ namespace SAMS.Data.Migrations
 
                     b.HasKey("StudentID");
 
-                    b.ToTable("studentScheduleInfoModels", (string)null);
+                    b.ToTable("studentScheduleInfoModels");
                 });
 
             modelBuilder.Entity("SAMS.Models.SubstituteInfoModel", b =>
@@ -1073,7 +1076,7 @@ namespace SAMS.Data.Migrations
 
                     b.HasKey("SubID");
 
-                    b.ToTable("substituteInfoModels", (string)null);
+                    b.ToTable("substituteInfoModels");
                 });
 
             modelBuilder.Entity("SAMS.Models.SynnLabQRNodeModel", b =>
@@ -1105,7 +1108,7 @@ namespace SAMS.Data.Migrations
                     b.HasIndex("SynnlabRoomIDMod")
                         .IsUnique();
 
-                    b.ToTable("synnLabQRNodeModels", (string)null);
+                    b.ToTable("synnLabQRNodeModels");
                 });
 
             modelBuilder.Entity("SAMS.Models.TeacherInfoModel", b =>
@@ -1150,7 +1153,7 @@ namespace SAMS.Data.Migrations
 
                     b.HasIndex("AssignedSubID");
 
-                    b.ToTable("teacherInfoModels", (string)null);
+                    b.ToTable("teacherInfoModels");
                 });
 
             modelBuilder.Entity("SAMS.Models.TeachingScheduleModel", b =>
@@ -1174,7 +1177,7 @@ namespace SAMS.Data.Migrations
                     b.HasIndex("TeacherID")
                         .IsUnique();
 
-                    b.ToTable("TeachingScheduleModel", (string)null);
+                    b.ToTable("TeachingScheduleModel");
                 });
 
             modelBuilder.Entity("SAMS.Models.TwoHrDelayBellScheduleModel", b =>
@@ -1194,7 +1197,7 @@ namespace SAMS.Data.Migrations
 
                     b.HasKey("StartTime");
 
-                    b.ToTable("twoHrDelayBellScheduleModels", (string)null);
+                    b.ToTable("twoHrDelayBellScheduleModels");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
