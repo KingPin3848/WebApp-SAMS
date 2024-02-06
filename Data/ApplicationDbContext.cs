@@ -36,7 +36,6 @@ namespace SAMS.Data
         public DbSet<RoomLocationInfoModel> roomLocationInfoModels { get; set; } = null!;
         public DbSet<StudentInfoModel> studentInfoModels { get; set; } = null!;
         public DbSet<StudentScheduleInfoModel> studentScheduleInfoModels { get; set; } = null!;
-        public DbSet<SubstituteInfoModel> substituteInfoModels { get; set; } = null!;
         public DbSet<SynnLabQRNodeModel> synnLabQRNodeModels { get; set; } = null!;
         public DbSet<TeacherInfoModel> teacherInfoModels { get; set; } = null!;
         public DbSet<TwoHrDelayBellScheduleModel> twoHrDelayBellScheduleModels { get; set; } = null!;
@@ -433,12 +432,6 @@ namespace SAMS.Data
                 .WithOne(b => b.SynnLabQRNode)
                 .HasForeignKey<SynnLabQRNodeModel>(c => c.SynnlabRoomIDMod)
                 .OnDelete(DeleteBehavior.NoAction);
-
-            //Teacher Info Model Relationships
-            modelBuilder.Entity<TeacherInfoModel>()
-                .HasOne(a => a.SubTeacher)
-                .WithMany(b => b.TeacherManaged)
-                .HasForeignKey(c => c.AssignedSubID);
 
             //Teaching Schedule Model Relationships
             modelBuilder.Entity<TeachingScheduleModel>()

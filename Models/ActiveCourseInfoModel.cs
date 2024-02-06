@@ -30,6 +30,5 @@ namespace SAMS.Models
         public RoomLocationInfoModel? Room { get; set; }
         [AllowNull]
         public ICollection<CourseEnrollmentModel> CourseEnrollments { get; set; }
-        public SubstituteInfoModel? Substitute { get; set; }
     }
 }

@@ -13,8 +13,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controllers\DevelopmentManagement\" />
-    <Folder Include="Views\DevelopmentManagement\" />
-    <Folder Include="Views\Student Features\Scan\" />
     <Folder Include="wwwroot\images\" />
   </ItemGroup>
   <ItemGroup>
