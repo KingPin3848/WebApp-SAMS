@@ -131,7 +131,7 @@ namespace SAMS.Controllers.InfoManagement
                 return NotFound();
             }
 
-            return View("~/Views/InfoManagement/Delete/Create.cshtml", counselorModel);
+            return View("~/Views/InfoManagement/Counselor/Delete.cshtml", counselorModel);
         }
 
         // POST: Counselor/Delete/5

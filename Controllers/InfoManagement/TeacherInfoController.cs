@@ -22,7 +22,7 @@ namespace SAMS.Controllers.InfoManagement
         // GET: TeacherInfo
         public async Task<IActionResult> Index()
         {
-            return View(await _context.teacherInfoModels.ToListAsync());
+            return View("~/Views/InfoManagement/TeacherInfo/Index.cshtml", await _context.teacherInfoModels.ToListAsync());
         }
 
         // GET: TeacherInfo/Details/5
@@ -40,13 +40,13 @@ namespace SAMS.Controllers.InfoManagement
                 return NotFound();
             }
 
-            return View(teacherInfoModel);
+            return View("~/Views/InfoManagement/TeacherInfo/Details.cshtml", teacherInfoModel);
         }
 
         // GET: TeacherInfo/Create
         public IActionResult Create()
         {
-            return View();
+            return View("~/Views/InfoManagement/TeacherInfo/Create.cshtml");
         }
 
         // POST: TeacherInfo/Create
@@ -62,7 +62,7 @@ namespace SAMS.Controllers.InfoManagement
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(teacherInfoModel);
+            return View("~/Views/InfoManagement/TeacherInfo/Create.cshtml", teacherInfoModel);
         }
 
         // GET: TeacherInfo/Edit/5
@@ -78,7 +78,7 @@ namespace SAMS.Controllers.InfoManagement
             {
                 return NotFound();
             }
-            return View(teacherInfoModel);
+            return View("~/Views/InfoManagement/TeacherInfo/Edit.cshtml", teacherInfoModel);
         }
 
         // POST: TeacherInfo/Edit/5
@@ -113,7 +113,7 @@ namespace SAMS.Controllers.InfoManagement
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(teacherInfoModel);
+            return View("~/Views/InfoManagement/TeacherInfo/Edit.cshtml", teacherInfoModel);
         }
 
         // GET: TeacherInfo/Delete/5
@@ -131,7 +131,7 @@ namespace SAMS.Controllers.InfoManagement
                 return NotFound();
             }
 
-            return View(teacherInfoModel);
+            return View("~/Views/InfoManagement/TeacherInfo/Delete.cshtml", teacherInfoModel);
         }
 
         // POST: TeacherInfo/Delete/5

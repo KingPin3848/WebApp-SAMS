@@ -23,7 +23,7 @@ namespace SAMS.Controllers.InfoManagement
         public async Task<IActionResult> Index()
         {
             var applicationDbContext = _context.roomScheduleModels.Include(r => r.Room).Include(r => r.Schedule).Include(r => r.Teacher);
-            return View(await applicationDbContext.ToListAsync());
+            return View("~/Views/InfoManagement/RoomSchedule/Index.cshtml", await applicationDbContext.ToListAsync());
         }
 
         // GET: RoomSchedule/Details/5
@@ -44,7 +44,7 @@ namespace SAMS.Controllers.InfoManagement
                 return NotFound();
             }
 
-            return View(roomScheduleModel);
+            return View("~/Views/InfoManagement/RoomSchedule/Details.cshtml", roomScheduleModel);
         }
 
         // GET: RoomSchedule/Create
@@ -53,7 +53,7 @@ namespace SAMS.Controllers.InfoManagement
             ViewData["RoomId"] = new SelectList(_context.roomLocationInfoModels, "RoomId", "RoomId");
             ViewData["ScheduleID"] = new SelectList(_context.TeachingScheduleModel, "ScheduleID", "ScheduleID");
             ViewData["TeacherID"] = new SelectList(_context.teacherInfoModels, "TeacherID", "TeacherID");
-            return View();
+            return View("~/Views/InfoManagement/RoomSchedule/Create.cshtml");
         }
 
         // POST: RoomSchedule/Create
@@ -72,7 +72,7 @@ namespace SAMS.Controllers.InfoManagement
             ViewData["RoomId"] = new SelectList(_context.roomLocationInfoModels, "RoomId", "RoomId", roomScheduleModel.RoomId);
             ViewData["ScheduleID"] = new SelectList(_context.TeachingScheduleModel, "ScheduleID", "ScheduleID", roomScheduleModel.ScheduleID);
             ViewData["TeacherID"] = new SelectList(_context.teacherInfoModels, "TeacherID", "TeacherID", roomScheduleModel.TeacherID);
-            return View(roomScheduleModel);
+            return View("~/Views/InfoManagement/RoomSchedule/Create.cshtml", roomScheduleModel);
         }
 
         // GET: RoomSchedule/Edit/5
@@ -91,7 +91,7 @@ namespace SAMS.Controllers.InfoManagement
             ViewData["RoomId"] = new SelectList(_context.roomLocationInfoModels, "RoomId", "RoomId", roomScheduleModel.RoomId);
             ViewData["ScheduleID"] = new SelectList(_context.TeachingScheduleModel, "ScheduleID", "ScheduleID", roomScheduleModel.ScheduleID);
             ViewData["TeacherID"] = new SelectList(_context.teacherInfoModels, "TeacherID", "TeacherID", roomScheduleModel.TeacherID);
-            return View(roomScheduleModel);
+            return View("~/Views/InfoManagement/RoomSchedule/Edit.cshtml", roomScheduleModel);
         }
 
         // POST: RoomSchedule/Edit/5
@@ -129,7 +129,7 @@ namespace SAMS.Controllers.InfoManagement
             ViewData["RoomId"] = new SelectList(_context.roomLocationInfoModels, "RoomId", "RoomId", roomScheduleModel.RoomId);
             ViewData["ScheduleID"] = new SelectList(_context.TeachingScheduleModel, "ScheduleID", "ScheduleID", roomScheduleModel.ScheduleID);
             ViewData["TeacherID"] = new SelectList(_context.teacherInfoModels, "TeacherID", "TeacherID", roomScheduleModel.TeacherID);
-            return View(roomScheduleModel);
+            return View("~/Views/InfoManagement/RoomSchedule/Edit.cshtml", roomScheduleModel);
         }
 
         // GET: RoomSchedule/Delete/5
@@ -150,7 +150,7 @@ namespace SAMS.Controllers.InfoManagement
                 return NotFound();
             }
 
-            return View(roomScheduleModel);
+            return View("~/Views/InfoManagement/RoomSchedule/Delete.cshtml", roomScheduleModel);
         }
 
         // POST: RoomSchedule/Delete/5

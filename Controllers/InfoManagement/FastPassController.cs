@@ -23,7 +23,7 @@ namespace SAMS.Controllers.InfoManagement
         public async Task<IActionResult> Index()
         {
             var applicationDbContext = _context.fastPassModels.Include(f => f.Room).Include(f => f.Student).Include(f => f.StudentSchedule);
-            return View(await applicationDbContext.ToListAsync());
+            return View("~/Views/InfoManagement/FastPass/Index.cshtml", await applicationDbContext.ToListAsync());
         }
 
         // GET: FastPass/Details/5
@@ -44,7 +44,7 @@ namespace SAMS.Controllers.InfoManagement
                 return NotFound();
             }
 
-            return View(fastPassModel);
+            return View("~/Views/InfoManagement/FastPass/Details.cshtml", fastPassModel);
         }
 
         // GET: FastPass/Create
@@ -53,7 +53,7 @@ namespace SAMS.Controllers.InfoManagement
             ViewData["EndLocationID"] = new SelectList(_context.roomLocationInfoModels, "RoomId", "RoomId");
             ViewData["StudentID"] = new SelectList(_context.studentInfoModels, "StudentID", "StudentID");
             ViewData["CourseIDFromStudentSchedule"] = new SelectList(_context.studentScheduleInfoModels, "StudentID", "StudentID");
-            return View();
+            return View("~/Views/InfoManagement/FastPass/Create.cshtml");
         }
 
         // POST: FastPass/Create
@@ -72,7 +72,7 @@ namespace SAMS.Controllers.InfoManagement
             ViewData["EndLocationID"] = new SelectList(_context.roomLocationInfoModels, "RoomId", "RoomId", fastPassModel.EndLocationID);
             ViewData["StudentID"] = new SelectList(_context.studentInfoModels, "StudentID", "StudentID", fastPassModel.StudentID);
             ViewData["CourseIDFromStudentSchedule"] = new SelectList(_context.studentScheduleInfoModels, "StudentID", "StudentID", fastPassModel.CourseIDFromStudentSchedule);
-            return View(fastPassModel);
+            return View("~/Views/InfoManagement/FastPass/Create.cshtml", fastPassModel);
         }
 
         // GET: FastPass/Edit/5
@@ -91,7 +91,7 @@ namespace SAMS.Controllers.InfoManagement
             ViewData["EndLocationID"] = new SelectList(_context.roomLocationInfoModels, "RoomId", "RoomId", fastPassModel.EndLocationID);
             ViewData["StudentID"] = new SelectList(_context.studentInfoModels, "StudentID", "StudentID", fastPassModel.StudentID);
             ViewData["CourseIDFromStudentSchedule"] = new SelectList(_context.studentScheduleInfoModels, "StudentID", "StudentID", fastPassModel.CourseIDFromStudentSchedule);
-            return View(fastPassModel);
+            return View("~/Views/InfoManagement/FastPass/Edit.cshtml", fastPassModel);
         }
 
         // POST: FastPass/Edit/5
@@ -129,7 +129,7 @@ namespace SAMS.Controllers.InfoManagement
             ViewData["EndLocationID"] = new SelectList(_context.roomLocationInfoModels, "RoomId", "RoomId", fastPassModel.EndLocationID);
             ViewData["StudentID"] = new SelectList(_context.studentInfoModels, "StudentID", "StudentID", fastPassModel.StudentID);
             ViewData["CourseIDFromStudentSchedule"] = new SelectList(_context.studentScheduleInfoModels, "StudentID", "StudentID", fastPassModel.CourseIDFromStudentSchedule);
-            return View(fastPassModel);
+            return View("~/Views/InfoManagement/FastPass/Edit.cshtml", fastPassModel);
         }
 
         // GET: FastPass/Delete/5
@@ -150,7 +150,7 @@ namespace SAMS.Controllers.InfoManagement
                 return NotFound();
             }
 
-            return View(fastPassModel);
+            return View("~/Views/InfoManagement/FastPass/Delete.cshtml", fastPassModel);
         }
 
         // POST: FastPass/Delete/5

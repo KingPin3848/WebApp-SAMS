@@ -23,7 +23,7 @@ namespace SAMS.Controllers.InfoManagement
         public async Task<IActionResult> Index()
         {
             var applicationDbContext = _context.hallPassInfoModels.Include(h => h.AddressedByAdmin).Include(h => h.AddressedByAttendanceOfficeMember).Include(h => h.AddressedByCounselor).Include(h => h.AddressedByLawEnf).Include(h => h.AddressedByNurse).Include(h => h.AddressedByTeacher).Include(h => h.AssignedByAdmin).Include(h => h.AssignedByAttendanceOfficeMember).Include(h => h.AssignedByCounselor).Include(h => h.AssignedByLawEnf).Include(h => h.AssignedByNurse).Include(h => h.AssignedByTeacher).Include(h => h.Student);
-            return View(await applicationDbContext.ToListAsync());
+            return View("~/Views/InfoManagement/HallPassInfo/Index.cshtml", await applicationDbContext.ToListAsync());
         }
 
         // GET: HallPassInfo/Details/5
@@ -54,7 +54,7 @@ namespace SAMS.Controllers.InfoManagement
                 return NotFound();
             }
 
-            return View(hallPassInfoModel);
+            return View("~/Views/InfoManagement/HallPassInfo/Details.cshtml", hallPassInfoModel);
         }
 
         // GET: HallPassInfo/Create
@@ -73,7 +73,7 @@ namespace SAMS.Controllers.InfoManagement
             ViewData["HallPassAssignedByID"] = new SelectList(_context.nurseInfoModels, "NurseID", "NurseID");
             ViewData["HallPassAssignedByID"] = new SelectList(_context.teacherInfoModels, "TeacherID", "TeacherID");
             ViewData["StudentID"] = new SelectList(_context.studentInfoModels, "StudentID", "StudentID");
-            return View();
+            return View("~/Views/InfoManagement/HallPassInfo/Create.cshtml");
         }
 
         // POST: HallPassInfo/Create
@@ -102,7 +102,7 @@ namespace SAMS.Controllers.InfoManagement
             ViewData["HallPassAssignedByID"] = new SelectList(_context.nurseInfoModels, "NurseID", "NurseID", hallPassInfoModel.HallPassAssignedByID);
             ViewData["HallPassAssignedByID"] = new SelectList(_context.teacherInfoModels, "TeacherID", "TeacherID", hallPassInfoModel.HallPassAssignedByID);
             ViewData["StudentID"] = new SelectList(_context.studentInfoModels, "StudentID", "StudentID", hallPassInfoModel.StudentID);
-            return View(hallPassInfoModel);
+            return View("~/Views/InfoManagement/HallPassInfo/Create.cshtml", hallPassInfoModel);
         }
 
         // GET: HallPassInfo/Edit/5
@@ -131,7 +131,7 @@ namespace SAMS.Controllers.InfoManagement
             ViewData["HallPassAssignedByID"] = new SelectList(_context.nurseInfoModels, "NurseID", "NurseID", hallPassInfoModel.HallPassAssignedByID);
             ViewData["HallPassAssignedByID"] = new SelectList(_context.teacherInfoModels, "TeacherID", "TeacherID", hallPassInfoModel.HallPassAssignedByID);
             ViewData["StudentID"] = new SelectList(_context.studentInfoModels, "StudentID", "StudentID", hallPassInfoModel.StudentID);
-            return View(hallPassInfoModel);
+            return View("~/Views/InfoManagement/HallPassInfo/Edit.cshtml", hallPassInfoModel);
         }
 
         // POST: HallPassInfo/Edit/5
@@ -179,7 +179,7 @@ namespace SAMS.Controllers.InfoManagement
             ViewData["HallPassAssignedByID"] = new SelectList(_context.nurseInfoModels, "NurseID", "NurseID", hallPassInfoModel.HallPassAssignedByID);
             ViewData["HallPassAssignedByID"] = new SelectList(_context.teacherInfoModels, "TeacherID", "TeacherID", hallPassInfoModel.HallPassAssignedByID);
             ViewData["StudentID"] = new SelectList(_context.studentInfoModels, "StudentID", "StudentID", hallPassInfoModel.StudentID);
-            return View(hallPassInfoModel);
+            return View("~/Views/InfoManagement/HallPassInfo/Edit.cshtml", hallPassInfoModel);
         }
 
         // GET: HallPassInfo/Delete/5
@@ -210,7 +210,7 @@ namespace SAMS.Controllers.InfoManagement
                 return NotFound();
             }
 
-            return View(hallPassInfoModel);
+            return View("~/Views/InfoManagement/HallPassInfo/Delete.cshtml", hallPassInfoModel);
         }
 
         // POST: HallPassInfo/Delete/5

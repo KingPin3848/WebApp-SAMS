@@ -23,7 +23,7 @@ namespace SAMS.Controllers.InfoManagement
         public async Task<IActionResult> Index()
         {
             var applicationDbContext = _context.TeachingScheduleModel.Include(t => t.Teacher);
-            return View(await applicationDbContext.ToListAsync());
+            return View("~/Views/InfoManagement/TeachingSchedule/Index.cshtml", await applicationDbContext.ToListAsync());
         }
 
         // GET: TeachingSchedule/Details/5
@@ -42,14 +42,14 @@ namespace SAMS.Controllers.InfoManagement
                 return NotFound();
             }
 
-            return View(teachingScheduleModel);
+            return View("~/Views/InfoManagement/TeachingSchedule/Details.cshtml", teachingScheduleModel);
         }
 
         // GET: TeachingSchedule/Create
         public IActionResult Create()
         {
             ViewData["TeacherID"] = new SelectList(_context.teacherInfoModels, "TeacherID", "TeacherID");
-            return View();
+            return View("~/Views/InfoManagement/TeachingSchedule/Create.cshtml");
         }
 
         // POST: TeachingSchedule/Create
@@ -66,7 +66,7 @@ namespace SAMS.Controllers.InfoManagement
                 return RedirectToAction(nameof(Index));
             }
             ViewData["TeacherID"] = new SelectList(_context.teacherInfoModels, "TeacherID", "TeacherID", teachingScheduleModel.TeacherID);
-            return View(teachingScheduleModel);
+            return View("~/Views/InfoManagement/TeachingSchedule/Create.cshtml", teachingScheduleModel);
         }
 
         // GET: TeachingSchedule/Edit/5
@@ -83,7 +83,7 @@ namespace SAMS.Controllers.InfoManagement
                 return NotFound();
             }
             ViewData["TeacherID"] = new SelectList(_context.teacherInfoModels, "TeacherID", "TeacherID", teachingScheduleModel.TeacherID);
-            return View(teachingScheduleModel);
+            return View("~/Views/InfoManagement/TeachingSchedule/Edit.cshtml", teachingScheduleModel);
         }
 
         // POST: TeachingSchedule/Edit/5
@@ -119,7 +119,7 @@ namespace SAMS.Controllers.InfoManagement
                 return RedirectToAction(nameof(Index));
             }
             ViewData["TeacherID"] = new SelectList(_context.teacherInfoModels, "TeacherID", "TeacherID", teachingScheduleModel.TeacherID);
-            return View(teachingScheduleModel);
+            return View("~/Views/InfoManagement/TeachingSchedule/Edit.cshtml", teachingScheduleModel);
         }
 
         // GET: TeachingSchedule/Delete/5
@@ -138,7 +138,7 @@ namespace SAMS.Controllers.InfoManagement
                 return NotFound();
             }
 
-            return View(teachingScheduleModel);
+            return View("~/Views/InfoManagement/TeachingSchedule/Delete.cshtml", teachingScheduleModel);
         }
 
         // POST: TeachingSchedule/Delete/5

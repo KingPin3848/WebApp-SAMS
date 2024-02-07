@@ -46,7 +46,7 @@ namespace SAMS.Controllers.InfoManagement
         // GET: DeveloperInfo/Create
         public IActionResult Create()
         {
-            return View();
+            return View("~/Views/InfoManagement/DeveloperInfo/Create.cshtml");
         }
 
         // POST: DeveloperInfo/Create

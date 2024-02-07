@@ -22,7 +22,7 @@ namespace SAMS.Controllers.InfoManagement
         // GET: NurseInfo
         public async Task<IActionResult> Index()
         {
-            return View(await _context.nurseInfoModels.ToListAsync());
+            return View("~/Views/InfoManagement/NurseInfo/Index.cshtml", await _context.nurseInfoModels.ToListAsync());
         }
 
         // GET: NurseInfo/Details/5
@@ -40,13 +40,13 @@ namespace SAMS.Controllers.InfoManagement
                 return NotFound();
             }
 
-            return View(nurseInfoModel);
+            return View("~/Views/InfoManagement/NurseInfo/Details.cshtml", nurseInfoModel);
         }
 
         // GET: NurseInfo/Create
         public IActionResult Create()
         {
-            return View();
+            return View("~/Views/InfoManagement/NurseInfo/Create.cshtml");
         }
 
         // POST: NurseInfo/Create
@@ -62,7 +62,7 @@ namespace SAMS.Controllers.InfoManagement
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(nurseInfoModel);
+            return View("~/Views/InfoManagement/NurseInfo/Create.cshtml", nurseInfoModel);
         }
 
         // GET: NurseInfo/Edit/5
@@ -78,7 +78,7 @@ namespace SAMS.Controllers.InfoManagement
             {
                 return NotFound();
             }
-            return View(nurseInfoModel);
+            return View("~/Views/InfoManagement/NurseInfo/Edit.cshtml", nurseInfoModel);
         }
 
         // POST: NurseInfo/Edit/5
@@ -113,7 +113,7 @@ namespace SAMS.Controllers.InfoManagement
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(nurseInfoModel);
+            return View("~/Views/InfoManagement/NurseInfo/Edit.cshtml", nurseInfoModel);
         }
 
         // GET: NurseInfo/Delete/5
@@ -131,7 +131,7 @@ namespace SAMS.Controllers.InfoManagement
                 return NotFound();
             }
 
-            return View(nurseInfoModel);
+            return View("~/Views/InfoManagement/NurseInfo/Delete.cshtml", nurseInfoModel);
         }
 
         // POST: NurseInfo/Delete/5

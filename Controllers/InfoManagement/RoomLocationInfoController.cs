@@ -23,7 +23,7 @@ namespace SAMS.Controllers.InfoManagement
         public async Task<IActionResult> Index()
         {
             var applicationDbContext = _context.roomLocationInfoModels.Include(r => r.Teacher);
-            return View(await applicationDbContext.ToListAsync());
+            return View("~/Views/InfoManagement/RoomLocationInfo/Index.cshtml", await applicationDbContext.ToListAsync());
         }
 
         // GET: RoomLocationInfo/Details/5
@@ -42,14 +42,14 @@ namespace SAMS.Controllers.InfoManagement
                 return NotFound();
             }
 
-            return View(roomLocationInfoModel);
+            return View("~/Views/InfoManagement/RoomLocationInfo/Details.cshtml", roomLocationInfoModel);
         }
 
         // GET: RoomLocationInfo/Create
         public IActionResult Create()
         {
             ViewData["RoomAssignedToTeacherID"] = new SelectList(_context.teacherInfoModels, "TeacherID", "TeacherID");
-            return View();
+            return View("~/Views/InfoManagement/RoomLocationInfo/Create.cshtml");
         }
 
         // POST: RoomLocationInfo/Create
@@ -66,7 +66,7 @@ namespace SAMS.Controllers.InfoManagement
                 return RedirectToAction(nameof(Index));
             }
             ViewData["RoomAssignedToTeacherID"] = new SelectList(_context.teacherInfoModels, "TeacherID", "TeacherID", roomLocationInfoModel.RoomAssignedToTeacherID);
-            return View(roomLocationInfoModel);
+            return View("~/Views/InfoManagement/RoomLocationInfo/Create.cshtml", roomLocationInfoModel);
         }
 
         // GET: RoomLocationInfo/Edit/5
@@ -83,7 +83,7 @@ namespace SAMS.Controllers.InfoManagement
                 return NotFound();
             }
             ViewData["RoomAssignedToTeacherID"] = new SelectList(_context.teacherInfoModels, "TeacherID", "TeacherID", roomLocationInfoModel.RoomAssignedToTeacherID);
-            return View(roomLocationInfoModel);
+            return View("~/Views/InfoManagement/RoomLocationInfo/Edit.cshtml", roomLocationInfoModel);
         }
 
         // POST: RoomLocationInfo/Edit/5
@@ -119,7 +119,7 @@ namespace SAMS.Controllers.InfoManagement
                 return RedirectToAction(nameof(Index));
             }
             ViewData["RoomAssignedToTeacherID"] = new SelectList(_context.teacherInfoModels, "TeacherID", "TeacherID", roomLocationInfoModel.RoomAssignedToTeacherID);
-            return View(roomLocationInfoModel);
+            return View("~/Views/InfoManagement/RoomLocationInfo/Edit.cshtml", roomLocationInfoModel);
         }
 
         // GET: RoomLocationInfo/Delete/5
@@ -138,7 +138,7 @@ namespace SAMS.Controllers.InfoManagement
                 return NotFound();
             }
 
-            return View(roomLocationInfoModel);
+            return View("~/Views/InfoManagement/RoomLocationInfo/Delete.cshtml", roomLocationInfoModel);
         }
 
         // POST: RoomLocationInfo/Delete/5

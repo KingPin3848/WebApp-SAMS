@@ -23,7 +23,7 @@ namespace SAMS.Controllers.InfoManagement
         public async Task<IActionResult> Index()
         {
             var applicationDbContext = _context.passRequestInfoModels.Include(p => p.AddressedByAdmin).Include(p => p.AddressedByAttendanceOfficeMember).Include(p => p.AddressedByCounselor).Include(p => p.AddressedByLawEnf).Include(p => p.AddressedByNurse).Include(p => p.AddressedByTeacher).Include(p => p.AssignedByAdmin).Include(p => p.AssignedByAttendanceOfficeMember).Include(p => p.AssignedByCounselor).Include(p => p.AssignedByLawEnf).Include(p => p.AssignedByNurse).Include(p => p.AssignedByTeacher).Include(p => p.Student);
-            return View(await applicationDbContext.ToListAsync());
+            return View("~/Views/InfoManagement/PassRequestInfo/Index.cshtml", await applicationDbContext.ToListAsync());
         }
 
         // GET: PassRequestInfo/Details/5
@@ -54,7 +54,7 @@ namespace SAMS.Controllers.InfoManagement
                 return NotFound();
             }
 
-            return View(passRequestInfoModel);
+            return View("~/Views/InfoManagement/PassRequestInfo/Details.cshtml", passRequestInfoModel);
         }
 
         // GET: PassRequestInfo/Create
@@ -73,7 +73,7 @@ namespace SAMS.Controllers.InfoManagement
             ViewData["HallPassAssignedBy"] = new SelectList(_context.nurseInfoModels, "NurseID", "NurseID");
             ViewData["HallPassAssignedBy"] = new SelectList(_context.teacherInfoModels, "TeacherID", "TeacherID");
             ViewData["StudentID"] = new SelectList(_context.studentInfoModels, "StudentID", "StudentID");
-            return View();
+            return View("~/Views/InfoManagement/PassRequestInfo/Create.cshtml");
         }
 
         // POST: PassRequestInfo/Create
@@ -102,7 +102,7 @@ namespace SAMS.Controllers.InfoManagement
             ViewData["HallPassAssignedBy"] = new SelectList(_context.nurseInfoModels, "NurseID", "NurseID", passRequestInfoModel.HallPassAssignedBy);
             ViewData["HallPassAssignedBy"] = new SelectList(_context.teacherInfoModels, "TeacherID", "TeacherID", passRequestInfoModel.HallPassAssignedBy);
             ViewData["StudentID"] = new SelectList(_context.studentInfoModels, "StudentID", "StudentID", passRequestInfoModel.StudentID);
-            return View(passRequestInfoModel);
+            return View("~/Views/InfoManagement/PassRequestInfo/Create.cshtml", passRequestInfoModel);
         }
 
         // GET: PassRequestInfo/Edit/5
@@ -131,7 +131,7 @@ namespace SAMS.Controllers.InfoManagement
             ViewData["HallPassAssignedBy"] = new SelectList(_context.nurseInfoModels, "NurseID", "NurseID", passRequestInfoModel.HallPassAssignedBy);
             ViewData["HallPassAssignedBy"] = new SelectList(_context.teacherInfoModels, "TeacherID", "TeacherID", passRequestInfoModel.HallPassAssignedBy);
             ViewData["StudentID"] = new SelectList(_context.studentInfoModels, "StudentID", "StudentID", passRequestInfoModel.StudentID);
-            return View(passRequestInfoModel);
+            return View("~/Views/InfoManagement/PassRequestInfo/Edit.cshtml", passRequestInfoModel);
         }
 
         // POST: PassRequestInfo/Edit/5
@@ -179,7 +179,7 @@ namespace SAMS.Controllers.InfoManagement
             ViewData["HallPassAssignedBy"] = new SelectList(_context.nurseInfoModels, "NurseID", "NurseID", passRequestInfoModel.HallPassAssignedBy);
             ViewData["HallPassAssignedBy"] = new SelectList(_context.teacherInfoModels, "TeacherID", "TeacherID", passRequestInfoModel.HallPassAssignedBy);
             ViewData["StudentID"] = new SelectList(_context.studentInfoModels, "StudentID", "StudentID", passRequestInfoModel.StudentID);
-            return View(passRequestInfoModel);
+            return View("~/Views/InfoManagement/PassRequestInfo/Edit.cshtml", passRequestInfoModel);
         }
 
         // GET: PassRequestInfo/Delete/5
@@ -210,7 +210,7 @@ namespace SAMS.Controllers.InfoManagement
                 return NotFound();
             }
 
-            return View(passRequestInfoModel);
+            return View("~/Views/InfoManagement/PassRequestInfo/Delete.cshtml", passRequestInfoModel);
         }
 
         // POST: PassRequestInfo/Delete/5

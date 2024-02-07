@@ -23,7 +23,7 @@ namespace SAMS.Controllers.InfoManagement
         public async Task<IActionResult> Index()
         {
             var applicationDbContext = _context.synnLabQRNodeModels.Include(s => s.Room);
-            return View(await applicationDbContext.ToListAsync());
+            return View("~/Views/InfoManagement/SynnLabQRNode/Index.cshtml", await applicationDbContext.ToListAsync());
         }
 
         // GET: SynnLabQRNode/Details/5
@@ -42,14 +42,14 @@ namespace SAMS.Controllers.InfoManagement
                 return NotFound();
             }
 
-            return View(synnLabQRNodeModel);
+            return View("~/Views/InfoManagement/SynnLabQRNode/Details.cshtml", synnLabQRNodeModel);
         }
 
         // GET: SynnLabQRNode/Create
         public IActionResult Create()
         {
             ViewData["SynnlabRoomIDMod"] = new SelectList(_context.roomLocationInfoModels, "RoomId", "RoomId");
-            return View();
+            return View("~/Views/InfoManagement/SynnLabQRNode/Create.cshtml");
         }
 
         // POST: SynnLabQRNode/Create
@@ -66,7 +66,7 @@ namespace SAMS.Controllers.InfoManagement
                 return RedirectToAction(nameof(Index));
             }
             ViewData["SynnlabRoomIDMod"] = new SelectList(_context.roomLocationInfoModels, "RoomId", "RoomId", synnLabQRNodeModel.SynnlabRoomIDMod);
-            return View(synnLabQRNodeModel);
+            return View("~/Views/InfoManagement/SynnLabQRNode/Create.cshtml", synnLabQRNodeModel);
         }
 
         // GET: SynnLabQRNode/Edit/5
@@ -83,7 +83,7 @@ namespace SAMS.Controllers.InfoManagement
                 return NotFound();
             }
             ViewData["SynnlabRoomIDMod"] = new SelectList(_context.roomLocationInfoModels, "RoomId", "RoomId", synnLabQRNodeModel.SynnlabRoomIDMod);
-            return View(synnLabQRNodeModel);
+            return View("~/Views/InfoManagement/SynnLabQRNode/Edit.cshtml", synnLabQRNodeModel);
         }
 
         // POST: SynnLabQRNode/Edit/5
@@ -119,7 +119,7 @@ namespace SAMS.Controllers.InfoManagement
                 return RedirectToAction(nameof(Index));
             }
             ViewData["SynnlabRoomIDMod"] = new SelectList(_context.roomLocationInfoModels, "RoomId", "RoomId", synnLabQRNodeModel.SynnlabRoomIDMod);
-            return View(synnLabQRNodeModel);
+            return View("~/Views/InfoManagement/SynnLabQRNode/Edit.cshtml", synnLabQRNodeModel);
         }
 
         // GET: SynnLabQRNode/Delete/5
@@ -138,7 +138,7 @@ namespace SAMS.Controllers.InfoManagement
                 return NotFound();
             }
 
-            return View(synnLabQRNodeModel);
+            return View("~/Views/InfoManagement/SynnLabQRNode/Delete.cshtml", synnLabQRNodeModel);
         }
 
         // POST: SynnLabQRNode/Delete/5
