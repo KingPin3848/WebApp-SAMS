@@ -28,9 +28,9 @@ namespace SAMS.Models
         public Char LunchCodeMod { get; set; }
 
         //Navigation properties
-        public StudentInfoModel? Student {  get; set; }
-        public ICollection<CourseEnrollmentModel>? CourseEnrollments { get; set; }
-        public ICollection<BellAttendanceModel>? BellAttendance { get; set; }
-        public ICollection<FastPassModel>? FastPasses { get; set; }
+        public StudentInfoModel? Student { get; set; } = null!;
+        public ICollection<CourseEnrollmentModel>? CourseEnrollments { get; set; } = null!;
+        public ICollection<BellAttendanceModel>? BellAttendance { get; set; } = null!;
+        public ICollection<FastPassModel>? FastPasses { get; set; } = null!;
     }
 }

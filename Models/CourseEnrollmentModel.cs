@@ -15,8 +15,8 @@ namespace SAMS.Models
         public DateTime EnrollmentDateTime { get; set; }
 
         //Navigation properties
-        public StudentInfoModel Student { get; set; } = null!;
+        public StudentInfoModel? Student { get; set; } = null!;
         public ActiveCourseInfoModel? ActiveCourses { get; set; } = null!;
-        public StudentScheduleInfoModel? StudentSchedules { get; set;}
+        public StudentScheduleInfoModel? StudentSchedules { get; set;} = null!;
     }
 }

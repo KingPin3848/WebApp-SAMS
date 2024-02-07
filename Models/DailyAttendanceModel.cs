@@ -17,6 +17,6 @@ namespace SAMS.Models
         public string ReasonForAbsence { get; set; } = null!;
 
         //Navigation properties
-        public StudentInfoModel? Student {  get; set; }
+        public StudentInfoModel? Student { get; set; } = null!;
     }
 }

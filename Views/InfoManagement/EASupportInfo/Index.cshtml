@@ -1,0 +1,71 @@
+﻿@model IEnumerable<SAMS.Models.EASuportInfoModel>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.EaFirstNameMod)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EaMiddleNameMod)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EaLastNameMod)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EaPreferredNameMod)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EaEmailMod)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EaPhoneMod)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EaStudentManaged)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.EaFirstNameMod)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EaMiddleNameMod)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EaLastNameMod)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EaPreferredNameMod)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EaEmailMod)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EaPhoneMod)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EaStudentManaged)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.EaID">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.EaID">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.EaID">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

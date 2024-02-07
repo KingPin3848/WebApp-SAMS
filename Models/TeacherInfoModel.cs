@@ -25,13 +25,13 @@ namespace SAMS.Models
         public int TeachingScheduleID { get; set; } = 0!;
 
         //Navigation properties
-        public ICollection<ActiveCourseInfoModel>? ActiveCourses { get; set; }
-        public RoomLocationInfoModel? Room {  get; set; }
-        public ICollection<RoomScheduleModel>? RoomSchedules { get; set; }
-        public TeachingScheduleModel? TeachingSchedule { get; set; }
-        public ICollection<HallPassInfoModel>? AssignedHallPasses { get; set; }
-        public ICollection<HallPassInfoModel>? AddressedHallPasses { get; set; }
-        public ICollection<PassRequestInfoModel>? RequestAssignedHallPasses { get; set; }
-        public ICollection<PassRequestInfoModel>? RequestAddressedHallPasses { get; set; }
+        public ICollection<ActiveCourseInfoModel>? ActiveCourses { get; set; } = null!;
+        public RoomLocationInfoModel? Room { get; set; } = null!;
+        public ICollection<RoomScheduleModel>? RoomSchedules { get; set; } = null!;
+        public TeachingScheduleModel? TeachingSchedule { get; set; } = null!;
+        public ICollection<HallPassInfoModel>? AssignedHallPasses { get; set; } = null!;
+        public ICollection<HallPassInfoModel>? AddressedHallPasses { get; set; } = null!;
+        public ICollection<PassRequestInfoModel>? RequestAssignedHallPasses { get; set; } = null!;
+        public ICollection<PassRequestInfoModel>? RequestAddressedHallPasses { get; set; } = null!;
     }
 }

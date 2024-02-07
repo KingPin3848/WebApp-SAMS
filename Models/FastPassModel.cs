@@ -29,10 +29,10 @@ namespace SAMS.Models
 
 
         //Navigation properties
-        public StudentInfoModel? Student {  get; set; }
+        public StudentInfoModel? Student { get; set; } = null!;
 
         //REVIEW THIS ONE ABOUT ROOM LOCATION INFO MODEL AND IF THIS SHOULD BE AN ICOLLECTION OR A SINGULAR
-        public RoomLocationInfoModel? Room { get; set; }
-        public StudentScheduleInfoModel? StudentSchedule { get; set; }
+        public RoomLocationInfoModel? Room { get; set; } = null!;
+        public StudentScheduleInfoModel? StudentSchedule { get; set; } = null!;
     }
 }

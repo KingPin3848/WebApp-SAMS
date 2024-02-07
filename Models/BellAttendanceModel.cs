@@ -21,7 +21,7 @@ namespace SAMS.Models
         public int ScheduleId { get; set; } = 0!;
 
         //Navigation properties
-        public StudentScheduleInfoModel? StudentScheduleInfoModel { get; set; }
-        public StudentInfoModel? StudentInfo { get; set; }
+        public StudentScheduleInfoModel? StudentScheduleInfoModel { get; set; } = null!;
+        public StudentInfoModel? StudentInfo { get; set; } = null!;
     }
 }

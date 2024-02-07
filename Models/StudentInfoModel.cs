@@ -50,15 +50,15 @@ namespace SAMS.Models
         //OR GET IT FROM THEIR GOOGLE ACCOUNT.
 
         //Navigation Properties
-        public CounselorModel? Counselor { get; set; }
-        public EASuportInfoModel? AssignedEASuport { get; set; }
-        public ICollection<HallPassInfoModel>? HallPasses { get; set; }
-        public ICollection<FastPassModel>? FastPasses { get; set; }
-        public ICollection<CourseEnrollmentModel>? CourseEnrollments { get; set; }
-        public ICollection<BellAttendanceModel>? BellAttendances { get; set; }
-        public ICollection<DailyAttendanceModel>? DailyAttendances { get; set; }
-        public EASuportInfoModel? EASuport { get; set; }
-        public ICollection<PassRequestInfoModel>? PassRequestsForStudent { get; set; }
-        public StudentScheduleInfoModel? StudentSchedule { get; set; }
+        public CounselorModel? Counselor { get; set; } = null!;
+        public EASuportInfoModel? AssignedEASuport { get; set; } = null!;
+        public ICollection<HallPassInfoModel>? HallPasses { get; set; } = null!;
+        public ICollection<FastPassModel>? FastPasses { get; set; } = null!;
+        public ICollection<CourseEnrollmentModel>? CourseEnrollments { get; set; } = null!;
+        public ICollection<BellAttendanceModel>? BellAttendances { get; set; } = null!;
+        public ICollection<DailyAttendanceModel>? DailyAttendances { get; set; } = null!;
+        public EASuportInfoModel? EASuport { get; set; } = null!;
+        public ICollection<PassRequestInfoModel>? PassRequestsForStudent { get; set; } = null!;
+        public StudentScheduleInfoModel? StudentSchedule { get; set; } = null!;
     }
 }

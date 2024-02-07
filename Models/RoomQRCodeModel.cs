@@ -10,6 +10,6 @@ namespace SAMS.Models
         public string Code { get; set; } = null!;
 
         //Navigation Properties
-        public RoomLocationInfoModel? Room { get; set; }
+        public RoomLocationInfoModel? Room { get; set; } = null!;
     }
 }

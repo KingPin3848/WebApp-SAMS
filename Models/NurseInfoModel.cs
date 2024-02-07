@@ -23,9 +23,9 @@ namespace SAMS.Models
         public string NursePhoneMod { get; set; } = null!;
 
         //Navigation properties
-        public ICollection<HallPassInfoModel>? AssignedHallPasses { get; set; }
-        public ICollection<HallPassInfoModel>? AddressedHallPasses { get; set; }
-        public ICollection<PassRequestInfoModel>? RequestAssignedHallPasses { get; set; }
-        public ICollection<PassRequestInfoModel>? RequestAddressedHallPasses { get; set; }
+        public ICollection<HallPassInfoModel>? AssignedHallPasses { get; set; } = null!;
+        public ICollection<HallPassInfoModel>? AddressedHallPasses { get; set; } = null!;
+        public ICollection<PassRequestInfoModel>? RequestAssignedHallPasses { get; set; } = null!;
+        public ICollection<PassRequestInfoModel>? RequestAddressedHallPasses { get; set; } = null!;
     }
 }

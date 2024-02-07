@@ -19,6 +19,6 @@ namespace SAMS.Models
         public string ScannerLabelMod { get; set; } = null!;
 
         //Navigation properties
-        public RoomLocationInfoModel? Room {  get; set; }
+        public RoomLocationInfoModel? Room { get; set; } = null!;
     }
 }

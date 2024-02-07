@@ -23,6 +23,6 @@ namespace SAMS.Models
         public int? EaStudentManaged { get; set; } = 0!;
 
         //Navigation properties
-        public ICollection<StudentInfoModel>? Students { get; set; }
+        public ICollection<StudentInfoModel>? Students { get; set; } = null!;
     }
 }

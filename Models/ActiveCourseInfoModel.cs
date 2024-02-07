@@ -26,9 +26,8 @@ namespace SAMS.Models
         public string CourseTaughtDays { get; set; } = null!;
 
         //Navigation properties
-        public TeacherInfoModel? Teacher { get; set; }
-        public RoomLocationInfoModel? Room { get; set; }
-        [AllowNull]
-        public ICollection<CourseEnrollmentModel> CourseEnrollments { get; set; }
+        public TeacherInfoModel? Teacher { get; set; } = null!;
+        public RoomLocationInfoModel? Room { get; set; } = null!;
+        public ICollection<CourseEnrollmentModel>? CourseEnrollments { get; set; } = null!;
     }
 }

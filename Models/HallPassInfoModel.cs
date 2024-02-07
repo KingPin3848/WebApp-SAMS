@@ -28,19 +28,19 @@ namespace SAMS.Models
         public string EndLocation { get; set; } = null!;
 
         //Navigation properties
-        public StudentInfoModel? Student {  get; set; }
-        public AdminInfoModel? AssignedByAdmin { get; set; }
-        public AdminInfoModel? AddressedByAdmin { get; set; }
-        public NurseInfoModel? AssignedByNurse { get; set; }
-        public NurseInfoModel? AddressedByNurse { get; set; }
-        public TeacherInfoModel? AssignedByTeacher { get; set; }
-        public TeacherInfoModel? AddressedByTeacher { get; set; }
-        public LawEnforcementInfoModel? AssignedByLawEnf { get; set; }
-        public LawEnforcementInfoModel? AddressedByLawEnf { get; set; }
-        public AttendanceOfficeMemberModel? AssignedByAttendanceOfficeMember { get; set; }
-        public AttendanceOfficeMemberModel? AddressedByAttendanceOfficeMember { get; set; }
-        public CounselorModel? AssignedByCounselor { get; set; }
-        public CounselorModel? AddressedByCounselor { get; set; }
+        public StudentInfoModel? Student { get; set; } = null!;
+        public AdminInfoModel? AssignedByAdmin { get; set; } = null!;
+        public AdminInfoModel? AddressedByAdmin { get; set; } = null!;
+        public NurseInfoModel? AssignedByNurse { get; set; } = null!;
+        public NurseInfoModel? AddressedByNurse { get; set; } = null!;
+        public TeacherInfoModel? AssignedByTeacher { get; set; } = null!;
+        public TeacherInfoModel? AddressedByTeacher { get; set; } = null!;
+        public LawEnforcementInfoModel? AssignedByLawEnf { get; set; } = null!;
+        public LawEnforcementInfoModel? AddressedByLawEnf { get; set; } = null!;
+        public AttendanceOfficeMemberModel? AssignedByAttendanceOfficeMember { get; set; } = null!;
+        public AttendanceOfficeMemberModel? AddressedByAttendanceOfficeMember { get; set; } = null!;
+        public CounselorModel? AssignedByCounselor { get; set; } = null!;
+        public CounselorModel? AddressedByCounselor { get; set; } = null!;
 
 
     }
