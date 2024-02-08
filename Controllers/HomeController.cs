@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SAMS.Data;
 using SAMS.Models;
 using System.Diagnostics;
@@ -56,7 +57,10 @@ namespace SAMS.Controllers
             string camResultTimestamp = ScannedCodeTimestamp;
 
             // Parsing the timestamp since it's a string
-            DateTime.TryParse(camResultTimestamp, out DateTime parsedTimestamp);
+            //DateTime.TryParse(camResultTimestamp, out DateTime parsedTimestamp);
+
+            TimeSpan timeSpan = TimeSpan.Parse(camResultTimestamp);
+            TimeOnly timeOnly = TimeOnly.FromTimeSpan(timeSpan);
 
             string passedschoolid = issuedSchoolId;
 
@@ -85,13 +89,235 @@ namespace SAMS.Controllers
                 }
             }
 
+            var roomCodes = _context.roomQRCodeModels.Select(a => a.Code).ToList();
+            var chosenBellSched = _context.ChosenBellSchedModel.Select(a => a.Name).ToList();
+            var scheduleForTheDay = chosenBellSched[0];
+
+            var studentBellSchedule = await _context.studentScheduleInfoModels.FindAsync(passedschoolid);
+
+            switch (scheduleForTheDay)
+            {
+                case "Daily Bell Schedule":
+                {
+                        var dailyBellSchedNames = _context.dailyBellScheduleModels.Select(a => a.BellName).ToList();
+                        var dailyBellSchedStart = _context.dailyBellScheduleModels.Select(a => a.StartTime).ToList();
+                        var dailyBellSchedEnd = _context.dailyBellScheduleModels.Select(a => a.EndTime).ToList();
+                        var dailyBellDuration = _context.dailyBellScheduleModels.Select(a => a.Duration).ToList();
+
+                        string atTheTimeBell = string.Empty;
+                        int curBell = 0;
+                        for (int i = 0; i < dailyBellSchedStart.Count; i++)
+                        {
+                            if ((timeOnly.CompareTo(dailyBellSchedStart[i]) > 0) && (timeOnly.CompareTo(dailyBellSchedEnd[i]) < 0))
+                            {
+                                atTheTimeBell = dailyBellSchedNames[i];
+                                int studidpassed = int.Parse(passedschoolid);
+                                var dailyAttRecord = await _context.dailyAttendanceModels.Where(a => (a.StudentId == studidpassed) && (a.AttendanceDate == DateTime.Now.Date)).FirstOrDefaultAsync();
+                                
+                                if (dailyAttRecord == null)
+                                {
+                                    return NotFound();
+                                }
+                                
+                                if (dailyAttRecord.Status == "Unknown")
+                                {
+                                    string bellBasedCourseCode;
+                                    switch (atTheTimeBell)
+                                    {
+                                        case "Bell 1":
+                                            {
+                                                bellBasedCourseCode = studentBellSchedule.Bell1EnrollmentCodeMod.ToString();
+                                                break;
+                                            }
+
+                                        case "Bell 2":
+                                            {
+                                                bellBasedCourseCode = studentBellSchedule.Bell2EnrollmentCodeMod.ToString();
+                                                break;
+                                            }
+
+                                        case "Bell 3":
+                                            {
+                                                bellBasedCourseCode = studentBellSchedule.Bell3EnrollmentCodeMod.ToString();
+                                                break;
+                                            }
+
+                                        case "Bell 4":
+                                            {
+                                                bellBasedCourseCode = studentBellSchedule.Bell4EnrollmentCodeMod.ToString();
+                                                break;
+                                            }
+
+                                        case "Bell 5":
+                                            {
+                                                bellBasedCourseCode = studentBellSchedule.Bell5EnrollmentCodeMod.ToString();
+                                                break;
+                                            }
+
+                                        case "Bell 6":
+                                            {
+                                                bellBasedCourseCode = studentBellSchedule.Bell6EnrollmentCodeMod.ToString();
+                                                break;
+                                            }
+
+                                        case "Bell 7":
+                                            {
+                                                bellBasedCourseCode = studentBellSchedule.Bell7EnrollmentCodeMod.ToString();
+                                                break;
+                                            }
+
+                                        default:
+                                            {
+                                                break;
+                                            }
+                                    }
+                                }
+                                //THIS IS WHERE WE NEED TO CHECK THE HALL-PASSES IF THERE IS ONE, AND IF THERE IS ONE THEN WE 
+                                else if(true)
+                                {
+
+                                }
+                            }
+                        }
+
+
+                        break;
+                }
+
+                case "Pep Rally Bell Schedule":
+                {
+                        var peprallyBellSchedStart = _context.pepRallyBellScheduleModels.Select(a => a.StartTime).ToList();
+                        var peprallyBellSchedEnd = _context.pepRallyBellScheduleModels.Select(a => a.EndTime).ToList();
+                        var peprallyBellDuration = _context.pepRallyBellScheduleModels.Select(a => a.Duration).ToList();
+                        
+                        
+                        break;
+                }
+
+                case "2 Hour Delay Bell Schedule":
+                {
+                        var _2hrdelayBellSchedStart = _context.twoHrDelayBellScheduleModels.Select(a => a.StartTime).ToList();
+                        var _2hrdelayBellSchedEnd = _context.twoHrDelayBellScheduleModels.Select(a => a.EndTime).ToList();
+                        var _2hrdelayBellDuration = _context.twoHrDelayBellScheduleModels.Select(a => a.Duration).ToList();
+
+
+                        break;
+                }
+
+                case "Extended Aves Bell Schedule":
+                {
+                        var extavesBellSchedStart = _context.extendedAvesModels.Select(a => a.StartTime).ToList();
+                        var extavesBellSchedEnd = _context.extendedAvesModels.Select(a => a.EndTime).ToList();
+                        var extavesBellDuration = _context.extendedAvesModels.Select(a => a.Duration).ToList();
+
+
+                        break;
+                }
+
+                    default:
+                    {
+                        return NotFound();
+                        break;
+                    }
+
+            }
+
+
+            //for (int indexer = 0; indexer < roomCodes.Count; indexer++)
+            //{
+            //    if (roomCodes[indexer].Equals(camResult))
+            //    {
+            //        //the qr code is one of the classes in the school
+
+            //        if (chosenBellSched[0].Equals("Daily Bell Schedule"))
+            //        {
+            //            //we are using daily bell schedule
+            //            for (int i = 0; i < dailyBellSchedStart.Count; i++)
+            //            {
+            //                if ((timeOnly.CompareTo(dailyBellSchedStart[i]) > 0) && (timeOnly.CompareTo(dailyBellSchedEnd[i]) < 0))
+            //                {
+            //                    var nullcheckForDailyAttendance = await _context.dailyAttendanceModels.FindAsync(passedschoolid);
+            //                    if (nullcheckForDailyAttendance != null)
+            //                    {
+            //                        if (nullcheckForDailyAttendance.Status == "Unknown")
+            //                        {
+
+            //                            nullcheckForDailyAttendance.Status = "Unknown";
+            //                        }
+            //                    }
+            //                    return Json(new { redirectUrl = Url.Action("Privacy") });
+            //                    //The qr code was scanned during the school hours
+
+            //                }
+            //            }
+            //            return Json(new { redirectUrl = Url.Action("Scan") });
+            //            //The qr code was not scanned during the school hours
+            //        }
+            //        else if (chosenBellSched[0].Equals("2 Hour Delay Bell Schedule"))
+            //        {
+            //            for (int i = 0; i < twoHourDelaySchedule.Count; i++)
+            //            {
+            //                if (timeOnly.Subtract(twoHourDelaySchedule[i]).TimeOfDay < twoHourDelayDuration[i])
+            //                {
+            //                    return NotFound($"Your atendance has been marked for '{studentBellSchedule[0]}'"); //change this to view later
+
+            //                }
+            //            }
+            //            return NotFound($"You are not supposed to be in this bell right now'"); //change this to view later
+
+            //        }
+            //        else if (chosenBellSched[0].Equals("Pep Rally Bell Schedule"))
+            //        {
+            //            for (int i = 0; i < pepRallySchedule.Count; i++)
+            //            {
+            //                if (timeOnly.Subtract(pepRallySchedule[i]).TimeOfDay < pepRallyDuration[i])
+            //                {
+            //                    return NotFound($"Your atendance has been marked for '{studentBellSchedule[0]}'"); //change this to view later
+
+            //                }
+            //            }
+            //            return NotFound($"You are not supposed to be in this bell right now'"); //change this to view later
+
+            //        }
+            //        else if (chosenBellSched[0].Equals("Extended Aves Bell Schedule"))
+            //        {
+            //            for (int i = 0; i < extendedAvesSchedule.Count; i++)
+            //            {
+            //                if (timeOnly.Subtract(extendedAvesSchedule[i]).TimeOfDay < extendedAvesDuration[i])
+            //                {
+            //                    return NotFound($"Your atendance has been marked for '{studentBellSchedule[0]}'"); //change this to view later
+
+            //                }
+            //            }
+            //            return NotFound($"You are not supposed to be in this bell right now'"); //change this to view later
+            //        }
+
+            //    }
+            //}
+
+            return Json(new { redirectUrl = Url.Action("Index") });
+
+
             //var roomCodes = _context.roomQRCodeModels.Select(a => a.Code).ToList();
             //if (roomCodes.Count == 0)
             //{
             //    return Json(new { dangertext = "Room Codes table is completely empty. Please check in with the developers to resolve this issue asap." });
             //}
 
-            return Json(new { redirectUrl = Url.Action("Index") });
+            //return Json(new { redirectUrl = Url.Action("Index") });
+        }
+
+        private async Task ProcessDailyBellSchedule(TimeOnly timeOnly, StudentScheduleInfoModel studentSchedule, int studID)
+        {
+            var dailyBellSchedules = await _context.dailyBellScheduleModels.ToListAsync();
+
+            //Identify the active bell
+            var activeBell = dailyBellSchedules.FirstOrDefault(schedule => timeOnly.CompareTo(schedule.StartTime) >= 0 && timeOnly.CompareTo(schedule.EndTime) <= 0);
+
+            if (activeBell != null)
+            {
+                
+            }
         }
     }
 }
