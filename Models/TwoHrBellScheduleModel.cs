@@ -1,8 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using SAMS.Interfaces;
+using System.ComponentModel.DataAnnotations;
 
 namespace SAMS.Models
 {
-    public class TwoHrDelayBellScheduleModel
+    public class TwoHrDelayBellScheduleModel : IBellSchedule
     {
         [Display(Name = ("Bell"))]
         public string BellName { get; set; } = null!;

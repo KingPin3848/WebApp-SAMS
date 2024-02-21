@@ -15,6 +15,8 @@ namespace SAMS.Models
         public string Status { get; set; } = null!;
         [Display(Name = ("Reason for Absence"))]
         public string ReasonForAbsence { get; set; } = null!;
+        [Display(Name = ("Bell Schedule for the day"))]
+        public string ChosenBellSchedule { get; set; } = null!;
 
         //Navigation properties
         public StudentInfoModel? Student { get; set; } = null!;

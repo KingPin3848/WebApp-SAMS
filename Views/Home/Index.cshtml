@@ -19,12 +19,22 @@
     //STUDENT VIEW
     <table class="table-borderless">
         <tr class="row">
-            <td class="col-5">
+            <td class="col">
                 <div class="card" style="width: 10rem; border-radius:35px;">
-                    <a class="btn" asp-controller="Home" asp-action="Scan">
+                    <a class="btn" asp-area="" asp-controller="Home" asp-action="Scan">
                         <img src="/images/ScanQRCode.png" class="card-img-top" alt="Phone Call" style="border-radius:35px;">
                         <div class="card-body">
                             <h5 class="card-title">Scan</h5>
+                        </div>
+                    </a>
+                </div>
+            </td>
+            <td class="col">
+                <div class="card" style="width: 10rem; border-radius:35px;">
+                    <a class="btn" asp-area="Student" asp-controller="Form" asp-action="Form">
+                        <img src="/images/ScanQRCode.png" class="card-img-top" alt="Phone Call" style="border-radius:35px;">
+                        <div class="card-body">
+                            <h5 class="card-title">Form</h5>
                         </div>
                     </a>
                 </div>
@@ -144,7 +154,7 @@
             <td class="col">
                 <!--BELL ATTENDANCE-->
                 <div class="card" style="width: 10rem; border-radius:35px;">
-                    <a class="btn" asp-area="" asp-controller="BellAttendance" asp-action="Index">
+                    <a class="btn" asp-area="" asp-controller="BellAttendanceModels" asp-action="Index">
                         <img src="/images/ScanQRCode.png" class="card-img-top" alt="Phone Call" style="border-radius:35px;">
                         <div class="card-body">
                             <h5 class="card-title">Bell Att.</h5>
@@ -163,7 +173,7 @@
                     </a>
                 </div>
             </td>
-            <td class="col">
+            @* <td class="col">
                 <!--COURSE ENROLLMENT INDEX-->
                 <div class="card" style="width: 10rem; border-radius:35px;">
                     <a class="btn" asp-area="" asp-controller="CourseEnrollment" asp-action="Index">
@@ -173,7 +183,7 @@
                         </div>
                     </a>
                 </div>
-            </td>
+            </td> *@
             <td class="col">
                 <!--DAILY ATTENDANCE INDEX-->
                 <div class="card" style="width: 10rem; border-radius:35px;">
@@ -288,7 +298,7 @@
                     </a>
                 </div>
             </td>
-            <td class="col">
+            @* <td class="col">
                 <!--ROOM SCHEDULE INDEX-->
                 <div class="card" style="width: 10rem; border-radius:35px;">
                     <a class="btn" asp-area="" asp-controller="RoomSchedule" asp-action="Index">
@@ -298,7 +308,7 @@
                         </div>
                     </a>
                 </div>
-            </td>
+            </td> *@
             <td class="col">
                 <!--STUDENT MANAGEMENT INDEX-->
                 <div class="card" style="width: 10rem; border-radius:35px;">
@@ -311,12 +321,23 @@
                 </div>
             </td>
             <td class="col">
-                <!--STUDENT SCHEDULE INFO INDEX-->
+                <!--STUDENT SEM 1 SCHEDULE INFO INDEX-->
                 <div class="card" style="width: 10rem; border-radius:35px;">
-                    <a class="btn" asp-area="" asp-controller="StudentScheduleInfo" asp-action="Index">
+                    <a class="btn" asp-area="" asp-controller="Sem1StudSchedule" asp-action="Index">
                         <img src="/images/ScanQRCode.png" class="card-img-top" alt="Phone Call" style="border-radius:35px;">
                         <div class="card-body">
-                            <h5 class="card-title">Student Schedule</h5>
+                            <h5 class="card-title">Student Sem 1 Schedule</h5>
+                        </div>
+                    </a>
+                </div>
+            </td>
+            <td class="col">
+                <!--STUDENT SEM 2 SCHEDULE INFO INDEX-->
+                <div class="card" style="width: 10rem; border-radius:35px;">
+                    <a class="btn" asp-area="" asp-controller="Sem2StudSchedule" asp-action="Index">
+                        <img src="/images/ScanQRCode.png" class="card-img-top" alt="Phone Call" style="border-radius:35px;">
+                        <div class="card-body">
+                            <h5 class="card-title">Student Sem 2 Schedule</h5>
                         </div>
                     </a>
                 </div>
@@ -345,7 +366,7 @@
                     </a>
                 </div>
             </td>
-            <td class="col">
+            @* <td class="col">
                 <!--TEACHING SCHEDULE INDEX-->
                 <div class="card" style="width: 10rem; border-radius:35px;">
                     <a class="btn" asp-area="" asp-controller="TeachingSchedule" asp-action="Index">
@@ -355,7 +376,7 @@
                         </div>
                     </a>
                 </div>
-            </td>
+            </td> *@
         </tr>
     </table>
 }

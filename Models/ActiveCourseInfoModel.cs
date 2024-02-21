@@ -24,10 +24,14 @@ namespace SAMS.Models
         public string CourseLength { get; set; } = null!;
         [Display(Name = ("Taught on Days"))]
         public string CourseTaughtDays { get; set; } = null!;
+        [Display(Name = ("Daily Attendance Applicable?"))]
+        public Boolean? DailyAttChecked { get; set; }
+        [Display(Name = ("Bell-to-bell Attendance Applicable"))]
+        public Boolean? B2BAttChecked { get; set; }
 
         //Navigation properties
         public TeacherInfoModel? Teacher { get; set; } = null!;
         public RoomLocationInfoModel? Room { get; set; } = null!;
-        public ICollection<CourseEnrollmentModel>? CourseEnrollments { get; set; } = null!;
+        public ICollection<BellAttendanceModel>? BellAttendances { get; set; } = null!;
     }
 }

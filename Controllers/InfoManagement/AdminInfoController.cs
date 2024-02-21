@@ -22,7 +22,7 @@ namespace SAMS.Controllers.InfoManagement
         // GET: AdminInfo
         public async Task<IActionResult> Index()
         {
-            return View("~/Views/InfoManagement/AdminInfo/Index.cshtml", await _context.adminInfoModels.ToListAsync());
+            return View(await _context.adminInfoModels.ToListAsync());
         }
 
         // GET: AdminInfo/Details/5
@@ -40,13 +40,13 @@ namespace SAMS.Controllers.InfoManagement
                 return NotFound();
             }
 
-            return View("~/Views/InfoManagement/AdminInfo/Details.cshtml", adminInfoModel);
+            return View(adminInfoModel);
         }
 
         // GET: AdminInfo/Create
         public IActionResult Create()
         {
-            return View("~/Views/InfoManagement/AdminInfo/Create.cshtml");
+            return View();
         }
 
         // POST: AdminInfo/Create
@@ -62,7 +62,7 @@ namespace SAMS.Controllers.InfoManagement
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View("~/Views/InfoManagement/AdminInfo/Create.cshtml", adminInfoModel);
+            return View(adminInfoModel);
         }
 
         // GET: AdminInfo/Edit/5
@@ -78,7 +78,7 @@ namespace SAMS.Controllers.InfoManagement
             {
                 return NotFound();
             }
-            return View("~/Views/InfoManagement/AdminInfo/Edit.cshtml", adminInfoModel);
+            return View(adminInfoModel);
         }
 
         // POST: AdminInfo/Edit/5
@@ -113,7 +113,7 @@ namespace SAMS.Controllers.InfoManagement
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View("~/Views/InfoManagement/AdminInfo/Edit.cshtml", adminInfoModel);
+            return View(adminInfoModel);
         }
 
         // GET: AdminInfo/Delete/5
@@ -131,7 +131,7 @@ namespace SAMS.Controllers.InfoManagement
                 return NotFound();
             }
 
-            return View("~/Views/InfoManagement/AdminInfo/Delete.cshtml", adminInfoModel);
+            return View(adminInfoModel);
         }
 
         // POST: AdminInfo/Delete/5

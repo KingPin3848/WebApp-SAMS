@@ -18,21 +18,18 @@
                 <a class="navbar-brand" style="visibility:visible; color:black;" asp-area="" asp-controller="Home" asp-action="Index">SAMS</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon" style="color:black;">☰</span>
+                    <span class="navbar-toggler-icon" id="thespan" style="color:black;"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link text-dark" asp-area="Student" asp-controller="Dashboard" asp-action="Student">Dashboard</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="Identity" asp-page="/AddAccount">Add Accounts</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Scan">Scan</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="ChosenBellSchedule" asp-action="Index">Choosen Bell Schedule</a>
@@ -69,15 +66,24 @@
         //Apply the saved theme preference
         if (theme) {
             document.documentElement.setAttribute('data-bs-theme', theme)
+            if (theme == "light") {
+                document.getElementById("thespan").textContent = "☰";
+            }
         } else {
             // If there is no saved preference, you can default to light mode
             document.documentElement.setAttribute('data-bs-theme', 'light');
+            document.getElementById("thespan").textContent = "";
         }
 
         //Function to switch themes
         function switchTheme() {
             var currentTheme = document.documentElement.getAttribute('data-bs-theme');
             var newTheme = (currentTheme === 'dark') ? 'light' : 'dark';
+            if (newTheme == "light") {
+                document.getElementById("thespan").textContent = "";
+            } else if (newTheme == "dark") {
+                document.getElementById("thespan").textContent = "☰";
+            }
             document.documentElement.setAttribute('data-bs-theme', newTheme);
             localStorage.setItem('theme', newTheme);
         }

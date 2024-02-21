@@ -21,14 +21,14 @@ namespace SAMS.Models
         public string TeacherPhoneMod { get; set; } = null!;
         [Display(Name = ("Teaches all 5 days?"))]
         public Boolean Teaches5Days { get; set; }
-        [Display(Name = ("Teaching Schedule ID"))]
-        public int TeachingScheduleID { get; set; } = 0!;
+        public int? RoomAssignedId { get; set; }
+
 
         //Navigation properties
         public ICollection<ActiveCourseInfoModel>? ActiveCourses { get; set; } = null!;
         public RoomLocationInfoModel? Room { get; set; } = null!;
-        public ICollection<RoomScheduleModel>? RoomSchedules { get; set; } = null!;
-        public TeachingScheduleModel? TeachingSchedule { get; set; } = null!;
+        //public ICollection<RoomScheduleModel>? RoomSchedules { get; set; } = null!;
+        //public TeachingScheduleModel? TeachingSchedule { get; set; } = null!;
         public ICollection<HallPassInfoModel>? AssignedHallPasses { get; set; } = null!;
         public ICollection<HallPassInfoModel>? AddressedHallPasses { get; set; } = null!;
         public ICollection<PassRequestInfoModel>? RequestAssignedHallPasses { get; set; } = null!;

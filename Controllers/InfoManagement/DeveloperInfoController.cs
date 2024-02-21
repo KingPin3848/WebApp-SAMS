@@ -22,7 +22,7 @@ namespace SAMS.Controllers.InfoManagement
         // GET: DeveloperInfo
         public async Task<IActionResult> Index()
         {
-            return View("~/Views/InfoManagement/DeveloperInfo/Index.cshtml", await _context.developerInfoModels.ToListAsync());
+            return View(await _context.developerInfoModels.ToListAsync());
         }
 
         // GET: DeveloperInfo/Details/5
@@ -40,13 +40,13 @@ namespace SAMS.Controllers.InfoManagement
                 return NotFound();
             }
 
-            return View("~/Views/InfoManagement/DeveloperInfo/Details.cshtml", developerInfoModel);
+            return View(developerInfoModel);
         }
 
         // GET: DeveloperInfo/Create
         public IActionResult Create()
         {
-            return View("~/Views/InfoManagement/DeveloperInfo/Create.cshtml");
+            return View();
         }
 
         // POST: DeveloperInfo/Create
@@ -62,7 +62,7 @@ namespace SAMS.Controllers.InfoManagement
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View("~/Views/InfoManagement/DeveloperInfo/Create.cshtml", developerInfoModel);
+            return View(developerInfoModel);
         }
 
         // GET: DeveloperInfo/Edit/5
@@ -78,7 +78,7 @@ namespace SAMS.Controllers.InfoManagement
             {
                 return NotFound();
             }
-            return View("~/Views/InfoManagement/DeveloperInfo/Edit.cshtml", developerInfoModel);
+            return View(developerInfoModel);
         }
 
         // POST: DeveloperInfo/Edit/5
@@ -113,7 +113,7 @@ namespace SAMS.Controllers.InfoManagement
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View("~/Views/InfoManagement/DeveloperInfo/Edit.cshtml", developerInfoModel);
+            return View(developerInfoModel);
         }
 
         // GET: DeveloperInfo/Delete/5
@@ -131,7 +131,7 @@ namespace SAMS.Controllers.InfoManagement
                 return NotFound();
             }
 
-            return View("~/Views/InfoManagement/DeveloperInfo/Delete.cshtml", developerInfoModel);
+            return View(developerInfoModel);
         }
 
         // POST: DeveloperInfo/Delete/5

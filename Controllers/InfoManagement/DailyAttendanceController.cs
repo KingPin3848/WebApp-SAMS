@@ -23,7 +23,7 @@ namespace SAMS.Controllers.InfoManagement
         public async Task<IActionResult> Index()
         {
             var applicationDbContext = _context.dailyAttendanceModels.Include(d => d.Student);
-            return View("~/Views/InfoManagement/DailyAttendance/Index.cshtml", await applicationDbContext.ToListAsync());
+            return View(await applicationDbContext.ToListAsync());
         }
 
         // GET: DailyAttendance/Details/5
@@ -42,14 +42,14 @@ namespace SAMS.Controllers.InfoManagement
                 return NotFound();
             }
 
-            return View("~/Views/InfoManagement/DailyAttendance/Details.cshtml", dailyAttendanceModel);
+            return View(dailyAttendanceModel);
         }
 
         // GET: DailyAttendance/Create
         public IActionResult Create()
         {
             ViewData["StudentId"] = new SelectList(_context.studentInfoModels, "StudentID", "StudentID");
-            return View("~/Views/InfoManagement/DailyAttendance/Create.cshtml");
+            return View();
         }
 
         // POST: DailyAttendance/Create
@@ -57,7 +57,7 @@ namespace SAMS.Controllers.InfoManagement
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("AttendanceId,StudentId,AttendanceDate,Status,ReasonForAbsence")] DailyAttendanceModel dailyAttendanceModel)
+        public async Task<IActionResult> Create([Bind("AttendanceId,StudentId,AttendanceDate,Status,ReasonForAbsence,ChosenBellSchedule")] DailyAttendanceModel dailyAttendanceModel)
         {
             if (ModelState.IsValid)
             {
@@ -66,7 +66,7 @@ namespace SAMS.Controllers.InfoManagement
                 return RedirectToAction(nameof(Index));
             }
             ViewData["StudentId"] = new SelectList(_context.studentInfoModels, "StudentID", "StudentID", dailyAttendanceModel.StudentId);
-            return View("~/Views/InfoManagement/DailyAttendance/Create.cshtml", dailyAttendanceModel);
+            return View(dailyAttendanceModel);
         }
 
         // GET: DailyAttendance/Edit/5
@@ -83,7 +83,7 @@ namespace SAMS.Controllers.InfoManagement
                 return NotFound();
             }
             ViewData["StudentId"] = new SelectList(_context.studentInfoModels, "StudentID", "StudentID", dailyAttendanceModel.StudentId);
-            return View("~/Views/InfoManagement/DailyAttendance/Edit.cshtml", dailyAttendanceModel);
+            return View(dailyAttendanceModel);
         }
 
         // POST: DailyAttendance/Edit/5
@@ -91,7 +91,7 @@ namespace SAMS.Controllers.InfoManagement
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("AttendanceId,StudentId,AttendanceDate,Status,ReasonForAbsence")] DailyAttendanceModel dailyAttendanceModel)
+        public async Task<IActionResult> Edit(int id, [Bind("AttendanceId,StudentId,AttendanceDate,Status,ReasonForAbsence,ChosenBellSchedule")] DailyAttendanceModel dailyAttendanceModel)
         {
             if (id != dailyAttendanceModel.AttendanceId)
             {
@@ -119,7 +119,7 @@ namespace SAMS.Controllers.InfoManagement
                 return RedirectToAction(nameof(Index));
             }
             ViewData["StudentId"] = new SelectList(_context.studentInfoModels, "StudentID", "StudentID", dailyAttendanceModel.StudentId);
-            return View("~/Views/InfoManagement/DailyAttendance/Edit.cshtml", dailyAttendanceModel);
+            return View(dailyAttendanceModel);
         }
 
         // GET: DailyAttendance/Delete/5
@@ -138,7 +138,7 @@ namespace SAMS.Controllers.InfoManagement
                 return NotFound();
             }
 
-            return View("~/Views/InfoManagement/DailyAttendance/Delete.cshtml", dailyAttendanceModel);
+            return View(dailyAttendanceModel);
         }
 
         // POST: DailyAttendance/Delete/5

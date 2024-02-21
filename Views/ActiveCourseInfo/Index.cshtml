@@ -1,0 +1,89 @@
+﻿@model IEnumerable<SAMS.Models.ActiveCourseInfoModel>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.CourseName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CourseCode)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CourseLevel)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CourseBellNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CourseLength)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CourseTaughtDays)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DailyAttChecked)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.B2BAttChecked)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Teacher)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Room)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.CourseName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CourseCode)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CourseLevel)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CourseBellNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CourseLength)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CourseTaughtDays)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DailyAttChecked)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.B2BAttChecked)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Teacher.TeacherID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Room.RoomId)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.CourseId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.CourseId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.CourseId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

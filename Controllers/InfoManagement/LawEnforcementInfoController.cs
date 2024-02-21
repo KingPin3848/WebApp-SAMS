@@ -22,7 +22,7 @@ namespace SAMS.Controllers.InfoManagement
         // GET: LawEnforcementInfo
         public async Task<IActionResult> Index()
         {
-            return View("~/Views/InfoManagement/LawEnforcementInfo/Index.cshtml", await _context.lawEnforcementInfoModels.ToListAsync());
+            return View(await _context.lawEnforcementInfoModels.ToListAsync());
         }
 
         // GET: LawEnforcementInfo/Details/5
@@ -40,13 +40,13 @@ namespace SAMS.Controllers.InfoManagement
                 return NotFound();
             }
 
-            return View("~/Views/InfoManagement/LawEnforcementInfo/Details.cshtml", lawEnforcementInfoModel);
+            return View(lawEnforcementInfoModel);
         }
 
         // GET: LawEnforcementInfo/Create
         public IActionResult Create()
         {
-            return View("~/Views/InfoManagement/LawEnforcementInfo/Create.cshtml");
+            return View();
         }
 
         // POST: LawEnforcementInfo/Create
@@ -62,7 +62,7 @@ namespace SAMS.Controllers.InfoManagement
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View("~/Views/InfoManagement/LawEnforcementInfo/Create.cshtml", lawEnforcementInfoModel);
+            return View(lawEnforcementInfoModel);
         }
 
         // GET: LawEnforcementInfo/Edit/5
@@ -78,7 +78,7 @@ namespace SAMS.Controllers.InfoManagement
             {
                 return NotFound();
             }
-            return View("~/Views/InfoManagement/LawEnforcementInfo/Edit.cshtml", lawEnforcementInfoModel);
+            return View(lawEnforcementInfoModel);
         }
 
         // POST: LawEnforcementInfo/Edit/5
@@ -113,7 +113,7 @@ namespace SAMS.Controllers.InfoManagement
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View("~/Views/InfoManagement/LawEnforcementInfo/Edit.cshtml", lawEnforcementInfoModel);
+            return View(lawEnforcementInfoModel);
         }
 
         // GET: LawEnforcementInfo/Delete/5
@@ -131,7 +131,7 @@ namespace SAMS.Controllers.InfoManagement
                 return NotFound();
             }
 
-            return View("~/Views/InfoManagement/LawEnforcementInfo/Delete.cshtml", lawEnforcementInfoModel);
+            return View(lawEnforcementInfoModel);
         }
 
         // POST: LawEnforcementInfo/Delete/5

@@ -1,0 +1,77 @@
+﻿@model IEnumerable<SAMS.Models.TeacherInfoModel>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.TeacherFirstNameMod)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TeacherMiddleNameMod)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TeacherLastNameMod)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TeacherPreferredNameMod)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TeacherEmailMod)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TeacherPhoneMod)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Teaches5Days)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Room)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.TeacherFirstNameMod)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TeacherMiddleNameMod)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TeacherLastNameMod)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TeacherPreferredNameMod)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TeacherEmailMod)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TeacherPhoneMod)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Teaches5Days)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Room.RoomId)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.TeacherID">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.TeacherID">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.TeacherID">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

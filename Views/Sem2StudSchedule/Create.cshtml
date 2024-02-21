@@ -1,0 +1,134 @@
+﻿@model SAMS.Models.Sem2StudSchedule
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>Sem2StudSchedule</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="StudentID" class="control-label"></label>
+                <select asp-for="StudentID" class ="form-control" asp-items="ViewBag.StudentID"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="Bell1CourseIDMod" class="control-label"></label>
+                <input asp-for="Bell1CourseIDMod" class="form-control" />
+                <span asp-validation-for="Bell1CourseIDMod" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Bell2MonWedCourseIDMod" class="control-label"></label>
+                <input asp-for="Bell2MonWedCourseIDMod" class="form-control" />
+                <span asp-validation-for="Bell2MonWedCourseIDMod" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Bell2TueThurCourseIDMod" class="control-label"></label>
+                <input asp-for="Bell2TueThurCourseIDMod" class="form-control" />
+                <span asp-validation-for="Bell2TueThurCourseIDMod" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Bell3MonWedCourseIDMod" class="control-label"></label>
+                <input asp-for="Bell3MonWedCourseIDMod" class="form-control" />
+                <span asp-validation-for="Bell3MonWedCourseIDMod" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Bell3TueThurCourseIDMod" class="control-label"></label>
+                <input asp-for="Bell3TueThurCourseIDMod" class="form-control" />
+                <span asp-validation-for="Bell3TueThurCourseIDMod" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Bell4MonWedCourseIDMod" class="control-label"></label>
+                <input asp-for="Bell4MonWedCourseIDMod" class="form-control" />
+                <span asp-validation-for="Bell4MonWedCourseIDMod" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Bell4TueThurCourseIDMod" class="control-label"></label>
+                <input asp-for="Bell4TueThurCourseIDMod" class="form-control" />
+                <span asp-validation-for="Bell4TueThurCourseIDMod" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Bell5MonWedCourseIDMod" class="control-label"></label>
+                <input asp-for="Bell5MonWedCourseIDMod" class="form-control" />
+                <span asp-validation-for="Bell5MonWedCourseIDMod" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Bell5TueThurCourseIDMod" class="control-label"></label>
+                <input asp-for="Bell5TueThurCourseIDMod" class="form-control" />
+                <span asp-validation-for="Bell5TueThurCourseIDMod" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Bell6MonWedCourseIDMod" class="control-label"></label>
+                <input asp-for="Bell6MonWedCourseIDMod" class="form-control" />
+                <span asp-validation-for="Bell6MonWedCourseIDMod" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Bell6TueThurCourseIDMod" class="control-label"></label>
+                <input asp-for="Bell6TueThurCourseIDMod" class="form-control" />
+                <span asp-validation-for="Bell6TueThurCourseIDMod" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Bell7MonWedCourseIDMod" class="control-label"></label>
+                <input asp-for="Bell7MonWedCourseIDMod" class="form-control" />
+                <span asp-validation-for="Bell7MonWedCourseIDMod" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Bell7TueThurCourseIDMod" class="control-label"></label>
+                <input asp-for="Bell7TueThurCourseIDMod" class="form-control" />
+                <span asp-validation-for="Bell7TueThurCourseIDMod" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FriBell2CourseIDMod" class="control-label"></label>
+                <input asp-for="FriBell2CourseIDMod" class="form-control" />
+                <span asp-validation-for="FriBell2CourseIDMod" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FriBell3CourseIDMod" class="control-label"></label>
+                <input asp-for="FriBell3CourseIDMod" class="form-control" />
+                <span asp-validation-for="FriBell3CourseIDMod" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FriBell4CourseIDMod" class="control-label"></label>
+                <input asp-for="FriBell4CourseIDMod" class="form-control" />
+                <span asp-validation-for="FriBell4CourseIDMod" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FriBell5CourseIDMod" class="control-label"></label>
+                <input asp-for="FriBell5CourseIDMod" class="form-control" />
+                <span asp-validation-for="FriBell5CourseIDMod" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FriBell6CourseIDMod" class="control-label"></label>
+                <input asp-for="FriBell6CourseIDMod" class="form-control" />
+                <span asp-validation-for="FriBell6CourseIDMod" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FriBell7CourseIDMod" class="control-label"></label>
+                <input asp-for="FriBell7CourseIDMod" class="form-control" />
+                <span asp-validation-for="FriBell7CourseIDMod" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="AvesBellCourseIDMod" class="control-label"></label>
+                <input asp-for="AvesBellCourseIDMod" class="form-control" />
+                <span asp-validation-for="AvesBellCourseIDMod" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="LunchCodeMod" class="control-label"></label>
+                <input asp-for="LunchCodeMod" class="form-control" />
+                <span asp-validation-for="LunchCodeMod" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+

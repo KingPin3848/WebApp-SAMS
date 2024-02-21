@@ -23,7 +23,7 @@ namespace SAMS.Controllers.InfoManagement
         public async Task<IActionResult> Index()
         {
             var applicationDbContext = _context.studentInfoModels.Include(s => s.AssignedEASuport).Include(s => s.Counselor);
-            return View("~/Views/InfoManagement/StudentManagement/Index.cshtml", await applicationDbContext.ToListAsync());
+            return View(await applicationDbContext.ToListAsync());
         }
 
         // GET: StudentManagement/Details/5
@@ -43,7 +43,7 @@ namespace SAMS.Controllers.InfoManagement
                 return NotFound();
             }
 
-            return View("~/Views/InfoManagement/StudentManagement/Details.cshtml", studentInfoModel);
+            return View(studentInfoModel);
         }
 
         // GET: StudentManagement/Create
@@ -51,7 +51,7 @@ namespace SAMS.Controllers.InfoManagement
         {
             ViewData["StudentEAID"] = new SelectList(_context.eASuportInfoModels, "EaID", "EaID");
             ViewData["StudentCounselorID"] = new SelectList(_context.counselorModels, "CounselorId", "CounselorId");
-            return View("~/Views/InfoManagement/StudentManagement/Create.cshtml");
+            return View();
         }
 
         // POST: StudentManagement/Create
@@ -69,7 +69,7 @@ namespace SAMS.Controllers.InfoManagement
             }
             ViewData["StudentEAID"] = new SelectList(_context.eASuportInfoModels, "EaID", "EaID", studentInfoModel.StudentEAID);
             ViewData["StudentCounselorID"] = new SelectList(_context.counselorModels, "CounselorId", "CounselorId", studentInfoModel.StudentCounselorID);
-            return View("~/Views/InfoManagement/StudentManagement/Create.cshtml", studentInfoModel);
+            return View(studentInfoModel);
         }
 
         // GET: StudentManagement/Edit/5
@@ -87,7 +87,7 @@ namespace SAMS.Controllers.InfoManagement
             }
             ViewData["StudentEAID"] = new SelectList(_context.eASuportInfoModels, "EaID", "EaID", studentInfoModel.StudentEAID);
             ViewData["StudentCounselorID"] = new SelectList(_context.counselorModels, "CounselorId", "CounselorId", studentInfoModel.StudentCounselorID);
-            return View("~/Views/InfoManagement/StudentManagement/Edit.cshtml", studentInfoModel);
+            return View(studentInfoModel);
         }
 
         // POST: StudentManagement/Edit/5
@@ -124,7 +124,7 @@ namespace SAMS.Controllers.InfoManagement
             }
             ViewData["StudentEAID"] = new SelectList(_context.eASuportInfoModels, "EaID", "EaID", studentInfoModel.StudentEAID);
             ViewData["StudentCounselorID"] = new SelectList(_context.counselorModels, "CounselorId", "CounselorId", studentInfoModel.StudentCounselorID);
-            return View("~/Views/InfoManagement/StudentManagement/Edit.cshtml", studentInfoModel);
+            return View(studentInfoModel);
         }
 
         // GET: StudentManagement/Delete/5
@@ -144,7 +144,7 @@ namespace SAMS.Controllers.InfoManagement
                 return NotFound();
             }
 
-            return View("~/Views/InfoManagement/StudentManagement/Delete.cshtml", studentInfoModel);
+            return View(studentInfoModel);
         }
 
         // POST: StudentManagement/Delete/5

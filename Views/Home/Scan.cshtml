@@ -3,13 +3,18 @@
 *@
 @{
 }
+@{
+    ViewData["Title"] = "Scan";
+}
+<h1>Scan</h1>
 
 
-<h1>Scan from WebCam:</h1>
 <div id="video-container">
     <video id="qr-video"></video>
 </div>
+
 <br />
+
 <h5 id="textdanger" class="text-danger"></h5>
 
 <b>Detected QR code: </b>
@@ -55,9 +60,9 @@
     // ####### Web Cam Scanning #######
     const scanner = new QrScanner(
         video,
-        (result) => { 
+        (result) => {
             setResult(camQrResult, result);
-                sendScannedData(result);
+            sendScannedData(result);
         },
         {
             onDecodeError: (error) => {
@@ -129,7 +134,7 @@
     document.getElementById("stop-button").addEventListener("click", () => {
         scanner.stop();
     });
-    
+
     function sendScannedData(result) {
         var schoolId = @ViewBag.Schoolid;
 
@@ -147,22 +152,26 @@
 
         var data = {
             'ScannedCode': qrCodeData,
-            'ScannedCodeTimestamp': formattedTime,
             'issuedSchoolId': schoolId
         };
 
         $.ajax({
-            url: '@Url.Action("Scan","Home")',
+            url: '@Url.Action("Scan", "Home")',
             type: 'POST',
             data: data,
             success: function (response) {
                 if (response.redirectUrl) {
                     window.location.href = response.redirectUrl;
                 }
+                if (response.dangertext) {
+                    alert(response.textdanger);
+                    document.getElementById("textdanger").textContent = response.dangertext;
+                    console.log(response);
+                }
             }, error: function (response) {
                 if (response.dangertext) {
                     alert(response.textdanger);
-                    document.getElementById("textdanger").textContent = response.textdanger;
+                    document.getElementById("textdanger").textContent = response.dangertext;
                     console.log(response);
                 }
             }

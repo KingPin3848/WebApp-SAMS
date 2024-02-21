@@ -22,7 +22,7 @@ namespace SAMS.Controllers.InfoManagement
         // GET: AttendanceOfficeMember
         public async Task<IActionResult> Index()
         {
-            return View("~/Views/InfoManagement/AttendanceOfficeMember/Index.cshtml", await _context.attendanceOfficeMemberModels.ToListAsync());
+            return View(await _context.attendanceOfficeMemberModels.ToListAsync());
         }
 
         // GET: AttendanceOfficeMember/Details/5
@@ -40,13 +40,13 @@ namespace SAMS.Controllers.InfoManagement
                 return NotFound();
             }
 
-            return View("~/Views/InfoManagement/AttendanceOfficeMember/Details.cshtml", attendanceOfficeMemberModel);
+            return View(attendanceOfficeMemberModel);
         }
 
         // GET: AttendanceOfficeMember/Create
         public IActionResult Create()
         {
-            return View("~/Views/InfoManagement/AttendanceOfficeMember/Create.cshtml");
+            return View();
         }
 
         // POST: AttendanceOfficeMember/Create
@@ -62,7 +62,7 @@ namespace SAMS.Controllers.InfoManagement
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View("~/Views/InfoManagement/AttendanceOfficeMember/Create.cshtml", attendanceOfficeMemberModel);
+            return View(attendanceOfficeMemberModel);
         }
 
         // GET: AttendanceOfficeMember/Edit/5
@@ -78,7 +78,7 @@ namespace SAMS.Controllers.InfoManagement
             {
                 return NotFound();
             }
-            return View("~/Views/InfoManagement/AttendanceOfficeMember/Edit.cshtml", attendanceOfficeMemberModel);
+            return View(attendanceOfficeMemberModel);
         }
 
         // POST: AttendanceOfficeMember/Edit/5
@@ -113,7 +113,7 @@ namespace SAMS.Controllers.InfoManagement
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View("~/Views/InfoManagement/AttendanceOfficeMember/Edit.cshtml", attendanceOfficeMemberModel);
+            return View(attendanceOfficeMemberModel);
         }
 
         // GET: AttendanceOfficeMember/Delete/5
@@ -131,7 +131,7 @@ namespace SAMS.Controllers.InfoManagement
                 return NotFound();
             }
 
-            return View("~/Views/InfoManagement/AttendanceOfficeMember/Delete.cshtml", attendanceOfficeMemberModel);
+            return View(attendanceOfficeMemberModel);
         }
 
         // POST: AttendanceOfficeMember/Delete/5

@@ -41,7 +41,5 @@ namespace SAMS.Models
         public AttendanceOfficeMemberModel? AddressedByAttendanceOfficeMember { get; set; } = null!;
         public CounselorModel? AssignedByCounselor { get; set; } = null!;
         public CounselorModel? AddressedByCounselor { get; set; } = null!;
-
-
     }
 }

@@ -13,19 +13,17 @@ namespace SAMS.Controllers.InfoManagement
     public class ActiveCourseInfoController : Controller
     {
         private readonly ApplicationDbContext _context;
-        private readonly ILogger<ActiveCourseInfoController> _logger;
 
-        public ActiveCourseInfoController(ApplicationDbContext context, ILogger<ActiveCourseInfoController> logger)
+        public ActiveCourseInfoController(ApplicationDbContext context)
         {
             _context = context;
-            _logger = logger;
         }
 
         // GET: ActiveCourseInfo
         public async Task<IActionResult> Index()
         {
             var applicationDbContext = _context.activeCourseInfoModels.Include(a => a.Room).Include(a => a.Teacher);
-            return View("~/Views/InfoManagement/ActiveCourseInfo/Index.cshtml", await applicationDbContext.ToListAsync());
+            return View(await applicationDbContext.ToListAsync());
         }
 
         // GET: ActiveCourseInfo/Details/5
@@ -45,7 +43,7 @@ namespace SAMS.Controllers.InfoManagement
                 return NotFound();
             }
 
-            return View("~/Views/InfoManagement/ActiveCourseInfo/Details.cshtml", activeCourseInfoModel);
+            return View(activeCourseInfoModel);
         }
 
         // GET: ActiveCourseInfo/Create
@@ -53,7 +51,7 @@ namespace SAMS.Controllers.InfoManagement
         {
             ViewData["CourseRoomID"] = new SelectList(_context.roomLocationInfoModels, "RoomId", "RoomId");
             ViewData["CourseTeacherID"] = new SelectList(_context.teacherInfoModels, "TeacherID", "TeacherID");
-            return View("~/Views/InfoManagement/ActiveCourseInfo/Create.cshtml");
+            return View();
         }
 
         // POST: ActiveCourseInfo/Create
@@ -61,7 +59,7 @@ namespace SAMS.Controllers.InfoManagement
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("CourseId,CourseName,CourseCode,CourseLevel,CourseTeacherID,CourseRoomID,CourseBellNumber,CourseLength,CourseTaughtDays")] ActiveCourseInfoModel activeCourseInfoModel)
+        public async Task<IActionResult> Create([Bind("CourseId,CourseName,CourseCode,CourseLevel,CourseTeacherID,CourseRoomID,CourseBellNumber,CourseLength,CourseTaughtDays,DailyAttChecked,B2BAttChecked")] ActiveCourseInfoModel activeCourseInfoModel)
         {
             if (ModelState.IsValid)
             {
@@ -69,17 +67,9 @@ namespace SAMS.Controllers.InfoManagement
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-
-            foreach(var modelstate in ViewData.ModelState.Values)
-            {
-                foreach (var error in modelstate.Errors)
-                {
-                    _logger.LogError(error.ErrorMessage);
-                }
-            }
             ViewData["CourseRoomID"] = new SelectList(_context.roomLocationInfoModels, "RoomId", "RoomId", activeCourseInfoModel.CourseRoomID);
             ViewData["CourseTeacherID"] = new SelectList(_context.teacherInfoModels, "TeacherID", "TeacherID", activeCourseInfoModel.CourseTeacherID);
-            return View("~/Views/InfoManagement/ActiveCourseInfo/Create.cshtml", activeCourseInfoModel);
+            return View(activeCourseInfoModel);
         }
 
         // GET: ActiveCourseInfo/Edit/5
@@ -97,7 +87,7 @@ namespace SAMS.Controllers.InfoManagement
             }
             ViewData["CourseRoomID"] = new SelectList(_context.roomLocationInfoModels, "RoomId", "RoomId", activeCourseInfoModel.CourseRoomID);
             ViewData["CourseTeacherID"] = new SelectList(_context.teacherInfoModels, "TeacherID", "TeacherID", activeCourseInfoModel.CourseTeacherID);
-            return View("~/Views/InfoManagement/ActiveCourseInfo/Edit.cshtml", activeCourseInfoModel);
+            return View(activeCourseInfoModel);
         }
 
         // POST: ActiveCourseInfo/Edit/5
@@ -105,7 +95,7 @@ namespace SAMS.Controllers.InfoManagement
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("CourseId,CourseName,CourseCode,CourseLevel,CourseTeacherID,CourseRoomID,CourseBellNumber,CourseLength,CourseTaughtDays")] ActiveCourseInfoModel activeCourseInfoModel)
+        public async Task<IActionResult> Edit(int id, [Bind("CourseId,CourseName,CourseCode,CourseLevel,CourseTeacherID,CourseRoomID,CourseBellNumber,CourseLength,CourseTaughtDays,DailyAttChecked,B2BAttChecked")] ActiveCourseInfoModel activeCourseInfoModel)
         {
             if (id != activeCourseInfoModel.CourseId)
             {
@@ -134,7 +124,7 @@ namespace SAMS.Controllers.InfoManagement
             }
             ViewData["CourseRoomID"] = new SelectList(_context.roomLocationInfoModels, "RoomId", "RoomId", activeCourseInfoModel.CourseRoomID);
             ViewData["CourseTeacherID"] = new SelectList(_context.teacherInfoModels, "TeacherID", "TeacherID", activeCourseInfoModel.CourseTeacherID);
-            return View("~/Views/InfoManagement/ActiveCourseInfo/Edit.cshtml", activeCourseInfoModel);
+            return View(activeCourseInfoModel);
         }
 
         // GET: ActiveCourseInfo/Delete/5
@@ -154,7 +144,7 @@ namespace SAMS.Controllers.InfoManagement
                 return NotFound();
             }
 
-            return View("~/Views/InfoManagement/ActiveCourseInfo/Delete.cshtml", activeCourseInfoModel);
+            return View(activeCourseInfoModel);
         }
 
         // POST: ActiveCourseInfo/Delete/5

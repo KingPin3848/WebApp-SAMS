@@ -1,0 +1,61 @@
+﻿@model SAMS.Areas.Admin.Controllers.AccountManagerController.InputModel
+@{
+    ViewData["Title"] = "Create Account";
+}
+
+<h1>Create</h1>
+
+<title>@ViewData["Title"]</title>
+
+<div class="row">
+    <div class="col-md-4">
+        <form id="registerForm" method="post">
+            <h2>Create a new account.</h2>
+            <hr />
+            <div asp-validation-summary="ModelOnly" class="text-danger pb-2"></div>
+            <div class="form-floating pb-2">
+                <input asp-for="Email" class="form-control" aria-required="true" />
+                <label asp-for="Email"></label>
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-floating pb-2">
+                <input asp-for="SchoolIssuedId" class="form-control" aria-required="true" />
+                <label asp-for="SchoolIssuedId"></label>
+                <span asp-validation-for="SchoolIssuedId" class="text-danger"></span>
+            </div>
+            <div class="form-floating pb-2">
+                <input asp-for="ActivationCode" class="form-control" aria-required="true" />
+                <label asp-for="ActivationCode"></label>
+                <span asp-validation-for="ActivationCode" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="AssignedRole" class="form-label"></label>
+                <div class="form-floating">
+                    <select asp-for="AssignedRole" class="form-select">
+                        <option value="HS School Admin">HS School Admin</option>
+                        <option value="Synnovation Lab Admin">Synnovation Lab Admin</option>
+                        <option value="Education Support (EA)">Education Support (EA)</option>
+                        <option value="Attendance Office Member">Attendance Office Member</option>
+                        <option value="Nurse">Nurse</option>
+                        <option value="Law Enforcement">Law Enforcement</option>
+                        <option value="Synnovation Lab QR Code Scanner Management">Synnovation Lab QR Code Scanner Management</option>
+                        <option value="Teacher">Teacher</option>
+                        <option value="Substitute Teacher">Substitute Teacher</option>
+                        <option value="Student">Student</option>
+                        <option value="District Admin">District Admin</option>
+                        <option value="Developer">Developer</option>
+                    </select>
+                    <span asp-validation-for="AssignedRole" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+            @*<button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Add Account</button>*@
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

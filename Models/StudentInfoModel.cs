@@ -54,11 +54,11 @@ namespace SAMS.Models
         public EASuportInfoModel? AssignedEASuport { get; set; } = null!;
         public ICollection<HallPassInfoModel>? HallPasses { get; set; } = null!;
         public ICollection<FastPassModel>? FastPasses { get; set; } = null!;
-        public ICollection<CourseEnrollmentModel>? CourseEnrollments { get; set; } = null!;
         public ICollection<BellAttendanceModel>? BellAttendances { get; set; } = null!;
         public ICollection<DailyAttendanceModel>? DailyAttendances { get; set; } = null!;
         public EASuportInfoModel? EASuport { get; set; } = null!;
         public ICollection<PassRequestInfoModel>? PassRequestsForStudent { get; set; } = null!;
-        public StudentScheduleInfoModel? StudentSchedule { get; set; } = null!;
+        public Sem1StudSchedule? Sem1StudSchedule { get; set; } = null!;
+        public Sem2StudSchedule? Sem2StudSchedule { get; set; } = null!;
     }
 }

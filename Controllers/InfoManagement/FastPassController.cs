@@ -22,8 +22,8 @@ namespace SAMS.Controllers.InfoManagement
         // GET: FastPass
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.fastPassModels.Include(f => f.Room).Include(f => f.Student).Include(f => f.StudentSchedule);
-            return View("~/Views/InfoManagement/FastPass/Index.cshtml", await applicationDbContext.ToListAsync());
+            var applicationDbContext = _context.fastPassModels.Include(f => f.Room).Include(f => f.Sem1StudSchedule).Include(f => f.Sem2StudSchedule).Include(f => f.Student);
+            return View(await applicationDbContext.ToListAsync());
         }
 
         // GET: FastPass/Details/5
@@ -36,24 +36,26 @@ namespace SAMS.Controllers.InfoManagement
 
             var fastPassModel = await _context.fastPassModels
                 .Include(f => f.Room)
+                .Include(f => f.Sem1StudSchedule)
+                .Include(f => f.Sem2StudSchedule)
                 .Include(f => f.Student)
-                .Include(f => f.StudentSchedule)
                 .FirstOrDefaultAsync(m => m.FastPassIDMod == id);
             if (fastPassModel == null)
             {
                 return NotFound();
             }
 
-            return View("~/Views/InfoManagement/FastPass/Details.cshtml", fastPassModel);
+            return View(fastPassModel);
         }
 
         // GET: FastPass/Create
         public IActionResult Create()
         {
             ViewData["EndLocationID"] = new SelectList(_context.roomLocationInfoModels, "RoomId", "RoomId");
+            ViewData["CourseIDFromStudentSchedule"] = new SelectList(_context.sem1StudSchedules, "StudentID", "StudentID");
+            ViewData["CourseIDFromStudentSchedule"] = new SelectList(_context.sem2StudSchedules, "StudentID", "StudentID");
             ViewData["StudentID"] = new SelectList(_context.studentInfoModels, "StudentID", "StudentID");
-            ViewData["CourseIDFromStudentSchedule"] = new SelectList(_context.studentScheduleInfoModels, "StudentID", "StudentID");
-            return View("~/Views/InfoManagement/FastPass/Create.cshtml");
+            return View();
         }
 
         // POST: FastPass/Create
@@ -70,9 +72,10 @@ namespace SAMS.Controllers.InfoManagement
                 return RedirectToAction(nameof(Index));
             }
             ViewData["EndLocationID"] = new SelectList(_context.roomLocationInfoModels, "RoomId", "RoomId", fastPassModel.EndLocationID);
+            ViewData["CourseIDFromStudentSchedule"] = new SelectList(_context.sem1StudSchedules, "StudentID", "StudentID", fastPassModel.CourseIDFromStudentSchedule);
+            ViewData["CourseIDFromStudentSchedule"] = new SelectList(_context.sem2StudSchedules, "StudentID", "StudentID", fastPassModel.CourseIDFromStudentSchedule);
             ViewData["StudentID"] = new SelectList(_context.studentInfoModels, "StudentID", "StudentID", fastPassModel.StudentID);
-            ViewData["CourseIDFromStudentSchedule"] = new SelectList(_context.studentScheduleInfoModels, "StudentID", "StudentID", fastPassModel.CourseIDFromStudentSchedule);
-            return View("~/Views/InfoManagement/FastPass/Create.cshtml", fastPassModel);
+            return View(fastPassModel);
         }
 
         // GET: FastPass/Edit/5
@@ -89,9 +92,10 @@ namespace SAMS.Controllers.InfoManagement
                 return NotFound();
             }
             ViewData["EndLocationID"] = new SelectList(_context.roomLocationInfoModels, "RoomId", "RoomId", fastPassModel.EndLocationID);
+            ViewData["CourseIDFromStudentSchedule"] = new SelectList(_context.sem1StudSchedules, "StudentID", "StudentID", fastPassModel.CourseIDFromStudentSchedule);
+            ViewData["CourseIDFromStudentSchedule"] = new SelectList(_context.sem2StudSchedules, "StudentID", "StudentID", fastPassModel.CourseIDFromStudentSchedule);
             ViewData["StudentID"] = new SelectList(_context.studentInfoModels, "StudentID", "StudentID", fastPassModel.StudentID);
-            ViewData["CourseIDFromStudentSchedule"] = new SelectList(_context.studentScheduleInfoModels, "StudentID", "StudentID", fastPassModel.CourseIDFromStudentSchedule);
-            return View("~/Views/InfoManagement/FastPass/Edit.cshtml", fastPassModel);
+            return View(fastPassModel);
         }
 
         // POST: FastPass/Edit/5
@@ -127,9 +131,10 @@ namespace SAMS.Controllers.InfoManagement
                 return RedirectToAction(nameof(Index));
             }
             ViewData["EndLocationID"] = new SelectList(_context.roomLocationInfoModels, "RoomId", "RoomId", fastPassModel.EndLocationID);
+            ViewData["CourseIDFromStudentSchedule"] = new SelectList(_context.sem1StudSchedules, "StudentID", "StudentID", fastPassModel.CourseIDFromStudentSchedule);
+            ViewData["CourseIDFromStudentSchedule"] = new SelectList(_context.sem2StudSchedules, "StudentID", "StudentID", fastPassModel.CourseIDFromStudentSchedule);
             ViewData["StudentID"] = new SelectList(_context.studentInfoModels, "StudentID", "StudentID", fastPassModel.StudentID);
-            ViewData["CourseIDFromStudentSchedule"] = new SelectList(_context.studentScheduleInfoModels, "StudentID", "StudentID", fastPassModel.CourseIDFromStudentSchedule);
-            return View("~/Views/InfoManagement/FastPass/Edit.cshtml", fastPassModel);
+            return View(fastPassModel);
         }
 
         // GET: FastPass/Delete/5
@@ -142,15 +147,16 @@ namespace SAMS.Controllers.InfoManagement
 
             var fastPassModel = await _context.fastPassModels
                 .Include(f => f.Room)
+                .Include(f => f.Sem1StudSchedule)
+                .Include(f => f.Sem2StudSchedule)
                 .Include(f => f.Student)
-                .Include(f => f.StudentSchedule)
                 .FirstOrDefaultAsync(m => m.FastPassIDMod == id);
             if (fastPassModel == null)
             {
                 return NotFound();
             }
 
-            return View("~/Views/InfoManagement/FastPass/Delete.cshtml", fastPassModel);
+            return View(fastPassModel);
         }
 
         // POST: FastPass/Delete/5

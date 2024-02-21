@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using SAMS.Interfaces;
+using System.ComponentModel.DataAnnotations;
 
 namespace SAMS.Models
 {
@@ -16,12 +17,14 @@ namespace SAMS.Models
         [Display(Name = ("Reason For Absence"))]
         public string ReasonForAbsence { get; set; } = null!;
         [Display(Name = ("Bell Number"))]
-        public int BellNumId { get; set; } = 0!;
-        [Display(Name = ("Course Name"))]
-        public int ScheduleId { get; set; } = 0!;
+        public string BellNumId { get; set; } = null!;
+        [Display(Name = ("Course Id"))]
+        public int CourseId { get; set; } = 0!;
+        [Display(Name = ("Bell Schedule for the day"))]
+        public string ChosenBellSchedule { get; set; } = null!;
 
         //Navigation properties
-        public StudentScheduleInfoModel? StudentScheduleInfoModel { get; set; } = null!;
+        public ActiveCourseInfoModel? ActiveCourses { get; set; } = null!;
         public StudentInfoModel? StudentInfo { get; set; } = null!;
     }
 }

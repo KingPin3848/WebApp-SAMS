@@ -1,0 +1,161 @@
+﻿@model IEnumerable<SAMS.Models.Sem1StudSchedule>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Bell1CourseIDMod)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Bell2MonWedCourseIDMod)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Bell2TueThurCourseIDMod)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Bell3MonWedCourseIDMod)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Bell3TueThurCourseIDMod)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Bell4MonWedCourseIDMod)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Bell4TueThurCourseIDMod)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Bell5MonWedCourseIDMod)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Bell5TueThurCourseIDMod)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Bell6MonWedCourseIDMod)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Bell6TueThurCourseIDMod)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Bell7MonWedCourseIDMod)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Bell7TueThurCourseIDMod)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FriBell2CourseIDMod)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FriBell3CourseIDMod)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FriBell4CourseIDMod)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FriBell5CourseIDMod)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FriBell6CourseIDMod)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FriBell7CourseIDMod)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AvesBellCourseIDMod)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LunchCodeMod)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Student)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Bell1CourseIDMod)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Bell2MonWedCourseIDMod)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Bell2TueThurCourseIDMod)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Bell3MonWedCourseIDMod)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Bell3TueThurCourseIDMod)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Bell4MonWedCourseIDMod)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Bell4TueThurCourseIDMod)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Bell5MonWedCourseIDMod)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Bell5TueThurCourseIDMod)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Bell6MonWedCourseIDMod)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Bell6TueThurCourseIDMod)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Bell7MonWedCourseIDMod)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Bell7TueThurCourseIDMod)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FriBell2CourseIDMod)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FriBell3CourseIDMod)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FriBell4CourseIDMod)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FriBell5CourseIDMod)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FriBell6CourseIDMod)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FriBell7CourseIDMod)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AvesBellCourseIDMod)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LunchCodeMod)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Student.StudentID)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.StudentID">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.StudentID">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.StudentID">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

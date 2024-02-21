@@ -7,5 +7,6 @@ namespace SAMS.Controllers
         public string? SchoolId { get; set; } = null!;
         public string? ActivationCode {  get; set; } = null!;
         public Boolean? UserExperienceEnabled { get; set; }
+        public IList<string>? Role { get; set; }
     }
 }

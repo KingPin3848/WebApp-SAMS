@@ -33,6 +33,7 @@ namespace SAMS.Models
 
         //REVIEW THIS ONE ABOUT ROOM LOCATION INFO MODEL AND IF THIS SHOULD BE AN ICOLLECTION OR A SINGULAR
         public RoomLocationInfoModel? Room { get; set; } = null!;
-        public StudentScheduleInfoModel? StudentSchedule { get; set; } = null!;
+        public Sem1StudSchedule? Sem1StudSchedule { get; set; } = null!;
+        public Sem2StudSchedule? Sem2StudSchedule { get; set; } = null!;
     }
 }

@@ -22,7 +22,7 @@ namespace SAMS.Controllers.InfoManagement
         // GET: Counselor
         public async Task<IActionResult> Index()
         {
-            return View("~/Views/InfoManagement/Counselor/Index.cshtml", await _context.counselorModels.ToListAsync());
+            return View(await _context.counselorModels.ToListAsync());
         }
 
         // GET: Counselor/Details/5
@@ -40,13 +40,13 @@ namespace SAMS.Controllers.InfoManagement
                 return NotFound();
             }
 
-            return View("~/Views/InfoManagement/Counselor/Details.cshtml", counselorModel);
+            return View(counselorModel);
         }
 
         // GET: Counselor/Create
         public IActionResult Create()
         {
-            return View("~/Views/InfoManagement/Counselor/Create.cshtml");
+            return View();
         }
 
         // POST: Counselor/Create
@@ -62,7 +62,7 @@ namespace SAMS.Controllers.InfoManagement
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View("~/Views/InfoManagement/Counselor/Create.cshtml", counselorModel);
+            return View(counselorModel);
         }
 
         // GET: Counselor/Edit/5
@@ -78,7 +78,7 @@ namespace SAMS.Controllers.InfoManagement
             {
                 return NotFound();
             }
-            return View("~/Views/InfoManagement/Counselor/Edit.cshtml", counselorModel);
+            return View(counselorModel);
         }
 
         // POST: Counselor/Edit/5
@@ -113,7 +113,7 @@ namespace SAMS.Controllers.InfoManagement
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View("~/Views/InfoManagement/Counselor/Edit.cshtml", counselorModel);
+            return View(counselorModel);
         }
 
         // GET: Counselor/Delete/5
@@ -131,7 +131,7 @@ namespace SAMS.Controllers.InfoManagement
                 return NotFound();
             }
 
-            return View("~/Views/InfoManagement/Counselor/Delete.cshtml", counselorModel);
+            return View(counselorModel);
         }
 
         // POST: Counselor/Delete/5

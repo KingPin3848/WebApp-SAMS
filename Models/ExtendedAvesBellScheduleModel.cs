@@ -1,8 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using SAMS.Interfaces;
+using System.ComponentModel.DataAnnotations;
 
 namespace SAMS.Models
 {
-    public class ExtendedAvesBellScheduleModel
+    public class ExtendedAvesBellScheduleModel : IBellSchedule
     {
         [Display(Name = ("Bell"))]
         public string BellName { get; set; } = null!;

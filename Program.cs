@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.EntityFrameworkCore;
 using SAMS.Controllers;
 using SAMS.Data;
+using SAMS.Services;
 using System.Drawing.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -35,6 +36,9 @@ builder.Services.AddAuthentication().AddGoogle(googleOptions =>
        googleOptions.ClientSecret = configuration["Authentication:Google:ClientSecret"];
    });
 
+//Attendance Generation Service
+//builder.Services.AddHostedService<DefaultAttendanceAdditionService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -57,6 +61,10 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
+app.MapControllerRoute(
+    name: "areas",
+    pattern: "{area:exists}/{controller=Scan}/{action=Scan}/{id?}"
+    );
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");

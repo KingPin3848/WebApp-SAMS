@@ -17,6 +17,6 @@ namespace SAMS.Models
         //Navigation properties
         public RoomLocationInfoModel? Room { get; set; } = null!;
         public TeacherInfoModel? Teacher { get; set; } = null!;
-        public TeachingScheduleModel? Schedule { get; set; } = null!;
+        //public TeachingScheduleModel? Schedule { get; set; } = null!;
     }
 }
