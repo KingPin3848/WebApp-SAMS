@@ -99,7 +99,14 @@ namespace SAMS.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnGetCallbackAsync(string returnUrl = null, string remoteError = null)
         {
-            returnUrl = returnUrl ?? Url.Content("~/");
+            if(User.IsInRole("Teacher"))
+            {
+                returnUrl = returnUrl ?? Url.Action("Dashbaord", "TeacherDashboard");
+            }
+            else
+            {
+                returnUrl = returnUrl ?? Url.Content("~/");
+            }
             if (remoteError != null)
             {
                 ErrorMessage = $"Error from external provider: {remoteError}";
@@ -131,6 +138,10 @@ namespace SAMS.Areas.Identity.Pages.Account
                         {
                             _logger.LogInformation("THE ACCOUNT IS NOT LOCKED OUT.");
                             _logger.LogInformation("{Name} logged in with {LoginProvider} provider.", info.Principal.Identity.Name, info.LoginProvider);
+                            if (User.IsInRole("Teacher"))
+                            {
+                                returnUrl = "~/TeacherDashboard/Dashboard";
+                            }
                             return LocalRedirect(returnUrl);
                         }
                     }
@@ -209,19 +220,19 @@ namespace SAMS.Areas.Identity.Pages.Account
         //    return Page();
         //}
 
-        private ApplicationUser CreateUser()
-        {
-            try
-            {
-                return Activator.CreateInstance<ApplicationUser>();
-            }
-            catch
-            {
-                throw new InvalidOperationException($"Can't create an instance of '{nameof(ApplicationUser)}'. " +
-                    $"Ensure that '{nameof(ApplicationUser)}' is not an abstract class and has a parameterless constructor, or alternatively " +
-                    $"override the external login page in /Areas/Identity/Pages/Account/ExternalLogin.cshtml");
-            }
-        }
+        //private ApplicationUser CreateUser()
+        //{
+        //    try
+        //    {
+        //        return Activator.CreateInstance<ApplicationUser>();
+        //    }
+        //    catch
+        //    {
+        //        throw new InvalidOperationException($"Can't create an instance of '{nameof(ApplicationUser)}'. " +
+        //            $"Ensure that '{nameof(ApplicationUser)}' is not an abstract class and has a parameterless constructor, or alternatively " +
+        //            $"override the external login page in /Areas/Identity/Pages/Account/ExternalLogin.cshtml");
+        //    }
+        //}
 
         private IUserEmailStore<ApplicationUser> GetEmailStore()
         {

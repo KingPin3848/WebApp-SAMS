@@ -1,0 +1,54 @@
+﻿@model IEnumerable<SAMS.Models.StudentInfoModel>
+
+@{
+    ViewData["Title"] = "Roster";
+}
+
+<h1>@ViewBag.Title</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.StudentID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StudentFirstNameMod) @Html.DisplayNameFor(model => model.StudentLastNameMod)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StudentEmailMod)
+            </th>
+            <th>
+                Daily Attendance Status
+            </th>
+            <th>
+                Bell Attendance Status
+            </th>
+
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StudentID)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StudentFirstNameMod) @Html.DisplayFor(modelItem => item.StudentLastNameMod)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StudentEmailMod)
+                </td>
+                <td>
+                    present
+                </td>
+                <td>
+                    present
+                </td>
+
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SAMS.Controllers;
@@ -7,14 +8,15 @@ using SAMS.Data;
 namespace SAMS.Areas.Teacher.Controllers
 {
     [Area("Teacher")]
-    public class DashboardController : Controller
+    [Authorize(Roles = "Teacher")]
+    public class TeacherDashboardController : Controller
     {
-        private readonly ILogger<DashboardController> _logger;
+        private readonly ILogger<TeacherDashboardController> _logger;
         private readonly ApplicationDbContext _context;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public DashboardController(ILogger<DashboardController> logger, ApplicationDbContext context, SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager)
+        public TeacherDashboardController(ILogger<TeacherDashboardController> logger, ApplicationDbContext context, SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager)
         {
             _logger = logger;
             _context = context;
@@ -28,7 +30,7 @@ namespace SAMS.Areas.Teacher.Controllers
         }
 
         // GET: DashboardController
-        public async Task<IActionResult> TeacherDashboard()
+        public async Task<IActionResult> Dashboard()
         {
 
             var user = await _userManager.GetUserAsync(User);
@@ -38,7 +40,7 @@ namespace SAMS.Areas.Teacher.Controllers
             }
 
             var courses = _context.activeCourseInfoModels.Where(a => a.CourseTeacherID == user.SchoolId).ToList();
-            List<string> bells = null!;
+            List<string> bells = new List<string>();
 
             for (int i = 0; i < courses.Count; i++)
             {

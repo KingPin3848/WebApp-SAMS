@@ -33,10 +33,10 @@ namespace SAMS.Controllers
 
         public async Task<IActionResult> UserToRole()
         {
-            var user = await _userManager.FindByNameAsync("vyasshivam2006@gmail.com");
+            var user = await _userManager.FindByNameAsync("245176@sycamoreschools.org");
             if (user != null)
             {
-                var result = await _userManager.AddToRoleAsync(user, "Developer");
+                var result = await _userManager.AddToRoleAsync(user, "Student");
                 if (result.Succeeded)
                 {
                     Console.WriteLine("It worked.");

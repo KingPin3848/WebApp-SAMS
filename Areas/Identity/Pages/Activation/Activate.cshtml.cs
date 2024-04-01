@@ -31,6 +31,7 @@ namespace SAMS.Areas.Identity.Pages.Activation
 
         public void OnGet()
         {
+
         }
 
         [BindProperty]
