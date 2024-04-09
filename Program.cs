@@ -62,6 +62,10 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{id?}"
+    );
 app.MapAreaControllerRoute(
     name: "Teacher",
     areaName: "Teacher",
@@ -81,10 +85,6 @@ app.MapAreaControllerRoute(
     name: "Student",
     areaName: "Student",
     pattern: "{area=Student}/{controller}/{action}/{id?}"
-    );
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}"
     );
 app.MapRazorPages();
 
