@@ -1,0 +1,15 @@
+﻿@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<h1>Dashboard</h1>
+
+<div>
+
+    @if (User?.IsInRole("Teacher") == true)
+    {
+        <partial name="_TeacherPartial.cshtml"/>
+    }
+
+</div>
+

@@ -140,7 +140,7 @@ namespace SAMS.Areas.Identity.Pages.Account
                             _logger.LogInformation("{Name} logged in with {LoginProvider} provider.", info.Principal.Identity.Name, info.LoginProvider);
                             if (User.IsInRole("Teacher"))
                             {
-                                returnUrl = "~/TeacherDashboard/Dashboard";
+                                returnUrl = "~/Dashboard/Dashboard";
                             }
                             return LocalRedirect(returnUrl);
                         }

@@ -7,26 +7,19 @@ using SAMS.Data;
 
 namespace SAMS.Areas.Teacher.Controllers
 {
-    [Area("Teacher")]
-    [Authorize(Roles = "Teacher")]
-    public class TeacherDashboardController : Controller
+    public class DashboardController : Controller
     {
-        private readonly ILogger<TeacherDashboardController> _logger;
+        private readonly ILogger<DashboardController> _logger;
         private readonly ApplicationDbContext _context;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public TeacherDashboardController(ILogger<TeacherDashboardController> logger, ApplicationDbContext context, SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager)
+        public DashboardController(ILogger<DashboardController> logger, ApplicationDbContext context, SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager)
         {
             _logger = logger;
             _context = context;
             _signInManager = signInManager;
             _userManager = userManager;
-        }
-
-        public IActionResult Index()
-        {
-            return View();
         }
 
         // GET: DashboardController
@@ -55,7 +48,7 @@ namespace SAMS.Areas.Teacher.Controllers
         }
 
         //GET: ClassAttendance
-        public async Task<IActionResult> ClassAttendance(string id)
+        public IActionResult ClassAttendance(string id)
         {
             string passedId = id;
 

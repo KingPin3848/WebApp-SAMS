@@ -1,19 +1,17 @@
-﻿@{
-    ViewData["Title"] = "Dashboard";
-}
+﻿
+@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
 
-<h1>Dashboard</h1>
-
-<br />
-<br />
-
-<h3>Bells</h3>
+<h3>
+    Bells
+</h3>
 <br />
 
 <table class="table-borderless">
     <tr class="row">
-            @for (int i = 0; i < ViewBag.Bells.Count; i++)
-            {
+        @for (int i = 0; i < ViewBag.Bells.Count; i++)
+        {
             <td class="col">
                 <div class="card" style="width: 12rem; border-radius:35px;">
                     <a class="btn" asp-controller="TeacherRoster" asp-action="Roster" asp-route-bell="@ViewBag.Bells[i]">
@@ -30,13 +28,7 @@
                         </div>
                     </a>
                 </div>
-                </td>
-            }
+            </td>
+        }
     </tr>
 </table>
-
-
-<br />
-<br />
-
-<h3>Features</h3>
