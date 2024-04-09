@@ -1,176 +1,233 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.EntityFrameworkCore;
 using SAMS.Controllers;
 using SAMS.Data;
+using SAMS.Interfaces;
 using SAMS.Models;
 
 namespace SAMS.Services
 {
     public class DailyAttendanceAdditionService : BackgroundService
     {
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly RoleManager<ApplicationUser> _roleManager;
-        private readonly ApplicationDbContext _context;
         private readonly ILogger<DailyAttendanceAdditionService> _logger;
+        private readonly IServiceScopeFactory _scopeFactory;
 
-        public DailyAttendanceAdditionService(UserManager<ApplicationUser> userManager, RoleManager<ApplicationUser> roleManager, ApplicationDbContext dbContext, ILogger<DailyAttendanceAdditionService> logger)
+        public DailyAttendanceAdditionService(ILogger<DailyAttendanceAdditionService> logger, IServiceScopeFactory scopeFactory)
         {
-            _context = dbContext;
-            _userManager = userManager;
-            _roleManager = roleManager;
             _logger = logger;
+            _scopeFactory = scopeFactory;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-                var holidayDates = _context.schedulerModels.Where(a => a.Type == "No School @SHS").Select(a => a.Date).ToList();
-                var todayDate = DateOnly.FromDateTime(DateTime.Now.Date);
-
-                foreach (var date in holidayDates)
-                {
-                    if (date == todayDate)
-                    {
-                        await Task.Delay(TimeSpan.FromDays(1));
-                    }
-                    else
-                    {
-                        await ScheduleRunner(stoppingToken);
-                    }
-                }
+                await holidayRun();
 
                 //await GenerateAttendanceFieldsDailyAttTask();
                 //await Task.Delay(TimeSpan.FromDays(1), stoppingToken);
             }
         }
 
-        private async Task ScheduleRunner(CancellationToken token)
+        private async Task holidayRun()
         {
-            var chosenBellSched = _context.chosenBellSchedModels.Select(a => a.Name).ToList();
-            var dateTime = DateTime.Now;
-            var day = dateTime.DayOfWeek;
-
-            if (day == DayOfWeek.Monday || day == DayOfWeek.Tuesday || day == DayOfWeek.Wednesday || day == DayOfWeek.Thursday || day == DayOfWeek.Friday)
+            using (var scope = _scopeFactory.CreateAsyncScope())
             {
-                var time = dateTime.TimeOfDay;
-                TimeSpan dailyBellStart = new TimeSpan(7, 15, 00);
-                TimeSpan peprallyStart = new TimeSpan(7, 15, 00);
-                TimeSpan _2hrdelStart = new TimeSpan(9, 15, 00);
-                TimeSpan extAvesStart = new TimeSpan(7, 15, 00);
+                var _context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
-                switch (chosenBellSched[0])
+                var holidayDates = _context.schedulerModels.Where(a => a.Type == "No School @SHS").Select(a => a.Date).ToList();
+                var todayDate = DateOnly.FromDateTime(DateTime.Now.Date);
+
+                if (holidayDates == null)
                 {
-                    case "Daily Bell Schedule":
+                    _logger.LogWarning("Holidays is null and the task if delayed by 1 DAY. Done by the if statement in holidayRun");
+                    await Task.Delay(TimeSpan.FromDays(1));
+                }
+                else
+                {
+                    foreach (var date in holidayDates)
                     {
-                        if (time >= dailyBellStart && time <= new TimeSpan(07, 20, 00))
+                        if (date == todayDate)
                         {
-                            await GenerateAttendanceFieldsDailyAttTask();
-                            break;
+                            _logger.LogWarning("Today is a holiday and the task is delayed by 1 DAY. Done by the if statement in holidayRun");
+                            await Task.Delay(TimeSpan.FromDays(1));
                         }
-                        break;
-                    }
-
-                    case "Pep Rally Bell Schedule":
-                    {
-                        if (time >= peprallyStart && time <= new TimeSpan(07, 20, 00))
+                        else
                         {
-                            await GenerateAttendanceFieldsDailyAttTask();
-                            break;
+                            await ScheduleRunner();
                         }
-                        break;
-                    }
-
-                    case "2 Hour Delay Bell Schedule":
-                    {
-                        if (time >= _2hrdelStart && time <= new TimeSpan(09, 20, 00))
-                        {
-                            await GenerateAttendanceFieldsDailyAttTask();
-                            break;
-                        }
-                        break;
-                    }
-
-                    case "Extended Aves Bell Schedule":
-                    {
-                        if (time >= extAvesStart && time <= new TimeSpan(07, 20, 00))
-                        {
-                            await GenerateAttendanceFieldsDailyAttTask();
-                            break;
-                        }
-                        break;
-                    }
-                    default:
-                    {
-                        await Task.Delay(TimeSpan.FromDays(1), token);
-                        break;
                     }
                 }
             }
-            else
+        }
+
+        private async Task ScheduleRunner()
+        {
+            using (var scope = _scopeFactory.CreateAsyncScope())
             {
-                await Task.Delay(TimeSpan.FromDays(1), token);
+                var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
+                var chosenBellSched = context.chosenBellSchedModels.Select(a => a.Name).ToList();
+                var dateTime = DateTime.Now;
+                var day = dateTime.DayOfWeek;
+
+                if (day == DayOfWeek.Monday || day == DayOfWeek.Tuesday || day == DayOfWeek.Wednesday || day == DayOfWeek.Thursday || day == DayOfWeek.Friday)
+                {
+                    var time = dateTime.TimeOfDay;
+                    TimeSpan dailyBellStart = new TimeSpan(7, 15, 00);
+                    TimeSpan peprallyStart = new TimeSpan(7, 15, 00);
+                    TimeSpan _2hrdelStart = new TimeSpan(9, 15, 00);
+                    TimeSpan extAvesStart = new TimeSpan(7, 15, 00);
+
+                    switch (chosenBellSched[0])
+                    {
+                        case "Daily Bell Schedule":
+                            {
+                                if (time >= dailyBellStart && time <= new TimeSpan(07, 20, 00))
+                                {
+                                    await GenerateAttendanceFieldsDailyAttTask();
+                                    break;
+                                }
+                                await Task.Delay(TimeSpan.FromMinutes(2.0));
+                                break;
+                            }
+
+                        case "Pep Rally Bell Schedule":
+                            {
+                                if (time >= peprallyStart && time <= new TimeSpan(23, 59, 00))
+                                {
+                                    await GenerateAttendanceFieldsDailyAttTask();
+                                    break;
+                                }
+                                await Task.Delay(TimeSpan.FromMinutes(2.0));
+                                break;
+                            }
+
+                        case "2 Hour Delay Bell Schedule":
+                            {
+                                if (time >= _2hrdelStart && time <= new TimeSpan(09, 20, 00))
+                                {
+                                    await GenerateAttendanceFieldsDailyAttTask();
+                                    break;
+                                }
+                                await Task.Delay(TimeSpan.FromMinutes(2.0));
+                                break;
+                            }
+
+                        case "Extended Aves Bell Schedule":
+                            {
+                                if (time >= extAvesStart && time <= new TimeSpan(07, 20, 00))
+                                {
+                                    await GenerateAttendanceFieldsDailyAttTask();
+                                    break;
+                                }
+                                await Task.Delay(TimeSpan.FromMinutes(2.0));
+                                break;
+                            }
+
+                        default:
+                            {
+                                _logger.LogInformation("The task is supposed to be delayed for 1 DAY. Done by default case in ScheduleRunner");
+                                await Task.Delay(TimeSpan.FromDays(1));
+                                break;
+                            }
+                    }
+                }
+                else
+                {
+                    _logger.LogWarning("The task is going to be delayed for 1 DAY. Done the by the else statement @line 136 in ScheduleRunner.");
+                    await Task.Delay(TimeSpan.FromDays(1));
+                }
             }
         }
 
         private async Task GenerateAttendanceFieldsDailyAttTask()
         {
-            var date = DateTime.Now.Date;
-            var students = await _userManager.GetUsersInRoleAsync("Student");
-            var noncheckDailyCourses = _context.activeCourseInfoModels.Where(a => a.DailyAttChecked == false).ToList();
-
-            foreach (var student in students)
+            using (var scope = _scopeFactory.CreateAsyncScope())
             {
-                var studentId = int.Parse(student.SchoolId);
+                var _userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+                var _context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
-                for (int bell = 0; bell <= 7; bell++)
+                var date = DateOnly.FromDateTime(DateTime.Now);
+
+                var students = await _userManager.GetUsersInRoleAsync("Student");
+                var noncheckDailyCourses = _context.activeCourseInfoModels.Where(a => a.DailyAttChecked == false).ToList();
+
+                foreach (var student in students)
                 {
-                    var sem2start = _context.schedulerModels.Where(a => a.Type == "Semester 2").Select(a => a.Date).FirstOrDefault();
-                    int bellCourseId;
-                    if (DateOnly.FromDateTime(DateTime.Now.Date) >= sem2start)
-                    {
-                        var studentSchedule = await _context.sem2StudSchedules.FindAsync(studentId);
-                        bellCourseId = GetS2BellCourseId(studentSchedule, bell);
-                    }
-                    else
-                    {
-                        var studentSchedule = await _context.sem1StudSchedules.FindAsync(studentId);
-                        bellCourseId = GetS1BellCourseId(studentSchedule, bell);
-                    }
-                    var matchingCourse = noncheckDailyCourses.Any(course => course.CourseId == bellCourseId);
+                    int studentId = int.Parse(student.SchoolId!);
 
-                    if (matchingCourse == true)
+                    for (int bell = 0; bell <= 7; bell++)
                     {
-                        // If the course for this bell is in noncheckDailyCourses, skip to the next student
-                        _logger.LogInformation("Course for this bell is in the noncheckDailyCourses.");
-                    }
-                    else
-                    {
-                        var entryExists = _context.dailyAttendanceModels.Any(a =>
-                            a.StudentId == studentId &&
-                            a.AttendanceDate == date);
-
-                        if (!entryExists)
+                        var sem2start = _context.schedulerModels.Where(a => a.Type == "Semester 2").Select(a => a.Date).FirstOrDefault();
+                        IStudentSchedule? studentSchedule = (DateOnly.FromDateTime(DateTime.Now.Date) >= sem2start) ? (await _context.sem2StudSchedules.FindAsync(studentId)) : (await _context.sem1StudSchedules.FindAsync(studentId));
+                        var sem2started = (DateOnly.FromDateTime(DateTime.Now.Date) >= sem2start);
+                        int bellCourseId;
+                        if (sem2started)
                         {
-                            //Add new entry if entry doesn't exist
-                            var newEntry = new DailyAttendanceModel
+                            bellCourseId = GetS2BellCourseId(studentSchedule!, bell);
+                        }
+                        else
+                        {
+                            bellCourseId = GetS1BellCourseId(studentSchedule!, bell);
+                        }
+
+                        if (noncheckDailyCourses.Any(course => course.CourseId == bellCourseId))
+                        {
+                            // If the course for this bell is in noncheckDailyCourses, skip to the next student
+                            _logger.LogInformation("Course for this bell is in the noncheckDailyCourses.");
+                        }
+                        else
+                        {
+                            var entryExists = _context.dailyAttendanceModels.Any(a =>
+                                a.StudentId == studentId &&
+                                a.AttendanceDate == date);
+
+                            if (entryExists)
                             {
-                                StudentId = studentId,
-                                AttendanceDate = date,
-                                Status = "Unknown",
-                                ReasonForAbsence = "NA"
-                            };
-                            _context.dailyAttendanceModels.Add(newEntry);
-                            await _context.SaveChangesAsync();
+                                _logger.LogInformation("Entry exists.");
+                                continue;
+                            }
+                            else
+                            {
+                                var chosenBellSched = _context.chosenBellSchedModels.Select(a => a.Name).ToList();
+                                //Add new entry if entry doesn't exist
+                                var newEntry = new DailyAttendanceModel
+                                {
+                                    StudentId = studentId,
+                                    AttendanceDate = date,
+                                    Status = "Unknown",
+                                    ReasonForAbsence = "Not Applicable Yet",
+                                    ChosenBellSchedule = chosenBellSched[0]!
+                                };
+
+                                var timestamp = new TimestampModel
+                                {
+                                    Timestamp = DateTime.Now,
+                                    ActionMade = $"Daily attendance default added for student ID {studentId} for Date: {DateTime.Now}",
+                                    MadeBy = "Daily Att. Addition Service",
+                                    Comments = ""
+                                };
+
+                                //Restart numbering
+                                var rawSqlString = "DBCC CHECKIDENT ('dailyAttendanceModels', RESEED, 0);";
+                                _context.Database.ExecuteSqlRaw(rawSqlString);
+
+                                _context.dailyAttendanceModels.Add(newEntry);
+                                _context.timestampModels.Add(timestamp);
+                                await _context.SaveChangesAsync();
+
+                            }
                         }
                     }
                 }
             }
-
-
+            await Task.Delay(TimeSpan.FromMinutes(5));
             await Task.CompletedTask;
         }
 
-        private int GetS1BellCourseId(Sem1StudSchedule studentSchedule, int bell)
+        private int GetS1BellCourseId(IStudentSchedule studentSchedule, int bell)
         {
             switch (bell)
             {
@@ -239,11 +296,13 @@ namespace SAMS.Services
                     }
                     return studentSchedule.Bell7TueThurCourseIDMod;
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(bell), "Invalid bell name provided.");
+                    {
+                        throw new ArgumentOutOfRangeException(nameof(bell), "Invalid bell name provided.");
+                    }
             }
         }
 
-        private int GetS2BellCourseId(Sem2StudSchedule studentSchedule, int bell)
+        private int GetS2BellCourseId(IStudentSchedule studentSchedule, int bell)
         {
             switch (bell)
             {
@@ -312,7 +371,9 @@ namespace SAMS.Services
                     }
                     return studentSchedule.Bell7TueThurCourseIDMod;
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(bell), "Invalid bell name provided.");
+                    {
+                        throw new ArgumentOutOfRangeException(nameof(bell), "Invalid bell name provided.");
+                    }
             }
         }
     }

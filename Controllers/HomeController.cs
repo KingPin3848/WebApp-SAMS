@@ -78,7 +78,7 @@ namespace SAMS.Controllers
                     return Json(new { dangertext = "Chosen Bell Schedule for the day not found. Please contact the administrator and developer for additional assistance." });
                 }
 
-                var determination = DetermineCurrentBell(chosenBellSchedule[0]);
+                var determination = DetermineCurrentBell(chosenBellSchedule[0]!);
                 var currentBell = determination[0];
                 TimeSpan startTimeAsDetermined = TimeSpan.Parse(determination[1]);
                 TimeSpan endTimeAsDetermined = TimeSpan.Parse(determination[2]);
@@ -141,13 +141,13 @@ namespace SAMS.Controllers
                     {
                         var dailyEntryExists = _context.dailyAttendanceModels.Any(a =>
                             a.StudentId == studId &&
-                            a.AttendanceDate == DateTime.Now.Date &&
+                            a.AttendanceDate == DateOnly.FromDateTime(DateTime.Now) &&
                             a.Status == "Unknown");
                         if (dailyEntryExists)
                         {
                             var dailyAttendanceEntry = _context.dailyAttendanceModels.First(a =>
                                 a.StudentId == studId &&
-                                a.AttendanceDate == DateTime.Now.Date &&
+                                a.AttendanceDate == DateOnly.FromDateTime(DateTime.Now) &&
                                 a.Status == "Unknown");
                             var timeStamp = new TimestampModel();
 

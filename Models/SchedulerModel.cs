@@ -3,9 +3,10 @@ using System.ComponentModel.DataAnnotations;
 
 namespace SAMS.Models
 {
-    [Keyless]
     public class SchedulerModel
     {
+        [Key]
+        public int Id { get; set; }
         [Display(Name = "Name of event")]
         public string NameOfEvent { get; set; } = null!;
         [Display(Name = "Date of event")]

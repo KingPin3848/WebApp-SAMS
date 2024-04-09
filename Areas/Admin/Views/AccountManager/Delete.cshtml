@@ -1,14 +1,24 @@
-﻿@model SAMS.Controllers.ApplicationUser
+﻿@using SAMS.Models
+@model SAMS.Controllers.ApplicationUser
 @{
     ViewData["Title"] = "Delete";
+    var studentinfo = ViewData["Student Info"] as string;
+    var teacherinfo = ViewData["Teacher Info"] as string;
+    var attmeminfo = ViewData["Attendance Office Member Info"] as string;
+    var hsadmininfo = ViewData["HS School Admin Info"] as string;
+    var synnlabadmininfo = ViewData["Synnovation Lab Admin Info"] as string;
+    var eainfo = ViewData["EA Support Info"] as string;
+    var nurseinfo = ViewData["Nurse Info"] as string;
+    var lawenfinfo = ViewData["Law Enforcement Info"] as string;
+    var scannermgmtinfo = ViewData["QR Code Scanner Management Info"] as string;
+    var subteacherinfo = ViewData["Substitute Teacher Info"] as string;
+    var districtadmininfo = ViewData["District Admin Info"] as string;
 }
-
 <h1>Delete</h1>
 <h4>Account Manager</h4>
 
 <h3>Are you sure you want to delete this?</h3>
 <div>
-    <h4>Role Manager</h4>
     <hr />
     <dl class="row">
         <dt class="col-sm-2">
@@ -21,7 +31,11 @@
             @Html.DisplayNameFor(model => model.Role)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Role)
+            @foreach (var role in Model.Role.ToList())
+            {
+                @Html.Raw(role)
+                <br />
+            }
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Email)
@@ -36,7 +50,169 @@
             @Html.DisplayFor(model => model.ActivationCode)
         </dd>
     </dl>
+    <br />
+    <br />
+    <div>
+        @if (studentinfo != null)
+        {
+            <h3 class="text-danger">You are about to delete student's data as well. It includes:</h3>
 
+            <br />
+            <ul class="text-danger">
+                <li>
+                    Identifiable information
+                </li>
+                <li>
+                    Student Schedule (Both Semester 1 and 2)
+                </li>
+            </ul>
+            <br />
+            <br />
+        }
+        @if (teacherinfo != null)
+        {
+            <h3 class="text-danger">You are about to delete teacher's data as well. It includes:</h3>
+
+            <br />
+            <ul class="text-danger">
+                <li>
+                    Courses taught by the teacher
+                </li>
+                <li>
+                    Identifiable information
+                </li>
+            </ul>
+            <br />
+            <br />
+        }
+        @if (attmeminfo != null)
+        {
+            <h3 class="text-danger">You are about to delete attendance member's data as well. It includes:</h3>
+
+            <br />
+            <ul class="text-danger">
+                <li>
+                    Identifiable information
+                </li>
+            </ul>
+            <br />
+            <br />
+        }
+        @if (hsadmininfo != null)
+        {
+            <h3 class="text-danger">You are about to delete HS Admin's data as well. It includes:</h3>
+
+            <br />
+            <ul class="text-danger">
+                <li>
+                    Identifiable information
+                </li>
+            </ul>
+            <br />
+            <br />
+        }
+        @if (synnlabadmininfo != null)
+        {
+            <h3 class="text-danger">You are about to delete SynnLab Admin's data as well. It includes:</h3>
+
+            <br />
+            <ul class="text-danger">
+                <li>
+                    Courses taught by the SynnLab Admin
+                </li>
+                <li>
+                    Identifiable information
+                </li>
+            </ul>
+            <br />
+            <br />
+        }
+        @if (eainfo != null)
+        {
+            <h3 class="text-danger">You are about to delete EA's data as well. It includes:</h3>
+
+            <br />
+            <ul class="text-danger">
+                <li>
+                    Identifiable information
+                </li>
+            </ul>
+            <br />
+            <br />
+        }
+        @if (nurseinfo != null)
+        {
+            <h3 class="text-danger">You are about to delete nurse's data as well. It includes:</h3>
+
+            <br />
+            <ul class="text-danger">
+                <li>
+                    Identifiable information
+                </li>
+            </ul>
+            <br />
+            <br />
+        }
+        @if (lawenfinfo != null)
+        {
+            <h3 class="text-danger">You are about to delete officer's data as well. It includes:</h3>
+
+            <br />
+            <ul class="text-danger">
+                <li>
+                    Identifiable information
+                </li>
+            </ul>
+            <br />
+            <br />
+        }
+        @if (scannermgmtinfo != null)
+        {
+            <h3 class="text-danger">You are about to delete QR Code Scanner's data as well. It includes:</h3>
+
+            <br />
+            <ul class="text-danger">
+                <li>
+                    Technical Details
+                </li>
+                <li>
+                    Identifiable Information
+                </li>
+            </ul>
+            <br />
+            <br />
+        }
+        @if (subteacherinfo != null)
+        {
+            <h3 class="text-danger">You are about to delete the sub's data as well. It includes:</h3>
+
+            <br />
+            <ul class="text-danger">
+                <li>
+                    Identifiable information
+                </li>
+            </ul>
+            <br />
+            <br />
+        }
+        @if (districtadmininfo != null)
+        {
+            <h3 class="text-danger">You are about to delete district admin's data as well. It includes:</h3>
+
+            <br />
+            <ul class="text-danger">
+                <li>
+                    Courses taught by the teacher
+                </li>
+                <li>
+                    Identifiable information
+                </li>
+            </ul>
+            <br />
+            <br />
+        }
+        <h4 class="text-danger">All data related to attendance and hall-passes is not deleted from here. They are deleted automatically by the system exactly after 1 Year (as determined by the system) from the date & time of addition in the database.</h4>
+    </div>
     <form asp-action="DeleteConfirmed">
         <input type="hidden" asp-for="Id" />
         <input type="submit" value="Delete" class="btn btn-danger" /> |

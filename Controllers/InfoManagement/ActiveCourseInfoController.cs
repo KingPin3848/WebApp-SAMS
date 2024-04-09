@@ -19,14 +19,14 @@ namespace SAMS.Controllers.InfoManagement
             _context = context;
         }
 
-        // GET: ActiveCourseInfo
+        // GET: ActiveCourseInfoModels
         public async Task<IActionResult> Index()
         {
             var applicationDbContext = _context.activeCourseInfoModels.Include(a => a.Room).Include(a => a.Teacher);
             return View(await applicationDbContext.ToListAsync());
         }
 
-        // GET: ActiveCourseInfo/Details/5
+        // GET: ActiveCourseInfoModels/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -46,15 +46,15 @@ namespace SAMS.Controllers.InfoManagement
             return View(activeCourseInfoModel);
         }
 
-        // GET: ActiveCourseInfo/Create
+        // GET: ActiveCourseInfoModels/Create
         public IActionResult Create()
         {
-            ViewData["CourseRoomID"] = new SelectList(_context.roomLocationInfoModels, "RoomId", "RoomId");
+            ViewData["CourseRoomID"] = new SelectList(_context.roomLocationInfoModels, "RoomNumberMod", "RoomNumberMod");
             ViewData["CourseTeacherID"] = new SelectList(_context.teacherInfoModels, "TeacherID", "TeacherID");
             return View();
         }
 
-        // POST: ActiveCourseInfo/Create
+        // POST: ActiveCourseInfoModels/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -67,12 +67,12 @@ namespace SAMS.Controllers.InfoManagement
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CourseRoomID"] = new SelectList(_context.roomLocationInfoModels, "RoomId", "RoomId", activeCourseInfoModel.CourseRoomID);
+            ViewData["CourseRoomID"] = new SelectList(_context.roomLocationInfoModels, "RoomNumberMod", "RoomNumberMod", activeCourseInfoModel.CourseRoomID);
             ViewData["CourseTeacherID"] = new SelectList(_context.teacherInfoModels, "TeacherID", "TeacherID", activeCourseInfoModel.CourseTeacherID);
             return View(activeCourseInfoModel);
         }
 
-        // GET: ActiveCourseInfo/Edit/5
+        // GET: ActiveCourseInfoModels/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -85,12 +85,12 @@ namespace SAMS.Controllers.InfoManagement
             {
                 return NotFound();
             }
-            ViewData["CourseRoomID"] = new SelectList(_context.roomLocationInfoModels, "RoomId", "RoomId", activeCourseInfoModel.CourseRoomID);
+            ViewData["CourseRoomID"] = new SelectList(_context.roomLocationInfoModels, "RoomNumberMod", "RoomNumberMod", activeCourseInfoModel.CourseRoomID);
             ViewData["CourseTeacherID"] = new SelectList(_context.teacherInfoModels, "TeacherID", "TeacherID", activeCourseInfoModel.CourseTeacherID);
             return View(activeCourseInfoModel);
         }
 
-        // POST: ActiveCourseInfo/Edit/5
+        // POST: ActiveCourseInfoModels/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -122,12 +122,12 @@ namespace SAMS.Controllers.InfoManagement
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CourseRoomID"] = new SelectList(_context.roomLocationInfoModels, "RoomId", "RoomId", activeCourseInfoModel.CourseRoomID);
+            ViewData["CourseRoomID"] = new SelectList(_context.roomLocationInfoModels, "RoomNumberMod", "RoomNumberMod", activeCourseInfoModel.CourseRoomID);
             ViewData["CourseTeacherID"] = new SelectList(_context.teacherInfoModels, "TeacherID", "TeacherID", activeCourseInfoModel.CourseTeacherID);
             return View(activeCourseInfoModel);
         }
 
-        // GET: ActiveCourseInfo/Delete/5
+        // GET: ActiveCourseInfoModels/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -147,7 +147,7 @@ namespace SAMS.Controllers.InfoManagement
             return View(activeCourseInfoModel);
         }
 
-        // POST: ActiveCourseInfo/Delete/5
+        // POST: ActiveCourseInfoModels/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

@@ -10,7 +10,7 @@ namespace SAMS.Models
         [Display(Name = ("Student ID"))]
         public int StudentId { get; set; } = 0!;
         [Display(Name = ("Date"))]
-        public DateTime? AttendanceDate { get; set; }
+        public DateOnly? AttendanceDate { get; set; }
         [Display(Name = ("Status"))]
         public string Status { get; set; } = null!;
         [Display(Name = ("Reason for Absence"))]

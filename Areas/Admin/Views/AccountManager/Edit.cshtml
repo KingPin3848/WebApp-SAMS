@@ -1,59 +1,47 @@
 ﻿@model SAMS.Controllers.ApplicationUser
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Edit Account";
 }
 
 <h1>Edit</h1>
-<hr />
+<title>@ViewData["Title"]</title>
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <h2>Edit an account.</h2>
+            <hr />
+            <div asp-validation-summary="All" class="text-danger pb-2"></div>
             <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <label asp-for="SchoolId" class="control-label"></label>
+            <div class="form-floating pb-2">
+                <input asp-for="Email" class="form-control" />
+                <label asp-for="Email"></label>
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+
+            <div class="form-floating pb-2">
                 <input asp-for="SchoolId" class="form-control" />
+                <label asp-for="SchoolId"></label>
                 <span asp-validation-for="SchoolId" class="text-danger"></span>
             </div>
 
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
-            <div class="form-group pb-2">
-                <label asp-for="Role" class="control-label"></label>
-                <select asp-for="Role[0]" class="form-control">
-                    <option value="HS School Admin">HS School Admin</option>
-                    <option value="Synnovation Lab Admin">Synnovation Lab Admin</option>
-                    <option value="Education Support (EA)">Education Support (EA)</option>
-                    <option value="Attendance Office Member">Attendance Office Member</option>
-                    <option value="Nurse">Nurse</option>
-                    <option value="Law Enforcement">Law Enforcement</option>
-                    <option value="Synnovation Lab QR Code Scanner Management">Synnovation Lab QR Code Scanner Management</option>
-                    <option value="Teacher">Teacher</option>
-                    <option value="Substitute Teacher">Substitute Teacher</option>
-                    <option value="Student">Student</option>
-                    <option value="District Admin">District Admin</option>
-                    <option value="Developer">Developer</option>
-                </select>
-                <span asp-validation-for="Role[0]" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Email" class="control-label"></label>
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ActivationCode" class="control-label"></label>
+            <div class="form-floating">
                 <input asp-for="ActivationCode" class="form-control" />
+                <label asp-for="ActivationCode"></label>
                 <span asp-validation-for="ActivationCode" class="text-danger"></span>
             </div>
 
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <label asp-for="Role" class="form-label pt-2"></label>
+                <div class="form-floating">
+                    <select asp-for="Role" asp-items="(@ViewData["RoleId"] as SelectList)" class="form-select" multiple>
+                    </select>
+                    <span asp-validation-for="Role" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="form-group pt-4">
+                <input type="submit" value="Save" class="btn btn-primary" /> <a class="p-3" asp-action="Index">Back to List</a>
             </div>
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
 </div>

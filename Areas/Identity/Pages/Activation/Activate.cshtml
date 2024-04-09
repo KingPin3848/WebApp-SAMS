@@ -13,7 +13,7 @@
             <hr />
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-floating pb-2">
-                <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" />
+                <input asp-for="Input.Email" class="form-control" autocomplete="email" aria-required="true" />
                 <label asp-for="Input.Email"></label>
                 <span asp-validation-for="Input.Email" class="text-danger"></span>
             </div>
@@ -23,9 +23,9 @@
                 <span asp-validation-for="Input.ActivationCode" class="text-danger"></span>
             </div>
             <div class="form-floating pb-2">
-                <input asp-for="Input.SchoolIssuedID" class="form-control" autocomplete="new-password" aria-required="true" />
-                <label asp-for="Input.SchoolIssuedID"></label>
-                <span asp-validation-for="Input.SchoolIssuedID" class="text-danger"></span>
+                <input asp-for="Input.SchoolId" class="form-control" autocomplete="new-password" aria-required="true" />
+                <label asp-for="Input.SchoolId"></label>
+                <span asp-validation-for="Input.SchoolId" class="text-danger"></span>
             </div>
             <button id="activateSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Activate</button>
         </form>

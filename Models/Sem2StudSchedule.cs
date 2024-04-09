@@ -10,27 +10,27 @@ namespace SAMS.Models
         [Display(Name = ("Student ID"))]
         public int StudentID { get; set; } = 0!;
         [Display(Name = ("Bell 1 Course Code"))]
-        public int Bell1CourseIDMod { get; set; } = 0!;
+        public int Bell1CourseIDMod { get; set; }
         [Display(Name = ("Bell 2 Mon/Wed Course Code"))]
-        public int Bell2MonWedCourseIDMod { get; set; } = 0!;
+        public int Bell2MonWedCourseIDMod { get; set; }
         [Display(Name = ("Bell 2 Tue/Thurs Course Code"))]
-        public int Bell2TueThurCourseIDMod { get; set; } = 0!;
+        public int Bell2TueThurCourseIDMod { get; set; }
         [Display(Name = ("Bell 3 Mon/Wed Course Code"))]
-        public int Bell3MonWedCourseIDMod { get; set; } = 0!;
+        public int Bell3MonWedCourseIDMod { get; set; }
         [Display(Name = ("Bell 3 Tue/Thur Course Code"))]
-        public int Bell3TueThurCourseIDMod { get; set; } = 0!;
+        public int Bell3TueThurCourseIDMod { get; set; }
         [Display(Name = ("Bell 4 Mon/Wed Course Code"))]
-        public int Bell4MonWedCourseIDMod { get; set; } = 0!;
+        public int Bell4MonWedCourseIDMod { get; set; }
         [Display(Name = ("Bell 4 Tue/Thur Course Code"))]
-        public int Bell4TueThurCourseIDMod { get; set; } = 0!;
+        public int Bell4TueThurCourseIDMod { get; set; }
         [Display(Name = ("Bell 5 Mon/Wed Course Code"))]
-        public int Bell5MonWedCourseIDMod { get; set; } = 0!;
+        public int Bell5MonWedCourseIDMod { get; set; }
         [Display(Name = ("Bell 5 Tue/Thur Course Code"))]
-        public int Bell5TueThurCourseIDMod { get; set; } = 0!;
+        public int Bell5TueThurCourseIDMod { get; set; }
         [Display(Name = ("Bell 6 Mon/Wed Course Code"))]
-        public int Bell6MonWedCourseIDMod { get; set; } = 0!;
+        public int Bell6MonWedCourseIDMod { get; set; }
         [Display(Name = ("Bell 6 Tue/Thur Course Code"))]
-        public int Bell6TueThurCourseIDMod { get; set; } = 0!;
+        public int Bell6TueThurCourseIDMod { get; set; }
         [Display(Name = ("Bell 7 Mon/Wed Course Code"))]
         public int Bell7MonWedCourseIDMod { get; set; }
         [Display(Name = ("Bell 7 Tue/Thur Course Code"))]

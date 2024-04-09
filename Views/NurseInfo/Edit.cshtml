@@ -1,0 +1,56 @@
+﻿@model SAMS.Models.NurseInfoModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>NurseInfoModel</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="NurseID" />
+            <div class="form-group">
+                <label asp-for="NurseFirstNameMod" class="control-label"></label>
+                <input asp-for="NurseFirstNameMod" class="form-control" />
+                <span asp-validation-for="NurseFirstNameMod" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="NurseMiddleNameMod" class="control-label"></label>
+                <input asp-for="NurseMiddleNameMod" class="form-control" />
+                <span asp-validation-for="NurseMiddleNameMod" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="NurseLastNameMod" class="control-label"></label>
+                <input asp-for="NurseLastNameMod" class="form-control" />
+                <span asp-validation-for="NurseLastNameMod" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="NursePreferredNameMod" class="control-label"></label>
+                <input asp-for="NursePreferredNameMod" class="form-control" />
+                <span asp-validation-for="NursePreferredNameMod" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="NurseEmailMod" class="control-label"></label>
+                <input asp-for="NurseEmailMod" class="form-control" />
+                <span asp-validation-for="NurseEmailMod" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="NursePhoneMod" class="control-label"></label>
+                <input asp-for="NursePhoneMod" class="form-control" />
+                <span asp-validation-for="NursePhoneMod" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+

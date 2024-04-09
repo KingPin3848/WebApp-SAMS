@@ -15,6 +15,17 @@
 
 @if (User?.IsInRole("Developer") == true || User?.IsInRole("Student") == true)
 {
+    <div class="card" style="width: 10rem; border-radius:35px;">
+        <a class="btn" asp-area="" asp-controller="DailyAdd" asp-action="Index">
+            <img src="/images/ScanQRCode.png" class="card-img-top" alt="Phone Call" style="border-radius:35px;">
+            <div class="card-body">
+                <h5 class="card-title">Test DailyAdd</h5>
+            </div>
+        </a>
+    </div>
+    <br />
+    <br />
+
 
     //STUDENT VIEW
     <table class="table-borderless">
@@ -126,6 +137,31 @@
                     </a>
                 </div>
             </td>
+
+            <td class="col">
+                <!--STUDENT MANAGEMENT INDEX-->
+                <div class="card" style="width: 10rem; border-radius:35px;">
+                    <a class="btn" asp-area="" asp-controller="Scheduler" asp-action="Index">
+                        <img src="/images/ScanQRCode.png" class="card-img-top" alt="Phone Call" style="border-radius:35px;">
+                        <div class="card-body">
+                            <h5 class="card-title">Scheduler</h5>
+                        </div>
+                    </a>
+                </div>
+            </td>
+
+            <td class="col">
+                <!--Daily Attendance Addition-->
+                <div class="card" style="width: 10rem; border-radius:35px;">
+                    <a class="btn" asp-area="" asp-controller="DailyAdd" asp-action="Index">
+                        <img src="/images/ScanQRCode.png" class="card-img-top" alt="Phone Call" style="border-radius:35px;">
+                        <div class="card-body">
+                            <h5 class="card-title">DailyAdd</h5>
+                        </div>
+                    </a>
+                </div>
+            </td>
+
             <td class="col">
                 <!--ADMIN INFO INDEX-->
                 <div class="card" style="width: 10rem; border-radius:35px;">

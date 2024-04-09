@@ -48,7 +48,7 @@ namespace SAMS.Controllers.InfoManagement
         // GET: TeacherInfo/Create
         public IActionResult Create()
         {
-            ViewData["RoomAssignedId"] = new SelectList(_context.roomLocationInfoModels, "RoomId", "RoomId");
+            ViewData["RoomAssignedId"] = new SelectList(_context.roomLocationInfoModels, "RoomNumberMod", "RoomNumberMod");
             return View();
         }
 
@@ -65,7 +65,7 @@ namespace SAMS.Controllers.InfoManagement
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["RoomAssignedId"] = new SelectList(_context.roomLocationInfoModels, "RoomId", "RoomId", teacherInfoModel.RoomAssignedId);
+            ViewData["RoomAssignedId"] = new SelectList(_context.roomLocationInfoModels, "RoomNumberMod", "RoomNumberMod", teacherInfoModel.RoomAssignedId);
             return View(teacherInfoModel);
         }
 
@@ -82,7 +82,7 @@ namespace SAMS.Controllers.InfoManagement
             {
                 return NotFound();
             }
-            ViewData["RoomAssignedId"] = new SelectList(_context.roomLocationInfoModels, "RoomId", "RoomId", teacherInfoModel.RoomAssignedId);
+            ViewData["RoomAssignedId"] = new SelectList(_context.roomLocationInfoModels, "RoomNumberMod", "RoomNumberMod", teacherInfoModel.RoomAssignedId);
             return View(teacherInfoModel);
         }
 
@@ -118,7 +118,7 @@ namespace SAMS.Controllers.InfoManagement
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["RoomAssignedId"] = new SelectList(_context.roomLocationInfoModels, "RoomId", "RoomId", teacherInfoModel.RoomAssignedId);
+            ViewData["RoomAssignedId"] = new SelectList(_context.roomLocationInfoModels, "RoomNumberMod", "RoomNumberMod", teacherInfoModel.RoomAssignedId);
             return View(teacherInfoModel);
         }
 

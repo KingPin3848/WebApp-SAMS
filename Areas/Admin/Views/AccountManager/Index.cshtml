@@ -1,4 +1,6 @@
-﻿@model IEnumerable<SAMS.Controllers.ApplicationUser>
+﻿@using SAMS.Controllers;
+@using SAMS.Areas.Admin.Controllers;
+@model IEnumerable<ApplicationUser>
 @{
     ViewData["Title"] = "Index";
 }
@@ -6,7 +8,7 @@
 <h1>Index</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">New Account</a>
 </p>
 <table class="table">
     <thead>
@@ -34,7 +36,11 @@
                     @Html.DisplayFor(modelItem => item.SchoolId)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Role[0])
+                    @foreach (var role in item.Role)
+                    {
+                        @Html.DisplayFor(modelItem => role)
+                        <br />
+                    }
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Email)

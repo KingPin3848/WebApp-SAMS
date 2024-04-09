@@ -18,6 +18,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using SAMS.Controllers;
+using Microsoft.AspNetCore.Authentication.Google;
 
 namespace SAMS.Areas.Identity.Pages.Account
 {
@@ -112,19 +113,31 @@ namespace SAMS.Areas.Identity.Pages.Account
                 ErrorMessage = $"Error from external provider: {remoteError}";
                 return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
             }
+
             var info = await _signInManager.GetExternalLoginInfoAsync();
-            var email = info.Principal.FindFirstValue(ClaimTypes.Email);
             if (info == null)
             {
                 ErrorMessage = "Error loading external login information.";
                 return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
             }
 
-            var dbuser = await _userManager.FindByEmailAsync(email);
+            var googleemail = info.Principal.FindFirstValue(ClaimTypes.Email);
+            if (googleemail == null)
+            {
+                ErrorMessage = "Error loading email address for user verification.";
+                return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
+            }
+
+            var dbuser = await _userManager.FindByEmailAsync(googleemail);
+            if (dbuser == null)
+            {
+                ErrorMessage = "Not a registered user on the Synnovation Lab AMS. Please contact the administrators if you think this is wrong.";
+                return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
+            }
             var dbuseremail = dbuser.Email;
             if (dbuseremail != null)
             {
-                if (dbuseremail == email)
+                if (dbuseremail == googleemail)
                 {
                     // Sign in the user with this external login provider if the user already has a login.
                     var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor: true);

@@ -49,9 +49,10 @@ namespace SAMS.Data
         public DbSet<StudentLocationModel> studentLocationModels { get; set; } = null!;
         public DbSet<TimestampModel> timestampModels { get; set; } = null!;
         public DbSet<SchedulerModel> schedulerModels { get; set; } = null!;
+        public DbSet<SAMS.Models.ChosenBellSchedModel> ChosenBellSchedModel { get; set; } = default!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
+        {           
 
             //Active Course Info Model Relationships
             modelBuilder.Entity<ActiveCourseInfoModel>()
@@ -364,25 +365,6 @@ namespace SAMS.Data
                 .HasForeignKey(c => c.EndLocationID)
                 .OnDelete(DeleteBehavior.NoAction);
 
-            ////Room Schedule Model Relationships
-            //modelBuilder.Entity<RoomScheduleModel>()
-            //    .HasOne(a => a.Room)
-            //    .WithOne(b => b.RoomSchedule)
-            //    .HasForeignKey<RoomScheduleModel>(c => c.RoomId)
-            //    .OnDelete(DeleteBehavior.NoAction);
-
-            //modelBuilder.Entity<RoomScheduleModel>()
-            //    .HasOne(a => a.Teacher)
-            //    .WithMany(b => b.RoomSchedules)
-            //    .HasForeignKey(c => c.TeacherID)
-            //    .OnDelete(DeleteBehavior.NoAction);
-
-            //modelBuilder.Entity<RoomScheduleModel>()
-            //    .HasOne(a => a.Schedule)
-            //    .WithOne(b => b.RoomSchedule)
-            //    .HasForeignKey<RoomScheduleModel>(c => c.ScheduleID)
-            //    .OnDelete(DeleteBehavior.NoAction);
-
             //Student Info Model Relationships
             modelBuilder.Entity<StudentInfoModel>()
                 .HasOne(a => a.Counselor)
@@ -419,13 +401,6 @@ namespace SAMS.Data
                 .HasForeignKey<SynnLabQRNodeModel>(c => c.SynnlabRoomIDMod)
                 .OnDelete(DeleteBehavior.NoAction);
 
-            //Teaching Schedule Model Relationships
-            //modelBuilder.Entity<TeachingScheduleModel>()
-            //    .HasOne(a => a.Teacher)
-            //    .WithOne(b => b.TeachingSchedule)
-            //    .HasForeignKey<TeachingScheduleModel>(c => c.TeacherID)
-            //    .OnDelete(DeleteBehavior.NoAction);
-
             //Room QR Code Model Relationships
             modelBuilder.Entity<RoomQRCodeModel>()
                 .HasOne(a => a.Room)
@@ -439,10 +414,16 @@ namespace SAMS.Data
                 .HasForeignKey<TeacherInfoModel>(c => c.RoomAssignedId)
                 .OnDelete(DeleteBehavior.NoAction);
 
+
+            modelBuilder.Entity<RoomQRCodeModel>()
+                .Property(a => a.RoomId)
+                .ValueGeneratedNever();
+
+            modelBuilder.Entity<RoomLocationInfoModel>()
+                .Property(a => a.RoomNumberMod)
+                .ValueGeneratedNever();
+
             base.OnModelCreating(modelBuilder);
         }
-
-        //public DbSet<SAMS.Models.TeachingScheduleModel>? TeachingScheduleModel { get; set; }
-        public DbSet<SAMS.Models.ChosenBellSchedModel> ChosenBellSchedModel { get; set; } = default!;
     }
 }

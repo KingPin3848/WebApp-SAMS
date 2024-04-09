@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SAMS.Controllers;
 using SAMS.Data;
 using SAMS.Interfaces;
@@ -55,7 +56,7 @@ namespace SAMS.Areas.Student.Controllers
                     return Json(new { dangertext = "Chosen Bell Schedule for the day not found. Please contact the administrator and developer for additional assistance." });
                 }
 
-                var determination = DetermineCurrentBell(chosenBellSchedule[0]);
+                var determination = DetermineCurrentBell(chosenBellSchedule[0]!);
                 var currentBell = determination[0];
                 TimeSpan startTimeAsDetermined = TimeSpan.Parse(determination[1]);
                 TimeSpan endTimeAsDetermined = TimeSpan.Parse(determination[2]);
@@ -75,18 +76,11 @@ namespace SAMS.Areas.Student.Controllers
                 if (schoolIDdb == passedID)
                 {
                     var studId = int.Parse(schoolIDdb);
-                    var studentSchedule = await _context.sem1StudSchedules.FindAsync(studId);
-                    //var sem2start = _context.schedulerModels.Where(a => a.Type == "Semester 2").Select(a => a.Date).FirstOrDefault();
-                    //if (DateOnly.FromDateTime(DateTime.Now.Date) >= sem2start)
-                    //{
-                    //    //studentSchedule = await _context.sem2StudSchedules.FindAsync(studId);
-                    //} else
-                    //{
-                    //    studentSchedule = await _context.sem1StudSchedules.FindAsync(studId);
-                    //}
+                    var sem2start = _context.schedulerModels.Where(a => a.Type == "Semester 2").Select(a => a.Date).FirstOrDefault();
+                    IStudentSchedule? studentSchedule = (DateOnly.FromDateTime(DateTime.Now.Date) >= sem2start) ? (await _context.sem2StudSchedules.FindAsync(studId)) : (await _context.sem1StudSchedules.FindAsync(studId));
                     if (studentSchedule == null)
                     {
-                        return Json(new { dangertext = "Your Schedule could not be retrived because it is completely empty. Please contact your counselor ASAP and notify them of this error." });
+                        return Json(new { dangertext = "Your Schedule could not be retrived because it is empty. Please contact your counselor ASAP and notify them of this error." });
                     }
 
                     var courseIdForCurrentBell = GetCourseIdForCurrentBell(currentBell, studentSchedule);
@@ -112,13 +106,13 @@ namespace SAMS.Areas.Student.Controllers
                     {
                         var dailyEntryExists = _context.dailyAttendanceModels.Any(a =>
                             a.StudentId == studId &&
-                            a.AttendanceDate == DateTime.Now.Date &&
+                            a.AttendanceDate == DateOnly.FromDateTime(DateTime.Now.Date) &&
                             a.Status == "Unknown");
                         if (dailyEntryExists)
                         {
                             var dailyAttendanceEntry = _context.dailyAttendanceModels.First(a =>
                                 a.StudentId == studId &&
-                                a.AttendanceDate == DateTime.Now.Date &&
+                                a.AttendanceDate == DateOnly.FromDateTime(DateTime.Now.Date) &&
                                 a.Status == "Unknown");
                             var timeStamp = new TimestampModel();
 
@@ -213,7 +207,7 @@ namespace SAMS.Areas.Student.Controllers
             }
         }
 
-        private int GetCourseIdForCurrentBell(string currentBell, Sem1StudSchedule studentSchedule)
+        private static int GetCourseIdForCurrentBell(string currentBell, IStudentSchedule studentSchedule)
         {
             switch (currentBell)
             {
