@@ -17,7 +17,7 @@ namespace SAMS.Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.2")
+                .HasAnnotation("ProductVersion", "8.0.3")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -168,13 +168,16 @@ namespace SAMS.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("ActivationCode")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(32)
+                        .HasColumnType("nvarchar(32)");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
+                        .IsRequired()
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
@@ -205,9 +208,11 @@ namespace SAMS.Data.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("Role")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SchoolId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SecurityStamp")
@@ -467,8 +472,8 @@ namespace SAMS.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AttendanceId"));
 
-                    b.Property<DateTime?>("AttendanceDate")
-                        .HasColumnType("datetime2");
+                    b.Property<DateOnly?>("AttendanceDate")
+                        .HasColumnType("date");
 
                     b.Property<string>("ChosenBellSchedule")
                         .IsRequired()
@@ -841,15 +846,8 @@ namespace SAMS.Data.Migrations
 
             modelBuilder.Entity("SAMS.Models.RoomLocationInfoModel", b =>
                 {
-                    b.Property<int>("RoomId")
-                        .ValueGeneratedOnAdd()
+                    b.Property<int>("RoomNumberMod")
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RoomId"));
-
-                    b.Property<string>("RoomNumberMod")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("RoomScannerId")
                         .HasColumnType("int");
@@ -858,7 +856,7 @@ namespace SAMS.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("RoomId");
+                    b.HasKey("RoomNumberMod");
 
                     b.ToTable("roomLocationInfoModels");
                 });
@@ -879,6 +877,12 @@ namespace SAMS.Data.Migrations
 
             modelBuilder.Entity("SAMS.Models.SchedulerModel", b =>
                 {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
                     b.Property<DateOnly>("Date")
                         .HasColumnType("date");
 
@@ -889,6 +893,8 @@ namespace SAMS.Data.Migrations
                     b.Property<string>("Type")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
 
                     b.ToTable("schedulerModels");
                 });
@@ -1188,18 +1194,15 @@ namespace SAMS.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TeacherMiddleNameMod")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TeacherPhoneMod")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TeacherPreferredNameMod")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("Teaches5Days")
+                    b.Property<bool?>("Teaches5Days")
                         .HasColumnType("bit");
 
                     b.HasKey("TeacherID");
@@ -1213,8 +1216,11 @@ namespace SAMS.Data.Migrations
 
             modelBuilder.Entity("SAMS.Models.TimestampModel", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ActionMade")
                         .HasColumnType("nvarchar(max)");

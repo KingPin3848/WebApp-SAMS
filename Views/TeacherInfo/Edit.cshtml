@@ -43,10 +43,10 @@
                 <input asp-for="TeacherPhoneMod" class="form-control" />
                 <span asp-validation-for="TeacherPhoneMod" class="text-danger"></span>
             </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="Teaches5Days" /> @Html.DisplayNameFor(model => model.Teaches5Days)
-                </label>
+            <div class="form-group">
+                <label asp-for="Teaches5Days" class="control-label"></label>
+                <input asp-for="Teaches5Days" class="form-control" />
+                <span asp-validation-for="Teaches5Days" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="RoomAssignedId" class="control-label"></label>

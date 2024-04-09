@@ -32,12 +32,13 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddAuthentication().AddGoogle(googleOptions =>
    {
        IConfigurationSection googleAuthNSection = builder.Configuration.GetSection("Authentication:Google");
-       googleOptions.ClientId = configuration["Authentication:Google:ClientId"];
-       googleOptions.ClientSecret = configuration["Authentication:Google:ClientSecret"];
+       googleOptions.ClientId = configuration["Authentication:Google:ClientId"]!;
+       googleOptions.ClientSecret = configuration["Authentication:Google:ClientSecret"]!;
+       googleOptions.Scope.Add("email");
    });
 
 //Attendance Generation Service
-//builder.Services.AddHostedService<DefaultAttendanceAdditionService>();
+//builder.Services.AddHostedService<DailyAttendanceAdditionService>();
 
 var app = builder.Build();
 
@@ -61,13 +62,30 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapControllerRoute(
-    name: "areas",
-    pattern: "{area:exists}/{controller=Scan}/{action=Scan}/{id?}"
+app.MapAreaControllerRoute(
+    name: "Teacher",
+    areaName: "Teacher",
+    pattern: "{area=Teacher}/{controller}/{action}/{id?}"
+    );
+app.MapAreaControllerRoute(
+    name: "Admin",
+    areaName: "Admin",
+    pattern: "{area=Admin}/{controller}/{action}/{id?}"
+    );
+app.MapAreaControllerRoute(
+    name: "AttOffPerson",
+    areaName: "AttendanceMem",
+    pattern: "{area=AttendanceMem}/{controller}/{action}/{id?}"
+    );
+app.MapAreaControllerRoute(
+    name: "Student",
+    areaName: "Student",
+    pattern: "{area=Student}/{controller}/{action}/{id?}"
     );
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Home}/{action=Index}/{id?}"
+    );
 app.MapRazorPages();
 
 app.Run();

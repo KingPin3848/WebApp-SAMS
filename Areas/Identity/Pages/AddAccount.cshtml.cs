@@ -39,7 +39,7 @@ namespace SAMS.Areas.Identity.Pages
             _emailSender = emailSender;
         }
 
-        public InputModel Input { get; set; }
+        public InputModel Input = new();
         public class InputModel
         {
             [Required]
@@ -57,7 +57,9 @@ namespace SAMS.Areas.Identity.Pages
             public string? SchoolIssuedId { get; set; }
             [Required]
             [Display(Name = "Role")]
-            public string? AssignedRole {  get; set; }
+            public IList<string>? AssignedRole { get; set; }
+            [Display(Name = "Enable User Experience")]
+            public Boolean? UserExperience {  get; set; }
         }
 
         public void OnGet()
@@ -72,20 +74,23 @@ namespace SAMS.Areas.Identity.Pages
             {
                 var user = CreateUser();
 
-                await _userStore.SetUserNameAsync(user, input.Email, CancellationToken.None);
-                await _emailStore.SetEmailAsync(user, input.Email, CancellationToken.None);
+                await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
+                await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
+                user.Role = input.AssignedRole;
+                user.SchoolId = input.SchoolIssuedId;
+                user.ActivationCode = input.ActivationCode;
+                user.UserExperienceEnabled = false;
+                user.Email = input.Email;
+                user.EmailConfirmed = true;
                 var result = await _userManager.CreateAsync(user);
 
                 if (result.Succeeded)
                 {
                     //TO UPDATE ALL USER'S INFORMATION AKA ADDING THEIR ACTIVATION CODES, SCHOOLISSUEDID, ETC.
-                    var foundUser = await _userManager.FindByEmailAsync(input.Email);
+                    var foundUser = await _userManager.FindByEmailAsync(Input.Email!);
                     if (foundUser != null)
                     {
-                        foundUser.ActivationCode = input.ActivationCode;
-                        foundUser.SchoolId = input.SchoolIssuedId;
-                        foundUser.EmailConfirmed = true;
-                        var roadroller = await _userManager.AddToRoleAsync(foundUser, input.AssignedRole);
+                        var roadroller = await _userManager.AddToRolesAsync(foundUser, Input.AssignedRole!);
                         if (roadroller.Succeeded)
                         {
                             return Page();

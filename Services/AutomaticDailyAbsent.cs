@@ -49,7 +49,7 @@ namespace SAMS.Services
 
         private async Task MarkAbsentDaily()
         {
-            var date = DateTime.Now.Date;
+            var date = DateOnly.FromDateTime(DateTime.Now.Date);
             var time = DateTime.Now.TimeOfDay;
             var students = await _userManager.GetUsersInRoleAsync("Student");
             var noncheckDailyCourses = _context.activeCourseInfoModels.Where(a => a.DailyAttChecked == false).ToList();

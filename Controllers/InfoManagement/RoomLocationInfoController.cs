@@ -34,7 +34,7 @@ namespace SAMS.Controllers.InfoManagement
             }
 
             var roomLocationInfoModel = await _context.roomLocationInfoModels
-                .FirstOrDefaultAsync(m => m.RoomId == id);
+                .FirstOrDefaultAsync(m => m.RoomNumberMod == id);
             if (roomLocationInfoModel == null)
             {
                 return NotFound();
@@ -54,7 +54,7 @@ namespace SAMS.Controllers.InfoManagement
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("RoomId,RoomNumberMod,WingNameMod,RoomScannerId")] RoomLocationInfoModel roomLocationInfoModel)
+        public async Task<IActionResult> Create([Bind("RoomNumberMod,WingNameMod,RoomScannerId")] RoomLocationInfoModel roomLocationInfoModel)
         {
             if (ModelState.IsValid)
             {
@@ -86,9 +86,9 @@ namespace SAMS.Controllers.InfoManagement
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("RoomId,RoomNumberMod,WingNameMod,RoomScannerId")] RoomLocationInfoModel roomLocationInfoModel)
+        public async Task<IActionResult> Edit(int id, [Bind("RoomNumberMod,WingNameMod,RoomScannerId")] RoomLocationInfoModel roomLocationInfoModel)
         {
-            if (id != roomLocationInfoModel.RoomId)
+            if (id != roomLocationInfoModel.RoomNumberMod)
             {
                 return NotFound();
             }
@@ -102,7 +102,7 @@ namespace SAMS.Controllers.InfoManagement
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!RoomLocationInfoModelExists(roomLocationInfoModel.RoomId))
+                    if (!RoomLocationInfoModelExists(roomLocationInfoModel.RoomNumberMod))
                     {
                         return NotFound();
                     }
@@ -125,7 +125,7 @@ namespace SAMS.Controllers.InfoManagement
             }
 
             var roomLocationInfoModel = await _context.roomLocationInfoModels
-                .FirstOrDefaultAsync(m => m.RoomId == id);
+                .FirstOrDefaultAsync(m => m.RoomNumberMod == id);
             if (roomLocationInfoModel == null)
             {
                 return NotFound();
@@ -151,7 +151,7 @@ namespace SAMS.Controllers.InfoManagement
 
         private bool RoomLocationInfoModelExists(int id)
         {
-            return _context.roomLocationInfoModels.Any(e => e.RoomId == id);
+            return _context.roomLocationInfoModels.Any(e => e.RoomNumberMod == id);
         }
     }
 }

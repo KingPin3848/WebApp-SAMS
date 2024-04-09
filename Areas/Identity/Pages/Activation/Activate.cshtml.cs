@@ -8,25 +8,29 @@ using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication;
 using System.Security.Claims;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace SAMS.Areas.Identity.Pages.Activation
 {
     [AllowAnonymous]
     public class ActivateModel : PageModel
     {
-        private readonly UserManager<ApplicationUser>? _userManager;
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ILogger<ActivateModel> _logger;
+        private readonly IServiceScopeFactory _serviceScopeFactory;
 
         [TempData]
         public string? StatusMessage { get; set; }
 
-        public ActivateModel(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, ILogger<ActivateModel> logger)
+        public ActivateModel(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, ILogger<ActivateModel> logger, IServiceScopeFactory serviceScopeFactory)
         {
             _userManager = userManager;
             Input = new InputModel();
             _signInManager = signInManager;
             _logger = logger;
+            _serviceScopeFactory = serviceScopeFactory;
         }
 
         public void OnGet()
@@ -41,36 +45,43 @@ namespace SAMS.Areas.Identity.Pages.Activation
             [EmailAddress]
             [Display(Name = "Email")]
             public string? Email { get; set; }
-
             [Required]
-            //[StringLength(32, ErrorMessage = "The activation code must be exactly 32 characters long.", MinimumLength = 32)]
-            [Display(Name = "Activation Code")]
+            [StringLength(32, ErrorMessage = "The Unique Code must be at least {2} and at max {1} characters long.", MinimumLength = 32)]
+            [Display(Name = "Unique Code")]
             public string? ActivationCode { get; set; }
-
             [Required]
-            [Display(Name = "School Issued ID")]
-            public string? SchoolIssuedID { get; set; }
+            [Display(Name = "School Id")]
+            public string? SchoolId { get; set; }
         }
 
         public async Task<IActionResult> OnPostAsync(InputModel input)
         {
             if (ModelState.IsValid)
             {
-                var foundUser = await _userManager.FindByEmailAsync(input.Email);
+                Input = input;
+                TempData["InputEmail"] = Input.Email;
+                var scope = _serviceScopeFactory.CreateAsyncScope();
+                var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+
+                var foundUser = await userManager.FindByEmailAsync(Input.Email!);
+                if (foundUser == null)
+                {
+                    return NotFound("User Not Found.");
+                }
                 var foundUserID = foundUser.Id;
                 TempData["UserId"] = foundUser.Id;
 
                 if (foundUser != null)
                 {
-                    var foundEmail = foundUser.NormalizedEmail.ToLower();
+                    var foundEmail = foundUser.Email!.ToLower();
                     var foundActCode = foundUser.ActivationCode;
                     var foundSchID = foundUser.SchoolId;
-                    if ((foundActCode == input.ActivationCode) && (foundSchID == input.SchoolIssuedID) && (foundEmail == input.Email))
+                    if ((foundActCode == Input.ActivationCode) && (foundSchID == Input.SchoolId) && (foundEmail == Input.Email))
                     {
-                        if(foundUser.UserExperienceEnabled != true)
+                        if (foundUser.UserExperienceEnabled != true)
                         {
                             foundUser.UserExperienceEnabled = true;
-                            var savechanges = await _userManager.UpdateAsync(foundUser);
+                            var savechanges = await userManager.UpdateAsync(foundUser);
 
                             if (savechanges.Succeeded)
                             {
@@ -90,7 +101,8 @@ namespace SAMS.Areas.Identity.Pages.Activation
                                 ModelState.AddModelError("", "Failed to save changes.");
                                 return Page();
                             }
-                        } else
+                        }
+                        else
                         {
                             ModelState.AddModelError("", "Your account has been activated already. Please login with Google or your password to login.");
                         }
@@ -102,10 +114,21 @@ namespace SAMS.Areas.Identity.Pages.Activation
                 }
                 else
                 {
+                    foundUser.UserExperienceEnabled = false;
+                    await userManager.UpdateAsync(foundUser);
                     return RedirectToPage("UserNotFound");
                 }
             }
-
+            else
+            {
+                foreach (var modelState in ModelState.Values)
+                {
+                    foreach (var modelError in modelState.Errors)
+                    {
+                        _logger.LogCritical($"Error message: \n{modelError.ErrorMessage}");
+                    }
+                }
+            }
             // If we got this far, something failed, redisplay form
             return Page();
         }
@@ -113,51 +136,85 @@ namespace SAMS.Areas.Identity.Pages.Activation
 
         public async Task<IActionResult> OnGetLinkLoginCallbackAsync()
         {
-            var userId = TempData["UserId"]?.ToString();
-            if(string.IsNullOrEmpty(userId))
+            var userId = TempData["UserId"]!.ToString();
+            if (string.IsNullOrEmpty(userId))
             {
-                return NotFound("User ID not found in TempData.");
+                return NotFound("User ID not found.");
             }
 
-            var foundUser = await _userManager.FindByIdAsync(userId);
-            if (foundUser == null)
+            var scope = _serviceScopeFactory.CreateAsyncScope();
+            var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+            var inputUser = await userManager.FindByIdAsync(userId);
+            if (inputUser == null)
             {
+                scope.Dispose();
                 return NotFound($"Unable to load user with ID '{userId}'.");
             }
 
             var info = await _signInManager.GetExternalLoginInfoAsync(userId);
             if (info == null)
             {
+                scope.Dispose();
                 throw new InvalidOperationException($"Unexpected error occurred loading external login info.");
             }
 
-            var email = info.Principal.FindFirstValue(ClaimTypes.Email);
-            var dbuser = await _userManager.FindByEmailAsync(email);
-            var dbuseremail = dbuser.Email;
-            if (dbuseremail != null)
+            var googleemail = info.Principal.FindFirstValue(ClaimTypes.Email);
+            if (googleemail == null)
             {
-                if (dbuseremail == email)
+                StatusMessage = "You need to allow SAMS to access only your email address from your Google Account. This is for user verification purposes only. You will need to re-activate your account now.";
+                inputUser.UserExperienceEnabled = false;
+                await userManager.UpdateAsync(inputUser);
+                scope.Dispose();
+                return Page();
+            }
+            var googleuser = await userManager.FindByEmailAsync(googleemail);
+            if (googleuser == null)
+            {
+                StatusMessage = "You are not a registered user on the Synnovation Lab AMS. Please contact the administrators if you think this is wrong.";
+                inputUser.UserExperienceEnabled = false;
+                await userManager.UpdateAsync(inputUser);
+                TempData["Messaage"] = StatusMessage;
+                return LocalRedirect("~/Identity/Account/Login");                
+            }
+            var googleuseremail = googleuser.Email;
+            if (googleuseremail != null)
+            {
+                if (inputUser.Email == googleemail)
                 {
-                    var result = await _userManager.AddLoginAsync(foundUser, info);
+                    var result = await userManager.AddLoginAsync(inputUser, info);
                     if (!result.Succeeded)
                     {
                         StatusMessage = "The external login was not added. External logins can only be associated with one account.";
-                        return RedirectToPage("../../../../../");
+                        inputUser.UserExperienceEnabled = false;
+                        await userManager.UpdateAsync(inputUser);
+                        scope.Dispose();
+                        TempData["Messaage"] = StatusMessage;
+                        return LocalRedirect("~/Identity/Account/Login");
                     }
                     // Clear the existing external cookie to ensure a clean login process
                     await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
                     StatusMessage = "The external login was added.";
+                    scope.Dispose();
+                    TempData["Messaage"] = StatusMessage;
                     return RedirectToPage("ActivationSuccessfull");
                 }
                 else
                 {
                     _logger.LogInformation("The email address from the Google Account was not found with the one in the database.");
-                    return RedirectToPage("UserNotFound");
+                    inputUser.UserExperienceEnabled = false;
+                    await userManager.UpdateAsync(inputUser);
+                    scope.Dispose();
+                    StatusMessage = "Email mismatch. The entered email and Google Account email did not match. Please contact the administrators.";
+                    TempData["Messaage"] = StatusMessage;
+                    return LocalRedirect("~/Identity/Account/Login");
                 }
             }
             else
             {
                 _logger.LogInformation("Couldn't find the user from the Google Account email address in our database.");
+                inputUser.UserExperienceEnabled = false;
+                await userManager.UpdateAsync(inputUser);
+                scope.Dispose();
                 return RedirectToPage("UserNotFound");
             }
         }

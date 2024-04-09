@@ -48,7 +48,7 @@ namespace SAMS.Controllers.InfoManagement
         // GET: RoomQRCode/Create
         public IActionResult Create()
         {
-            ViewData["RoomId"] = new SelectList(_context.roomLocationInfoModels, "RoomId", "RoomId");
+            ViewData["RoomId"] = new SelectList(_context.roomLocationInfoModels, "RoomNumberMod", "RoomNumberMod");
             return View();
         }
 
@@ -65,7 +65,7 @@ namespace SAMS.Controllers.InfoManagement
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["RoomId"] = new SelectList(_context.roomLocationInfoModels, "RoomId", "RoomId", roomQRCodeModel.RoomId);
+            ViewData["RoomId"] = new SelectList(_context.roomLocationInfoModels, "RoomNumberMod", "RoomNumberMod", roomQRCodeModel.RoomId);
             return View(roomQRCodeModel);
         }
 
@@ -82,7 +82,7 @@ namespace SAMS.Controllers.InfoManagement
             {
                 return NotFound();
             }
-            ViewData["RoomId"] = new SelectList(_context.roomLocationInfoModels, "RoomId", "RoomId", roomQRCodeModel.RoomId);
+            ViewData["RoomId"] = new SelectList(_context.roomLocationInfoModels, "RoomNumberMod", "RoomNumberMod", roomQRCodeModel.RoomId);
             return View(roomQRCodeModel);
         }
 
@@ -118,7 +118,7 @@ namespace SAMS.Controllers.InfoManagement
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["RoomId"] = new SelectList(_context.roomLocationInfoModels, "RoomId", "RoomId", roomQRCodeModel.RoomId);
+            ViewData["RoomId"] = new SelectList(_context.roomLocationInfoModels, "RoomNumberMod", "RoomNumberMod", roomQRCodeModel.RoomId);
             return View(roomQRCodeModel);
         }
 
