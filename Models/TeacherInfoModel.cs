@@ -10,25 +10,23 @@ namespace SAMS.Models
         [Display(Name = ("First Name"))]
         public string TeacherFirstNameMod { get; set; } = null!;
         [Display(Name = ("Middle Name"))]
-        public string TeacherMiddleNameMod { get; set; } = null!;
+        public string? TeacherMiddleNameMod { get; set; } = null!;
         [Display(Name = ("Last Name"))]
         public string TeacherLastNameMod { get; set; } = null!;
         [Display(Name = ("Preferred Name"))]
-        public string TeacherPreferredNameMod { get; set; } = null!;
+        public string? TeacherPreferredNameMod { get; set; } = null!;
         [Display(Name = ("Email Address"))]
         public string TeacherEmailMod { get; set; } = null!;
         [Display(Name = ("Phone Ext."))]
-        public string TeacherPhoneMod { get; set; } = null!;
+        public string? TeacherPhoneMod { get; set; } = null!;
         [Display(Name = ("Teaches all 5 days?"))]
-        public Boolean Teaches5Days { get; set; }
+        public Boolean? Teaches5Days { get; set; }
         public int? RoomAssignedId { get; set; }
 
 
         //Navigation properties
         public ICollection<ActiveCourseInfoModel>? ActiveCourses { get; set; } = null!;
         public RoomLocationInfoModel? Room { get; set; } = null!;
-        //public ICollection<RoomScheduleModel>? RoomSchedules { get; set; } = null!;
-        //public TeachingScheduleModel? TeachingSchedule { get; set; } = null!;
         public ICollection<HallPassInfoModel>? AssignedHallPasses { get; set; } = null!;
         public ICollection<HallPassInfoModel>? AddressedHallPasses { get; set; } = null!;
         public ICollection<PassRequestInfoModel>? RequestAssignedHallPasses { get; set; } = null!;

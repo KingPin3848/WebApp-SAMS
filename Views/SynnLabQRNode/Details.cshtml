@@ -1,0 +1,48 @@
+﻿@model SAMS.Models.SynnLabQRNodeModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>SynnLabQRNodeModel</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.ScannerMacAddressMod)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.ScannerMacAddressMod)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.ModelNumberMod)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.ModelNumberMod)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.ScannerDeviceIPAddressMod)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.ScannerDeviceIPAddressMod)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.ScannerLabelMod)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.ScannerLabelMod)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Room)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Room.RoomNumberMod)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.ScannerID">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

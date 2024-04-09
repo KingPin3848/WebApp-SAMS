@@ -116,7 +116,7 @@ namespace SAMS.Services
 
         private async void ChangeQRCode()
         {
-            var roomIds = _context.roomLocationInfoModels.Select(a => a.RoomId).ToList();
+            var roomIds = _context.roomLocationInfoModels.Select(a => a.RoomNumberMod).ToList();
 
             foreach (var id in roomIds)
             {

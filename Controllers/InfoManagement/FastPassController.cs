@@ -51,7 +51,7 @@ namespace SAMS.Controllers.InfoManagement
         // GET: FastPass/Create
         public IActionResult Create()
         {
-            ViewData["EndLocationID"] = new SelectList(_context.roomLocationInfoModels, "RoomId", "RoomId");
+            ViewData["EndLocationID"] = new SelectList(_context.roomLocationInfoModels, "RoomNumberMod", "RoomNumberMod");
             ViewData["CourseIDFromStudentSchedule"] = new SelectList(_context.sem1StudSchedules, "StudentID", "StudentID");
             ViewData["CourseIDFromStudentSchedule"] = new SelectList(_context.sem2StudSchedules, "StudentID", "StudentID");
             ViewData["StudentID"] = new SelectList(_context.studentInfoModels, "StudentID", "StudentID");
@@ -71,7 +71,7 @@ namespace SAMS.Controllers.InfoManagement
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["EndLocationID"] = new SelectList(_context.roomLocationInfoModels, "RoomId", "RoomId", fastPassModel.EndLocationID);
+            ViewData["EndLocationID"] = new SelectList(_context.roomLocationInfoModels, "RoomNumberMod", "RoomNumberMod", fastPassModel.EndLocationID);
             ViewData["CourseIDFromStudentSchedule"] = new SelectList(_context.sem1StudSchedules, "StudentID", "StudentID", fastPassModel.CourseIDFromStudentSchedule);
             ViewData["CourseIDFromStudentSchedule"] = new SelectList(_context.sem2StudSchedules, "StudentID", "StudentID", fastPassModel.CourseIDFromStudentSchedule);
             ViewData["StudentID"] = new SelectList(_context.studentInfoModels, "StudentID", "StudentID", fastPassModel.StudentID);
@@ -91,7 +91,7 @@ namespace SAMS.Controllers.InfoManagement
             {
                 return NotFound();
             }
-            ViewData["EndLocationID"] = new SelectList(_context.roomLocationInfoModels, "RoomId", "RoomId", fastPassModel.EndLocationID);
+            ViewData["EndLocationID"] = new SelectList(_context.roomLocationInfoModels, "RoomNumberMod", "RoomNumberMod", fastPassModel.EndLocationID);
             ViewData["CourseIDFromStudentSchedule"] = new SelectList(_context.sem1StudSchedules, "StudentID", "StudentID", fastPassModel.CourseIDFromStudentSchedule);
             ViewData["CourseIDFromStudentSchedule"] = new SelectList(_context.sem2StudSchedules, "StudentID", "StudentID", fastPassModel.CourseIDFromStudentSchedule);
             ViewData["StudentID"] = new SelectList(_context.studentInfoModels, "StudentID", "StudentID", fastPassModel.StudentID);
@@ -130,7 +130,7 @@ namespace SAMS.Controllers.InfoManagement
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["EndLocationID"] = new SelectList(_context.roomLocationInfoModels, "RoomId", "RoomId", fastPassModel.EndLocationID);
+            ViewData["EndLocationID"] = new SelectList(_context.roomLocationInfoModels, "RoomNumberMod", "RoomNumberMod", fastPassModel.EndLocationID);
             ViewData["CourseIDFromStudentSchedule"] = new SelectList(_context.sem1StudSchedules, "StudentID", "StudentID", fastPassModel.CourseIDFromStudentSchedule);
             ViewData["CourseIDFromStudentSchedule"] = new SelectList(_context.sem2StudSchedules, "StudentID", "StudentID", fastPassModel.CourseIDFromStudentSchedule);
             ViewData["StudentID"] = new SelectList(_context.studentInfoModels, "StudentID", "StudentID", fastPassModel.StudentID);

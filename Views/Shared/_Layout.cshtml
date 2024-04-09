@@ -29,13 +29,19 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="Identity" asp-page="/AddAccount">Add Accounts</a>
+                            <a class="nav-link text-dark" asp-area="Admin" asp-controller="AccountManager" asp-action="Index">Account Manager</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="ChosenBellSchedule" asp-action="Index">Choosen Bell Schedule</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="RoomQRCode" asp-action="Index">Room QRCodes</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Role" asp-action="UserToRole">User to role</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="DataTransfer" asp-action="TeacherTransfer">Data Transfer</a>
                         </li>
                     </ul>
                     <partial name="_LoginPartial" />

@@ -18,6 +18,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using SAMS.Controllers;
+using Microsoft.AspNetCore.Authentication.Google;
 
 namespace SAMS.Areas.Identity.Pages.Account
 {
@@ -105,19 +106,31 @@ namespace SAMS.Areas.Identity.Pages.Account
                 ErrorMessage = $"Error from external provider: {remoteError}";
                 return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
             }
+
             var info = await _signInManager.GetExternalLoginInfoAsync();
-            var email = info.Principal.FindFirstValue(ClaimTypes.Email);
             if (info == null)
             {
                 ErrorMessage = "Error loading external login information.";
                 return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
             }
 
-            var dbuser = await _userManager.FindByEmailAsync(email);
+            var googleemail = info.Principal.FindFirstValue(ClaimTypes.Email);
+            if (googleemail == null)
+            {
+                ErrorMessage = "Error loading email address for user verification.";
+                return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
+            }
+
+            var dbuser = await _userManager.FindByEmailAsync(googleemail);
+            if (dbuser == null)
+            {
+                ErrorMessage = "Not a registered user on the Synnovation Lab AMS. Please contact the administrators if you think this is wrong.";
+                return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
+            }
             var dbuseremail = dbuser.Email;
             if (dbuseremail != null)
             {
-                if (dbuseremail == email)
+                if (dbuseremail == googleemail)
                 {
                     // Sign in the user with this external login provider if the user already has a login.
                     var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
@@ -147,79 +160,6 @@ namespace SAMS.Areas.Identity.Pages.Account
             else
             {
                 return RedirectToPage("EmailUnmatch");
-            }
-        }
-
-        //public async Task<IActionResult> OnPostConfirmationAsync(string returnUrl = null)
-        //{
-        //    returnUrl = returnUrl ?? Url.Content("~/");
-        //    // Get the information about the user from the external login provider
-        //    var info = await _signInManager.GetExternalLoginInfoAsync();
-        //    if (info == null)
-        //    {
-        //        ErrorMessage = "Error loading external login information during confirmation.";
-        //        return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
-        //    }
-
-        //    if (ModelState.IsValid)
-        //    {
-        //        var user = CreateUser();
-
-        //        await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
-        //        await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
-
-        //        var result = await _userManager.CreateAsync(user);
-        //        if (result.Succeeded)
-        //        {
-        //            result = await _userManager.AddLoginAsync(user, info);
-        //            if (result.Succeeded)
-        //            {
-        //                _logger.LogInformation("User created an account using {Name} provider.", info.LoginProvider);
-
-        //                var userId = await _userManager.GetUserIdAsync(user);
-        //                var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-        //                code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-        //                var callbackUrl = Url.Page(
-        //                    "/Account/ConfirmEmail",
-        //                    pageHandler: null,
-        //                    values: new { area = "Identity", userId = userId, code = code },
-        //                    protocol: Request.Scheme);
-
-        //                await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
-        //                    $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
-
-        //                // If account confirmation is required, we need to show the link if we don't have a real email sender
-        //                if (_userManager.Options.SignIn.RequireConfirmedAccount)
-        //                {
-        //                    return RedirectToPage("./RegisterConfirmation", new { Email = Input.Email });
-        //                }
-
-        //                await _signInManager.SignInAsync(user, isPersistent: false, info.LoginProvider);
-        //                return LocalRedirect(returnUrl);
-        //            }
-        //        }
-        //        foreach (var error in result.Errors)
-        //        {
-        //            ModelState.AddModelError(string.Empty, error.Description);
-        //        }
-        //    }
-
-        //    ProviderDisplayName = info.ProviderDisplayName;
-        //    ReturnUrl = returnUrl;
-        //    return Page();
-        //}
-
-        private ApplicationUser CreateUser()
-        {
-            try
-            {
-                return Activator.CreateInstance<ApplicationUser>();
-            }
-            catch
-            {
-                throw new InvalidOperationException($"Can't create an instance of '{nameof(ApplicationUser)}'. " +
-                    $"Ensure that '{nameof(ApplicationUser)}' is not an abstract class and has a parameterless constructor, or alternatively " +
-                    $"override the external login page in /Areas/Identity/Pages/Account/ExternalLogin.cshtml");
             }
         }
 

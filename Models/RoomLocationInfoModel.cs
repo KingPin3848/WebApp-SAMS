@@ -1,14 +1,13 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 
 namespace SAMS.Models
 {
     public class RoomLocationInfoModel
     {
-        [Key]
-        [Display(Name = ("Room ID"))]
-        public int RoomId { get; set; }
         [Display(Name = ("Room Number"))]
-        public string RoomNumberMod { get; set; } = null!;
+        [Key]
+        public int RoomNumberMod { get; set; }
         [Display(Name = ("Wing"))]
         public string WingNameMod { get; set; } = null!;
         [Display(Name = ("Scanner ID"))]
@@ -18,7 +17,6 @@ namespace SAMS.Models
         public TeacherInfoModel? Teacher { get; set; } = null!;
         public ICollection<ActiveCourseInfoModel>? ActiveCourseInfos { get; set; } = null!;
         public ICollection<FastPassModel>? FastPassesIssued { get; set; } = null!;
-        //public RoomScheduleModel? RoomSchedule { get; set; } = null!;
         public SynnLabQRNodeModel? SynnLabQRNode { get; set; } = null!;
         public RoomQRCodeModel? RoomQRCode { get; set; } = null!;
     }

@@ -42,8 +42,8 @@ namespace SAMS.Areas.Student.Controllers
         public async Task<IActionResult> Form()
         {
             var user = await _userManager.GetUserAsync(User);
-            var studId = int.Parse(user.SchoolId);
-            ViewBag.Schoolid = user?.SchoolId;
+            //var studId = int.Parse(user.SchoolId);
+            //ViewBag.Schoolid = user?.SchoolId;
             List<int> MWCourseIds = new List<int>();
             List<int> TTCourseIds = new List<int>();
             List<int> FriCourseIds = new List<int>();
@@ -51,10 +51,10 @@ namespace SAMS.Areas.Student.Controllers
             var sem2start = _context.schedulerModels.Where(a => a.Type == "Semester 2").Select(a => a.Date).FirstOrDefault();
             if (DateOnly.FromDateTime(DateTime.Now.Date) <= sem2start)
             {
-                var sem1StudSchedule = _context.sem1StudSchedules.Find(studId);
-                MWCourseIds = [sem1StudSchedule.Bell1CourseIDMod, sem1StudSchedule.Bell2MonWedCourseIDMod, sem1StudSchedule.Bell3MonWedCourseIDMod, sem1StudSchedule.Bell4MonWedCourseIDMod, sem1StudSchedule.Bell5MonWedCourseIDMod, sem1StudSchedule.Bell6MonWedCourseIDMod, sem1StudSchedule.Bell7MonWedCourseIDMod];
-                TTCourseIds = [sem1StudSchedule.Bell1CourseIDMod, sem1StudSchedule.Bell2TueThurCourseIDMod, sem1StudSchedule.Bell3TueThurCourseIDMod, sem1StudSchedule.Bell4TueThurCourseIDMod, sem1StudSchedule.Bell5TueThurCourseIDMod, sem1StudSchedule.Bell6TueThurCourseIDMod, sem1StudSchedule.Bell7TueThurCourseIDMod];
-                FriCourseIds = [sem1StudSchedule.FriBell2CourseIDMod, sem1StudSchedule.FriBell3CourseIDMod, sem1StudSchedule.FriBell4CourseIDMod, sem1StudSchedule.FriBell5CourseIDMod, sem1StudSchedule.FriBell6CourseIDMod, sem1StudSchedule.FriBell7CourseIDMod];
+                //var sem1StudSchedule = _context.sem1StudSchedules.Find(studId);
+                //MWCourseIds = [sem1StudSchedule.Bell1CourseIDMod, sem1StudSchedule.Bell2MonWedCourseIDMod, sem1StudSchedule.Bell3MonWedCourseIDMod, sem1StudSchedule.Bell4MonWedCourseIDMod, sem1StudSchedule.Bell5MonWedCourseIDMod, sem1StudSchedule.Bell6MonWedCourseIDMod, sem1StudSchedule.Bell7MonWedCourseIDMod];
+                //TTCourseIds = [sem1StudSchedule.Bell1CourseIDMod, sem1StudSchedule.Bell2TueThurCourseIDMod, sem1StudSchedule.Bell3TueThurCourseIDMod, sem1StudSchedule.Bell4TueThurCourseIDMod, sem1StudSchedule.Bell5TueThurCourseIDMod, sem1StudSchedule.Bell6TueThurCourseIDMod, sem1StudSchedule.Bell7TueThurCourseIDMod];
+                //FriCourseIds = [sem1StudSchedule.FriBell2CourseIDMod, sem1StudSchedule.FriBell3CourseIDMod, sem1StudSchedule.FriBell4CourseIDMod, sem1StudSchedule.FriBell5CourseIDMod, sem1StudSchedule.FriBell6CourseIDMod, sem1StudSchedule.FriBell7CourseIDMod];
 
                 var date = DateTime.Now;
                 var chosenBellSched = _context.chosenBellSchedModels.FirstOrDefault().Name;
@@ -65,10 +65,10 @@ namespace SAMS.Areas.Student.Controllers
             }
             else
             {
-                var sem2StudSchedule = _context.sem2StudSchedules.Find(studId);
-                MWCourseIds = [sem2StudSchedule.Bell1CourseIDMod, sem2StudSchedule.Bell2MonWedCourseIDMod, sem2StudSchedule.Bell3MonWedCourseIDMod, sem2StudSchedule.Bell4MonWedCourseIDMod, sem2StudSchedule.Bell5MonWedCourseIDMod, sem2StudSchedule.Bell6MonWedCourseIDMod, sem2StudSchedule.Bell7MonWedCourseIDMod];
-                TTCourseIds = [sem2StudSchedule.Bell1CourseIDMod, sem2StudSchedule.Bell2TueThurCourseIDMod, sem2StudSchedule.Bell3TueThurCourseIDMod, sem2StudSchedule.Bell4TueThurCourseIDMod, sem2StudSchedule.Bell5TueThurCourseIDMod, sem2StudSchedule.Bell6TueThurCourseIDMod, sem2StudSchedule.Bell7TueThurCourseIDMod];
-                FriCourseIds = [sem2StudSchedule.FriBell2CourseIDMod, sem2StudSchedule.FriBell3CourseIDMod, sem2StudSchedule.FriBell4CourseIDMod, sem2StudSchedule.FriBell5CourseIDMod, sem2StudSchedule.FriBell6CourseIDMod, sem2StudSchedule.FriBell7CourseIDMod];
+                //var sem2StudSchedule = _context.sem2StudSchedules.Find(studId);
+                //MWCourseIds = [sem2StudSchedule.Bell1CourseIDMod, sem2StudSchedule.Bell2MonWedCourseIDMod, sem2StudSchedule.Bell3MonWedCourseIDMod, sem2StudSchedule.Bell4MonWedCourseIDMod, sem2StudSchedule.Bell5MonWedCourseIDMod, sem2StudSchedule.Bell6MonWedCourseIDMod, sem2StudSchedule.Bell7MonWedCourseIDMod];
+                //TTCourseIds = [sem2StudSchedule.Bell1CourseIDMod, sem2StudSchedule.Bell2TueThurCourseIDMod, sem2StudSchedule.Bell3TueThurCourseIDMod, sem2StudSchedule.Bell4TueThurCourseIDMod, sem2StudSchedule.Bell5TueThurCourseIDMod, sem2StudSchedule.Bell6TueThurCourseIDMod, sem2StudSchedule.Bell7TueThurCourseIDMod];
+                //FriCourseIds = [sem2StudSchedule.FriBell2CourseIDMod, sem2StudSchedule.FriBell3CourseIDMod, sem2StudSchedule.FriBell4CourseIDMod, sem2StudSchedule.FriBell5CourseIDMod, sem2StudSchedule.FriBell6CourseIDMod, sem2StudSchedule.FriBell7CourseIDMod];
 
                 var date = DateTime.Now;
                 var chosenBellSched = _context.chosenBellSchedModels.FirstOrDefault().Name;
@@ -94,7 +94,7 @@ namespace SAMS.Areas.Student.Controllers
 
             return View();
         }
-
+/*
         [Authorize(Roles = "Student, Developer")]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -234,7 +234,7 @@ namespace SAMS.Areas.Student.Controllers
                 return Json(new { dangertext = $"An error occurred: {ex.Message}" });
             }
         }
-
+*/
         private int GetCourseIdForCurrentBell(string currentBell, Sem1StudSchedule studentSchedule)
         {
             switch (currentBell)
