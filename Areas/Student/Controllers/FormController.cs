@@ -24,6 +24,7 @@ namespace SAMS.Areas.Student.Controllers
             _context = context;
             _signInManager = signInManager;
             _userManager = userManager;
+            Input = new InputModel();
         }
 
         public InputModel Input { get; set; }
