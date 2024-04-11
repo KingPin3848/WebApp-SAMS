@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
+using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.EntityFrameworkCore;
 using SAMS.Controllers;
 using SAMS.Data;
@@ -62,25 +63,9 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapAreaControllerRoute(
-    name: "Teacher",
-    areaName: "Teacher",
-    pattern: "{area=Teacher}/{controller}/{action}/{id?}"
-    );
-app.MapAreaControllerRoute(
-    name: "Admin",
-    areaName: "Admin",
-    pattern: "{area=Admin}/{controller}/{action}/{id?}"
-    );
-app.MapAreaControllerRoute(
-    name: "AttOffPerson",
-    areaName: "AttendanceMem",
-    pattern: "{area=AttendanceMem}/{controller}/{action}/{id?}"
-    );
-app.MapAreaControllerRoute(
-    name: "Student",
-    areaName: "Student",
-    pattern: "{area=Student}/{controller}/{action}/{id?}"
+app.MapControllerRoute(
+    name: "myArea",
+    pattern: "{area:exists}/{controller}/{action}/{id?}"
     );
 app.MapControllerRoute(
     name: "default",
