@@ -17,7 +17,6 @@
     <Folder Include="Areas\AttOfficePersonnel\Controllers\" />
     <Folder Include="Areas\AttOfficePersonnel\Data\" />
     <Folder Include="Areas\AttOfficePersonnel\Models\" />
-    <Folder Include="Areas\AttOfficePersonnel\Views\" />
     <Folder Include="Areas\Student\Data\" />
     <Folder Include="Areas\Student\Models\" />
     <Folder Include="Areas\Teacher\Data\" />
