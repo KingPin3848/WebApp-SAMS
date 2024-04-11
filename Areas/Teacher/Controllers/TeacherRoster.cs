@@ -30,6 +30,7 @@ namespace SAMS.Areas.Teacher.Controllers
             return View();
         }
 
+        [HttpGet]
         public async Task<IActionResult> Roster(int bell)
         {
             var user = await _userManager.GetUserAsync(User);
