@@ -10,19 +10,14 @@ using SAMS.Models;
 
 namespace SAMS.Controllers
 {
-    public class ChosenBellScheduleController : Controller
+    public class ChosenBellScheduleController(ApplicationDbContext context) : Controller
     {
-        private readonly ApplicationDbContext _context;
-
-        public ChosenBellScheduleController(ApplicationDbContext context)
-        {
-            _context = context;
-        }
+        private readonly ApplicationDbContext _context = context;
 
         // GET: ChosenBellSchedule
         public async Task<IActionResult> Index()
         {
-            return View(await _context.chosenBellSchedModels.ToListAsync());
+            return View(await _context.ChosenBellSchedModels.ToListAsync());
         }
 
         // GET: ChosenBellSchedule/Details/5
@@ -33,7 +28,7 @@ namespace SAMS.Controllers
                 return NotFound();
             }
 
-            var chosenBellSchedModel = await _context.chosenBellSchedModels
+            var chosenBellSchedModel = await _context.ChosenBellSchedModels
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (chosenBellSchedModel == null)
             {
@@ -80,7 +75,7 @@ namespace SAMS.Controllers
                 return NotFound();
             }
 
-            var chosenBellSchedModel = await _context.chosenBellSchedModels.FindAsync(id);
+            var chosenBellSchedModel = await _context.ChosenBellSchedModels.FindAsync(id);
             if (chosenBellSchedModel == null)
             {
                 return NotFound();
@@ -133,7 +128,7 @@ namespace SAMS.Controllers
 
         private bool ChosenBellSchedModelExists(int id)
         {
-            return _context.chosenBellSchedModels.Any(e => e.Id == id);
+            return _context.ChosenBellSchedModels.Any(e => e.Id == id);
         }
     }
 }

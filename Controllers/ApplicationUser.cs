@@ -8,11 +8,11 @@ namespace SAMS.Controllers
     {
         [Required]
         [Display(Name = "School Id")]
-        public string? SchoolId { get; set; } = null!;
+        public string SchoolId { get; set; } = null!;
         [Required]
         [StringLength(32, ErrorMessage = "The Unique Code must be at least {2} and at max {1} characters long.", MinimumLength = 32)]
         [Display(Name = "Unique Code")]
-        public string? ActivationCode {  get; set; } = null!;
+        public string ActivationCode {  get; set; } = null!;
         [Display(Name = "Enable User Experience")]
         public Boolean? UserExperienceEnabled { get; set; }
         [Required]

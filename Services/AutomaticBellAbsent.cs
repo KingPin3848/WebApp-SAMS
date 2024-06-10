@@ -6,32 +6,42 @@ using SAMS.Models;
 
 namespace SAMS.Services
 {
-    public class AutomaticBellAbsent : BackgroundService
+    public class AutomaticBellAbsent(ILogger<AutomaticBellAbsent> logger, IServiceScopeFactory scopeFactory) : BackgroundService
     {
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly RoleManager<ApplicationUser> _roleManager;
-        private readonly ApplicationDbContext _context;
-        private readonly ILogger<AutomaticBellAbsent> _logger;
-
-        public AutomaticBellAbsent(UserManager<ApplicationUser> userManager, RoleManager<ApplicationUser> roleManager, ApplicationDbContext dbContext, ILogger<AutomaticBellAbsent> logger)
-        {
-            _context = dbContext;
-            _userManager = userManager;
-            _roleManager = roleManager;
-            _logger = logger;
-        }
+        private readonly IServiceScopeFactory _scopeFactory = scopeFactory;
+        private readonly ILogger<AutomaticBellAbsent> _logger = logger;
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            while(!stoppingToken.IsCancellationRequested)
+            while (!stoppingToken.IsCancellationRequested)
             {
-                var holidayDates = _context.schedulerModels.Where(a => a.Type == "No School @SHS").Select(a => a.Date).ToList();
-                var todayDate = DateOnly.FromDateTime(DateTime.Now.Date);
+                await HolidayRun();
+                // Wait for two minutes before checking again - COOL DOWN!!!!
+                await Task.Delay(TimeSpan.FromMinutes(2), stoppingToken);
+            }
+        }
 
+        private async Task HolidayRun()
+        {
+            using var scope = _scopeFactory.CreateAsyncScope();
+
+            var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
+            var holidayDates = context.SchedulerModels.Where(a => a.Type == "No School @SHS").Select(a => a.Date).ToList();
+            var todayDate = DateOnly.FromDateTime(DateTime.Now.Date);
+
+            if (holidayDates == null)
+            {
+                _logger.LogWarning("Holidays is null and the task if delayed by 1 DAY. Done by the if statement in holidayRun");
+                await Task.Delay(TimeSpan.FromDays(1));
+            }
+            else
+            {
                 foreach (var date in holidayDates)
                 {
                     if (date == todayDate)
                     {
+                        _logger.LogWarning("Today is a holiday and the task is delayed by 1 DAY. Done by the if statement in holidayRun");
                         await Task.Delay(TimeSpan.FromDays(1));
                     }
                     else
@@ -39,101 +49,232 @@ namespace SAMS.Services
                         await MarkAbsentTask();
                     }
                 }
-                await Task.Delay(TimeSpan.FromMinutes(1));
             }
         }
 
         private async Task MarkAbsentTask()
         {
+            using var scope = _scopeFactory.CreateAsyncScope();
+            var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+            var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
             var date = DateTime.Now.Date;
             var time = DateTime.Now.TimeOfDay;
-            var students = await _userManager.GetUsersInRoleAsync("Student");
-            var noncheckDailyCourses = _context.activeCourseInfoModels.Where(a => a.DailyAttChecked == false).ToList();
-            var chosenBellSchedName = _context.chosenBellSchedModels.Select(a => a.Name).FirstOrDefault();
+            var students = await userManager.GetUsersInRoleAsync("Student");
+            var noncheckDailyCourses = context.ActiveCourseInfoModels.Where(a => a.DailyAttChecked == false).ToList();
+            var noncheckBellCourses = context.ActiveCourseInfoModels.Where(a => a.B2BAttChecked == false).ToList();
+            var chosenBellSchedName = context.ChosenBellSchedModels.Select(a => a.Name).FirstOrDefault();
 
-            List<IBellSchedule> chosenBellSched;
+            List<IBellSchedule>? chosenBellSched;
             switch (chosenBellSchedName)
             {
                 case "Daily Bell Schedule":
-                    chosenBellSched = _context.dailyBellScheduleModels.Where(a => a.BellName.Contains("Bell")).OrderBy(a => a.StartTime).Cast<IBellSchedule>().ToList();
+                    chosenBellSched = [.. context.DailyBellScheduleModels.Where(a => a.BellName.Contains("Bell")).OrderBy(a => a.StartTime).Cast<IBellSchedule>()];
+                    await NormalRunner(students, date, time, noncheckDailyCourses, noncheckBellCourses, chosenBellSched);
                     break;
                 case "Extended Aves Bell Schedule":
-                    chosenBellSched = _context.extendedAvesModels.Where(a => a.BellName.Contains("Bell")).OrderBy(a => a.StartTime).Cast<IBellSchedule>().ToList();
+                    chosenBellSched = [.. context.ExtendedAvesModels.Where(a => a.BellName.Contains("Bell")).OrderBy(a => a.StartTime).Cast<IBellSchedule>()];
+                    await NormalRunner(students, date, time, noncheckDailyCourses, noncheckBellCourses, chosenBellSched);
                     break;
                 case "Pep Rally Bell Schedule":
-                    chosenBellSched = _context.pepRallyBellScheduleModels.Where(a => a.BellName.Contains("Bell")).OrderBy(a => a.StartTime).Cast<IBellSchedule>().ToList();
+                    chosenBellSched = [.. context.PepRallyBellScheduleModels.Where(a => a.BellName.Contains("Bell")).OrderBy(a => a.StartTime).Cast<IBellSchedule>()];
+                    await NormalRunner(students, date, time, noncheckDailyCourses, noncheckBellCourses, chosenBellSched);
                     break;
-                case "Two Hour Delay Bell Schedule":
-                    chosenBellSched = _context.twoHrDelayBellScheduleModels.Where(a => a.BellName.Contains("Bell")).OrderBy(a => a.StartTime).Cast<IBellSchedule>().ToList();
+                case "2 Hour Delay Bell Schedule":
+                    chosenBellSched = [.. context.TwoHrDelayBellScheduleModels.Where(a => a.BellName.Contains("Bell")).OrderBy(a => a.StartTime).Cast<IBellSchedule>()];
+                    await NormalRunner(students, date, time, noncheckDailyCourses, noncheckBellCourses, chosenBellSched);
+                    break;
+                case "Custom Bell Schedule":
+                    chosenBellSched = [.. context.CustomSchedules.Where(a => a.BellName.Contains("Bell")).OrderBy(a => a.StartTime).Cast<IBellSchedule>()];
+                    await CustomRunner(students, date, time, noncheckDailyCourses, noncheckBellCourses, chosenBellSched);
                     break;
                 default:
-                    throw new ArgumentException("Invalid bell schedule name provided.");
+                    chosenBellSched = null;
+                    _logger.LogInformation("A schedule was chosen other than the ones offered. Possible breach try.");
+                    break;
             }
+        }
 
-            foreach (var bellObject in chosenBellSched)
+        private async Task NormalRunner(IList<ApplicationUser> students, DateTime date, TimeSpan time, List<ActiveCourseInfoModel> noncheckDailyCourses, List<ActiveCourseInfoModel> noncheckBellCourses, List<IBellSchedule> chosenBellSched)
+        {
+            using var scope = _scopeFactory.CreateAsyncScope();
+            var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
+            if (chosenBellSched == null)
             {
-                IBellSchedule bell = bellObject;
-                // Check if we are 15 minutes into the current bell
-                if (time >= bell.StartTime.Add(TimeSpan.FromMinutes(15)) && time < bell.EndTime)
+                _logger.LogCritical("A schedule or option was chosen other than the ones offered. Possible breach try.");
+            }
+            else
+            {
+                var currentBell = GetCurrentBell(chosenBellSched);
+
+                foreach (var bellObject in chosenBellSched)
                 {
-                    foreach (var student in students)
+                    IBellSchedule bell = bellObject;
+                    // Check if we are 15 minutes into the current bell
+                    if (time >= bell.StartTime.Add(TimeSpan.FromMinutes(15)) && time < bell.EndTime)
                     {
-                        var studentId = int.Parse(student.SchoolId);
-                        var sem2start = _context.schedulerModels.Where(a => a.Type == "Semester 2").Select(a => a.Date).FirstOrDefault();
-                        int bellCourseId;
-                        if (DateOnly.FromDateTime(DateTime.Now.Date) >= sem2start)
+                        foreach (var student in students)
                         {
-                            var studentSchedule = await _context.sem2StudSchedules.FindAsync(studentId);
-                            bellCourseId = GetS2BellCourseId(studentSchedule, bell.BellName);
-                        }
-                        else
-                        {
-                            var studentSchedule = await _context.sem1StudSchedules.FindAsync(studentId);
-                            bellCourseId = GetS1BellCourseId(studentSchedule, bell.BellName);
-                        }
-                        var bellCourseName = _context.activeCourseInfoModels.Find(bellCourseId).CourseName;
+                            var studentId = int.Parse(student.SchoolId!);
+                            var sem2start = context.SchedulerModels.Where(a => a.Type == "Semester 2").Select(a => a.Date).FirstOrDefault();
+                            IStudentSchedule? studentSchedule = (DateOnly.FromDateTime(DateTime.Now.Date) >= sem2start) ? (await context.Sem2StudSchedules.FindAsync(studentId)) : (await context.Sem1StudSchedules.FindAsync(studentId));
+                            var sem2started = (DateOnly.FromDateTime(DateTime.Now.Date) >= sem2start);
+                            int bellCourseId;
+                            if (sem2started)
+                            {
+                                bellCourseId = GetS2BellCourseId(studentSchedule!, bell.BellName);
+                            }
+                            else
+                            {
+                                bellCourseId = GetS1BellCourseId(studentSchedule!, bell.BellName);
+                            }
+                            var bellCourseName = context.ActiveCourseInfoModels.Where(a => a.CourseId == bellCourseId).Select(a => a.CourseName).First();
 
-                        // If the course for this bell is in noncheckDailyCourses, skip to the next student
-                        if (noncheckDailyCourses.Any(course => course.CourseId == bellCourseId))
-                        {
-                            continue;
-                        }
-
-                        var entryExists = _context.bellAttendanceModels.Any(a =>
-                            a.StudentId == studentId &&
-                            a.DateTime.Date == date &&
-                            a.BellNumId == bell.BellName &&
-                            a.Status == "Unknown");
-
-                        // If an unknown status entry exists, mark it as Absent
-                        if (entryExists)
-                        {
-                            var attendanceEntry = _context.bellAttendanceModels.First(a =>
+                            var noncheckBelltrue = noncheckBellCourses.Any(course => course.CourseId == bellCourseId);
+                            var noncheckDailytrue = noncheckDailyCourses.Any(course => course.CourseId == bellCourseId);
+                            // If the course for this bell is in noncheckDailyCourses, skip to the next student
+                            if (noncheckBelltrue || noncheckDailytrue)
+                            {
+                                _logger.LogInformation("Course was found inside the noncheck course list. noncheckBell list: {noncheckBelltrue}, noncheckDaily list: {noncheckDailytrue} Cannot mark absent for that class.", noncheckBelltrue, noncheckDailytrue);
+                            }
+                            else
+                            {
+                                var entryExists = context.BellAttendanceModels.Any(a =>
                                 a.StudentId == studentId &&
                                 a.DateTime.Date == date &&
                                 a.BellNumId == bell.BellName &&
+                                a.CourseId == bellCourseId &&
                                 a.Status == "Unknown");
 
-                            var timeStamp = new TimestampModel
-                            {
-                                Timestamp = DateTime.Now,
-                                ActionMade = "Marked Absent Automatically for Class",
-                                MadeBy = $"Automated Class Absence Service - SAMS Program {DateTime.Now}",
-                                Comments = $"The student was marked absent automatically because the student did not check themslves into the class: {bellCourseName} within the " +
-                                "15 minutes of start of the class. Please contact the Sycamore High School Attendance Office for any further questions or concerns."
-                            };
+                                // If an unknown status entry exists, mark it as Absent
+                                if (entryExists)
+                                {
+                                    var attendanceEntry = context.BellAttendanceModels.First(a =>
+                                    a.StudentId == studentId &&
+                                        a.DateTime.Date == date &&
+                                        a.BellNumId == bell.BellName &&
+                                        a.CourseId == bellCourseId &&
+                                        a.Status == "Unknown");
 
-                            attendanceEntry.Status = "Absent";
-                            _context.bellAttendanceModels.Update(attendanceEntry);
-                            await _context.SaveChangesAsync();
+                                    var timeStamp = new TimestampModel
+                                    {
+                                        Timestamp = DateTime.Now,
+                                        ActionMade = "Marked Absent Automatically for Class",
+                                        MadeBy = $"Automated Class Absence Service - SAMS Program {DateTime.Now}",
+                                        Comments = $"The student was marked absent automatically because the student did not check themslves into the class: {bellCourseName} within the " +
+                                        "5 minutes of start of the class. Please contact the Sycamore High School Attendance Office for any further questions or concerns."
+                                    };
+
+                                    attendanceEntry.Status = "Absent";
+                                    context.BellAttendanceModels.Update(attendanceEntry);
+                                    context.TimestampModels.Add(timeStamp);
+                                    await context.SaveChangesAsync();
+                                }
+                            }
                         }
                     }
                 }
             }
         }
 
+        private async Task CustomRunner(IList<ApplicationUser> students, DateTime date, TimeSpan time, List<ActiveCourseInfoModel> noncheckDailyCourses, List<ActiveCourseInfoModel> noncheckBellCourses, List<IBellSchedule> chosenBellSched)
+        {
+            using var scope = _scopeFactory.CreateAsyncScope();
+            var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
-        private int GetS1BellCourseId(Sem1StudSchedule studentSchedule, string bellName)
+            if (chosenBellSched == null)
+            {
+                _logger.LogCritical("A schedule or option was chosen other than the ones offered. Possible breach try.");
+            }
+            else
+            {
+                var currentBell = GetCurrentBell(chosenBellSched);
+
+                foreach (var bellObject in chosenBellSched)
+                {
+                    IBellSchedule bell = bellObject;
+                    // Check if we are 15 minutes into the current bell
+                    if (time >= bell.StartTime.Add(TimeSpan.FromMinutes(15)) && time < bell.EndTime)
+                    {
+                        foreach (var student in students)
+                        {
+                            var studentId = int.Parse(student.SchoolId!);
+                            var sem2start = context.SchedulerModels.Where(a => a.Type == "Semester 2").Select(a => a.Date).FirstOrDefault();
+                            IStudentSchedule? studentSchedule = (DateOnly.FromDateTime(DateTime.Now.Date) >= sem2start) ? (await context.Sem2StudSchedules.FindAsync(studentId)) : (await context.Sem1StudSchedules.FindAsync(studentId));
+                            var sem2started = (DateOnly.FromDateTime(DateTime.Now.Date) >= sem2start);
+                            int bellCourseId;
+                            if (sem2started)
+                            {
+                                bellCourseId = GetS2BellCourseId(studentSchedule!, bell.BellName);
+                            }
+                            else
+                            {
+                                bellCourseId = GetS1BellCourseId(studentSchedule!, bell.BellName);
+                            }
+                            var bellCourseName = context.ActiveCourseInfoModels.Where(a => a.CourseId == bellCourseId).Select(a => a.CourseName).First();
+
+                            var noncheckBelltrue = noncheckBellCourses.Any(course => course.CourseId == bellCourseId);
+                            var noncheckDailytrue = noncheckDailyCourses.Any(course => course.CourseId == bellCourseId);
+                            // If the course for this bell is in noncheckDailyCourses, skip to the next student
+                            if (noncheckBelltrue || noncheckDailytrue)
+                            {
+                                _logger.LogInformation("Course was found inside the noncheck course list. noncheckBell list: {noncheckBelltrue}, noncheckDaily list: {noncheckDailytrue} Cannot mark absent for that class.", noncheckBelltrue, noncheckDailytrue);
+                            }
+                            else
+                            {
+                                var entryExists = context.BellAttendanceModels.Any(a =>
+                                a.StudentId == studentId &&
+                                a.DateTime.Date == date &&
+                                a.BellNumId == bell.BellName &&
+                                a.CourseId == bellCourseId &&
+                                a.Status == "Unknown");
+
+                                // If an unknown status entry exists, mark it as Absent
+                                if (entryExists)
+                                {
+                                    var attendanceEntry = context.BellAttendanceModels.First(a =>
+                                    a.StudentId == studentId &&
+                                        a.DateTime.Date == date &&
+                                        a.BellNumId == bell.BellName &&
+                                        a.CourseId == bellCourseId &&
+                                        a.Status == "Unknown");
+
+                                    var timeStamp = new TimestampModel
+                                    {
+                                        Timestamp = DateTime.Now,
+                                        ActionMade = "Marked Absent Automatically for Class",
+                                        MadeBy = $"Automated Class Absence Service - SAMS Program {DateTime.Now}",
+                                        Comments = $"The student was marked absent automatically because the student did not check themslves into the class: {bellCourseName} within the " +
+                                        "5 minutes of start of the class. Please contact the Sycamore High School Attendance Office for any further questions or concerns."
+                                    };
+
+                                    attendanceEntry.Status = "Absent";
+                                    context.BellAttendanceModels.Update(attendanceEntry);
+                                    context.TimestampModels.Add(timeStamp);
+                                    await context.SaveChangesAsync();
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        private static string? GetCurrentBell(List<IBellSchedule> chosenBellSched)
+        {
+            var currentTime = DateTime.Now.TimeOfDay;
+            foreach (var bell in chosenBellSched)
+            {
+                if (currentTime >= bell.StartTime && currentTime <= bell.EndTime)
+                {
+                    return bell.BellName;
+                }
+            }
+            return null;
+        }
+
+        private static int GetS1BellCourseId(IStudentSchedule studentSchedule, string bellName)
         {
             switch (bellName)
             {
@@ -144,7 +285,7 @@ namespace SAMS.Services
                     {
                         return studentSchedule.Bell2MonWedCourseIDMod;
                     }
-                    else if(DateTime.Now.Date.DayOfWeek == DayOfWeek.Friday)
+                    else if (DateTime.Now.Date.DayOfWeek == DayOfWeek.Friday)
                     {
                         return studentSchedule.FriBell2CourseIDMod;
                     }
@@ -204,7 +345,7 @@ namespace SAMS.Services
             }
         }
 
-        private int GetS2BellCourseId(Sem2StudSchedule studentSchedule, string bellName)
+        private static int GetS2BellCourseId(IStudentSchedule studentSchedule, string bellName)
         {
             switch (bellName)
             {

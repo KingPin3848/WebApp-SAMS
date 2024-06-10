@@ -42,22 +42,22 @@ namespace SAMS.Areas.Admin.Controllers
         }
 
         public InputModel Input { get; set; }
-        public class InputModel : ApplicationUser
+        public class InputModel
         {
             [Required]
             [EmailAddress]
             [Display(Name = "Email")]
-            public new string? Email { get; set; }
+            public string? Email { get; set; }
             [Required]
             [StringLength(32, ErrorMessage = "The Unique Code must be at least {2} and at max {1} characters long.", MinimumLength = 32)]
             [Display(Name = "Unique Code")]
-            public new string? ActivationCode { get; set; }
+            public string? ActivationCode { get; set; }
             [Required]
             [Display(Name = "School Id")]
-            public new string? SchoolId { get; set; }
+            public string? SchoolId { get; set; }
             [Required]
             [Display(Name = "Role(s)")]
-            public new IList<string>? Role { get; set; }
+            public IList<string>? Role { get; set; }
         }
 
 
@@ -119,14 +119,12 @@ namespace SAMS.Areas.Admin.Controllers
                 {
                     var user = CreateUser();
 
-                    Input = input;
-
                     IEnumerable<string> listRoles = Input.Role!;
                     await _userStore.SetUserNameAsync(user, Input.SchoolId, CancellationToken.None);
                     await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
                     user.Role = Input.Role;
-                    user.SchoolId = Input.SchoolId;
-                    user.ActivationCode = input.ActivationCode;
+                    user.SchoolId = Input.SchoolId!;
+                    user.ActivationCode = input.ActivationCode!;
                     user.UserExperienceEnabled = false;
                     user.Email = input.Email;
                     user.EmailConfirmed = true;
@@ -419,21 +417,21 @@ namespace SAMS.Areas.Admin.Controllers
                         case "Student":
                             {
                                 var studId = int.Parse(schoolId);
-                                var studentInfo = await _context.studentInfoModels.FindAsync(studId) ?? throw new Exception("Unable to retrieve student data for deletion.");
-                                var sem1sched = await _context.sem1StudSchedules.FindAsync(studId) ?? throw new Exception("Unable to retrieve student schedule 1 for deletion.");
-                                var sem2sched = await _context.sem2StudSchedules.FindAsync(studId) ?? throw new Exception("Unable to retrieve student schedule 2 for deletion.");
+                                var studentInfo = await _context.StudentInfoModels.FindAsync(studId) ?? throw new Exception("Unable to retrieve student data for deletion.");
+                                var sem1sched = await _context.Sem1StudSchedules.FindAsync(studId) ?? throw new Exception("Unable to retrieve student schedule 1 for deletion.");
+                                var sem2sched = await _context.Sem2StudSchedules.FindAsync(studId) ?? throw new Exception("Unable to retrieve student schedule 2 for deletion.");
 
-                                var studInfoDeletion = _context.studentInfoModels.Remove(studentInfo);
-                                var sem1schedDeletion = _context.sem1StudSchedules.Remove(sem1sched);
-                                var sem2schedDeletion = _context.sem2StudSchedules.Remove(sem2sched);
+                                var studInfoDeletion = _context.StudentInfoModels.Remove(studentInfo);
+                                var sem1schedDeletion = _context.Sem1StudSchedules.Remove(sem1sched);
+                                var sem2schedDeletion = _context.Sem2StudSchedules.Remove(sem2sched);
                                 await _context.SaveChangesAsync();
                                 break;
                             }
                         case "Teacher":
                             {
                                 var teacherid = schoolId;
-                                var courses = _context.activeCourseInfoModels.Where(a => a.CourseTeacherID == teacherid).ToList() ?? throw new Exception("Unable to retrieve teacher's courses for deletion.");
-                                var teacherInfo = _context.teacherInfoModels.Where(a => a.TeacherID == teacherid).ToList() ?? throw new Exception("Unable to retrieve teacher data for deletion.");
+                                var courses = _context.ActiveCourseInfoModels.Where(a => a.CourseTeacherID == teacherid).ToList() ?? throw new Exception("Unable to retrieve teacher's courses for deletion.");
+                                var teacherInfo = _context.TeacherInfoModels.Where(a => a.TeacherID == teacherid).ToList() ?? throw new Exception("Unable to retrieve teacher data for deletion.");
 
                                 var deletion1 = _context.Remove(courses);
                                 var deletion2 = _context.Remove(teacherInfo);
@@ -443,7 +441,7 @@ namespace SAMS.Areas.Admin.Controllers
                         case "Attendance Office Member":
                             {
                                 var attid = schoolId;
-                                var attinfo = _context.attendanceOfficeMemberModels.Where(a => a.AoMemberID == attid).ToList() ?? throw new Exception("Unable to retrieve attendance office member data for deletion.");
+                                var attinfo = _context.AttendanceOfficeMemberModels.Where(a => a.AoMemberID == attid).ToList() ?? throw new Exception("Unable to retrieve attendance office member data for deletion.");
 
                                 var deletion = _context.Remove(attinfo);
                                 await _context.SaveChangesAsync();
@@ -452,7 +450,7 @@ namespace SAMS.Areas.Admin.Controllers
                         case "HS School Admin":
                             {
                                 var adminid = schoolId;
-                                var admininfo = _context.adminInfoModels.Where(a => a.AdminID == adminid).ToList() ?? throw new Exception("Unable to retrieve admin data for deletion.");
+                                var admininfo = _context.AdminInfoModels.Where(a => a.AdminID == adminid).ToList() ?? throw new Exception("Unable to retrieve admin data for deletion.");
 
                                 var deletion = _context.Remove(admininfo);
                                 await _context.SaveChangesAsync();
@@ -461,7 +459,7 @@ namespace SAMS.Areas.Admin.Controllers
                         case "Synnovation Lab Admin":
                             {
                                 var adminid = schoolId;
-                                var admininfo = _context.adminInfoModels.Where(a => a.AdminID == adminid).ToList() ?? throw new Exception("Unable to retrieve admin data for deletion.");
+                                var admininfo = _context.AdminInfoModels.Where(a => a.AdminID == adminid).ToList() ?? throw new Exception("Unable to retrieve admin data for deletion.");
 
                                 var deletion = _context.Remove(admininfo);
                                 await _context.SaveChangesAsync();
@@ -470,7 +468,7 @@ namespace SAMS.Areas.Admin.Controllers
                         case "Education Support (EA)":
                             {
                                 var eaid = schoolId;
-                                var eainfo = _context.eASuportInfoModels.Where(a => a.EaID == eaid).ToList() ?? throw new Exception("Unable to retrieve ea data for deletion.");
+                                var eainfo = _context.EASuportInfoModels.Where(a => a.EaID == eaid).ToList() ?? throw new Exception("Unable to retrieve ea data for deletion.");
 
                                 var deletion = _context.Remove(eainfo);
                                 await _context.SaveChangesAsync();
@@ -479,7 +477,7 @@ namespace SAMS.Areas.Admin.Controllers
                         case "Nurse":
                             {
                                 var nurseid = schoolId;
-                                var nurseinfo = _context.nurseInfoModels.Where(a => a.NurseID == nurseid).ToList() ?? throw new Exception("Unable to retrieve nurse data for deletion.");
+                                var nurseinfo = _context.NurseInfoModels.Where(a => a.NurseID == nurseid).ToList() ?? throw new Exception("Unable to retrieve nurse data for deletion.");
 
                                 var deletion = _context.Remove(nurseinfo);
                                 await _context.SaveChangesAsync();
@@ -488,7 +486,7 @@ namespace SAMS.Areas.Admin.Controllers
                         case "Law Enforcement":
                             {
                                 var adminid = schoolId;
-                                var admininfo = _context.lawEnforcementInfoModels.Where(a => a.LawenfID == adminid).ToList() ?? throw new Exception("Unable to retrieve law enforcement officer data for deletion.");
+                                var admininfo = _context.LawEnforcementInfoModels.Where(a => a.LawenfID == adminid).ToList() ?? throw new Exception("Unable to retrieve law enforcement officer data for deletion.");
 
                                 var deletion = _context.Remove(admininfo);
                                 await _context.SaveChangesAsync();
@@ -497,7 +495,7 @@ namespace SAMS.Areas.Admin.Controllers
                         case "Synnovation Lab QR Code Scanner Management":
                             {
                                 var adminid = schoolId;
-                                var admininfo = _context.synnLabQRNodeModels.Where(a => a.ScannerID == adminid).ToList() ?? throw new Exception("Unable to retrieve scanner node data for deletion.");
+                                var admininfo = _context.SynnLabQRNodeModels.Where(a => a.ScannerID == adminid).ToList() ?? throw new Exception("Unable to retrieve scanner node data for deletion.");
 
                                 var deletion = _context.Remove(admininfo);
                                 await _context.SaveChangesAsync();
@@ -506,8 +504,8 @@ namespace SAMS.Areas.Admin.Controllers
                         case "Substitute Teacher":
                             {
                                 var teacherid = schoolId;
-                                var courses = _context.activeCourseInfoModels.Where(a => a.CourseTeacherID == teacherid).ToList() ?? throw new Exception("Unable to retrieve teacher's courses for deletion.");
-                                var teacherInfo = _context.teacherInfoModels.Where(a => a.TeacherID == teacherid).ToList() ?? throw new Exception("Unable to retrieve teacher data for deletion.");
+                                var courses = _context.ActiveCourseInfoModels.Where(a => a.CourseTeacherID == teacherid).ToList() ?? throw new Exception("Unable to retrieve teacher's courses for deletion.");
+                                var teacherInfo = _context.TeacherInfoModels.Where(a => a.TeacherID == teacherid).ToList() ?? throw new Exception("Unable to retrieve teacher data for deletion.");
 
                                 var deletion1 = _context.Remove(courses);
                                 var deletion2 = _context.Remove(teacherInfo);
@@ -517,7 +515,7 @@ namespace SAMS.Areas.Admin.Controllers
                         case "District Admin":
                             {
                                 var adminid = schoolId;
-                                var admininfo = _context.adminInfoModels.Where(a => a.AdminID == adminid).ToList() ?? throw new Exception("Unable to retrieve admin data for deletion.");
+                                var admininfo = _context.AdminInfoModels.Where(a => a.AdminID == adminid).ToList() ?? throw new Exception("Unable to retrieve admin data for deletion.");
 
                                 var deletion = _context.Remove(admininfo);
                                 await _context.SaveChangesAsync();

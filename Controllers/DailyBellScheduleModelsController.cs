@@ -10,32 +10,27 @@ using SAMS.Models;
 
 namespace SAMS.Controllers
 {
-    public class DailyBellScheduleModelsController : Controller
+    public class DailyBellScheduleModelsController(ApplicationDbContext context) : Controller
     {
-        private readonly ApplicationDbContext _context;
-
-        public DailyBellScheduleModelsController(ApplicationDbContext context)
-        {
-            _context = context;
-        }
+        private readonly ApplicationDbContext _context = context;
 
         // GET: DailyBellScheduleModels
         public async Task<IActionResult> Index()
         {
-              return _context.dailyBellScheduleModels != null ? 
-                          View(await _context.dailyBellScheduleModels.ToListAsync()) :
+              return _context.DailyBellScheduleModels != null ? 
+                          View(await _context.DailyBellScheduleModels.ToListAsync()) :
                           Problem("Entity set 'ApplicationDbContext.dailyBellScheduleModels'  is null.");
         }
 
         // GET: DailyBellScheduleModels/Details/5
         public async Task<IActionResult> Details(TimeSpan? id)
         {
-            if (id == null || _context.dailyBellScheduleModels == null)
+            if (id == null || _context.DailyBellScheduleModels == null)
             {
                 return NotFound();
             }
 
-            var dailyBellScheduleModel = await _context.dailyBellScheduleModels
+            var dailyBellScheduleModel = await _context.DailyBellScheduleModels
                 .FirstOrDefaultAsync(m => m.StartTime == id);
             if (dailyBellScheduleModel == null)
             {
@@ -70,12 +65,12 @@ namespace SAMS.Controllers
         // GET: DailyBellScheduleModels/Edit/5
         public async Task<IActionResult> Edit(TimeSpan? id)
         {
-            if (id == null || _context.dailyBellScheduleModels == null)
+            if (id == null || _context.DailyBellScheduleModels == null)
             {
                 return NotFound();
             }
 
-            var dailyBellScheduleModel = await _context.dailyBellScheduleModels.FindAsync(id);
+            var dailyBellScheduleModel = await _context.DailyBellScheduleModels.FindAsync(id);
             if (dailyBellScheduleModel == null)
             {
                 return NotFound();
@@ -121,12 +116,12 @@ namespace SAMS.Controllers
         // GET: DailyBellScheduleModels/Delete/5
         public async Task<IActionResult> Delete(TimeSpan? id)
         {
-            if (id == null || _context.dailyBellScheduleModels == null)
+            if (id == null || _context.DailyBellScheduleModels == null)
             {
                 return NotFound();
             }
 
-            var dailyBellScheduleModel = await _context.dailyBellScheduleModels
+            var dailyBellScheduleModel = await _context.DailyBellScheduleModels
                 .FirstOrDefaultAsync(m => m.StartTime == id);
             if (dailyBellScheduleModel == null)
             {
@@ -141,14 +136,14 @@ namespace SAMS.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(TimeSpan id)
         {
-            if (_context.dailyBellScheduleModels == null)
+            if (_context.DailyBellScheduleModels == null)
             {
                 return Problem("Entity set 'ApplicationDbContext.dailyBellScheduleModels'  is null.");
             }
-            var dailyBellScheduleModel = await _context.dailyBellScheduleModels.FindAsync(id);
+            var dailyBellScheduleModel = await _context.DailyBellScheduleModels.FindAsync(id);
             if (dailyBellScheduleModel != null)
             {
-                _context.dailyBellScheduleModels.Remove(dailyBellScheduleModel);
+                _context.DailyBellScheduleModels.Remove(dailyBellScheduleModel);
             }
             
             await _context.SaveChangesAsync();
@@ -157,7 +152,7 @@ namespace SAMS.Controllers
 
         private bool DailyBellScheduleModelExists(TimeSpan id)
         {
-          return (_context.dailyBellScheduleModels?.Any(e => e.StartTime == id)).GetValueOrDefault();
+          return (_context.DailyBellScheduleModels?.Any(e => e.StartTime == id)).GetValueOrDefault();
         }
     }
 }

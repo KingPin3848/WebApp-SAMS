@@ -10,19 +10,14 @@ using SAMS.Models;
 
 namespace SAMS.Controllers.InfoManagement
 {
-    public class EASuportInfoController : Controller
+    public class EASuportInfoController(ApplicationDbContext context) : Controller
     {
-        private readonly ApplicationDbContext _context;
-
-        public EASuportInfoController(ApplicationDbContext context)
-        {
-            _context = context;
-        }
+        private readonly ApplicationDbContext _context = context;
 
         // GET: EASuportInfo
         public async Task<IActionResult> Index()
         {
-            return View(await _context.eASuportInfoModels.ToListAsync());
+            return View(await _context.EASuportInfoModels.ToListAsync());
         }
 
         // GET: EASuportInfo/Details/5
@@ -33,7 +28,7 @@ namespace SAMS.Controllers.InfoManagement
                 return NotFound();
             }
 
-            var eASuportInfoModel = await _context.eASuportInfoModels
+            var eASuportInfoModel = await _context.EASuportInfoModels
                 .FirstOrDefaultAsync(m => m.EaID == id);
             if (eASuportInfoModel == null)
             {
@@ -73,7 +68,7 @@ namespace SAMS.Controllers.InfoManagement
                 return NotFound();
             }
 
-            var eASuportInfoModel = await _context.eASuportInfoModels.FindAsync(id);
+            var eASuportInfoModel = await _context.EASuportInfoModels.FindAsync(id);
             if (eASuportInfoModel == null)
             {
                 return NotFound();
@@ -124,7 +119,7 @@ namespace SAMS.Controllers.InfoManagement
                 return NotFound();
             }
 
-            var eASuportInfoModel = await _context.eASuportInfoModels
+            var eASuportInfoModel = await _context.EASuportInfoModels
                 .FirstOrDefaultAsync(m => m.EaID == id);
             if (eASuportInfoModel == null)
             {
@@ -139,10 +134,10 @@ namespace SAMS.Controllers.InfoManagement
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
-            var eASuportInfoModel = await _context.eASuportInfoModels.FindAsync(id);
+            var eASuportInfoModel = await _context.EASuportInfoModels.FindAsync(id);
             if (eASuportInfoModel != null)
             {
-                _context.eASuportInfoModels.Remove(eASuportInfoModel);
+                _context.EASuportInfoModels.Remove(eASuportInfoModel);
             }
 
             await _context.SaveChangesAsync();
@@ -151,7 +146,7 @@ namespace SAMS.Controllers.InfoManagement
 
         private bool EASuportInfoModelExists(string id)
         {
-            return _context.eASuportInfoModels.Any(e => e.EaID == id);
+            return _context.EASuportInfoModels.Any(e => e.EaID == id);
         }
     }
 }

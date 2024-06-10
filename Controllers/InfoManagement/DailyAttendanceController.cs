@@ -10,19 +10,14 @@ using SAMS.Models;
 
 namespace SAMS.Controllers.InfoManagement
 {
-    public class DailyAttendanceController : Controller
+    public class DailyAttendanceController(ApplicationDbContext context) : Controller
     {
-        private readonly ApplicationDbContext _context;
-
-        public DailyAttendanceController(ApplicationDbContext context)
-        {
-            _context = context;
-        }
+        private readonly ApplicationDbContext _context = context;
 
         // GET: DailyAttendance
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.dailyAttendanceModels.Include(d => d.Student);
+            var applicationDbContext = _context.DailyAttendanceModels.Include(d => d.Student);
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -34,7 +29,7 @@ namespace SAMS.Controllers.InfoManagement
                 return NotFound();
             }
 
-            var dailyAttendanceModel = await _context.dailyAttendanceModels
+            var dailyAttendanceModel = await _context.DailyAttendanceModels
                 .Include(d => d.Student)
                 .FirstOrDefaultAsync(m => m.AttendanceId == id);
             if (dailyAttendanceModel == null)
@@ -48,7 +43,7 @@ namespace SAMS.Controllers.InfoManagement
         // GET: DailyAttendance/Create
         public IActionResult Create()
         {
-            ViewData["StudentId"] = new SelectList(_context.studentInfoModels, "StudentID", "StudentID");
+            ViewData["StudentId"] = new SelectList(_context.StudentInfoModels, "StudentID", "StudentID");
             return View();
         }
 
@@ -65,7 +60,7 @@ namespace SAMS.Controllers.InfoManagement
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["StudentId"] = new SelectList(_context.studentInfoModels, "StudentID", "StudentID", dailyAttendanceModel.StudentId);
+            ViewData["StudentId"] = new SelectList(_context.StudentInfoModels, "StudentID", "StudentID", dailyAttendanceModel.StudentId);
             return View(dailyAttendanceModel);
         }
 
@@ -77,12 +72,12 @@ namespace SAMS.Controllers.InfoManagement
                 return NotFound();
             }
 
-            var dailyAttendanceModel = await _context.dailyAttendanceModels.FindAsync(id);
+            var dailyAttendanceModel = await _context.DailyAttendanceModels.FindAsync(id);
             if (dailyAttendanceModel == null)
             {
                 return NotFound();
             }
-            ViewData["StudentId"] = new SelectList(_context.studentInfoModels, "StudentID", "StudentID", dailyAttendanceModel.StudentId);
+            ViewData["StudentId"] = new SelectList(_context.StudentInfoModels, "StudentID", "StudentID", dailyAttendanceModel.StudentId);
             return View(dailyAttendanceModel);
         }
 
@@ -118,7 +113,7 @@ namespace SAMS.Controllers.InfoManagement
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["StudentId"] = new SelectList(_context.studentInfoModels, "StudentID", "StudentID", dailyAttendanceModel.StudentId);
+            ViewData["StudentId"] = new SelectList(_context.StudentInfoModels, "StudentID", "StudentID", dailyAttendanceModel.StudentId);
             return View(dailyAttendanceModel);
         }
 
@@ -130,7 +125,7 @@ namespace SAMS.Controllers.InfoManagement
                 return NotFound();
             }
 
-            var dailyAttendanceModel = await _context.dailyAttendanceModels
+            var dailyAttendanceModel = await _context.DailyAttendanceModels
                 .Include(d => d.Student)
                 .FirstOrDefaultAsync(m => m.AttendanceId == id);
             if (dailyAttendanceModel == null)
@@ -146,10 +141,10 @@ namespace SAMS.Controllers.InfoManagement
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var dailyAttendanceModel = await _context.dailyAttendanceModels.FindAsync(id);
+            var dailyAttendanceModel = await _context.DailyAttendanceModels.FindAsync(id);
             if (dailyAttendanceModel != null)
             {
-                _context.dailyAttendanceModels.Remove(dailyAttendanceModel);
+                _context.DailyAttendanceModels.Remove(dailyAttendanceModel);
             }
 
             await _context.SaveChangesAsync();
@@ -158,7 +153,7 @@ namespace SAMS.Controllers.InfoManagement
 
         private bool DailyAttendanceModelExists(int id)
         {
-            return _context.dailyAttendanceModels.Any(e => e.AttendanceId == id);
+            return _context.DailyAttendanceModels.Any(e => e.AttendanceId == id);
         }
     }
 }

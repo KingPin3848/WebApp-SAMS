@@ -10,19 +10,14 @@ using SAMS.Models;
 
 namespace SAMS.Controllers.InfoManagement
 {
-    public class ActiveCourseInfoController : Controller
+    public class ActiveCourseInfoController(ApplicationDbContext context) : Controller
     {
-        private readonly ApplicationDbContext _context;
-
-        public ActiveCourseInfoController(ApplicationDbContext context)
-        {
-            _context = context;
-        }
+        private readonly ApplicationDbContext _context = context;
 
         // GET: ActiveCourseInfoModels
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.activeCourseInfoModels.Include(a => a.Room).Include(a => a.Teacher);
+            var applicationDbContext = _context.ActiveCourseInfoModels.Include(a => a.Room).Include(a => a.Teacher);
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -34,7 +29,7 @@ namespace SAMS.Controllers.InfoManagement
                 return NotFound();
             }
 
-            var activeCourseInfoModel = await _context.activeCourseInfoModels
+            var activeCourseInfoModel = await _context.ActiveCourseInfoModels
                 .Include(a => a.Room)
                 .Include(a => a.Teacher)
                 .FirstOrDefaultAsync(m => m.CourseId == id);
@@ -49,8 +44,8 @@ namespace SAMS.Controllers.InfoManagement
         // GET: ActiveCourseInfoModels/Create
         public IActionResult Create()
         {
-            ViewData["CourseRoomID"] = new SelectList(_context.roomLocationInfoModels, "RoomNumberMod", "RoomNumberMod");
-            ViewData["CourseTeacherID"] = new SelectList(_context.teacherInfoModels, "TeacherID", "TeacherID");
+            ViewData["CourseRoomID"] = new SelectList(_context.RoomLocationInfoModels, "RoomNumberMod", "RoomNumberMod");
+            ViewData["CourseTeacherID"] = new SelectList(_context.TeacherInfoModels, "TeacherID", "TeacherID");
             return View();
         }
 
@@ -67,8 +62,8 @@ namespace SAMS.Controllers.InfoManagement
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CourseRoomID"] = new SelectList(_context.roomLocationInfoModels, "RoomNumberMod", "RoomNumberMod", activeCourseInfoModel.CourseRoomID);
-            ViewData["CourseTeacherID"] = new SelectList(_context.teacherInfoModels, "TeacherID", "TeacherID", activeCourseInfoModel.CourseTeacherID);
+            ViewData["CourseRoomID"] = new SelectList(_context.RoomLocationInfoModels, "RoomNumberMod", "RoomNumberMod", activeCourseInfoModel.CourseRoomID);
+            ViewData["CourseTeacherID"] = new SelectList(_context.TeacherInfoModels, "TeacherID", "TeacherID", activeCourseInfoModel.CourseTeacherID);
             return View(activeCourseInfoModel);
         }
 
@@ -80,13 +75,13 @@ namespace SAMS.Controllers.InfoManagement
                 return NotFound();
             }
 
-            var activeCourseInfoModel = await _context.activeCourseInfoModels.FindAsync(id);
+            var activeCourseInfoModel = await _context.ActiveCourseInfoModels.FindAsync(id);
             if (activeCourseInfoModel == null)
             {
                 return NotFound();
             }
-            ViewData["CourseRoomID"] = new SelectList(_context.roomLocationInfoModels, "RoomNumberMod", "RoomNumberMod", activeCourseInfoModel.CourseRoomID);
-            ViewData["CourseTeacherID"] = new SelectList(_context.teacherInfoModels, "TeacherID", "TeacherID", activeCourseInfoModel.CourseTeacherID);
+            ViewData["CourseRoomID"] = new SelectList(_context.RoomLocationInfoModels, "RoomNumberMod", "RoomNumberMod", activeCourseInfoModel.CourseRoomID);
+            ViewData["CourseTeacherID"] = new SelectList(_context.TeacherInfoModels, "TeacherID", "TeacherID", activeCourseInfoModel.CourseTeacherID);
             return View(activeCourseInfoModel);
         }
 
@@ -122,8 +117,8 @@ namespace SAMS.Controllers.InfoManagement
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CourseRoomID"] = new SelectList(_context.roomLocationInfoModels, "RoomNumberMod", "RoomNumberMod", activeCourseInfoModel.CourseRoomID);
-            ViewData["CourseTeacherID"] = new SelectList(_context.teacherInfoModels, "TeacherID", "TeacherID", activeCourseInfoModel.CourseTeacherID);
+            ViewData["CourseRoomID"] = new SelectList(_context.RoomLocationInfoModels, "RoomNumberMod", "RoomNumberMod", activeCourseInfoModel.CourseRoomID);
+            ViewData["CourseTeacherID"] = new SelectList(_context.TeacherInfoModels, "TeacherID", "TeacherID", activeCourseInfoModel.CourseTeacherID);
             return View(activeCourseInfoModel);
         }
 
@@ -135,7 +130,7 @@ namespace SAMS.Controllers.InfoManagement
                 return NotFound();
             }
 
-            var activeCourseInfoModel = await _context.activeCourseInfoModels
+            var activeCourseInfoModel = await _context.ActiveCourseInfoModels
                 .Include(a => a.Room)
                 .Include(a => a.Teacher)
                 .FirstOrDefaultAsync(m => m.CourseId == id);
@@ -152,10 +147,10 @@ namespace SAMS.Controllers.InfoManagement
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var activeCourseInfoModel = await _context.activeCourseInfoModels.FindAsync(id);
+            var activeCourseInfoModel = await _context.ActiveCourseInfoModels.FindAsync(id);
             if (activeCourseInfoModel != null)
             {
-                _context.activeCourseInfoModels.Remove(activeCourseInfoModel);
+                _context.ActiveCourseInfoModels.Remove(activeCourseInfoModel);
             }
 
             await _context.SaveChangesAsync();
@@ -164,7 +159,7 @@ namespace SAMS.Controllers.InfoManagement
 
         private bool ActiveCourseInfoModelExists(int id)
         {
-            return _context.activeCourseInfoModels.Any(e => e.CourseId == id);
+            return _context.ActiveCourseInfoModels.Any(e => e.CourseId == id);
         }
     }
 }

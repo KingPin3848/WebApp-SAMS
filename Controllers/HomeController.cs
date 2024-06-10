@@ -13,20 +13,12 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace SAMS.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController(ILogger<HomeController> logger, ApplicationDbContext context, SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager) : Controller
     {
-        private readonly ILogger<HomeController> _logger;
-        private readonly ApplicationDbContext _context;
-        private readonly SignInManager<ApplicationUser> _signInManager;
-        private readonly UserManager<ApplicationUser> _userManager;
-
-        public HomeController(ILogger<HomeController> logger, ApplicationDbContext context, SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager)
-        {
-            _logger = logger;
-            _context = context;
-            _signInManager = signInManager;
-            _userManager = userManager;
-        }
+        private readonly ILogger<HomeController> _logger = logger;
+        private readonly ApplicationDbContext _context = context;
+        private readonly SignInManager<ApplicationUser> _signInManager = signInManager;
+        private readonly UserManager<ApplicationUser> _userManager = userManager;
 
         [AllowAnonymous]
         public IActionResult Index()
@@ -71,7 +63,7 @@ namespace SAMS.Controllers
                     return Json(new { dangertext = "User not found for the provided school ID." });
                 }
 
-                var chosenBellSchedule = _context.chosenBellSchedModels.Select(a => a.Name).ToList();
+                var chosenBellSchedule = _context.ChosenBellSchedModels.Select(a => a.Name).ToList();
                 if (chosenBellSchedule == null || chosenBellSchedule.Count == 0)
                 {
                     _logger.LogCritical("Chosen Bell Schedule for the day not found. Please contact the administrator and developer for additional assistance.");
@@ -91,7 +83,7 @@ namespace SAMS.Controllers
                 var schoolIDdb = user.SchoolId;
                 if (schoolIDdb == null)
                 {
-                    _logger.LogCritical($"Unable to find the school id with the user with ID {_userManager.GetUserId(User)}.");
+                    _logger.LogCritical("Unable to find the school id with the user with ID {UserId}.", _userManager.GetUserId(User));
                     return Json(new { dangertext = $"Unable to find the school id with the user with ID '{_userManager.GetUserId(User)}'." });
                     //return NotFound($"Unable to find the school id with the user with ID '{_userManager.GetUserId(User)}'.");
                 }
@@ -100,7 +92,7 @@ namespace SAMS.Controllers
                 if (schoolIDdb == passedID)
                 {
                     var studId = int.Parse(schoolIDdb);
-                    var studentSchedule = await _context.sem1StudSchedules.FindAsync(studId);
+                    var studentSchedule = await _context.Sem1StudSchedules.FindAsync(studId);
                     //var sem2start = _context.schedulerModels.Where(a => a.Type == "Semester 2").Select(a => a.Date).FirstOrDefault();
                     //if (DateOnly.FromDateTime(DateTime.Now.Date) >= sem2start)
                     //{
@@ -122,14 +114,14 @@ namespace SAMS.Controllers
                         return Json(new { dangertext = "Invalid Course Id. This is an error on our end. Please contact the developers and share the whole experience step-by-step on what happened exactly." });
                     }
 
-                    var roomIdForCourse = _context.activeCourseInfoModels.Where(a => a.CourseId == courseIdForCurrentBell).Select(a => a.CourseRoomID).FirstOrDefault();
+                    var roomIdForCourse = _context.ActiveCourseInfoModels.Where(a => a.CourseId == courseIdForCurrentBell).Select(a => a.CourseRoomID).FirstOrDefault();
                     if (roomIdForCourse == 0)
                     {
                         _logger.LogCritical("Room ID not found for the course. Please check with the admins to add the respective roomid in SAMS.");
                         return Json(new { dangertext = "Room ID not found for the course. Please check with the admins to add the respective roomid in SAMS." });
                     }
 
-                    var expectedQRCode = _context.roomQRCodeModels.Where(a => a.RoomId == roomIdForCourse).Select(a => a.Code).ToList().FirstOrDefault();
+                    var expectedQRCode = _context.RoomQRCodeModels.Where(a => a.RoomId == roomIdForCourse).Select(a => a.Code).ToList().FirstOrDefault();
                     if (expectedQRCode == null)
                     {
                         _logger.LogCritical("Expected QR Code not found for the room you are in at right now. Please contact the admin to add the room in SAMS.");
@@ -139,13 +131,13 @@ namespace SAMS.Controllers
                     var passedCode = ScannedCode;
                     if (passedCode == expectedQRCode)
                     {
-                        var dailyEntryExists = _context.dailyAttendanceModels.Any(a =>
+                        var dailyEntryExists = _context.DailyAttendanceModels.Any(a =>
                             a.StudentId == studId &&
                             a.AttendanceDate == DateOnly.FromDateTime(DateTime.Now) &&
                             a.Status == "Unknown");
                         if (dailyEntryExists)
                         {
-                            var dailyAttendanceEntry = _context.dailyAttendanceModels.First(a =>
+                            var dailyAttendanceEntry = _context.DailyAttendanceModels.First(a =>
                                 a.StudentId == studId &&
                                 a.AttendanceDate == DateOnly.FromDateTime(DateTime.Now) &&
                                 a.Status == "Unknown");
@@ -168,22 +160,22 @@ namespace SAMS.Controllers
                                 timeStamp.Comments = "Student was marked present because the student scanned in within 25 minutes of the start of the in-school bell. Please contact the teacher/admin/attendance office for any questions or concerns regarding this.";
                             }
 
-                            _context.dailyAttendanceModels.Update(dailyAttendanceEntry);
-                            _context.timestampModels.Add(timeStamp);
+                            _context.DailyAttendanceModels.Update(dailyAttendanceEntry);
+                            _context.TimestampModels.Add(timeStamp);
                         }
 
                         //This is where we would add the algorithm to check for both the field trip
                         //And the hall-pass still using the If statements.
                         //And the same algorithm would go to the form feature as well, but excluding the daily attendance option.
 
-                        var bellEntryExists = _context.bellAttendanceModels.Any(a =>
+                        var bellEntryExists = _context.BellAttendanceModels.Any(a =>
                             a.StudentId == studId &&
                             a.DateTime.Date == DateTime.Now.Date &&
                             a.BellNumId == currentBell &&
                             a.Status == "Unknown");
                         if (bellEntryExists)
                         {
-                            var bellAttendanceEntry = _context.bellAttendanceModels.First(a =>
+                            var bellAttendanceEntry = _context.BellAttendanceModels.First(a =>
                                 a.StudentId == studId &&
                                 a.DateTime.Date == DateTime.Now.Date &&
                                 a.BellNumId == currentBell &&
@@ -207,17 +199,17 @@ namespace SAMS.Controllers
                                 timeStamp.Comments = "Student was marked present because the student scanned in within 25 minutes of the start of the bell. Please contact the teacher/admin/attendance office for any questions or concerns regarding this.";
                             }
 
-                            _context.bellAttendanceModels.Update(bellAttendanceEntry);
-                            _context.timestampModels.Add(timeStamp);
+                            _context.BellAttendanceModels.Update(bellAttendanceEntry);
+                            _context.TimestampModels.Add(timeStamp);
                         }
 
-                        var studLocationEntry = _context.studentLocationModels.Any(a => a.StudentId == studId);
+                        var studLocationEntry = _context.StudentLocationModels.Any(a => a.StudentId == studId);
                         if (studLocationEntry)
                         {
-                            var studLocation = _context.studentLocationModels.FirstOrDefault(a => a.StudentId == studId);
+                            var studLocation = _context.StudentLocationModels.FirstOrDefault(a => a.StudentId == studId);
                             if (studLocation != null)
                             {
-                                var room = await _context.roomLocationInfoModels.FindAsync(roomIdForCourse);
+                                var room = await _context.RoomLocationInfoModels.FindAsync(roomIdForCourse);
                                 studLocation.StudentLocation = $"{room?.RoomNumberMod} - {room?.Teacher?.TeacherFirstNameMod} {room?.Teacher?.TeacherLastNameMod}";
                                 var timestamp = new TimestampModel
                                 {
@@ -226,8 +218,8 @@ namespace SAMS.Controllers
                                     MadeBy = "Scan Feature of SAMS",
                                     Comments = $"The student scanned to update their location to {room?.RoomNumberMod} - {room?.Teacher?.TeacherFirstNameMod} {room?.Teacher?.TeacherLastNameMod}"
                                 };
-                                _context.timestampModels.Add(timestamp);
-                                _context.studentLocationModels.Update(studLocation);
+                                _context.TimestampModels.Add(timestamp);
+                                _context.StudentLocationModels.Update(studLocation);
                             }
                         }
 
@@ -242,7 +234,7 @@ namespace SAMS.Controllers
             }
         }
 
-        private int GetCourseIdForCurrentBell(string currentBell, Sem1StudSchedule studentSchedule)
+        private static int GetCourseIdForCurrentBell(string currentBell, Sem1StudSchedule studentSchedule)
         {
             switch (currentBell)
             {
@@ -314,7 +306,7 @@ namespace SAMS.Controllers
             {
                 case "Daily Bell Schedule":
                     {
-                        List<IBellSchedule> dailySchedule = _context.dailyBellScheduleModels.OrderBy(a => a.StartTime).Cast<IBellSchedule>().ToList();
+                        List<IBellSchedule> dailySchedule = [.. _context.DailyBellScheduleModels.OrderBy(a => a.StartTime).Cast<IBellSchedule>()];
                         foreach (var entry in dailySchedule)
                         {
                             IBellSchedule bell = entry;
@@ -332,7 +324,7 @@ namespace SAMS.Controllers
                     }
                 case "Extended Aves Bell Schedule":
                     {
-                        List<IBellSchedule> extSchedule = _context.extendedAvesModels.OrderBy(a => a.StartTime).Cast<IBellSchedule>().ToList();
+                        List<IBellSchedule> extSchedule = [.. _context.ExtendedAvesModels.OrderBy(a => a.StartTime).Cast<IBellSchedule>()];
                         foreach (var entry in extSchedule)
                         {
                             IBellSchedule bell = entry;
@@ -350,7 +342,7 @@ namespace SAMS.Controllers
                     }
                 case "Pep Rally Bell Schedule":
                     {
-                        List<IBellSchedule> pepSchedule = _context.pepRallyBellScheduleModels.OrderBy(a => a.StartTime).Cast<IBellSchedule>().ToList();
+                        List<IBellSchedule> pepSchedule = [.. _context.PepRallyBellScheduleModels.OrderBy(a => a.StartTime).Cast<IBellSchedule>()];
                         foreach (var entry in pepSchedule)
                         {
                             IBellSchedule bell = entry;
@@ -368,7 +360,7 @@ namespace SAMS.Controllers
                     }
                 case "2 Hour Delay Bell Schedule":
                     {
-                        List<IBellSchedule> twoSchedule = _context.twoHrDelayBellScheduleModels.OrderBy(a => a.StartTime).Cast<IBellSchedule>().ToList();
+                        List<IBellSchedule> twoSchedule = [.. _context.TwoHrDelayBellScheduleModels.OrderBy(a => a.StartTime).Cast<IBellSchedule>()];
                         foreach (var entry in twoSchedule)
                         {
                             IBellSchedule bell = entry;
@@ -397,13 +389,13 @@ namespace SAMS.Controllers
             }
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Form()
-        {
-            var user = await _userManager.GetUserAsync(User);
-            ViewBag.Schoolid = user.SchoolId;
-            return View();
-        }
+        //[HttpGet]
+        //public async Task<IActionResult> Form()
+        //{
+        //    var user = await _userManager.GetUserAsync(User);
+        //    ViewBag.Schoolid = user.SchoolId;
+        //    return View();
+        //}
 
         //[HttpPost]
         //public async Task<IActionResult> Form()

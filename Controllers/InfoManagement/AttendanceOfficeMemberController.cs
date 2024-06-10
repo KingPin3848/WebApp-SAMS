@@ -10,19 +10,14 @@ using SAMS.Models;
 
 namespace SAMS.Controllers.InfoManagement
 {
-    public class AttendanceOfficeMemberController : Controller
+    public class AttendanceOfficeMemberController(ApplicationDbContext context) : Controller
     {
-        private readonly ApplicationDbContext _context;
-
-        public AttendanceOfficeMemberController(ApplicationDbContext context)
-        {
-            _context = context;
-        }
+        private readonly ApplicationDbContext _context = context;
 
         // GET: AttendanceOfficeMember
         public async Task<IActionResult> Index()
         {
-            return View(await _context.attendanceOfficeMemberModels.ToListAsync());
+            return View(await _context.AttendanceOfficeMemberModels.ToListAsync());
         }
 
         // GET: AttendanceOfficeMember/Details/5
@@ -33,7 +28,7 @@ namespace SAMS.Controllers.InfoManagement
                 return NotFound();
             }
 
-            var attendanceOfficeMemberModel = await _context.attendanceOfficeMemberModels
+            var attendanceOfficeMemberModel = await _context.AttendanceOfficeMemberModels
                 .FirstOrDefaultAsync(m => m.AoMemberID == id);
             if (attendanceOfficeMemberModel == null)
             {
@@ -73,7 +68,7 @@ namespace SAMS.Controllers.InfoManagement
                 return NotFound();
             }
 
-            var attendanceOfficeMemberModel = await _context.attendanceOfficeMemberModels.FindAsync(id);
+            var attendanceOfficeMemberModel = await _context.AttendanceOfficeMemberModels.FindAsync(id);
             if (attendanceOfficeMemberModel == null)
             {
                 return NotFound();
@@ -124,7 +119,7 @@ namespace SAMS.Controllers.InfoManagement
                 return NotFound();
             }
 
-            var attendanceOfficeMemberModel = await _context.attendanceOfficeMemberModels
+            var attendanceOfficeMemberModel = await _context.AttendanceOfficeMemberModels
                 .FirstOrDefaultAsync(m => m.AoMemberID == id);
             if (attendanceOfficeMemberModel == null)
             {
@@ -139,10 +134,10 @@ namespace SAMS.Controllers.InfoManagement
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
-            var attendanceOfficeMemberModel = await _context.attendanceOfficeMemberModels.FindAsync(id);
+            var attendanceOfficeMemberModel = await _context.AttendanceOfficeMemberModels.FindAsync(id);
             if (attendanceOfficeMemberModel != null)
             {
-                _context.attendanceOfficeMemberModels.Remove(attendanceOfficeMemberModel);
+                _context.AttendanceOfficeMemberModels.Remove(attendanceOfficeMemberModel);
             }
 
             await _context.SaveChangesAsync();
@@ -151,7 +146,7 @@ namespace SAMS.Controllers.InfoManagement
 
         private bool AttendanceOfficeMemberModelExists(string id)
         {
-            return _context.attendanceOfficeMemberModels.Any(e => e.AoMemberID == id);
+            return _context.AttendanceOfficeMemberModels.Any(e => e.AoMemberID == id);
         }
     }
 }

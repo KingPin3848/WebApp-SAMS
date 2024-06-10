@@ -10,19 +10,14 @@ using SAMS.Models;
 
 namespace SAMS.Controllers.InfoManagement
 {
-    public class SynnLabQRNodeController : Controller
+    public class SynnLabQRNodeController(ApplicationDbContext context) : Controller
     {
-        private readonly ApplicationDbContext _context;
-
-        public SynnLabQRNodeController(ApplicationDbContext context)
-        {
-            _context = context;
-        }
+        private readonly ApplicationDbContext _context = context;
 
         // GET: SynnLabQRNode
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.synnLabQRNodeModels.Include(s => s.Room);
+            var applicationDbContext = _context.SynnLabQRNodeModels.Include(s => s.Room);
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -34,7 +29,7 @@ namespace SAMS.Controllers.InfoManagement
                 return NotFound();
             }
 
-            var synnLabQRNodeModel = await _context.synnLabQRNodeModels
+            var synnLabQRNodeModel = await _context.SynnLabQRNodeModels
                 .Include(s => s.Room)
                 .FirstOrDefaultAsync(m => m.ScannerID == id);
             if (synnLabQRNodeModel == null)
@@ -48,7 +43,7 @@ namespace SAMS.Controllers.InfoManagement
         // GET: SynnLabQRNode/Create
         public IActionResult Create()
         {
-            ViewData["SynnlabRoomIDMod"] = new SelectList(_context.roomLocationInfoModels, "RoomNumberMod", "RoomNumberMod");
+            ViewData["SynnlabRoomIDMod"] = new SelectList(_context.RoomLocationInfoModels, "RoomNumberMod", "RoomNumberMod");
             return View();
         }
 
@@ -65,7 +60,7 @@ namespace SAMS.Controllers.InfoManagement
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["SynnlabRoomIDMod"] = new SelectList(_context.roomLocationInfoModels, "RoomNumberMod", "RoomNumberMod", synnLabQRNodeModel.SynnlabRoomIDMod);
+            ViewData["SynnlabRoomIDMod"] = new SelectList(_context.RoomLocationInfoModels, "RoomNumberMod", "RoomNumberMod", synnLabQRNodeModel.SynnlabRoomIDMod);
             return View(synnLabQRNodeModel);
         }
 
@@ -77,12 +72,12 @@ namespace SAMS.Controllers.InfoManagement
                 return NotFound();
             }
 
-            var synnLabQRNodeModel = await _context.synnLabQRNodeModels.FindAsync(id);
+            var synnLabQRNodeModel = await _context.SynnLabQRNodeModels.FindAsync(id);
             if (synnLabQRNodeModel == null)
             {
                 return NotFound();
             }
-            ViewData["SynnlabRoomIDMod"] = new SelectList(_context.roomLocationInfoModels, "RoomNumberMod", "RoomNumberMod", synnLabQRNodeModel.SynnlabRoomIDMod);
+            ViewData["SynnlabRoomIDMod"] = new SelectList(_context.RoomLocationInfoModels, "RoomNumberMod", "RoomNumberMod", synnLabQRNodeModel.SynnlabRoomIDMod);
             return View(synnLabQRNodeModel);
         }
 
@@ -118,7 +113,7 @@ namespace SAMS.Controllers.InfoManagement
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["SynnlabRoomIDMod"] = new SelectList(_context.roomLocationInfoModels, "RoomNumberMod", "RoomNumberMod", synnLabQRNodeModel.SynnlabRoomIDMod);
+            ViewData["SynnlabRoomIDMod"] = new SelectList(_context.RoomLocationInfoModels, "RoomNumberMod", "RoomNumberMod", synnLabQRNodeModel.SynnlabRoomIDMod);
             return View(synnLabQRNodeModel);
         }
 
@@ -130,7 +125,7 @@ namespace SAMS.Controllers.InfoManagement
                 return NotFound();
             }
 
-            var synnLabQRNodeModel = await _context.synnLabQRNodeModels
+            var synnLabQRNodeModel = await _context.SynnLabQRNodeModels
                 .Include(s => s.Room)
                 .FirstOrDefaultAsync(m => m.ScannerID == id);
             if (synnLabQRNodeModel == null)
@@ -146,10 +141,10 @@ namespace SAMS.Controllers.InfoManagement
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
-            var synnLabQRNodeModel = await _context.synnLabQRNodeModels.FindAsync(id);
+            var synnLabQRNodeModel = await _context.SynnLabQRNodeModels.FindAsync(id);
             if (synnLabQRNodeModel != null)
             {
-                _context.synnLabQRNodeModels.Remove(synnLabQRNodeModel);
+                _context.SynnLabQRNodeModels.Remove(synnLabQRNodeModel);
             }
 
             await _context.SaveChangesAsync();
@@ -158,7 +153,7 @@ namespace SAMS.Controllers.InfoManagement
 
         private bool SynnLabQRNodeModelExists(string id)
         {
-            return _context.synnLabQRNodeModels.Any(e => e.ScannerID == id);
+            return _context.SynnLabQRNodeModels.Any(e => e.ScannerID == id);
         }
     }
 }

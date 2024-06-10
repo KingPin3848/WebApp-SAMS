@@ -15,7 +15,18 @@ namespace SAMS.Models
         [Display(Name = ("Expiration"))]
         public DateTime EndDateTime { get; set; }
         [Display(Name = ("Duration"))]
-        public TimeSpan Duration { get { return Duration; } set { Duration = EndDateTime - StartDateTime; } }
+        private TimeSpan _Duration;
+        public TimeSpan Duration
+        {
+            get
+            {
+                return _Duration;
+            }
+            set
+            {
+                _Duration = EndDateTime - StartDateTime;
+            }
+        }
         [Display(Name = ("Bell"))]
         public int BellNumber { get; set; } = 0!;
         [Display(Name = ("Assigned By"))]

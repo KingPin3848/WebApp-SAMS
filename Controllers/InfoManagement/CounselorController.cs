@@ -10,19 +10,14 @@ using SAMS.Models;
 
 namespace SAMS.Controllers.InfoManagement
 {
-    public class CounselorController : Controller
+    public class CounselorController(ApplicationDbContext context) : Controller
     {
-        private readonly ApplicationDbContext _context;
-
-        public CounselorController(ApplicationDbContext context)
-        {
-            _context = context;
-        }
+        private readonly ApplicationDbContext _context = context;
 
         // GET: Counselor
         public async Task<IActionResult> Index()
         {
-            return View(await _context.counselorModels.ToListAsync());
+            return View(await _context.CounselorModels.ToListAsync());
         }
 
         // GET: Counselor/Details/5
@@ -33,7 +28,7 @@ namespace SAMS.Controllers.InfoManagement
                 return NotFound();
             }
 
-            var counselorModel = await _context.counselorModels
+            var counselorModel = await _context.CounselorModels
                 .FirstOrDefaultAsync(m => m.CounselorId == id);
             if (counselorModel == null)
             {
@@ -73,7 +68,7 @@ namespace SAMS.Controllers.InfoManagement
                 return NotFound();
             }
 
-            var counselorModel = await _context.counselorModels.FindAsync(id);
+            var counselorModel = await _context.CounselorModels.FindAsync(id);
             if (counselorModel == null)
             {
                 return NotFound();
@@ -124,7 +119,7 @@ namespace SAMS.Controllers.InfoManagement
                 return NotFound();
             }
 
-            var counselorModel = await _context.counselorModels
+            var counselorModel = await _context.CounselorModels
                 .FirstOrDefaultAsync(m => m.CounselorId == id);
             if (counselorModel == null)
             {
@@ -139,10 +134,10 @@ namespace SAMS.Controllers.InfoManagement
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
-            var counselorModel = await _context.counselorModels.FindAsync(id);
+            var counselorModel = await _context.CounselorModels.FindAsync(id);
             if (counselorModel != null)
             {
-                _context.counselorModels.Remove(counselorModel);
+                _context.CounselorModels.Remove(counselorModel);
             }
 
             await _context.SaveChangesAsync();
@@ -151,7 +146,7 @@ namespace SAMS.Controllers.InfoManagement
 
         private bool CounselorModelExists(string id)
         {
-            return _context.counselorModels.Any(e => e.CounselorId == id);
+            return _context.CounselorModels.Any(e => e.CounselorId == id);
         }
     }
 }

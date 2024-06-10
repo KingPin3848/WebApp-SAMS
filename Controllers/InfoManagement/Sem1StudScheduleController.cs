@@ -10,19 +10,14 @@ using SAMS.Models;
 
 namespace SAMS.Controllers.InfoManagement
 {
-    public class Sem1StudScheduleController : Controller
+    public class Sem1StudScheduleController(ApplicationDbContext context) : Controller
     {
-        private readonly ApplicationDbContext _context;
-
-        public Sem1StudScheduleController(ApplicationDbContext context)
-        {
-            _context = context;
-        }
+        private readonly ApplicationDbContext _context = context;
 
         // GET: Sem1StudSchedule
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.sem1StudSchedules.Include(s => s.Student);
+            var applicationDbContext = _context.Sem1StudSchedules.Include(s => s.Student);
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -34,7 +29,7 @@ namespace SAMS.Controllers.InfoManagement
                 return NotFound();
             }
 
-            var sem1StudSchedule = await _context.sem1StudSchedules
+            var sem1StudSchedule = await _context.Sem1StudSchedules
                 .Include(s => s.Student)
                 .FirstOrDefaultAsync(m => m.StudentID == id);
             if (sem1StudSchedule == null)
@@ -48,7 +43,7 @@ namespace SAMS.Controllers.InfoManagement
         // GET: Sem1StudSchedule/Create
         public IActionResult Create()
         {
-            ViewData["StudentID"] = new SelectList(_context.studentInfoModels, "StudentID", "StudentID");
+            ViewData["StudentID"] = new SelectList(_context.StudentInfoModels, "StudentID", "StudentID");
             return View();
         }
 
@@ -65,7 +60,7 @@ namespace SAMS.Controllers.InfoManagement
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["StudentID"] = new SelectList(_context.studentInfoModels, "StudentID", "StudentID", sem1StudSchedule.StudentID);
+            ViewData["StudentID"] = new SelectList(_context.StudentInfoModels, "StudentID", "StudentID", sem1StudSchedule.StudentID);
             return View(sem1StudSchedule);
         }
 
@@ -77,12 +72,12 @@ namespace SAMS.Controllers.InfoManagement
                 return NotFound();
             }
 
-            var sem1StudSchedule = await _context.sem1StudSchedules.FindAsync(id);
+            var sem1StudSchedule = await _context.Sem1StudSchedules.FindAsync(id);
             if (sem1StudSchedule == null)
             {
                 return NotFound();
             }
-            ViewData["StudentID"] = new SelectList(_context.studentInfoModels, "StudentID", "StudentID", sem1StudSchedule.StudentID);
+            ViewData["StudentID"] = new SelectList(_context.StudentInfoModels, "StudentID", "StudentID", sem1StudSchedule.StudentID);
             return View(sem1StudSchedule);
         }
 
@@ -118,7 +113,7 @@ namespace SAMS.Controllers.InfoManagement
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["StudentID"] = new SelectList(_context.studentInfoModels, "StudentID", "StudentID", sem1StudSchedule.StudentID);
+            ViewData["StudentID"] = new SelectList(_context.StudentInfoModels, "StudentID", "StudentID", sem1StudSchedule.StudentID);
             return View(sem1StudSchedule);
         }
 
@@ -130,7 +125,7 @@ namespace SAMS.Controllers.InfoManagement
                 return NotFound();
             }
 
-            var sem1StudSchedule = await _context.sem1StudSchedules
+            var sem1StudSchedule = await _context.Sem1StudSchedules
                 .Include(s => s.Student)
                 .FirstOrDefaultAsync(m => m.StudentID == id);
             if (sem1StudSchedule == null)
@@ -146,10 +141,10 @@ namespace SAMS.Controllers.InfoManagement
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var sem1StudSchedule = await _context.sem1StudSchedules.FindAsync(id);
+            var sem1StudSchedule = await _context.Sem1StudSchedules.FindAsync(id);
             if (sem1StudSchedule != null)
             {
-                _context.sem1StudSchedules.Remove(sem1StudSchedule);
+                _context.Sem1StudSchedules.Remove(sem1StudSchedule);
             }
 
             await _context.SaveChangesAsync();
@@ -158,7 +153,7 @@ namespace SAMS.Controllers.InfoManagement
 
         private bool Sem1StudScheduleExists(int id)
         {
-            return _context.sem1StudSchedules.Any(e => e.StudentID == id);
+            return _context.Sem1StudSchedules.Any(e => e.StudentID == id);
         }
     }
 }

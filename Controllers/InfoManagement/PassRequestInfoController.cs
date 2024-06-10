@@ -10,19 +10,14 @@ using SAMS.Models;
 
 namespace SAMS.Controllers.InfoManagement
 {
-    public class PassRequestInfoController : Controller
+    public class PassRequestInfoController(ApplicationDbContext context) : Controller
     {
-        private readonly ApplicationDbContext _context;
-
-        public PassRequestInfoController(ApplicationDbContext context)
-        {
-            _context = context;
-        }
+        private readonly ApplicationDbContext _context = context;
 
         // GET: PassRequestInfo
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.passRequestInfoModels.Include(p => p.AddressedByAdmin).Include(p => p.AddressedByAttendanceOfficeMember).Include(p => p.AddressedByCounselor).Include(p => p.AddressedByLawEnf).Include(p => p.AddressedByNurse).Include(p => p.AddressedByTeacher).Include(p => p.AssignedByAdmin).Include(p => p.AssignedByAttendanceOfficeMember).Include(p => p.AssignedByCounselor).Include(p => p.AssignedByLawEnf).Include(p => p.AssignedByNurse).Include(p => p.AssignedByTeacher).Include(p => p.Student);
+            var applicationDbContext = _context.PassRequestInfoModels.Include(p => p.AddressedByAdmin).Include(p => p.AddressedByAttendanceOfficeMember).Include(p => p.AddressedByCounselor).Include(p => p.AddressedByLawEnf).Include(p => p.AddressedByNurse).Include(p => p.AddressedByTeacher).Include(p => p.AssignedByAdmin).Include(p => p.AssignedByAttendanceOfficeMember).Include(p => p.AssignedByCounselor).Include(p => p.AssignedByLawEnf).Include(p => p.AssignedByNurse).Include(p => p.AssignedByTeacher).Include(p => p.Student);
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -34,7 +29,7 @@ namespace SAMS.Controllers.InfoManagement
                 return NotFound();
             }
 
-            var passRequestInfoModel = await _context.passRequestInfoModels
+            var passRequestInfoModel = await _context.PassRequestInfoModels
                 .Include(p => p.AddressedByAdmin)
                 .Include(p => p.AddressedByAttendanceOfficeMember)
                 .Include(p => p.AddressedByCounselor)
@@ -60,19 +55,19 @@ namespace SAMS.Controllers.InfoManagement
         // GET: PassRequestInfo/Create
         public IActionResult Create()
         {
-            ViewData["HallPassAddressedBy"] = new SelectList(_context.adminInfoModels, "AdminID", "AdminID");
-            ViewData["HallPassAddressedBy"] = new SelectList(_context.attendanceOfficeMemberModels, "AoMemberID", "AoMemberID");
-            ViewData["HallPassAddressedBy"] = new SelectList(_context.counselorModels, "CounselorId", "CounselorId");
-            ViewData["HallPassAddressedBy"] = new SelectList(_context.lawEnforcementInfoModels, "LawenfID", "LawenfID");
-            ViewData["HallPassAddressedBy"] = new SelectList(_context.nurseInfoModels, "NurseID", "NurseID");
-            ViewData["HallPassAddressedBy"] = new SelectList(_context.teacherInfoModels, "TeacherID", "TeacherID");
-            ViewData["HallPassAssignedBy"] = new SelectList(_context.adminInfoModels, "AdminID", "AdminID");
-            ViewData["HallPassAssignedBy"] = new SelectList(_context.attendanceOfficeMemberModels, "AoMemberID", "AoMemberID");
-            ViewData["HallPassAssignedBy"] = new SelectList(_context.counselorModels, "CounselorId", "CounselorId");
-            ViewData["HallPassAssignedBy"] = new SelectList(_context.lawEnforcementInfoModels, "LawenfID", "LawenfID");
-            ViewData["HallPassAssignedBy"] = new SelectList(_context.nurseInfoModels, "NurseID", "NurseID");
-            ViewData["HallPassAssignedBy"] = new SelectList(_context.teacherInfoModels, "TeacherID", "TeacherID");
-            ViewData["StudentID"] = new SelectList(_context.studentInfoModels, "StudentID", "StudentID");
+            ViewData["HallPassAddressedBy"] = new SelectList(_context.AdminInfoModels, "AdminID", "AdminID");
+            ViewData["HallPassAddressedBy"] = new SelectList(_context.AttendanceOfficeMemberModels, "AoMemberID", "AoMemberID");
+            ViewData["HallPassAddressedBy"] = new SelectList(_context.CounselorModels, "CounselorId", "CounselorId");
+            ViewData["HallPassAddressedBy"] = new SelectList(_context.LawEnforcementInfoModels, "LawenfID", "LawenfID");
+            ViewData["HallPassAddressedBy"] = new SelectList(_context.NurseInfoModels, "NurseID", "NurseID");
+            ViewData["HallPassAddressedBy"] = new SelectList(_context.TeacherInfoModels, "TeacherID", "TeacherID");
+            ViewData["HallPassAssignedBy"] = new SelectList(_context.AdminInfoModels, "AdminID", "AdminID");
+            ViewData["HallPassAssignedBy"] = new SelectList(_context.AttendanceOfficeMemberModels, "AoMemberID", "AoMemberID");
+            ViewData["HallPassAssignedBy"] = new SelectList(_context.CounselorModels, "CounselorId", "CounselorId");
+            ViewData["HallPassAssignedBy"] = new SelectList(_context.LawEnforcementInfoModels, "LawenfID", "LawenfID");
+            ViewData["HallPassAssignedBy"] = new SelectList(_context.NurseInfoModels, "NurseID", "NurseID");
+            ViewData["HallPassAssignedBy"] = new SelectList(_context.TeacherInfoModels, "TeacherID", "TeacherID");
+            ViewData["StudentID"] = new SelectList(_context.StudentInfoModels, "StudentID", "StudentID");
             return View();
         }
 
@@ -89,19 +84,19 @@ namespace SAMS.Controllers.InfoManagement
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["HallPassAddressedBy"] = new SelectList(_context.adminInfoModels, "AdminID", "AdminID", passRequestInfoModel.HallPassAddressedBy);
-            ViewData["HallPassAddressedBy"] = new SelectList(_context.attendanceOfficeMemberModels, "AoMemberID", "AoMemberID", passRequestInfoModel.HallPassAddressedBy);
-            ViewData["HallPassAddressedBy"] = new SelectList(_context.counselorModels, "CounselorId", "CounselorId", passRequestInfoModel.HallPassAddressedBy);
-            ViewData["HallPassAddressedBy"] = new SelectList(_context.lawEnforcementInfoModels, "LawenfID", "LawenfID", passRequestInfoModel.HallPassAddressedBy);
-            ViewData["HallPassAddressedBy"] = new SelectList(_context.nurseInfoModels, "NurseID", "NurseID", passRequestInfoModel.HallPassAddressedBy);
-            ViewData["HallPassAddressedBy"] = new SelectList(_context.teacherInfoModels, "TeacherID", "TeacherID", passRequestInfoModel.HallPassAddressedBy);
-            ViewData["HallPassAssignedBy"] = new SelectList(_context.adminInfoModels, "AdminID", "AdminID", passRequestInfoModel.HallPassAssignedBy);
-            ViewData["HallPassAssignedBy"] = new SelectList(_context.attendanceOfficeMemberModels, "AoMemberID", "AoMemberID", passRequestInfoModel.HallPassAssignedBy);
-            ViewData["HallPassAssignedBy"] = new SelectList(_context.counselorModels, "CounselorId", "CounselorId", passRequestInfoModel.HallPassAssignedBy);
-            ViewData["HallPassAssignedBy"] = new SelectList(_context.lawEnforcementInfoModels, "LawenfID", "LawenfID", passRequestInfoModel.HallPassAssignedBy);
-            ViewData["HallPassAssignedBy"] = new SelectList(_context.nurseInfoModels, "NurseID", "NurseID", passRequestInfoModel.HallPassAssignedBy);
-            ViewData["HallPassAssignedBy"] = new SelectList(_context.teacherInfoModels, "TeacherID", "TeacherID", passRequestInfoModel.HallPassAssignedBy);
-            ViewData["StudentID"] = new SelectList(_context.studentInfoModels, "StudentID", "StudentID", passRequestInfoModel.StudentID);
+            ViewData["HallPassAddressedBy"] = new SelectList(_context.AdminInfoModels, "AdminID", "AdminID", passRequestInfoModel.HallPassAddressedBy);
+            ViewData["HallPassAddressedBy"] = new SelectList(_context.AttendanceOfficeMemberModels, "AoMemberID", "AoMemberID", passRequestInfoModel.HallPassAddressedBy);
+            ViewData["HallPassAddressedBy"] = new SelectList(_context.CounselorModels, "CounselorId", "CounselorId", passRequestInfoModel.HallPassAddressedBy);
+            ViewData["HallPassAddressedBy"] = new SelectList(_context.LawEnforcementInfoModels, "LawenfID", "LawenfID", passRequestInfoModel.HallPassAddressedBy);
+            ViewData["HallPassAddressedBy"] = new SelectList(_context.NurseInfoModels, "NurseID", "NurseID", passRequestInfoModel.HallPassAddressedBy);
+            ViewData["HallPassAddressedBy"] = new SelectList(_context.TeacherInfoModels, "TeacherID", "TeacherID", passRequestInfoModel.HallPassAddressedBy);
+            ViewData["HallPassAssignedBy"] = new SelectList(_context.AdminInfoModels, "AdminID", "AdminID", passRequestInfoModel.HallPassAssignedBy);
+            ViewData["HallPassAssignedBy"] = new SelectList(_context.AttendanceOfficeMemberModels, "AoMemberID", "AoMemberID", passRequestInfoModel.HallPassAssignedBy);
+            ViewData["HallPassAssignedBy"] = new SelectList(_context.CounselorModels, "CounselorId", "CounselorId", passRequestInfoModel.HallPassAssignedBy);
+            ViewData["HallPassAssignedBy"] = new SelectList(_context.LawEnforcementInfoModels, "LawenfID", "LawenfID", passRequestInfoModel.HallPassAssignedBy);
+            ViewData["HallPassAssignedBy"] = new SelectList(_context.NurseInfoModels, "NurseID", "NurseID", passRequestInfoModel.HallPassAssignedBy);
+            ViewData["HallPassAssignedBy"] = new SelectList(_context.TeacherInfoModels, "TeacherID", "TeacherID", passRequestInfoModel.HallPassAssignedBy);
+            ViewData["StudentID"] = new SelectList(_context.StudentInfoModels, "StudentID", "StudentID", passRequestInfoModel.StudentID);
             return View(passRequestInfoModel);
         }
 
@@ -113,24 +108,24 @@ namespace SAMS.Controllers.InfoManagement
                 return NotFound();
             }
 
-            var passRequestInfoModel = await _context.passRequestInfoModels.FindAsync(id);
+            var passRequestInfoModel = await _context.PassRequestInfoModels.FindAsync(id);
             if (passRequestInfoModel == null)
             {
                 return NotFound();
             }
-            ViewData["HallPassAddressedBy"] = new SelectList(_context.adminInfoModels, "AdminID", "AdminID", passRequestInfoModel.HallPassAddressedBy);
-            ViewData["HallPassAddressedBy"] = new SelectList(_context.attendanceOfficeMemberModels, "AoMemberID", "AoMemberID", passRequestInfoModel.HallPassAddressedBy);
-            ViewData["HallPassAddressedBy"] = new SelectList(_context.counselorModels, "CounselorId", "CounselorId", passRequestInfoModel.HallPassAddressedBy);
-            ViewData["HallPassAddressedBy"] = new SelectList(_context.lawEnforcementInfoModels, "LawenfID", "LawenfID", passRequestInfoModel.HallPassAddressedBy);
-            ViewData["HallPassAddressedBy"] = new SelectList(_context.nurseInfoModels, "NurseID", "NurseID", passRequestInfoModel.HallPassAddressedBy);
-            ViewData["HallPassAddressedBy"] = new SelectList(_context.teacherInfoModels, "TeacherID", "TeacherID", passRequestInfoModel.HallPassAddressedBy);
-            ViewData["HallPassAssignedBy"] = new SelectList(_context.adminInfoModels, "AdminID", "AdminID", passRequestInfoModel.HallPassAssignedBy);
-            ViewData["HallPassAssignedBy"] = new SelectList(_context.attendanceOfficeMemberModels, "AoMemberID", "AoMemberID", passRequestInfoModel.HallPassAssignedBy);
-            ViewData["HallPassAssignedBy"] = new SelectList(_context.counselorModels, "CounselorId", "CounselorId", passRequestInfoModel.HallPassAssignedBy);
-            ViewData["HallPassAssignedBy"] = new SelectList(_context.lawEnforcementInfoModels, "LawenfID", "LawenfID", passRequestInfoModel.HallPassAssignedBy);
-            ViewData["HallPassAssignedBy"] = new SelectList(_context.nurseInfoModels, "NurseID", "NurseID", passRequestInfoModel.HallPassAssignedBy);
-            ViewData["HallPassAssignedBy"] = new SelectList(_context.teacherInfoModels, "TeacherID", "TeacherID", passRequestInfoModel.HallPassAssignedBy);
-            ViewData["StudentID"] = new SelectList(_context.studentInfoModels, "StudentID", "StudentID", passRequestInfoModel.StudentID);
+            ViewData["HallPassAddressedBy"] = new SelectList(_context.AdminInfoModels, "AdminID", "AdminID", passRequestInfoModel.HallPassAddressedBy);
+            ViewData["HallPassAddressedBy"] = new SelectList(_context.AttendanceOfficeMemberModels, "AoMemberID", "AoMemberID", passRequestInfoModel.HallPassAddressedBy);
+            ViewData["HallPassAddressedBy"] = new SelectList(_context.CounselorModels, "CounselorId", "CounselorId", passRequestInfoModel.HallPassAddressedBy);
+            ViewData["HallPassAddressedBy"] = new SelectList(_context.LawEnforcementInfoModels, "LawenfID", "LawenfID", passRequestInfoModel.HallPassAddressedBy);
+            ViewData["HallPassAddressedBy"] = new SelectList(_context.NurseInfoModels, "NurseID", "NurseID", passRequestInfoModel.HallPassAddressedBy);
+            ViewData["HallPassAddressedBy"] = new SelectList(_context.TeacherInfoModels, "TeacherID", "TeacherID", passRequestInfoModel.HallPassAddressedBy);
+            ViewData["HallPassAssignedBy"] = new SelectList(_context.AdminInfoModels, "AdminID", "AdminID", passRequestInfoModel.HallPassAssignedBy);
+            ViewData["HallPassAssignedBy"] = new SelectList(_context.AttendanceOfficeMemberModels, "AoMemberID", "AoMemberID", passRequestInfoModel.HallPassAssignedBy);
+            ViewData["HallPassAssignedBy"] = new SelectList(_context.CounselorModels, "CounselorId", "CounselorId", passRequestInfoModel.HallPassAssignedBy);
+            ViewData["HallPassAssignedBy"] = new SelectList(_context.LawEnforcementInfoModels, "LawenfID", "LawenfID", passRequestInfoModel.HallPassAssignedBy);
+            ViewData["HallPassAssignedBy"] = new SelectList(_context.NurseInfoModels, "NurseID", "NurseID", passRequestInfoModel.HallPassAssignedBy);
+            ViewData["HallPassAssignedBy"] = new SelectList(_context.TeacherInfoModels, "TeacherID", "TeacherID", passRequestInfoModel.HallPassAssignedBy);
+            ViewData["StudentID"] = new SelectList(_context.StudentInfoModels, "StudentID", "StudentID", passRequestInfoModel.StudentID);
             return View(passRequestInfoModel);
         }
 
@@ -166,19 +161,19 @@ namespace SAMS.Controllers.InfoManagement
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["HallPassAddressedBy"] = new SelectList(_context.adminInfoModels, "AdminID", "AdminID", passRequestInfoModel.HallPassAddressedBy);
-            ViewData["HallPassAddressedBy"] = new SelectList(_context.attendanceOfficeMemberModels, "AoMemberID", "AoMemberID", passRequestInfoModel.HallPassAddressedBy);
-            ViewData["HallPassAddressedBy"] = new SelectList(_context.counselorModels, "CounselorId", "CounselorId", passRequestInfoModel.HallPassAddressedBy);
-            ViewData["HallPassAddressedBy"] = new SelectList(_context.lawEnforcementInfoModels, "LawenfID", "LawenfID", passRequestInfoModel.HallPassAddressedBy);
-            ViewData["HallPassAddressedBy"] = new SelectList(_context.nurseInfoModels, "NurseID", "NurseID", passRequestInfoModel.HallPassAddressedBy);
-            ViewData["HallPassAddressedBy"] = new SelectList(_context.teacherInfoModels, "TeacherID", "TeacherID", passRequestInfoModel.HallPassAddressedBy);
-            ViewData["HallPassAssignedBy"] = new SelectList(_context.adminInfoModels, "AdminID", "AdminID", passRequestInfoModel.HallPassAssignedBy);
-            ViewData["HallPassAssignedBy"] = new SelectList(_context.attendanceOfficeMemberModels, "AoMemberID", "AoMemberID", passRequestInfoModel.HallPassAssignedBy);
-            ViewData["HallPassAssignedBy"] = new SelectList(_context.counselorModels, "CounselorId", "CounselorId", passRequestInfoModel.HallPassAssignedBy);
-            ViewData["HallPassAssignedBy"] = new SelectList(_context.lawEnforcementInfoModels, "LawenfID", "LawenfID", passRequestInfoModel.HallPassAssignedBy);
-            ViewData["HallPassAssignedBy"] = new SelectList(_context.nurseInfoModels, "NurseID", "NurseID", passRequestInfoModel.HallPassAssignedBy);
-            ViewData["HallPassAssignedBy"] = new SelectList(_context.teacherInfoModels, "TeacherID", "TeacherID", passRequestInfoModel.HallPassAssignedBy);
-            ViewData["StudentID"] = new SelectList(_context.studentInfoModels, "StudentID", "StudentID", passRequestInfoModel.StudentID);
+            ViewData["HallPassAddressedBy"] = new SelectList(_context.AdminInfoModels, "AdminID", "AdminID", passRequestInfoModel.HallPassAddressedBy);
+            ViewData["HallPassAddressedBy"] = new SelectList(_context.AttendanceOfficeMemberModels, "AoMemberID", "AoMemberID", passRequestInfoModel.HallPassAddressedBy);
+            ViewData["HallPassAddressedBy"] = new SelectList(_context.CounselorModels, "CounselorId", "CounselorId", passRequestInfoModel.HallPassAddressedBy);
+            ViewData["HallPassAddressedBy"] = new SelectList(_context.LawEnforcementInfoModels, "LawenfID", "LawenfID", passRequestInfoModel.HallPassAddressedBy);
+            ViewData["HallPassAddressedBy"] = new SelectList(_context.NurseInfoModels, "NurseID", "NurseID", passRequestInfoModel.HallPassAddressedBy);
+            ViewData["HallPassAddressedBy"] = new SelectList(_context.TeacherInfoModels, "TeacherID", "TeacherID", passRequestInfoModel.HallPassAddressedBy);
+            ViewData["HallPassAssignedBy"] = new SelectList(_context.AdminInfoModels, "AdminID", "AdminID", passRequestInfoModel.HallPassAssignedBy);
+            ViewData["HallPassAssignedBy"] = new SelectList(_context.AttendanceOfficeMemberModels, "AoMemberID", "AoMemberID", passRequestInfoModel.HallPassAssignedBy);
+            ViewData["HallPassAssignedBy"] = new SelectList(_context.CounselorModels, "CounselorId", "CounselorId", passRequestInfoModel.HallPassAssignedBy);
+            ViewData["HallPassAssignedBy"] = new SelectList(_context.LawEnforcementInfoModels, "LawenfID", "LawenfID", passRequestInfoModel.HallPassAssignedBy);
+            ViewData["HallPassAssignedBy"] = new SelectList(_context.NurseInfoModels, "NurseID", "NurseID", passRequestInfoModel.HallPassAssignedBy);
+            ViewData["HallPassAssignedBy"] = new SelectList(_context.TeacherInfoModels, "TeacherID", "TeacherID", passRequestInfoModel.HallPassAssignedBy);
+            ViewData["StudentID"] = new SelectList(_context.StudentInfoModels, "StudentID", "StudentID", passRequestInfoModel.StudentID);
             return View(passRequestInfoModel);
         }
 
@@ -190,7 +185,7 @@ namespace SAMS.Controllers.InfoManagement
                 return NotFound();
             }
 
-            var passRequestInfoModel = await _context.passRequestInfoModels
+            var passRequestInfoModel = await _context.PassRequestInfoModels
                 .Include(p => p.AddressedByAdmin)
                 .Include(p => p.AddressedByAttendanceOfficeMember)
                 .Include(p => p.AddressedByCounselor)
@@ -218,10 +213,10 @@ namespace SAMS.Controllers.InfoManagement
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var passRequestInfoModel = await _context.passRequestInfoModels.FindAsync(id);
+            var passRequestInfoModel = await _context.PassRequestInfoModels.FindAsync(id);
             if (passRequestInfoModel != null)
             {
-                _context.passRequestInfoModels.Remove(passRequestInfoModel);
+                _context.PassRequestInfoModels.Remove(passRequestInfoModel);
             }
 
             await _context.SaveChangesAsync();
@@ -230,7 +225,7 @@ namespace SAMS.Controllers.InfoManagement
 
         private bool PassRequestInfoModelExists(int id)
         {
-            return _context.passRequestInfoModels.Any(e => e.PassRequestId == id);
+            return _context.PassRequestInfoModels.Any(e => e.PassRequestId == id);
         }
     }
 }

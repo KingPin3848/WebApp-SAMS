@@ -10,19 +10,14 @@ using SAMS.Models;
 
 namespace SAMS.Controllers
 {
-    public class SchedulerController : Controller
+    public class SchedulerController(ApplicationDbContext context) : Controller
     {
-        private readonly ApplicationDbContext _context;
-
-        public SchedulerController(ApplicationDbContext context)
-        {
-            _context = context;
-        }
+        private readonly ApplicationDbContext _context = context;
 
         // GET: Scheduler
         public async Task<IActionResult> Index()
         {
-            return View(await _context.schedulerModels.ToListAsync());
+            return View(await _context.SchedulerModels.ToListAsync());
         }
 
         // GET: Scheduler/Details/5
@@ -33,7 +28,7 @@ namespace SAMS.Controllers
                 return NotFound();
             }
 
-            var schedulerModel = await _context.schedulerModels
+            var schedulerModel = await _context.SchedulerModels
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (schedulerModel == null)
             {
@@ -73,7 +68,7 @@ namespace SAMS.Controllers
                 return NotFound();
             }
 
-            var schedulerModel = await _context.schedulerModels.FindAsync(id);
+            var schedulerModel = await _context.SchedulerModels.FindAsync(id);
             if (schedulerModel == null)
             {
                 return NotFound();
@@ -124,7 +119,7 @@ namespace SAMS.Controllers
                 return NotFound();
             }
 
-            var schedulerModel = await _context.schedulerModels
+            var schedulerModel = await _context.SchedulerModels
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (schedulerModel == null)
             {
@@ -139,10 +134,10 @@ namespace SAMS.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var schedulerModel = await _context.schedulerModels.FindAsync(id);
+            var schedulerModel = await _context.SchedulerModels.FindAsync(id);
             if (schedulerModel != null)
             {
-                _context.schedulerModels.Remove(schedulerModel);
+                _context.SchedulerModels.Remove(schedulerModel);
             }
 
             await _context.SaveChangesAsync();
@@ -151,7 +146,7 @@ namespace SAMS.Controllers
 
         private bool SchedulerModelExists(int id)
         {
-            return _context.schedulerModels.Any(e => e.Id == id);
+            return _context.SchedulerModels.Any(e => e.Id == id);
         }
     }
 }

@@ -10,19 +10,14 @@ using SAMS.Models;
 
 namespace SAMS.Controllers.InfoManagement
 {
-    public class AdminInfoController : Controller
+    public class AdminInfoController(ApplicationDbContext context) : Controller
     {
-        private readonly ApplicationDbContext _context;
-
-        public AdminInfoController(ApplicationDbContext context)
-        {
-            _context = context;
-        }
+        private readonly ApplicationDbContext _context = context;
 
         // GET: AdminInfo
         public async Task<IActionResult> Index()
         {
-            return View(await _context.adminInfoModels.ToListAsync());
+            return View(await _context.AdminInfoModels.ToListAsync());
         }
 
         // GET: AdminInfo/Details/5
@@ -33,7 +28,7 @@ namespace SAMS.Controllers.InfoManagement
                 return NotFound();
             }
 
-            var adminInfoModel = await _context.adminInfoModels
+            var adminInfoModel = await _context.AdminInfoModels
                 .FirstOrDefaultAsync(m => m.AdminID == id);
             if (adminInfoModel == null)
             {
@@ -73,7 +68,7 @@ namespace SAMS.Controllers.InfoManagement
                 return NotFound();
             }
 
-            var adminInfoModel = await _context.adminInfoModels.FindAsync(id);
+            var adminInfoModel = await _context.AdminInfoModels.FindAsync(id);
             if (adminInfoModel == null)
             {
                 return NotFound();
@@ -124,7 +119,7 @@ namespace SAMS.Controllers.InfoManagement
                 return NotFound();
             }
 
-            var adminInfoModel = await _context.adminInfoModels
+            var adminInfoModel = await _context.AdminInfoModels
                 .FirstOrDefaultAsync(m => m.AdminID == id);
             if (adminInfoModel == null)
             {
@@ -139,10 +134,10 @@ namespace SAMS.Controllers.InfoManagement
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
-            var adminInfoModel = await _context.adminInfoModels.FindAsync(id);
+            var adminInfoModel = await _context.AdminInfoModels.FindAsync(id);
             if (adminInfoModel != null)
             {
-                _context.adminInfoModels.Remove(adminInfoModel);
+                _context.AdminInfoModels.Remove(adminInfoModel);
             }
 
             await _context.SaveChangesAsync();
@@ -151,7 +146,7 @@ namespace SAMS.Controllers.InfoManagement
 
         private bool AdminInfoModelExists(string id)
         {
-            return _context.adminInfoModels.Any(e => e.AdminID == id);
+            return _context.AdminInfoModels.Any(e => e.AdminID == id);
         }
     }
 }

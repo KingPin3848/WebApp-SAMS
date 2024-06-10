@@ -10,19 +10,14 @@ using SAMS.Models;
 
 namespace SAMS.Controllers.InfoManagement
 {
-    public class StudentLocationController : Controller
+    public class StudentLocationController(ApplicationDbContext context) : Controller
     {
-        private readonly ApplicationDbContext _context;
-
-        public StudentLocationController(ApplicationDbContext context)
-        {
-            _context = context;
-        }
+        private readonly ApplicationDbContext _context = context;
 
         // GET: StudentLocation
         public async Task<IActionResult> Index()
         {
-            return View(await _context.studentLocationModels.ToListAsync());
+            return View(await _context.StudentLocationModels.ToListAsync());
         }
 
         // GET: StudentLocation/Details/5
@@ -33,7 +28,7 @@ namespace SAMS.Controllers.InfoManagement
                 return NotFound();
             }
 
-            var studentLocationModel = await _context.studentLocationModels
+            var studentLocationModel = await _context.StudentLocationModels
                 .FirstOrDefaultAsync(m => m.StudentId == id);
             if (studentLocationModel == null)
             {
@@ -73,7 +68,7 @@ namespace SAMS.Controllers.InfoManagement
                 return NotFound();
             }
 
-            var studentLocationModel = await _context.studentLocationModels.FindAsync(id);
+            var studentLocationModel = await _context.StudentLocationModels.FindAsync(id);
             if (studentLocationModel == null)
             {
                 return NotFound();
@@ -124,7 +119,7 @@ namespace SAMS.Controllers.InfoManagement
                 return NotFound();
             }
 
-            var studentLocationModel = await _context.studentLocationModels
+            var studentLocationModel = await _context.StudentLocationModels
                 .FirstOrDefaultAsync(m => m.StudentId == id);
             if (studentLocationModel == null)
             {
@@ -139,10 +134,10 @@ namespace SAMS.Controllers.InfoManagement
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var studentLocationModel = await _context.studentLocationModels.FindAsync(id);
+            var studentLocationModel = await _context.StudentLocationModels.FindAsync(id);
             if (studentLocationModel != null)
             {
-                _context.studentLocationModels.Remove(studentLocationModel);
+                _context.StudentLocationModels.Remove(studentLocationModel);
             }
 
             await _context.SaveChangesAsync();
@@ -151,7 +146,7 @@ namespace SAMS.Controllers.InfoManagement
 
         private bool StudentLocationModelExists(int id)
         {
-            return _context.studentLocationModels.Any(e => e.StudentId == id);
+            return _context.StudentLocationModels.Any(e => e.StudentId == id);
         }
     }
 }

@@ -10,19 +10,14 @@ using SAMS.Models;
 
 namespace SAMS.Controllers.InfoManagement
 {
-    public class LawEnforcementInfoController : Controller
+    public class LawEnforcementInfoController(ApplicationDbContext context) : Controller
     {
-        private readonly ApplicationDbContext _context;
-
-        public LawEnforcementInfoController(ApplicationDbContext context)
-        {
-            _context = context;
-        }
+        private readonly ApplicationDbContext _context = context;
 
         // GET: LawEnforcementInfo
         public async Task<IActionResult> Index()
         {
-            return View(await _context.lawEnforcementInfoModels.ToListAsync());
+            return View(await _context.LawEnforcementInfoModels.ToListAsync());
         }
 
         // GET: LawEnforcementInfo/Details/5
@@ -33,7 +28,7 @@ namespace SAMS.Controllers.InfoManagement
                 return NotFound();
             }
 
-            var lawEnforcementInfoModel = await _context.lawEnforcementInfoModels
+            var lawEnforcementInfoModel = await _context.LawEnforcementInfoModels
                 .FirstOrDefaultAsync(m => m.LawenfID == id);
             if (lawEnforcementInfoModel == null)
             {
@@ -73,7 +68,7 @@ namespace SAMS.Controllers.InfoManagement
                 return NotFound();
             }
 
-            var lawEnforcementInfoModel = await _context.lawEnforcementInfoModels.FindAsync(id);
+            var lawEnforcementInfoModel = await _context.LawEnforcementInfoModels.FindAsync(id);
             if (lawEnforcementInfoModel == null)
             {
                 return NotFound();
@@ -124,7 +119,7 @@ namespace SAMS.Controllers.InfoManagement
                 return NotFound();
             }
 
-            var lawEnforcementInfoModel = await _context.lawEnforcementInfoModels
+            var lawEnforcementInfoModel = await _context.LawEnforcementInfoModels
                 .FirstOrDefaultAsync(m => m.LawenfID == id);
             if (lawEnforcementInfoModel == null)
             {
@@ -139,10 +134,10 @@ namespace SAMS.Controllers.InfoManagement
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
-            var lawEnforcementInfoModel = await _context.lawEnforcementInfoModels.FindAsync(id);
+            var lawEnforcementInfoModel = await _context.LawEnforcementInfoModels.FindAsync(id);
             if (lawEnforcementInfoModel != null)
             {
-                _context.lawEnforcementInfoModels.Remove(lawEnforcementInfoModel);
+                _context.LawEnforcementInfoModels.Remove(lawEnforcementInfoModel);
             }
 
             await _context.SaveChangesAsync();
@@ -151,7 +146,7 @@ namespace SAMS.Controllers.InfoManagement
 
         private bool LawEnforcementInfoModelExists(string id)
         {
-            return _context.lawEnforcementInfoModels.Any(e => e.LawenfID == id);
+            return _context.LawEnforcementInfoModels.Any(e => e.LawenfID == id);
         }
     }
 }

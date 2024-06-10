@@ -10,19 +10,14 @@ using SAMS.Models;
 
 namespace SAMS.Controllers.InfoManagement
 {
-    public class DeveloperInfoController : Controller
+    public class DeveloperInfoController(ApplicationDbContext context) : Controller
     {
-        private readonly ApplicationDbContext _context;
-
-        public DeveloperInfoController(ApplicationDbContext context)
-        {
-            _context = context;
-        }
+        private readonly ApplicationDbContext _context = context;
 
         // GET: DeveloperInfo
         public async Task<IActionResult> Index()
         {
-            return View(await _context.developerInfoModels.ToListAsync());
+            return View(await _context.DeveloperInfoModels.ToListAsync());
         }
 
         // GET: DeveloperInfo/Details/5
@@ -33,7 +28,7 @@ namespace SAMS.Controllers.InfoManagement
                 return NotFound();
             }
 
-            var developerInfoModel = await _context.developerInfoModels
+            var developerInfoModel = await _context.DeveloperInfoModels
                 .FirstOrDefaultAsync(m => m.DeveloperID == id);
             if (developerInfoModel == null)
             {
@@ -73,7 +68,7 @@ namespace SAMS.Controllers.InfoManagement
                 return NotFound();
             }
 
-            var developerInfoModel = await _context.developerInfoModels.FindAsync(id);
+            var developerInfoModel = await _context.DeveloperInfoModels.FindAsync(id);
             if (developerInfoModel == null)
             {
                 return NotFound();
@@ -124,7 +119,7 @@ namespace SAMS.Controllers.InfoManagement
                 return NotFound();
             }
 
-            var developerInfoModel = await _context.developerInfoModels
+            var developerInfoModel = await _context.DeveloperInfoModels
                 .FirstOrDefaultAsync(m => m.DeveloperID == id);
             if (developerInfoModel == null)
             {
@@ -139,10 +134,10 @@ namespace SAMS.Controllers.InfoManagement
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var developerInfoModel = await _context.developerInfoModels.FindAsync(id);
+            var developerInfoModel = await _context.DeveloperInfoModels.FindAsync(id);
             if (developerInfoModel != null)
             {
-                _context.developerInfoModels.Remove(developerInfoModel);
+                _context.DeveloperInfoModels.Remove(developerInfoModel);
             }
 
             await _context.SaveChangesAsync();
@@ -151,7 +146,7 @@ namespace SAMS.Controllers.InfoManagement
 
         private bool DeveloperInfoModelExists(int id)
         {
-            return _context.developerInfoModels.Any(e => e.DeveloperID == id);
+            return _context.DeveloperInfoModels.Any(e => e.DeveloperID == id);
         }
     }
 }

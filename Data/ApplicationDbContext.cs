@@ -9,46 +9,40 @@ using SAMS.Controllers;
 
 namespace SAMS.Data
 {
-    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
+    public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : IdentityDbContext<ApplicationUser>(options)
     {
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-            : base(options)
-        {
-        }
 
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
 
-        public DbSet<ActiveCourseInfoModel> activeCourseInfoModels { get; set; } = default!;
-        public DbSet<AdminInfoModel> adminInfoModels { get; set; } = default!;
-        public DbSet<AttendanceOfficeMemberModel> attendanceOfficeMemberModels { get; set; } = default!;
-        public DbSet<DailyBellScheduleModel> dailyBellScheduleModels { get; set; } = default!;
-        public DbSet<DeveloperInfoModel> developerInfoModels { get; set; } = default!;
-        public DbSet<EASuportInfoModel> eASuportInfoModels { get; set; } = default!;
-        public DbSet<ExtendedAvesBellScheduleModel> extendedAvesModels { get; set; } = default!;
-        public DbSet<FastPassModel> fastPassModels { get; set; } = default!;
-        public DbSet<HallPassInfoModel> hallPassInfoModels { get; set; } = default!;
-        public DbSet<LawEnforcementInfoModel> lawEnforcementInfoModels { get; set; } = default!;
-        public DbSet<NurseInfoModel> nurseInfoModels { get; set; } = default!;
-        public DbSet<PassRequestInfoModel> passRequestInfoModels { get; set; } = default!;
-        public DbSet<PepRallyBellScheduleModel> pepRallyBellScheduleModels { get; set; } = default!;
-        public DbSet<RoomLocationInfoModel> roomLocationInfoModels { get; set; } = default!;
-        public DbSet<StudentInfoModel> studentInfoModels { get; set; } = default!;
-        public DbSet<Sem1StudSchedule> sem1StudSchedules { get; set; } = default!;
-        public DbSet<Sem2StudSchedule> sem2StudSchedules { get; set; } = default!;
-        public DbSet<SynnLabQRNodeModel> synnLabQRNodeModels { get; set; } = default!;
-        public DbSet<TeacherInfoModel> teacherInfoModels { get; set; } = default!;
-        public DbSet<TwoHrDelayBellScheduleModel> twoHrDelayBellScheduleModels { get; set; } = default!;
-        public DbSet<BellAttendanceModel> bellAttendanceModels { get;  set; } = default!;
-        public DbSet<CounselorModel> counselorModels { get; set; } = default!;
-        public DbSet<DailyAttendanceModel> dailyAttendanceModels { get; set; } = default!;
+        public DbSet<ActiveCourseInfoModel> ActiveCourseInfoModels { get; set; } = default!;
+        public DbSet<AdminInfoModel> AdminInfoModels { get; set; } = default!;
+        public DbSet<AttendanceOfficeMemberModel> AttendanceOfficeMemberModels { get; set; } = default!;
+        public DbSet<DailyBellScheduleModel> DailyBellScheduleModels { get; set; } = default!;
+        public DbSet<DeveloperInfoModel> DeveloperInfoModels { get; set; } = default!;
+        public DbSet<EASuportInfoModel> EASuportInfoModels { get; set; } = default!;
+        public DbSet<ExtendedAvesBellScheduleModel> ExtendedAvesModels { get; set; } = default!;
+        public DbSet<FastPassModel> FastPassModels { get; set; } = default!;
+        public DbSet<HallPassInfoModel> HallPassInfoModels { get; set; } = default!;
+        public DbSet<LawEnforcementInfoModel> LawEnforcementInfoModels { get; set; } = default!;
+        public DbSet<NurseInfoModel> NurseInfoModels { get; set; } = default!;
+        public DbSet<PassRequestInfoModel> PassRequestInfoModels { get; set; } = default!;
+        public DbSet<PepRallyBellScheduleModel> PepRallyBellScheduleModels { get; set; } = default!;
+        public DbSet<RoomLocationInfoModel> RoomLocationInfoModels { get; set; } = default!;
+        public DbSet<StudentInfoModel> StudentInfoModels { get; set; } = default!;
+        public DbSet<Sem1StudSchedule> Sem1StudSchedules { get; set; } = default!;
+        public DbSet<Sem2StudSchedule> Sem2StudSchedules { get; set; } = default!;
+        public DbSet<SynnLabQRNodeModel> SynnLabQRNodeModels { get; set; } = default!;
+        public DbSet<TeacherInfoModel> TeacherInfoModels { get; set; } = default!;
+        public DbSet<TwoHrDelayBellScheduleModel> TwoHrDelayBellScheduleModels { get; set; } = default!;
+        public DbSet<BellAttendanceModel> BellAttendanceModels { get; set; } = default!;
+        public DbSet<CounselorModel> CounselorModels { get; set; } = default!;
+        public DbSet<DailyAttendanceModel> DailyAttendanceModels { get; set; } = default!;
         //public DbSet<RoomScheduleModel> roomScheduleModels { get; set; } = null!;
-        public DbSet<ChosenBellSchedModel> chosenBellSchedModels { get; set; } = default!;
-        public DbSet<RoomQRCodeModel> roomQRCodeModels { get; set; } = default!;
-        public DbSet<StudentLocationModel> studentLocationModels { get; set; } = default!;
-        public DbSet<TimestampModel> timestampModels { get; set; } = default!;
-        public DbSet<SchedulerModel> schedulerModels { get; set; } = default!;
+        public DbSet<ChosenBellSchedModel> ChosenBellSchedModels { get; set; } = default!;
+        public DbSet<RoomQRCodeModel> RoomQRCodeModels { get; set; } = default!;
+        public DbSet<StudentLocationModel> StudentLocationModels { get; set; } = default!;
+        public DbSet<TimestampModel> TimestampModels { get; set; } = default!;
+        public DbSet<SchedulerModel> SchedulerModels { get; set; } = default!;
         public DbSet<CustomScheduleModel> CustomSchedules { get; set; } = default!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

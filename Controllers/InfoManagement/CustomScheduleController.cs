@@ -10,14 +10,9 @@ using SAMS.Models;
 
 namespace SAMS.Controllers.InfoManagement
 {
-    public class CustomScheduleController : Controller
+    public class CustomScheduleController(ApplicationDbContext context) : Controller
     {
-        private readonly ApplicationDbContext _context;
-
-        public CustomScheduleController(ApplicationDbContext context)
-        {
-            _context = context;
-        }
+        private readonly ApplicationDbContext _context = context;
 
         // GET: CustomSchedule
         public async Task<IActionResult> Index()
