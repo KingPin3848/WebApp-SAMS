@@ -10,18 +10,15 @@ using SAMS.Controllers;
 
 namespace SAMS.Areas.Identity.Pages.Account.Manage
 {
-    public class PersonalDataModel : PageModel
-    {
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly ILogger<PersonalDataModel> _logger;
-
-        public PersonalDataModel(
+    public class PersonalDataModel(
             UserManager<ApplicationUser> userManager,
-            ILogger<PersonalDataModel> logger)
-        {
-            _userManager = userManager;
-            _logger = logger;
-        }
+            ILogger<PersonalDataModel> logger) : PageModel
+    {
+        private readonly UserManager<ApplicationUser> _userManager = userManager;
+#pragma warning disable IDE0052 // Remove unread private members
+        private readonly ILogger<PersonalDataModel> _logger = logger;
+#pragma warning restore IDE0052 // Remove unread private members
+
 
         public async Task<IActionResult> OnGet()
         {

@@ -22,7 +22,7 @@ namespace SAMS.Controllers
         // GET: ChosenBellSchedule
         public async Task<IActionResult> Index()
         {
-            return View(await _context.ChosenBellSchedModel.ToListAsync());
+            return View(await _context.chosenBellSchedModels.ToListAsync());
         }
 
         // GET: ChosenBellSchedule/Details/5
@@ -33,7 +33,7 @@ namespace SAMS.Controllers
                 return NotFound();
             }
 
-            var chosenBellSchedModel = await _context.ChosenBellSchedModel
+            var chosenBellSchedModel = await _context.chosenBellSchedModels
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (chosenBellSchedModel == null)
             {
@@ -58,9 +58,16 @@ namespace SAMS.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(chosenBellSchedModel);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                List<string> scheds = ["Daily Bell Schedule", "Pep Rally Bell Schedule", "2 Hour Delay Bell Schedule", "Extended Aves Bell Schedule", "Custom Bell Schedule"];
+                if (scheds.Contains(chosenBellSchedModel.Name!))
+                {
+                    _context.Add(chosenBellSchedModel);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                } else
+                {
+                    return NotFound("Bell Schedule Mismatch. Please try again.");
+                }
             }
             return View(chosenBellSchedModel);
         }
@@ -73,7 +80,7 @@ namespace SAMS.Controllers
                 return NotFound();
             }
 
-            var chosenBellSchedModel = await _context.ChosenBellSchedModel.FindAsync(id);
+            var chosenBellSchedModel = await _context.chosenBellSchedModels.FindAsync(id);
             if (chosenBellSchedModel == null)
             {
                 return NotFound();
@@ -97,8 +104,16 @@ namespace SAMS.Controllers
             {
                 try
                 {
-                    _context.Update(chosenBellSchedModel);
-                    await _context.SaveChangesAsync();
+                    List<string> scheds = ["Daily Bell Schedule", "Pep Rally Bell Schedule", "2 Hour Delay Bell Schedule", "Extended Aves Bell Schedule", "Custom Bell Schedule"];
+                    if (scheds.Contains(chosenBellSchedModel.Name!))
+                    {
+                        _context.Update(chosenBellSchedModel);
+                        await _context.SaveChangesAsync();
+                    }
+                    else
+                    {
+                        return NotFound("Bell Schedule Mismatch. Please try again.");
+                    }
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -116,42 +131,9 @@ namespace SAMS.Controllers
             return View(chosenBellSchedModel);
         }
 
-        // GET: ChosenBellSchedule/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var chosenBellSchedModel = await _context.ChosenBellSchedModel
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (chosenBellSchedModel == null)
-            {
-                return NotFound();
-            }
-
-            return View(chosenBellSchedModel);
-        }
-
-        // POST: ChosenBellSchedule/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var chosenBellSchedModel = await _context.ChosenBellSchedModel.FindAsync(id);
-            if (chosenBellSchedModel != null)
-            {
-                _context.ChosenBellSchedModel.Remove(chosenBellSchedModel);
-            }
-
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
         private bool ChosenBellSchedModelExists(int id)
         {
-            return _context.ChosenBellSchedModel.Any(e => e.Id == id);
+            return _context.chosenBellSchedModels.Any(e => e.Id == id);
         }
     }
 }

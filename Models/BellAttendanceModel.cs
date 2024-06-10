@@ -1,13 +1,12 @@
-﻿using SAMS.Interfaces;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace SAMS.Models
 {
     public class BellAttendanceModel
     {
+        [Key]
         [Display(Name = ("Att. ID"))]
         public int BellAttendanceId { get; set; } = 0!;
-        [Key]
         [Display(Name = ("Student ID"))]
         public int StudentId { get; set; } = 0!;
         [Display(Name = ("Date/Time"))]

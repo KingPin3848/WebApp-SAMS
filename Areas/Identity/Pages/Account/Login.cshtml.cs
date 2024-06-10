@@ -18,16 +18,10 @@ using SAMS.Controllers;
 
 namespace SAMS.Areas.Identity.Pages.Account
 {
-    public class LoginModel : PageModel
+    public class LoginModel(SignInManager<ApplicationUser> signInManager, ILogger<LoginModel> logger) : PageModel
     {
-        private readonly SignInManager<ApplicationUser> _signInManager;
-        private readonly ILogger<LoginModel> _logger;
-
-        public LoginModel(SignInManager<ApplicationUser> signInManager, ILogger<LoginModel> logger)
-        {
-            _signInManager = signInManager;
-            _logger = logger;
-        }
+        private readonly SignInManager<ApplicationUser> _signInManager = signInManager;
+        private readonly ILogger<LoginModel> _logger = logger;
 
         /// <summary>
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
@@ -85,7 +79,9 @@ namespace SAMS.Areas.Identity.Pages.Account
             public bool RememberMe { get; set; }
         }
 
+#pragma warning disable IDE0060 // Remove unused parameter
         public async Task OnGetAsync(string returnUrl = null, string statmessage = null)
+#pragma warning restore IDE0060 // Remove unused parameter
         {
             if (TempData["Messaage"]?.ToString() == null)
             {
@@ -140,7 +136,9 @@ namespace SAMS.Areas.Identity.Pages.Account
                 }
                 if (result.RequiresTwoFactor)
                 {
+#pragma warning disable IDE0037 // Use inferred member name
                     return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, RememberMe = Input.RememberMe });
+#pragma warning restore IDE0037 // Use inferred member name
                 }
                 if (result.IsLockedOut)
                 {

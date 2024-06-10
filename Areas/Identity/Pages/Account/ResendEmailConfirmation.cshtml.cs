@@ -18,16 +18,10 @@ using SAMS.Controllers;
 namespace SAMS.Areas.Identity.Pages.Account
 {
     [AllowAnonymous]
-    public class ResendEmailConfirmationModel : PageModel
+    public class ResendEmailConfirmationModel(UserManager<ApplicationUser> userManager, IEmailSender emailSender) : PageModel
     {
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly IEmailSender _emailSender;
-
-        public ResendEmailConfirmationModel(UserManager<ApplicationUser> userManager, IEmailSender emailSender)
-        {
-            _userManager = userManager;
-            _emailSender = emailSender;
-        }
+        private readonly UserManager<ApplicationUser> _userManager = userManager;
+        private readonly IEmailSender _emailSender = emailSender;
 
         /// <summary>
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
@@ -72,11 +66,13 @@ namespace SAMS.Areas.Identity.Pages.Account
             var userId = await _userManager.GetUserIdAsync(user);
             var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
             code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+#pragma warning disable IDE0037 // Use inferred member name
             var callbackUrl = Url.Page(
                 "/Account/ConfirmEmail",
                 pageHandler: null,
                 values: new { userId = userId, code = code },
                 protocol: Request.Scheme);
+#pragma warning restore IDE0037 // Use inferred member name
             await _emailSender.SendEmailAsync(
                 Input.Email,
                 "Confirm your email",

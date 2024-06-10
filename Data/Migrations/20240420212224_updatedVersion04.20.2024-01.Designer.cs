@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SAMS.Data;
 
@@ -11,9 +12,11 @@ using SAMS.Data;
 namespace SAMS.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240420212224_updatedVersion04.20.2024-01")]
+    partial class updatedVersion0420202401
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -369,13 +372,10 @@ namespace SAMS.Data.Migrations
 
             modelBuilder.Entity("SAMS.Models.BellAttendanceModel", b =>
                 {
-                    b.Property<int>("BellAttendanceId")
-                        .ValueGeneratedOnAdd()
+                    b.Property<int>("StudentId")
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BellAttendanceId"));
-
-                    b.Property<int?>("ActiveCoursesCourseId")
+                    b.Property<int>("BellAttendanceId")
                         .HasColumnType("int");
 
                     b.Property<string>("BellNumId")
@@ -396,21 +396,23 @@ namespace SAMS.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("Sem1StudScheduleStudentID")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("Sem2StudScheduleStudentID")
+                        .HasColumnType("int");
+
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("StudentId")
-                        .HasColumnType("int");
+                    b.HasKey("StudentId");
 
-                    b.Property<int?>("StudentInfoStudentID")
-                        .HasColumnType("int");
+                    b.HasIndex("CourseId");
 
-                    b.HasKey("BellAttendanceId");
+                    b.HasIndex("Sem1StudScheduleStudentID");
 
-                    b.HasIndex("ActiveCoursesCourseId");
-
-                    b.HasIndex("StudentInfoStudentID");
+                    b.HasIndex("Sem2StudScheduleStudentID");
 
                     b.ToTable("bellAttendanceModels");
                 });
@@ -1353,12 +1355,24 @@ namespace SAMS.Data.Migrations
             modelBuilder.Entity("SAMS.Models.BellAttendanceModel", b =>
                 {
                     b.HasOne("SAMS.Models.ActiveCourseInfoModel", "ActiveCourses")
-                        .WithMany()
-                        .HasForeignKey("ActiveCoursesCourseId");
+                        .WithMany("BellAttendances")
+                        .HasForeignKey("CourseId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("SAMS.Models.Sem1StudSchedule", null)
+                        .WithMany("BellAttendance")
+                        .HasForeignKey("Sem1StudScheduleStudentID");
+
+                    b.HasOne("SAMS.Models.Sem2StudSchedule", null)
+                        .WithMany("BellAttendance")
+                        .HasForeignKey("Sem2StudScheduleStudentID");
 
                     b.HasOne("SAMS.Models.StudentInfoModel", "StudentInfo")
-                        .WithMany()
-                        .HasForeignKey("StudentInfoStudentID");
+                        .WithMany("BellAttendances")
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
 
                     b.Navigation("ActiveCourses");
 
@@ -1703,6 +1717,11 @@ namespace SAMS.Data.Migrations
                     b.Navigation("Room");
                 });
 
+            modelBuilder.Entity("SAMS.Models.ActiveCourseInfoModel", b =>
+                {
+                    b.Navigation("BellAttendances");
+                });
+
             modelBuilder.Entity("SAMS.Models.AdminInfoModel", b =>
                 {
                     b.Navigation("AddressedHallPasses");
@@ -1780,16 +1799,22 @@ namespace SAMS.Data.Migrations
 
             modelBuilder.Entity("SAMS.Models.Sem1StudSchedule", b =>
                 {
+                    b.Navigation("BellAttendance");
+
                     b.Navigation("FastPasses");
                 });
 
             modelBuilder.Entity("SAMS.Models.Sem2StudSchedule", b =>
                 {
+                    b.Navigation("BellAttendance");
+
                     b.Navigation("FastPasses");
                 });
 
             modelBuilder.Entity("SAMS.Models.StudentInfoModel", b =>
                 {
+                    b.Navigation("BellAttendances");
+
                     b.Navigation("DailyAttendances");
 
                     b.Navigation("FastPasses");

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SAMS.Data;
 
@@ -11,9 +12,11 @@ using SAMS.Data;
 namespace SAMS.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240423115745_updatedVersion04.23.2024-01")]
+    partial class updatedVersion0423202401
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -369,13 +372,10 @@ namespace SAMS.Data.Migrations
 
             modelBuilder.Entity("SAMS.Models.BellAttendanceModel", b =>
                 {
-                    b.Property<int>("BellAttendanceId")
-                        .ValueGeneratedOnAdd()
+                    b.Property<int?>("ActiveCoursesCourseId")
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BellAttendanceId"));
-
-                    b.Property<int?>("ActiveCoursesCourseId")
+                    b.Property<int>("BellAttendanceId")
                         .HasColumnType("int");
 
                     b.Property<string>("BellNumId")
@@ -400,13 +400,8 @@ namespace SAMS.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("StudentId")
-                        .HasColumnType("int");
-
                     b.Property<int?>("StudentInfoStudentID")
                         .HasColumnType("int");
-
-                    b.HasKey("BellAttendanceId");
 
                     b.HasIndex("ActiveCoursesCourseId");
 

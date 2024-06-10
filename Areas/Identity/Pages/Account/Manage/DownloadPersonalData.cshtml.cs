@@ -16,18 +16,12 @@ using SAMS.Controllers;
 
 namespace SAMS.Areas.Identity.Pages.Account.Manage
 {
-    public class DownloadPersonalDataModel : PageModel
-    {
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly ILogger<DownloadPersonalDataModel> _logger;
-
-        public DownloadPersonalDataModel(
+    public class DownloadPersonalDataModel(
             UserManager<ApplicationUser> userManager,
-            ILogger<DownloadPersonalDataModel> logger)
-        {
-            _userManager = userManager;
-            _logger = logger;
-        }
+            ILogger<DownloadPersonalDataModel> logger) : PageModel
+    {
+        private readonly UserManager<ApplicationUser> _userManager = userManager;
+        private readonly ILogger<DownloadPersonalDataModel> _logger = logger;
 
         public IActionResult OnGet()
         {

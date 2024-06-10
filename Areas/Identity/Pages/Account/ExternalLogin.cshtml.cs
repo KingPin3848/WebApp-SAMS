@@ -23,29 +23,20 @@ using Microsoft.AspNetCore.Authentication.Google;
 namespace SAMS.Areas.Identity.Pages.Account
 {
     [AllowAnonymous]
-    public class ExternalLoginModel : PageModel
-    {
-        private readonly SignInManager<ApplicationUser> _signInManager;
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly IUserStore<ApplicationUser> _userStore;
-        private readonly IUserEmailStore<ApplicationUser> _emailStore;
-        private readonly IEmailSender _emailSender;
-        private readonly ILogger<ExternalLoginModel> _logger;
-
-        public ExternalLoginModel(
+    public class ExternalLoginModel(
             SignInManager<ApplicationUser> signInManager,
             UserManager<ApplicationUser> userManager,
             IUserStore<ApplicationUser> userStore,
-            ILogger<ExternalLoginModel> logger,
-            IEmailSender emailSender)
-        {
-            _signInManager = signInManager;
-            _userManager = userManager;
-            _userStore = userStore;
-            _emailStore = GetEmailStore();
-            _logger = logger;
-            _emailSender = emailSender;
-        }
+            ILogger<ExternalLoginModel> logger
+            /*IEmailSender emailSender*/) : PageModel
+    {
+        private readonly SignInManager<ApplicationUser> _signInManager = signInManager;
+        private readonly UserManager<ApplicationUser> _userManager = userManager;
+        private readonly IUserStore<ApplicationUser> _userStore = userStore;
+        //private readonly IUserEmailStore<ApplicationUser> _emailStore = GetEmailStore();
+        //private readonly IEmailSender _emailSender = emailSender;
+        private readonly ILogger<ExternalLoginModel> _logger = logger;
+
 
         /// <summary>
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
@@ -72,6 +63,8 @@ namespace SAMS.Areas.Identity.Pages.Account
         /// </summary>
         [TempData]
         public string ErrorMessage { get; set; }
+
+        public IUserEmailStore<ApplicationUser> EmailStore => GetEmailStore();
 
         /// <summary>
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
@@ -100,7 +93,7 @@ namespace SAMS.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnGetCallbackAsync(string returnUrl = null, string remoteError = null)
         {
-            returnUrl = returnUrl ?? Url.Content("~/");
+            returnUrl ??= Url.Content("~/");
             if (remoteError != null)
             {
                 ErrorMessage = $"Error from external provider: {remoteError}";

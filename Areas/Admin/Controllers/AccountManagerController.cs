@@ -65,7 +65,7 @@ namespace SAMS.Areas.Admin.Controllers
         public async Task<IActionResult> Index()
         {
             var users = _userManager.Users.ToList();
-            List<ApplicationUser> unreals = new();
+            List<ApplicationUser> unreals = [];
             foreach (var user in users)
             {
                 user.Role = await _userManager.GetRolesAsync(user);
@@ -167,10 +167,10 @@ namespace SAMS.Areas.Admin.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogCritical(ex.Message);
-                _logger.LogCritical(ex.Source);
-                _logger.LogCritical($"{ex.InnerException}");
-                _logger.LogCritical(ex.StackTrace);
+                _logger.LogCritical("{Message}", ex.Message);
+                _logger.LogCritical("{Source}", ex.Source);
+                _logger.LogCritical("{InnerException}", ex.InnerException);
+                _logger.LogCritical("{StackTrace}", ex.StackTrace);
                 return View();
             }
 
@@ -285,7 +285,7 @@ namespace SAMS.Areas.Admin.Controllers
                 {
                     foreach (var modelError in modelState.Errors)
                     {
-                        _logger.LogCritical($"Error message: \n{modelError.ErrorMessage}");
+                        _logger.LogCritical("Error message: \n {ErrorMessage}", modelError.ErrorMessage);
                     }
                 }
             }
@@ -398,7 +398,7 @@ namespace SAMS.Areas.Admin.Controllers
         }
 
         // POST: AccountManager/Delete/5
-        [HttpPost, ActionName("Delete")]
+        [HttpPost, ActionName("DeleteConfirmed")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
@@ -419,9 +419,9 @@ namespace SAMS.Areas.Admin.Controllers
                         case "Student":
                             {
                                 var studId = int.Parse(schoolId);
-                                var studentInfo = _context.studentInfoModels.Find(schoolId) ?? throw new Exception("Unable to retrieve student data for deletion.");
-                                var sem1sched = _context.sem1StudSchedules.Find(schoolId) ?? throw new Exception("Unable to retrieve student schedule 1 for deletion.");
-                                var sem2sched = _context.sem2StudSchedules.Find(schoolId) ?? throw new Exception("Unable to retrieve student schedule 2 for deletion.");
+                                var studentInfo = await _context.studentInfoModels.FindAsync(studId) ?? throw new Exception("Unable to retrieve student data for deletion.");
+                                var sem1sched = await _context.sem1StudSchedules.FindAsync(studId) ?? throw new Exception("Unable to retrieve student schedule 1 for deletion.");
+                                var sem2sched = await _context.sem2StudSchedules.FindAsync(studId) ?? throw new Exception("Unable to retrieve student schedule 2 for deletion.");
 
                                 var studInfoDeletion = _context.studentInfoModels.Remove(studentInfo);
                                 var sem1schedDeletion = _context.sem1StudSchedules.Remove(sem1sched);
@@ -542,8 +542,10 @@ namespace SAMS.Areas.Admin.Controllers
 
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (Exception ex)
             {
+                _logger.LogCritical("{Exception}", ex.ToString());
+
                 return View();
             }
 

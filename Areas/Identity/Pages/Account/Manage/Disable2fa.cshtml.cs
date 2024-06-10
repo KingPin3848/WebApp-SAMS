@@ -12,18 +12,12 @@ using SAMS.Controllers;
 
 namespace SAMS.Areas.Identity.Pages.Account.Manage
 {
-    public class Disable2faModel : PageModel
-    {
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly ILogger<Disable2faModel> _logger;
-
-        public Disable2faModel(
+    public class Disable2faModel(
             UserManager<ApplicationUser> userManager,
-            ILogger<Disable2faModel> logger)
-        {
-            _userManager = userManager;
-            _logger = logger;
-        }
+            ILogger<Disable2faModel> logger) : PageModel
+    {
+        private readonly UserManager<ApplicationUser> _userManager = userManager;
+        private readonly ILogger<Disable2faModel> _logger = logger;
 
         /// <summary>
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
