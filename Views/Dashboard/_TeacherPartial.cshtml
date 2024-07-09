@@ -14,7 +14,7 @@
         {
             <td class="col">
                 <div class="card" style="width: 12rem; border-radius:35px;">
-                    <a class="btn" asp-controller="TeacherRoster" asp-action="Roster" asp-route-bell="@ViewBag.Bells[i]">
+                    <a class="btn" asp-area="Teacher" asp-controller="TeacherRoster" asp-action="Roster" asp-route-bell="@ViewBag.Bells[i]">
                         <img src="/images/ScanQRCode.png" class="card-img-top" alt="Bell @ViewBag.Bells[i]" style="border-radius:35px;">
                         <div class="card-body">
                             @if (ViewBag.Bells[i] == "Aves")
