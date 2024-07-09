@@ -10,32 +10,27 @@ using SAMS.Models;
 
 namespace SAMS.Controllers
 {
-    public class TwoHrDelayBellScheduleController : Controller
+    public class TwoHrDelayBellScheduleController(ApplicationDbContext context) : Controller
     {
-        private readonly ApplicationDbContext _context;
-
-        public TwoHrDelayBellScheduleController(ApplicationDbContext context)
-        {
-            _context = context;
-        }
+        private readonly ApplicationDbContext _context = context;
 
         // GET: TwoHrDelayBellSchedule
         public async Task<IActionResult> Index()
         {
-              return _context.twoHrDelayBellScheduleModels != null ? 
-                          View(await _context.twoHrDelayBellScheduleModels.ToListAsync()) :
+              return _context.TwoHrDelayBellScheduleModels != null ? 
+                          View(await _context.TwoHrDelayBellScheduleModels.ToListAsync()) :
                           Problem("Entity set 'ApplicationDbContext.twoHrDelayBellScheduleModels'  is null.");
         }
 
         // GET: TwoHrDelayBellSchedule/Details/5
         public async Task<IActionResult> Details(TimeSpan? id)
         {
-            if (id == null || _context.twoHrDelayBellScheduleModels == null)
+            if (id == null || _context.TwoHrDelayBellScheduleModels == null)
             {
                 return NotFound();
             }
 
-            var twoHrDelayBellScheduleModel = await _context.twoHrDelayBellScheduleModels
+            var twoHrDelayBellScheduleModel = await _context.TwoHrDelayBellScheduleModels
                 .FirstOrDefaultAsync(m => m.StartTime == id);
             if (twoHrDelayBellScheduleModel == null)
             {
@@ -70,12 +65,12 @@ namespace SAMS.Controllers
         // GET: TwoHrDelayBellSchedule/Edit/5
         public async Task<IActionResult> Edit(TimeSpan? id)
         {
-            if (id == null || _context.twoHrDelayBellScheduleModels == null)
+            if (id == null || _context.TwoHrDelayBellScheduleModels == null)
             {
                 return NotFound();
             }
 
-            var twoHrDelayBellScheduleModel = await _context.twoHrDelayBellScheduleModels.FindAsync(id);
+            var twoHrDelayBellScheduleModel = await _context.TwoHrDelayBellScheduleModels.FindAsync(id);
             if (twoHrDelayBellScheduleModel == null)
             {
                 return NotFound();
@@ -121,12 +116,12 @@ namespace SAMS.Controllers
         // GET: TwoHrDelayBellSchedule/Delete/5
         public async Task<IActionResult> Delete(TimeSpan? id)
         {
-            if (id == null || _context.twoHrDelayBellScheduleModels == null)
+            if (id == null || _context.TwoHrDelayBellScheduleModels == null)
             {
                 return NotFound();
             }
 
-            var twoHrDelayBellScheduleModel = await _context.twoHrDelayBellScheduleModels
+            var twoHrDelayBellScheduleModel = await _context.TwoHrDelayBellScheduleModels
                 .FirstOrDefaultAsync(m => m.StartTime == id);
             if (twoHrDelayBellScheduleModel == null)
             {
@@ -141,14 +136,14 @@ namespace SAMS.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(TimeSpan id)
         {
-            if (_context.twoHrDelayBellScheduleModels == null)
+            if (_context.TwoHrDelayBellScheduleModels == null)
             {
                 return Problem("Entity set 'ApplicationDbContext.twoHrDelayBellScheduleModels'  is null.");
             }
-            var twoHrDelayBellScheduleModel = await _context.twoHrDelayBellScheduleModels.FindAsync(id);
+            var twoHrDelayBellScheduleModel = await _context.TwoHrDelayBellScheduleModels.FindAsync(id);
             if (twoHrDelayBellScheduleModel != null)
             {
-                _context.twoHrDelayBellScheduleModels.Remove(twoHrDelayBellScheduleModel);
+                _context.TwoHrDelayBellScheduleModels.Remove(twoHrDelayBellScheduleModel);
             }
             
             await _context.SaveChangesAsync();
@@ -157,7 +152,7 @@ namespace SAMS.Controllers
 
         private bool TwoHrDelayBellScheduleModelExists(TimeSpan id)
         {
-          return (_context.twoHrDelayBellScheduleModels?.Any(e => e.StartTime == id)).GetValueOrDefault();
+          return (_context.TwoHrDelayBellScheduleModels?.Any(e => e.StartTime == id)).GetValueOrDefault();
         }
     }
 }

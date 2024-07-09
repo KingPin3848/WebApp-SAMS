@@ -13,21 +13,14 @@ using Microsoft.Extensions.Logging;
 using SAMS.Controllers;
 namespace SAMS.Areas.Identity.Pages.Account
 {
-    public class LoginWithRecoveryCodeModel : PageModel
-    {
-        private readonly SignInManager<ApplicationUser> _signInManager;
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly ILogger<LoginWithRecoveryCodeModel> _logger;
-
-        public LoginWithRecoveryCodeModel(
+    public class LoginWithRecoveryCodeModel(
             SignInManager<ApplicationUser> signInManager,
             UserManager<ApplicationUser> userManager,
-            ILogger<LoginWithRecoveryCodeModel> logger)
-        {
-            _signInManager = signInManager;
-            _userManager = userManager;
-            _logger = logger;
-        }
+            ILogger<LoginWithRecoveryCodeModel> logger) : PageModel
+    {
+        private readonly SignInManager<ApplicationUser> _signInManager = signInManager;
+        private readonly UserManager<ApplicationUser> _userManager = userManager;
+        private readonly ILogger<LoginWithRecoveryCodeModel> _logger = logger;
 
         /// <summary>
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
@@ -62,12 +55,9 @@ namespace SAMS.Areas.Identity.Pages.Account
         public async Task<IActionResult> OnGetAsync(string returnUrl = null)
         {
             // Ensure the user has gone through the username & password screen first
-            var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
-            if (user == null)
-            {
-                throw new InvalidOperationException($"Unable to load two-factor authentication user.");
-            }
-
+#pragma warning disable IDE0059 // Unnecessary assignment of a value
+            var user = await _signInManager.GetTwoFactorAuthenticationUserAsync() ?? throw new InvalidOperationException($"Unable to load two-factor authentication user.");
+#pragma warning restore IDE0059 // Unnecessary assignment of a value
             ReturnUrl = returnUrl;
 
             return Page();
@@ -80,17 +70,14 @@ namespace SAMS.Areas.Identity.Pages.Account
                 return Page();
             }
 
-            var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
-            if (user == null)
-            {
-                throw new InvalidOperationException($"Unable to load two-factor authentication user.");
-            }
-
+            var user = await _signInManager.GetTwoFactorAuthenticationUserAsync() ?? throw new InvalidOperationException($"Unable to load two-factor authentication user.");
             var recoveryCode = Input.RecoveryCode.Replace(" ", string.Empty);
 
             var result = await _signInManager.TwoFactorRecoveryCodeSignInAsync(recoveryCode);
 
+#pragma warning disable IDE0059 // Unnecessary assignment of a value
             var userId = await _userManager.GetUserIdAsync(user);
+#pragma warning restore IDE0059 // Unnecessary assignment of a value
 
             if (result.Succeeded)
             {

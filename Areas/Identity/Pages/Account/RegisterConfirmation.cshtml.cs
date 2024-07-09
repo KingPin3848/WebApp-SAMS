@@ -16,16 +16,10 @@ using SAMS.Controllers;
 namespace SAMS.Areas.Identity.Pages.Account
 {
     [AllowAnonymous]
-    public class RegisterConfirmationModel : PageModel
+    public class RegisterConfirmationModel(UserManager<ApplicationUser> userManager/*, IEmailSender sender*/) : PageModel
     {
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly IEmailSender _sender;
-
-        public RegisterConfirmationModel(UserManager<ApplicationUser> userManager, IEmailSender sender)
-        {
-            _userManager = userManager;
-            _sender = sender;
-        }
+        private readonly UserManager<ApplicationUser> _userManager = userManager;
+        //private readonly IEmailSender _sender = sender;
 
         /// <summary>
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
@@ -51,7 +45,7 @@ namespace SAMS.Areas.Identity.Pages.Account
             {
                 return RedirectToPage("/Index");
             }
-            returnUrl = returnUrl ?? Url.Content("~/");
+            returnUrl ??= Url.Content("~/");
 
             var user = await _userManager.FindByEmailAsync(email);
             if (user == null)
@@ -67,11 +61,13 @@ namespace SAMS.Areas.Identity.Pages.Account
                 var userId = await _userManager.GetUserIdAsync(user);
                 var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                 code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+#pragma warning disable IDE0037 // Use inferred member name
                 EmailConfirmationUrl = Url.Page(
                     "/Account/ConfirmEmail",
                     pageHandler: null,
                     values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
                     protocol: Request.Scheme);
+#pragma warning restore IDE0037 // Use inferred member name
             }
 
             return Page();

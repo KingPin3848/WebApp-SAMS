@@ -1135,7 +1135,7 @@ namespace SAMS.Data.Migrations
                     b.ToTable("studentLocationModels");
                 });
 
-            modelBuilder.Entity("SAMS.Models.SynnLabQRNodeModel", b =>
+            modelBuilder.Entity("SAMS.Models.HandheldScannerNodeModel", b =>
                 {
                     b.Property<string>("ScannerID")
                         .HasColumnType("nvarchar(450)");
@@ -1156,7 +1156,7 @@ namespace SAMS.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("SynnlabRoomIDMod")
+                    b.Property<int>("RoomIDMod")
                         .HasColumnType("int");
 
                     b.HasKey("ScannerID");
@@ -1589,7 +1589,7 @@ namespace SAMS.Data.Migrations
 
             modelBuilder.Entity("SAMS.Models.RoomLocationInfoModel", b =>
                 {
-                    b.HasOne("SAMS.Models.SynnLabQRNodeModel", "SynnLabQRNode")
+                    b.HasOne("SAMS.Models.HandheldScannerNodeModel", "SynnLabQRNode")
                         .WithMany()
                         .HasForeignKey("SynnLabQRNodeScannerID");
 

@@ -52,9 +52,9 @@ namespace SAMS.Models
         [Display(Name = ("Lunch Code"))]
         public Char LunchCodeMod { get; set; }
 
-            //Navigation properties
-            public StudentInfoModel? Student { get; set; } = null!;
-            public ICollection<BellAttendanceModel>? BellAttendance { get; set; } = null!;
-            public ICollection<FastPassModel>? FastPasses { get; set; } = null!;
+        //Navigation properties
+        public StudentInfoModel? Student { get; set; } = null!;
+        public ICollection<BellAttendanceModel>? BellAttendance { get; set; } = null!;
+        public ICollection<FastPassModel>? FastPasses { get; set; } = null!;
     }
 }

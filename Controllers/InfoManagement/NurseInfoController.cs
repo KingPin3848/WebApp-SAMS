@@ -10,19 +10,14 @@ using SAMS.Models;
 
 namespace SAMS.Controllers.InfoManagement
 {
-    public class NurseInfoController : Controller
+    public class NurseInfoController(ApplicationDbContext context) : Controller
     {
-        private readonly ApplicationDbContext _context;
-
-        public NurseInfoController(ApplicationDbContext context)
-        {
-            _context = context;
-        }
+        private readonly ApplicationDbContext _context = context;
 
         // GET: NurseInfo
         public async Task<IActionResult> Index()
         {
-            return View(await _context.nurseInfoModels.ToListAsync());
+            return View(await _context.NurseInfoModels.ToListAsync());
         }
 
         // GET: NurseInfo/Details/5
@@ -33,7 +28,7 @@ namespace SAMS.Controllers.InfoManagement
                 return NotFound();
             }
 
-            var nurseInfoModel = await _context.nurseInfoModels
+            var nurseInfoModel = await _context.NurseInfoModels
                 .FirstOrDefaultAsync(m => m.NurseID == id);
             if (nurseInfoModel == null)
             {
@@ -73,7 +68,7 @@ namespace SAMS.Controllers.InfoManagement
                 return NotFound();
             }
 
-            var nurseInfoModel = await _context.nurseInfoModels.FindAsync(id);
+            var nurseInfoModel = await _context.NurseInfoModels.FindAsync(id);
             if (nurseInfoModel == null)
             {
                 return NotFound();
@@ -124,7 +119,7 @@ namespace SAMS.Controllers.InfoManagement
                 return NotFound();
             }
 
-            var nurseInfoModel = await _context.nurseInfoModels
+            var nurseInfoModel = await _context.NurseInfoModels
                 .FirstOrDefaultAsync(m => m.NurseID == id);
             if (nurseInfoModel == null)
             {
@@ -139,10 +134,10 @@ namespace SAMS.Controllers.InfoManagement
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
-            var nurseInfoModel = await _context.nurseInfoModels.FindAsync(id);
+            var nurseInfoModel = await _context.NurseInfoModels.FindAsync(id);
             if (nurseInfoModel != null)
             {
-                _context.nurseInfoModels.Remove(nurseInfoModel);
+                _context.NurseInfoModels.Remove(nurseInfoModel);
             }
 
             await _context.SaveChangesAsync();
@@ -151,7 +146,7 @@ namespace SAMS.Controllers.InfoManagement
 
         private bool NurseInfoModelExists(string id)
         {
-            return _context.nurseInfoModels.Any(e => e.NurseID == id);
+            return _context.NurseInfoModels.Any(e => e.NurseID == id);
         }
     }
 }

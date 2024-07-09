@@ -13,18 +13,12 @@ using SAMS.Controllers;
 
 namespace SAMS.Areas.Identity.Pages.Account.Manage
 {
-    public class GenerateRecoveryCodesModel : PageModel
-    {
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly ILogger<GenerateRecoveryCodesModel> _logger;
-
-        public GenerateRecoveryCodesModel(
+    public class GenerateRecoveryCodesModel(
             UserManager<ApplicationUser> userManager,
-            ILogger<GenerateRecoveryCodesModel> logger)
-        {
-            _userManager = userManager;
-            _logger = logger;
-        }
+            ILogger<GenerateRecoveryCodesModel> logger) : PageModel
+    {
+        private readonly UserManager<ApplicationUser> _userManager = userManager;
+        private readonly ILogger<GenerateRecoveryCodesModel> _logger = logger;
 
         /// <summary>
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used

@@ -10,32 +10,27 @@ using SAMS.Models;
 
 namespace SAMS.Controllers
 {
-    public class PepRallyBellScheduleController : Controller
+    public class PepRallyBellScheduleController(ApplicationDbContext context) : Controller
     {
-        private readonly ApplicationDbContext _context;
-
-        public PepRallyBellScheduleController(ApplicationDbContext context)
-        {
-            _context = context;
-        }
+        private readonly ApplicationDbContext _context = context;
 
         // GET: PepRallyBellSchedule
         public async Task<IActionResult> Index()
         {
-              return _context.pepRallyBellScheduleModels != null ? 
-                          View(await _context.pepRallyBellScheduleModels.ToListAsync()) :
+              return _context.PepRallyBellScheduleModels != null ? 
+                          View(await _context.PepRallyBellScheduleModels.ToListAsync()) :
                           Problem("Entity set 'ApplicationDbContext.pepRallyBellScheduleModels'  is null.");
         }
 
         // GET: PepRallyBellSchedule/Details/5
         public async Task<IActionResult> Details(TimeSpan? id)
         {
-            if (id == null || _context.pepRallyBellScheduleModels == null)
+            if (id == null || _context.PepRallyBellScheduleModels == null)
             {
                 return NotFound();
             }
 
-            var pepRallyBellScheduleModel = await _context.pepRallyBellScheduleModels
+            var pepRallyBellScheduleModel = await _context.PepRallyBellScheduleModels
                 .FirstOrDefaultAsync(m => m.StartTime == id);
             if (pepRallyBellScheduleModel == null)
             {
@@ -70,12 +65,12 @@ namespace SAMS.Controllers
         // GET: PepRallyBellSchedule/Edit/5
         public async Task<IActionResult> Edit(TimeSpan? id)
         {
-            if (id == null || _context.pepRallyBellScheduleModels == null)
+            if (id == null || _context.PepRallyBellScheduleModels == null)
             {
                 return NotFound();
             }
 
-            var pepRallyBellScheduleModel = await _context.pepRallyBellScheduleModels.FindAsync(id);
+            var pepRallyBellScheduleModel = await _context.PepRallyBellScheduleModels.FindAsync(id);
             if (pepRallyBellScheduleModel == null)
             {
                 return NotFound();
@@ -121,12 +116,12 @@ namespace SAMS.Controllers
         // GET: PepRallyBellSchedule/Delete/5
         public async Task<IActionResult> Delete(TimeSpan? id)
         {
-            if (id == null || _context.pepRallyBellScheduleModels == null)
+            if (id == null || _context.PepRallyBellScheduleModels == null)
             {
                 return NotFound();
             }
 
-            var pepRallyBellScheduleModel = await _context.pepRallyBellScheduleModels
+            var pepRallyBellScheduleModel = await _context.PepRallyBellScheduleModels
                 .FirstOrDefaultAsync(m => m.StartTime == id);
             if (pepRallyBellScheduleModel == null)
             {
@@ -141,14 +136,14 @@ namespace SAMS.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(TimeSpan id)
         {
-            if (_context.pepRallyBellScheduleModels == null)
+            if (_context.PepRallyBellScheduleModels == null)
             {
                 return Problem("Entity set 'ApplicationDbContext.pepRallyBellScheduleModels'  is null.");
             }
-            var pepRallyBellScheduleModel = await _context.pepRallyBellScheduleModels.FindAsync(id);
+            var pepRallyBellScheduleModel = await _context.PepRallyBellScheduleModels.FindAsync(id);
             if (pepRallyBellScheduleModel != null)
             {
-                _context.pepRallyBellScheduleModels.Remove(pepRallyBellScheduleModel);
+                _context.PepRallyBellScheduleModels.Remove(pepRallyBellScheduleModel);
             }
             
             await _context.SaveChangesAsync();
@@ -157,7 +152,7 @@ namespace SAMS.Controllers
 
         private bool PepRallyBellScheduleModelExists(TimeSpan id)
         {
-          return (_context.pepRallyBellScheduleModels?.Any(e => e.StartTime == id)).GetValueOrDefault();
+          return (_context.PepRallyBellScheduleModels?.Any(e => e.StartTime == id)).GetValueOrDefault();
         }
     }
 }

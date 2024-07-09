@@ -1,10 +1,13 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 using SAMS.Controllers;
 using SAMS.Data;
+using SAMS.Models;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
 
 namespace SAMS.Areas.Admin.Controllers
 {
@@ -19,6 +22,9 @@ namespace SAMS.Areas.Admin.Controllers
         private readonly ILogger<AccountManagerController> _logger;
         private readonly IEmailSender<ApplicationUser> _emailSender;
         private readonly ApplicationDbContext _context;
+#pragma warning disable CA1805 // Do not initialize unnecessarily
+        private bool _disposed = false; // to detect redundant calls
+#pragma warning restore CA1805 // Do not initialize unnecessarily
 
         public AccountManagerController(
             RoleManager<IdentityRole> roleManager,
@@ -38,37 +44,18 @@ namespace SAMS.Areas.Admin.Controllers
             _emailStore = GetEmailStore();
             _logger = logger;
             _emailSender = emailSender;
-            Input = new InputModel();
         }
 
-        public InputModel Input { get; set; }
-        public class InputModel : ApplicationUser
-        {
-            [Required]
-            [EmailAddress]
-            [Display(Name = "Email")]
-            public new string? Email { get; set; }
-            [Required]
-            [StringLength(32, ErrorMessage = "The Unique Code must be at least {2} and at max {1} characters long.", MinimumLength = 32)]
-            [Display(Name = "Unique Code")]
-            public new string? ActivationCode { get; set; }
-            [Required]
-            [Display(Name = "School Id")]
-            public new string? SchoolId { get; set; }
-            [Required]
-            [Display(Name = "Role(s)")]
-            public new IList<string>? Role { get; set; }
-        }
-
-
+        [HttpGet]
         // GET: AccountManager
         public async Task<IActionResult> Index()
         {
+            //EventId = 1; CodeIdentifier = 74
             var users = _userManager.Users.ToList();
-            List<ApplicationUser> unreals = new();
+            List<ApplicationUser> unreals = [];
             foreach (var user in users)
             {
-                user.Role = await _userManager.GetRolesAsync(user);
+                user.Role = await _userManager.GetRolesAsync(user).ConfigureAwait(true);
                 foreach (var role in user.Role)
                 {
                     if (role == "Developer")
@@ -89,12 +76,14 @@ namespace SAMS.Areas.Admin.Controllers
 
             if (id == null)
             {
+                //EventId = 2; CodeIdentifierNumber = 100
                 return NotFound();
             }
 
-            var user = await _userManager.FindByIdAsync(id);
+            var user = await _userManager.FindByIdAsync(id).ConfigureAwait(true);
             if (user == null)
             {
+                //EventId = 2; CodeIdentifierNumber = 106
                 return NotFound();
             }
 
@@ -102,6 +91,7 @@ namespace SAMS.Areas.Admin.Controllers
         }
 
         // GET: AccountManager/Create
+        [HttpGet]
         public ActionResult Create()
         {
             ViewData["RoleId"] = new SelectList(_context.Roles, "Name", "Name");
@@ -111,7 +101,7 @@ namespace SAMS.Areas.Admin.Controllers
         // POST: AccountManager/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(InputModel input)
+        public async Task<IActionResult> Create([Bind("Email,ActivationCode,SchoolId,Role")] InputModel input)
         {
             try
             {
@@ -119,26 +109,24 @@ namespace SAMS.Areas.Admin.Controllers
                 {
                     var user = CreateUser();
 
-                    Input = input;
-
-                    IEnumerable<string> listRoles = Input.Role!;
-                    await _userStore.SetUserNameAsync(user, Input.SchoolId, CancellationToken.None);
-                    await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
-                    user.Role = Input.Role;
-                    user.SchoolId = Input.SchoolId;
-                    user.ActivationCode = input.ActivationCode;
+                    IEnumerable<string> listRoles = input.Role!;
+                    await _userStore.SetUserNameAsync(user, input.SchoolId, CancellationToken.None).ConfigureAwait(true);
+                    await _emailStore.SetEmailAsync(user, input.Email, CancellationToken.None).ConfigureAwait(true);
+                    user.Role = input.Role;
+                    user.SchoolId = input.SchoolId!;
+                    user.ActivationCode = input.ActivationCode!;
                     user.UserExperienceEnabled = false;
                     user.Email = input.Email;
                     user.EmailConfirmed = true;
-                    var result = await _userManager.CreateAsync(user);
+                    var result = await _userManager.CreateAsync(user).ConfigureAwait(true);
 
                     if (result.Succeeded)
                     {
                         //TO UPDATE ALL USER'S INFORMATION AKA ADDING THEIR ACTIVATION CODES, SCHOOLISSUEDID, ETC.
-                        var foundUser = await _userManager.FindByEmailAsync(input.Email!);
+                        var foundUser = await _userManager.FindByEmailAsync(input.Email!).ConfigureAwait(true);
                         if (foundUser != null)
                         {
-                            var roadroller = await _userManager.AddToRolesAsync(foundUser, listRoles);
+                            var roadroller = await _userManager.AddToRolesAsync(foundUser, listRoles).ConfigureAwait(true);
                             if (roadroller.Succeeded)
                             {
                                 return View();
@@ -167,10 +155,10 @@ namespace SAMS.Areas.Admin.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogCritical(ex.Message);
-                _logger.LogCritical(ex.Source);
-                _logger.LogCritical($"{ex.InnerException}");
-                _logger.LogCritical(ex.StackTrace);
+                _logger.LogCritical("{Message}", ex.Message);
+                _logger.LogCritical("{Source}", ex.Source);
+                _logger.LogCritical("{InnerException}", ex.InnerException);
+                _logger.LogCritical("{StackTrace}", ex.StackTrace);
                 return View();
             }
 
@@ -207,7 +195,7 @@ namespace SAMS.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var user = await _userManager.FindByIdAsync(id);
+            var user = await _userManager.FindByIdAsync(id).ConfigureAwait(true);
             if (user == null)
             {
                 return NotFound();
@@ -233,7 +221,7 @@ namespace SAMS.Areas.Admin.Controllers
             {
                 try
                 {
-                    var user = await _userManager.FindByIdAsync(id);
+                    var user = await _userManager.FindByIdAsync(id).ConfigureAwait(true);
                     if (user == null)
                     {
                         return NotFound();
@@ -246,25 +234,27 @@ namespace SAMS.Areas.Admin.Controllers
                     user.Role = model.Role;
 
                     // Get the current roles of the user
-                    var currentRoles = await _userManager.GetRolesAsync(user);
+                    var currentRoles = await _userManager.GetRolesAsync(user).ConfigureAwait(true);
 
                     // Remove the user from the current roles
-                    var removeResult = await _userManager.RemoveFromRolesAsync(user, currentRoles);
+                    var removeResult = await _userManager.RemoveFromRolesAsync(user, currentRoles).ConfigureAwait(true);
                     if (!removeResult.Succeeded)
                     {
+                        _logger.LogError("Failed to remove user roles.");
                         // Handle the error
-                        throw new Exception("Failed to remove user roles.");
+                        return RedirectToAction("Error", new {Message = "Failed to remove user roles."});
                     }
 
                     // Add the user to the new role
-                    var addResult = await _userManager.AddToRolesAsync(user, model.Role!);
+                    var addResult = await _userManager.AddToRolesAsync(user, model.Role!).ConfigureAwait(true);
                     if (!addResult.Succeeded)
                     {
+                        _logger.LogError("Failed to add user roles.");
                         // Handle the error
-                        throw new Exception("Failed to add user roles.");
+                        return RedirectToAction("Error", new { Message = "Failed to add user roles." });
                     }
 
-                    await _userManager.UpdateAsync(user);
+                    await _userManager.UpdateAsync(user).ConfigureAwait(true);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -285,7 +275,7 @@ namespace SAMS.Areas.Admin.Controllers
                 {
                     foreach (var modelError in modelState.Errors)
                     {
-                        _logger.LogCritical($"Error message: \n{modelError.ErrorMessage}");
+                        _logger.LogCritical("Error message: \n {ErrorMessage}", modelError.ErrorMessage);
                     }
                 }
             }
@@ -311,17 +301,19 @@ namespace SAMS.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var user = await _userManager.FindByIdAsync(id);
+            var user = await _userManager.FindByIdAsync(id).ConfigureAwait(true);
             if (user == null)
             {
                 return NotFound();
             }
 
-            var roles = await _userManager.GetRolesAsync(user) ?? throw new Exception("Unable to retrieve user roles. Please make sure you have assigned roles to the selected user. Use the Edit action to add roles to the user.");
+            var roles = await _userManager.GetRolesAsync(user).ConfigureAwait(true) ?? throw new Exception("Unable to retrieve user roles. Please make sure you have assigned roles to the selected user. Use the Edit action to add roles to the user.");
             foreach (var role in roles)
             {
                 if (role == null)
                 {
+                    return RedirectToAction("Error", new { Message = "Couldn't retrieve a role for the user."});
+
                     throw new NullReferenceException("Null reference to retrieval of user role.");
                 }
                 switch (role)
@@ -398,20 +390,20 @@ namespace SAMS.Areas.Admin.Controllers
         }
 
         // POST: AccountManager/Delete/5
-        [HttpPost, ActionName("Delete")]
+        [HttpPost, ActionName("DeleteConfirmed")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
             try
             {
-                var user = await _userManager.FindByIdAsync(id);
+                var user = await _userManager.FindByIdAsync(id).ConfigureAwait(true);
                 if (user == null)
                 {
                     return NotFound();
                 }
 
                 var schoolId = user.SchoolId ?? throw new Exception("Failed to retrieve School Id of the user for deletion.");
-                var roles = await _userManager.GetRolesAsync(user) ?? throw new Exception("Failed to retrieve user roles.");
+                var roles = await _userManager.GetRolesAsync(user).ConfigureAwait(true) ?? throw new Exception("Failed to retrieve user roles.");
                 foreach (var role in roles)
                 {
                     switch (role)
@@ -419,108 +411,108 @@ namespace SAMS.Areas.Admin.Controllers
                         case "Student":
                             {
                                 var studId = int.Parse(schoolId);
-                                var studentInfo = _context.studentInfoModels.Find(schoolId) ?? throw new Exception("Unable to retrieve student data for deletion.");
-                                var sem1sched = _context.sem1StudSchedules.Find(schoolId) ?? throw new Exception("Unable to retrieve student schedule 1 for deletion.");
-                                var sem2sched = _context.sem2StudSchedules.Find(schoolId) ?? throw new Exception("Unable to retrieve student schedule 2 for deletion.");
+                                var studentInfo = await _context.StudentInfoModels.FindAsync(studId).ConfigureAwait(true) ?? throw new Exception("Unable to retrieve student data for deletion.");
+                                var sem1sched = await _context.Sem1StudSchedules.FindAsync(studId).ConfigureAwait(true) ?? throw new Exception("Unable to retrieve student schedule 1 for deletion.");
+                                var sem2sched = await _context.Sem2StudSchedules.FindAsync(studId).ConfigureAwait(true) ?? throw new Exception("Unable to retrieve student schedule 2 for deletion.");
 
-                                var studInfoDeletion = _context.studentInfoModels.Remove(studentInfo);
-                                var sem1schedDeletion = _context.sem1StudSchedules.Remove(sem1sched);
-                                var sem2schedDeletion = _context.sem2StudSchedules.Remove(sem2sched);
-                                await _context.SaveChangesAsync();
+                                var studInfoDeletion = _context.StudentInfoModels.Remove(studentInfo);
+                                var sem1schedDeletion = _context.Sem1StudSchedules.Remove(sem1sched);
+                                var sem2schedDeletion = _context.Sem2StudSchedules.Remove(sem2sched);
+                                await _context.SaveChangesAsync().ConfigureAwait(true);
                                 break;
                             }
                         case "Teacher":
                             {
                                 var teacherid = schoolId;
-                                var courses = _context.activeCourseInfoModels.Where(a => a.CourseTeacherID == teacherid).ToList() ?? throw new Exception("Unable to retrieve teacher's courses for deletion.");
-                                var teacherInfo = _context.teacherInfoModels.Where(a => a.TeacherID == teacherid).ToList() ?? throw new Exception("Unable to retrieve teacher data for deletion.");
+                                var courses = _context.ActiveCourseInfoModels.Where(a => a.CourseTeacherID == teacherid).ToList() ?? throw new Exception("Unable to retrieve teacher's courses for deletion.");
+                                var teacherInfo = _context.TeacherInfoModels.Where(a => a.TeacherID == teacherid).ToList() ?? throw new Exception("Unable to retrieve teacher data for deletion.");
 
                                 var deletion1 = _context.Remove(courses);
                                 var deletion2 = _context.Remove(teacherInfo);
-                                await _context.SaveChangesAsync();
+                                await _context.SaveChangesAsync().ConfigureAwait(true);
                                 break;
                             }
                         case "Attendance Office Member":
                             {
                                 var attid = schoolId;
-                                var attinfo = _context.attendanceOfficeMemberModels.Where(a => a.AoMemberID == attid).ToList() ?? throw new Exception("Unable to retrieve attendance office member data for deletion.");
+                                var attinfo = _context.AttendanceOfficeMemberModels.Where(a => a.AoMemberID == attid).ToList() ?? throw new Exception("Unable to retrieve attendance office member data for deletion.");
 
                                 var deletion = _context.Remove(attinfo);
-                                await _context.SaveChangesAsync();
+                                await _context.SaveChangesAsync().ConfigureAwait(true);
                                 break;
                             }
                         case "HS School Admin":
                             {
                                 var adminid = schoolId;
-                                var admininfo = _context.adminInfoModels.Where(a => a.AdminID == adminid).ToList() ?? throw new Exception("Unable to retrieve admin data for deletion.");
+                                var admininfo = _context.AdminInfoModels.Where(a => a.AdminID == adminid).ToList() ?? throw new Exception("Unable to retrieve admin data for deletion.");
 
                                 var deletion = _context.Remove(admininfo);
-                                await _context.SaveChangesAsync();
+                                await _context.SaveChangesAsync().ConfigureAwait(true);
                                 break;
                             }
                         case "Synnovation Lab Admin":
                             {
                                 var adminid = schoolId;
-                                var admininfo = _context.adminInfoModels.Where(a => a.AdminID == adminid).ToList() ?? throw new Exception("Unable to retrieve admin data for deletion.");
+                                var admininfo = _context.AdminInfoModels.Where(a => a.AdminID == adminid).ToList() ?? throw new Exception("Unable to retrieve admin data for deletion.");
 
                                 var deletion = _context.Remove(admininfo);
-                                await _context.SaveChangesAsync();
+                                await _context.SaveChangesAsync().ConfigureAwait(true);
                                 break;
                             }
                         case "Education Support (EA)":
                             {
                                 var eaid = schoolId;
-                                var eainfo = _context.eASuportInfoModels.Where(a => a.EaID == eaid).ToList() ?? throw new Exception("Unable to retrieve ea data for deletion.");
+                                var eainfo = _context.EASuportInfoModels.Where(a => a.EaID == eaid).ToList() ?? throw new Exception("Unable to retrieve ea data for deletion.");
 
                                 var deletion = _context.Remove(eainfo);
-                                await _context.SaveChangesAsync();
+                                await _context.SaveChangesAsync().ConfigureAwait(true);
                                 break;
                             }
                         case "Nurse":
                             {
                                 var nurseid = schoolId;
-                                var nurseinfo = _context.nurseInfoModels.Where(a => a.NurseID == nurseid).ToList() ?? throw new Exception("Unable to retrieve nurse data for deletion.");
+                                var nurseinfo = _context.NurseInfoModels.Where(a => a.NurseID == nurseid).ToList() ?? throw new Exception("Unable to retrieve nurse data for deletion.");
 
                                 var deletion = _context.Remove(nurseinfo);
-                                await _context.SaveChangesAsync();
+                                await _context.SaveChangesAsync().ConfigureAwait(true);
                                 break;
                             }
                         case "Law Enforcement":
                             {
                                 var adminid = schoolId;
-                                var admininfo = _context.lawEnforcementInfoModels.Where(a => a.LawenfID == adminid).ToList() ?? throw new Exception("Unable to retrieve law enforcement officer data for deletion.");
+                                var admininfo = _context.LawEnforcementInfoModels.Where(a => a.LawenfID == adminid).ToList() ?? throw new Exception("Unable to retrieve law enforcement officer data for deletion.");
 
                                 var deletion = _context.Remove(admininfo);
-                                await _context.SaveChangesAsync();
+                                await _context.SaveChangesAsync().ConfigureAwait(true);
                                 break;
                             }
-                        case "Synnovation Lab QR Code Scanner Management":
-                            {
-                                var adminid = schoolId;
-                                var admininfo = _context.synnLabQRNodeModels.Where(a => a.ScannerID == adminid).ToList() ?? throw new Exception("Unable to retrieve scanner node data for deletion.");
+                        //case "Synnovation Lab QR Code Scanner Management":
+                        //    {
+                        //        var adminid = schoolId;
+                        //        var admininfo = _context.HandheldScannerNodeModels.Where(a => a.ScannerID == adminid).ToList() ?? throw new Exception("Unable to retrieve scanner node data for deletion.");
 
-                                var deletion = _context.Remove(admininfo);
-                                await _context.SaveChangesAsync();
-                                break;
-                            }
+                        //        var deletion = _context.Remove(admininfo);
+                        //        await _context.SaveChangesAsync().ConfigureAwait(true);
+                        //        break;
+                        //    }
                         case "Substitute Teacher":
                             {
                                 var teacherid = schoolId;
-                                var courses = _context.activeCourseInfoModels.Where(a => a.CourseTeacherID == teacherid).ToList() ?? throw new Exception("Unable to retrieve teacher's courses for deletion.");
-                                var teacherInfo = _context.teacherInfoModels.Where(a => a.TeacherID == teacherid).ToList() ?? throw new Exception("Unable to retrieve teacher data for deletion.");
+                                var courses = _context.ActiveCourseInfoModels.Where(a => a.CourseTeacherID == teacherid).ToList() ?? throw new Exception("Unable to retrieve teacher's courses for deletion.");
+                                var teacherInfo = _context.TeacherInfoModels.Where(a => a.TeacherID == teacherid).ToList() ?? throw new Exception("Unable to retrieve teacher data for deletion.");
 
                                 var deletion1 = _context.Remove(courses);
                                 var deletion2 = _context.Remove(teacherInfo);
-                                await _context.SaveChangesAsync();
+                                await _context.SaveChangesAsync().ConfigureAwait(true);
                                 break;
                             }
                         case "District Admin":
                             {
                                 var adminid = schoolId;
-                                var admininfo = _context.adminInfoModels.Where(a => a.AdminID == adminid).ToList() ?? throw new Exception("Unable to retrieve admin data for deletion.");
+                                var admininfo = _context.AdminInfoModels.Where(a => a.AdminID == adminid).ToList() ?? throw new Exception("Unable to retrieve admin data for deletion.");
 
                                 var deletion = _context.Remove(admininfo);
-                                await _context.SaveChangesAsync();
+                                await _context.SaveChangesAsync().ConfigureAwait(true);
                                 break;
                             }
                         case "Developer":
@@ -533,7 +525,7 @@ namespace SAMS.Areas.Admin.Controllers
                             }
                     }
                 }
-                var result = await _userManager.DeleteAsync(user);
+                var result = await _userManager.DeleteAsync(user).ConfigureAwait(true);
                 if (!result.Succeeded)
                 {
                     // Handle the error
@@ -542,11 +534,65 @@ namespace SAMS.Areas.Admin.Controllers
 
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (Exception ex)
             {
+                _logger.LogCritical("{Exception}", ex.ToString());
+
                 return View();
             }
 
         }
+
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult Error(string Message)
+        {
+            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier, Message = Message });
+        }
+
+        // Dispose method to handle unmanaged resources
+        protected virtual new void Dispose(bool disposing)
+        {
+            if (!_disposed)
+            {
+                if (disposing)
+                {
+                    // Dispose managed resources
+                    _emailStore?.Dispose();
+                }
+                _disposed = true;
+            }
+        }
+
+        // Public dispose method to be called by consumers
+        public new void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        ~AccountManagerController()
+        {
+            Dispose(false);
+        }
+    }
+
+    public class InputModel
+    {
+        [EmailAddress]
+        [Display(Name = "Email")]
+        public required string Email { get; set; }
+
+
+        [StringLength(32, ErrorMessage = "The Unique Code must be at least {2} and at max {1} characters long.", MinimumLength = 32)]
+        [Display(Name = "Unique Code")]
+        public required string ActivationCode { get; set; }
+
+
+        [Display(Name = "School Id")]
+        public required string SchoolId { get; set; }
+
+
+        [Display(Name = "Role(s)")]
+        public required IList<string> Role { get; init; }
     }
 }

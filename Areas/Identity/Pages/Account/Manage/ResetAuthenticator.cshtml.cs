@@ -12,21 +12,15 @@ using SAMS.Controllers;
 
 namespace SAMS.Areas.Identity.Pages.Account.Manage
 {
-    public class ResetAuthenticatorModel : PageModel
-    {
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly SignInManager<ApplicationUser> _signInManager;
-        private readonly ILogger<ResetAuthenticatorModel> _logger;
-
-        public ResetAuthenticatorModel(
+    public class ResetAuthenticatorModel(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
-            ILogger<ResetAuthenticatorModel> logger)
-        {
-            _userManager = userManager;
-            _signInManager = signInManager;
-            _logger = logger;
-        }
+            ILogger<ResetAuthenticatorModel> logger) : PageModel
+    {
+        private readonly UserManager<ApplicationUser> _userManager = userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager = signInManager;
+        private readonly ILogger<ResetAuthenticatorModel> _logger = logger;
+
 
         /// <summary>
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
@@ -56,7 +50,9 @@ namespace SAMS.Areas.Identity.Pages.Account.Manage
 
             await _userManager.SetTwoFactorEnabledAsync(user, false);
             await _userManager.ResetAuthenticatorKeyAsync(user);
+#pragma warning disable IDE0059 // Unnecessary assignment of a value
             var userId = await _userManager.GetUserIdAsync(user);
+#pragma warning restore IDE0059 // Unnecessary assignment of a value
             _logger.LogInformation("User with ID '{UserId}' has reset their authentication app key.", user.Id);
 
             await _signInManager.RefreshSignInAsync(user);

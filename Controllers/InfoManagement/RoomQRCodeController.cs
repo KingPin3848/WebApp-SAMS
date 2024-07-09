@@ -10,19 +10,14 @@ using SAMS.Models;
 
 namespace SAMS.Controllers.InfoManagement
 {
-    public class RoomQRCodeController : Controller
+    public class RoomQRCodeController(ApplicationDbContext context) : Controller
     {
-        private readonly ApplicationDbContext _context;
-
-        public RoomQRCodeController(ApplicationDbContext context)
-        {
-            _context = context;
-        }
+        private readonly ApplicationDbContext _context = context;
 
         // GET: RoomQRCode
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.roomQRCodeModels.Include(r => r.Room);
+            var applicationDbContext = _context.RoomQRCodeModels.Include(r => r.Room);
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -34,7 +29,7 @@ namespace SAMS.Controllers.InfoManagement
                 return NotFound();
             }
 
-            var roomQRCodeModel = await _context.roomQRCodeModels
+            var roomQRCodeModel = await _context.RoomQRCodeModels
                 .Include(r => r.Room)
                 .FirstOrDefaultAsync(m => m.RoomId == id);
             if (roomQRCodeModel == null)
@@ -48,7 +43,7 @@ namespace SAMS.Controllers.InfoManagement
         // GET: RoomQRCode/Create
         public IActionResult Create()
         {
-            ViewData["RoomId"] = new SelectList(_context.roomLocationInfoModels, "RoomNumberMod", "RoomNumberMod");
+            ViewData["RoomId"] = new SelectList(_context.RoomLocationInfoModels, "RoomNumberMod", "RoomNumberMod");
             return View();
         }
 
@@ -65,7 +60,7 @@ namespace SAMS.Controllers.InfoManagement
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["RoomId"] = new SelectList(_context.roomLocationInfoModels, "RoomNumberMod", "RoomNumberMod", roomQRCodeModel.RoomId);
+            ViewData["RoomId"] = new SelectList(_context.RoomLocationInfoModels, "RoomNumberMod", "RoomNumberMod", roomQRCodeModel.RoomId);
             return View(roomQRCodeModel);
         }
 
@@ -77,12 +72,12 @@ namespace SAMS.Controllers.InfoManagement
                 return NotFound();
             }
 
-            var roomQRCodeModel = await _context.roomQRCodeModels.FindAsync(id);
+            var roomQRCodeModel = await _context.RoomQRCodeModels.FindAsync(id);
             if (roomQRCodeModel == null)
             {
                 return NotFound();
             }
-            ViewData["RoomId"] = new SelectList(_context.roomLocationInfoModels, "RoomNumberMod", "RoomNumberMod", roomQRCodeModel.RoomId);
+            ViewData["RoomId"] = new SelectList(_context.RoomLocationInfoModels, "RoomNumberMod", "RoomNumberMod", roomQRCodeModel.RoomId);
             return View(roomQRCodeModel);
         }
 
@@ -118,7 +113,7 @@ namespace SAMS.Controllers.InfoManagement
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["RoomId"] = new SelectList(_context.roomLocationInfoModels, "RoomNumberMod", "RoomNumberMod", roomQRCodeModel.RoomId);
+            ViewData["RoomId"] = new SelectList(_context.RoomLocationInfoModels, "RoomNumberMod", "RoomNumberMod", roomQRCodeModel.RoomId);
             return View(roomQRCodeModel);
         }
 
@@ -130,7 +125,7 @@ namespace SAMS.Controllers.InfoManagement
                 return NotFound();
             }
 
-            var roomQRCodeModel = await _context.roomQRCodeModels
+            var roomQRCodeModel = await _context.RoomQRCodeModels
                 .Include(r => r.Room)
                 .FirstOrDefaultAsync(m => m.RoomId == id);
             if (roomQRCodeModel == null)
@@ -146,10 +141,10 @@ namespace SAMS.Controllers.InfoManagement
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var roomQRCodeModel = await _context.roomQRCodeModels.FindAsync(id);
+            var roomQRCodeModel = await _context.RoomQRCodeModels.FindAsync(id);
             if (roomQRCodeModel != null)
             {
-                _context.roomQRCodeModels.Remove(roomQRCodeModel);
+                _context.RoomQRCodeModels.Remove(roomQRCodeModel);
             }
 
             await _context.SaveChangesAsync();
@@ -158,7 +153,7 @@ namespace SAMS.Controllers.InfoManagement
 
         private bool RoomQRCodeModelExists(int id)
         {
-            return _context.roomQRCodeModels.Any(e => e.RoomId == id);
+            return _context.RoomQRCodeModels.Any(e => e.RoomId == id);
         }
     }
 }

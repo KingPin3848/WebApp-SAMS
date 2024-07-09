@@ -14,24 +14,17 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 namespace SAMS.Areas.Identity.Pages.Activation
 {
     [AllowAnonymous]
-    public class ActivateModel : PageModel
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+    public class ActivateModel(/*UserManager<ApplicationUser> userManager, */SignInManager<ApplicationUser> signInManager, ILogger<ActivateModel> logger, IServiceScopeFactory serviceScopeFactory) : PageModel
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
     {
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly SignInManager<ApplicationUser> _signInManager;
-        private readonly ILogger<ActivateModel> _logger;
-        private readonly IServiceScopeFactory _serviceScopeFactory;
+        //private readonly UserManager<ApplicationUser> _userManager = userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager = signInManager;
+        private readonly ILogger<ActivateModel> _logger = logger;
+        private readonly IServiceScopeFactory _serviceScopeFactory = serviceScopeFactory;
 
         [TempData]
         public string? StatusMessage { get; set; }
-
-        public ActivateModel(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, ILogger<ActivateModel> logger, IServiceScopeFactory serviceScopeFactory)
-        {
-            _userManager = userManager;
-            Input = new InputModel();
-            _signInManager = signInManager;
-            _logger = logger;
-            _serviceScopeFactory = serviceScopeFactory;
-        }
 
         public void OnGet()
         {
@@ -113,12 +106,12 @@ namespace SAMS.Areas.Identity.Pages.Activation
                         return Page();
                     }
                 }
-                else
-                {
-                    foundUser.UserExperienceEnabled = false;
-                    await userManager.UpdateAsync(foundUser);
-                    return RedirectToPage("UserNotFound");
-                }
+                //else
+                //{
+                //    foundUser.UserExperienceEnabled = false;
+                //    await userManager.UpdateAsync(foundUser);
+                //    return RedirectToPage("UserNotFound");
+                //}
             }
             else
             {
@@ -126,7 +119,7 @@ namespace SAMS.Areas.Identity.Pages.Activation
                 {
                     foreach (var modelError in modelState.Errors)
                     {
-                        _logger.LogCritical($"Error message: \n{modelError.ErrorMessage}");
+                        _logger.LogCritical("Error message: \n {ErrorMessage}", modelError.ErrorMessage);
                     }
                 }
             }

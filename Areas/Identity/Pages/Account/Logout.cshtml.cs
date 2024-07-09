@@ -13,16 +13,10 @@ using SAMS.Controllers;
 
 namespace SAMS.Areas.Identity.Pages.Account
 {
-    public class LogoutModel : PageModel
+    public class LogoutModel(SignInManager<ApplicationUser> signInManager, ILogger<LogoutModel> logger) : PageModel
     {
-        private readonly SignInManager<ApplicationUser> _signInManager;
-        private readonly ILogger<LogoutModel> _logger;
-
-        public LogoutModel(SignInManager<ApplicationUser> signInManager, ILogger<LogoutModel> logger)
-        {
-            _signInManager = signInManager;
-            _logger = logger;
-        }
+        private readonly SignInManager<ApplicationUser> _signInManager = signInManager;
+        private readonly ILogger<LogoutModel> _logger = logger;
 
         public async Task<IActionResult> OnPost(string returnUrl = null)
         {

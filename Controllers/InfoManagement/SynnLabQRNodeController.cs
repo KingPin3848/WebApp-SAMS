@@ -10,45 +10,49 @@ using SAMS.Models;
 
 namespace SAMS.Controllers.InfoManagement
 {
-    public class SynnLabQRNodeController : Controller
+    public class SynnLabQRNodeController(IServiceScopeFactory serviceScopeFactory) : Controller
     {
-        private readonly ApplicationDbContext _context;
-
-        public SynnLabQRNodeController(ApplicationDbContext context)
-        {
-            _context = context;
-        }
+        private readonly IServiceScopeFactory _scopeFactory = serviceScopeFactory;
 
         // GET: SynnLabQRNode
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.synnLabQRNodeModels.Include(s => s.Room);
-            return View(await applicationDbContext.ToListAsync());
+            using var scope = _scopeFactory.CreateAsyncScope();
+            using var _context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
+            var applicationDbContext = _context.HandheldScannerNodeModels.Include(h => h.Room);
+            return View(await applicationDbContext.ToListAsync().ConfigureAwait(true));
         }
 
         // GET: SynnLabQRNode/Details/5
-        public async Task<IActionResult> Details(string id)
+        public async Task<IActionResult> Details(int? id)
         {
+            using var scope = _scopeFactory.CreateAsyncScope();
+            using var _context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
             if (id == null)
             {
                 return NotFound();
             }
 
-            var synnLabQRNodeModel = await _context.synnLabQRNodeModels
-                .Include(s => s.Room)
-                .FirstOrDefaultAsync(m => m.ScannerID == id);
-            if (synnLabQRNodeModel == null)
+            var handheldScannerNodeModel = await _context.HandheldScannerNodeModels
+                .Include(h => h.Room)
+                .FirstOrDefaultAsync(m => m.ScannerID == id).ConfigureAwait(true);
+            if (handheldScannerNodeModel == null)
             {
                 return NotFound();
             }
 
-            return View(synnLabQRNodeModel);
+            return View(handheldScannerNodeModel);
         }
 
         // GET: SynnLabQRNode/Create
         public IActionResult Create()
         {
-            ViewData["SynnlabRoomIDMod"] = new SelectList(_context.roomLocationInfoModels, "RoomNumberMod", "RoomNumberMod");
+            using var scope = _scopeFactory.CreateAsyncScope();
+            using var _context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
+            ViewData["RoomIDMod"] = new SelectList(_context.RoomLocationInfoModels, "RoomNumberMod", "RoomNumberMod");
             return View();
         }
 
@@ -57,33 +61,44 @@ namespace SAMS.Controllers.InfoManagement
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ScannerID,SynnlabRoomIDMod,ScannerMacAddressMod,ModelNumberMod,ScannerDeviceIPAddressMod,ScannerLabelMod")] SynnLabQRNodeModel synnLabQRNodeModel)
+        public async Task<IActionResult> Create([Bind("ScannerID,RoomIDMod,SerialNumberMod")] HandheldScannerNodeModel handheldScannerNodeModel)
         {
+            if (handheldScannerNodeModel == null)
+            {
+                return NotFound();
+            }
+
+            using var scope = _scopeFactory.CreateAsyncScope();
+            using var _context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
             if (ModelState.IsValid)
             {
-                _context.Add(synnLabQRNodeModel);
-                await _context.SaveChangesAsync();
+                _context.Add(handheldScannerNodeModel);
+                await _context.SaveChangesAsync().ConfigureAwait(true);
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["SynnlabRoomIDMod"] = new SelectList(_context.roomLocationInfoModels, "RoomNumberMod", "RoomNumberMod", synnLabQRNodeModel.SynnlabRoomIDMod);
-            return View(synnLabQRNodeModel);
+            ViewData["RoomIDMod"] = new SelectList(_context.RoomLocationInfoModels, "RoomNumberMod", "RoomNumberMod", handheldScannerNodeModel.RoomIDMod);
+            return View(handheldScannerNodeModel);
         }
 
         // GET: SynnLabQRNode/Edit/5
-        public async Task<IActionResult> Edit(string id)
+        public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var synnLabQRNodeModel = await _context.synnLabQRNodeModels.FindAsync(id);
-            if (synnLabQRNodeModel == null)
+            using var scope = _scopeFactory.CreateAsyncScope();
+            using var _context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
+            var handheldScannerNodeModel = await _context.HandheldScannerNodeModels.FindAsync(id).ConfigureAwait(true);
+            if (handheldScannerNodeModel == null)
             {
                 return NotFound();
             }
-            ViewData["SynnlabRoomIDMod"] = new SelectList(_context.roomLocationInfoModels, "RoomNumberMod", "RoomNumberMod", synnLabQRNodeModel.SynnlabRoomIDMod);
-            return View(synnLabQRNodeModel);
+            ViewData["RoomIDMod"] = new SelectList(_context.RoomLocationInfoModels, "RoomNumberMod", "RoomNumberMod", handheldScannerNodeModel.RoomIDMod);
+            return View(handheldScannerNodeModel);
         }
 
         // POST: SynnLabQRNode/Edit/5
@@ -91,23 +106,31 @@ namespace SAMS.Controllers.InfoManagement
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("ScannerID,SynnlabRoomIDMod,ScannerMacAddressMod,ModelNumberMod,ScannerDeviceIPAddressMod,ScannerLabelMod")] SynnLabQRNodeModel synnLabQRNodeModel)
+        public async Task<IActionResult> Edit(int id, [Bind("ScannerID,RoomIDMod,SerialNumberMod")] HandheldScannerNodeModel handheldScannerNodeModel)
         {
-            if (id != synnLabQRNodeModel.ScannerID)
+            if (handheldScannerNodeModel is null)
             {
                 return NotFound();
             }
+
+            if (id != handheldScannerNodeModel.ScannerID)
+            {
+                return NotFound();
+            }
+
+            using var scope = _scopeFactory.CreateAsyncScope();
+            using var _context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(synnLabQRNodeModel);
-                    await _context.SaveChangesAsync();
+                    _context.Update(handheldScannerNodeModel);
+                    await _context.SaveChangesAsync().ConfigureAwait(true);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!SynnLabQRNodeModelExists(synnLabQRNodeModel.ScannerID))
+                    if (!HandheldScannerNodeModelExists(handheldScannerNodeModel.ScannerID))
                     {
                         return NotFound();
                     }
@@ -118,47 +141,56 @@ namespace SAMS.Controllers.InfoManagement
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["SynnlabRoomIDMod"] = new SelectList(_context.roomLocationInfoModels, "RoomNumberMod", "RoomNumberMod", synnLabQRNodeModel.SynnlabRoomIDMod);
-            return View(synnLabQRNodeModel);
+            ViewData["RoomIDMod"] = new SelectList(_context.RoomLocationInfoModels, "RoomNumberMod", "RoomNumberMod", handheldScannerNodeModel.RoomIDMod);
+            return View(handheldScannerNodeModel);
         }
 
         // GET: SynnLabQRNode/Delete/5
-        public async Task<IActionResult> Delete(string id)
+        public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var synnLabQRNodeModel = await _context.synnLabQRNodeModels
-                .Include(s => s.Room)
-                .FirstOrDefaultAsync(m => m.ScannerID == id);
-            if (synnLabQRNodeModel == null)
+            using var scope = _scopeFactory.CreateAsyncScope();
+            using var _context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
+            var handheldScannerNodeModel = await _context.HandheldScannerNodeModels
+                .Include(h => h.Room)
+                .FirstOrDefaultAsync(m => m.ScannerID == id).ConfigureAwait(true);
+            if (handheldScannerNodeModel == null)
             {
                 return NotFound();
             }
 
-            return View(synnLabQRNodeModel);
+            return View(handheldScannerNodeModel);
         }
 
         // POST: SynnLabQRNode/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(string id)
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var synnLabQRNodeModel = await _context.synnLabQRNodeModels.FindAsync(id);
-            if (synnLabQRNodeModel != null)
+            using var scope = _scopeFactory.CreateAsyncScope();
+            using var _context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
+            var handheldScannerNodeModel = await _context.HandheldScannerNodeModels.FindAsync(id).ConfigureAwait(true);
+            if (handheldScannerNodeModel != null)
             {
-                _context.synnLabQRNodeModels.Remove(synnLabQRNodeModel);
+                _context.HandheldScannerNodeModels.Remove(handheldScannerNodeModel);
             }
 
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync().ConfigureAwait(true);
             return RedirectToAction(nameof(Index));
         }
 
-        private bool SynnLabQRNodeModelExists(string id)
+        private bool HandheldScannerNodeModelExists(int id)
         {
-            return _context.synnLabQRNodeModels.Any(e => e.ScannerID == id);
+            using var scope = _scopeFactory.CreateAsyncScope();
+            using var _context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
+            return _context.HandheldScannerNodeModels.Any(e => e.ScannerID == id);
         }
     }
 }

@@ -15,21 +15,14 @@ using SAMS.Controllers;
 
 namespace SAMS.Areas.Identity.Pages.Account.Manage
 {
-    public class ExternalLoginsModel : PageModel
-    {
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly SignInManager<ApplicationUser> _signInManager;
-        private readonly IUserStore<ApplicationUser> _userStore;
-
-        public ExternalLoginsModel(
+    public class ExternalLoginsModel(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
-            IUserStore<ApplicationUser> userStore)
-        {
-            _userManager = userManager;
-            _signInManager = signInManager;
-            _userStore = userStore;
-        }
+            IUserStore<ApplicationUser> userStore) : PageModel
+    {
+        private readonly UserManager<ApplicationUser> _userManager = userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager = signInManager;
+        private readonly IUserStore<ApplicationUser> _userStore = userStore;
 
         /// <summary>
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
@@ -119,12 +112,7 @@ namespace SAMS.Areas.Identity.Pages.Account.Manage
             }
 
             var userId = await _userManager.GetUserIdAsync(user);
-            var info = await _signInManager.GetExternalLoginInfoAsync(userId);
-            if (info == null)
-            {
-                throw new InvalidOperationException($"Unexpected error occurred loading external login info.");
-            }
-
+            var info = await _signInManager.GetExternalLoginInfoAsync(userId) ?? throw new InvalidOperationException($"Unexpected error occurred loading external login info.");
             var result = await _userManager.AddLoginAsync(user, info);
             if (!result.Succeeded)
             {

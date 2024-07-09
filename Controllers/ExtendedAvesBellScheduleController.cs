@@ -10,32 +10,27 @@ using SAMS.Models;
 
 namespace SAMS.Controllers
 {
-    public class ExtendedAvesBellScheduleController : Controller
+    public class ExtendedAvesBellScheduleController(ApplicationDbContext context) : Controller
     {
-        private readonly ApplicationDbContext _context;
-
-        public ExtendedAvesBellScheduleController(ApplicationDbContext context)
-        {
-            _context = context;
-        }
+        private readonly ApplicationDbContext _context = context;
 
         // GET: ExtendedAvesBellSchedule
         public async Task<IActionResult> Index()
         {
-              return _context.extendedAvesModels != null ? 
-                          View(await _context.extendedAvesModels.ToListAsync()) :
+              return _context.ExtendedAvesModels != null ? 
+                          View(await _context.ExtendedAvesModels.ToListAsync()) :
                           Problem("Entity set 'ApplicationDbContext.extendedAvesModels'  is null.");
         }
 
         // GET: ExtendedAvesBellSchedule/Details/5
         public async Task<IActionResult> Details(TimeSpan? id)
         {
-            if (id == null || _context.extendedAvesModels == null)
+            if (id == null || _context.ExtendedAvesModels == null)
             {
                 return NotFound();
             }
 
-            var extendedAvesBellScheduleModel = await _context.extendedAvesModels
+            var extendedAvesBellScheduleModel = await _context.ExtendedAvesModels
                 .FirstOrDefaultAsync(m => m.StartTime == id);
             if (extendedAvesBellScheduleModel == null)
             {
@@ -70,12 +65,12 @@ namespace SAMS.Controllers
         // GET: ExtendedAvesBellSchedule/Edit/5
         public async Task<IActionResult> Edit(TimeSpan? id)
         {
-            if (id == null || _context.extendedAvesModels == null)
+            if (id == null || _context.ExtendedAvesModels == null)
             {
                 return NotFound();
             }
 
-            var extendedAvesBellScheduleModel = await _context.extendedAvesModels.FindAsync(id);
+            var extendedAvesBellScheduleModel = await _context.ExtendedAvesModels.FindAsync(id);
             if (extendedAvesBellScheduleModel == null)
             {
                 return NotFound();
@@ -121,12 +116,12 @@ namespace SAMS.Controllers
         // GET: ExtendedAvesBellSchedule/Delete/5
         public async Task<IActionResult> Delete(TimeSpan? id)
         {
-            if (id == null || _context.extendedAvesModels == null)
+            if (id == null || _context.ExtendedAvesModels == null)
             {
                 return NotFound();
             }
 
-            var extendedAvesBellScheduleModel = await _context.extendedAvesModels
+            var extendedAvesBellScheduleModel = await _context.ExtendedAvesModels
                 .FirstOrDefaultAsync(m => m.StartTime == id);
             if (extendedAvesBellScheduleModel == null)
             {
@@ -141,14 +136,14 @@ namespace SAMS.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(TimeSpan id)
         {
-            if (_context.extendedAvesModels == null)
+            if (_context.ExtendedAvesModels == null)
             {
                 return Problem("Entity set 'ApplicationDbContext.extendedAvesModels'  is null.");
             }
-            var extendedAvesBellScheduleModel = await _context.extendedAvesModels.FindAsync(id);
+            var extendedAvesBellScheduleModel = await _context.ExtendedAvesModels.FindAsync(id);
             if (extendedAvesBellScheduleModel != null)
             {
-                _context.extendedAvesModels.Remove(extendedAvesBellScheduleModel);
+                _context.ExtendedAvesModels.Remove(extendedAvesBellScheduleModel);
             }
             
             await _context.SaveChangesAsync();
@@ -157,7 +152,7 @@ namespace SAMS.Controllers
 
         private bool ExtendedAvesBellScheduleModelExists(TimeSpan id)
         {
-          return (_context.extendedAvesModels?.Any(e => e.StartTime == id)).GetValueOrDefault();
+          return (_context.ExtendedAvesModels?.Any(e => e.StartTime == id)).GetValueOrDefault();
         }
     }
 }

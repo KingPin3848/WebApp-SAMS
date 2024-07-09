@@ -16,21 +16,14 @@ using SAMS.Controllers;
 
 namespace SAMS.Areas.Identity.Pages.Account.Manage
 {
-    public class EmailModel : PageModel
-    {
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly SignInManager<ApplicationUser> _signInManager;
-        private readonly IEmailSender _emailSender;
-
-        public EmailModel(
+    public class EmailModel(
             UserManager<ApplicationUser> userManager,
-            SignInManager<ApplicationUser> signInManager,
-            IEmailSender emailSender)
-        {
-            _userManager = userManager;
-            _signInManager = signInManager;
-            _emailSender = emailSender;
-        }
+            //SignInManager<ApplicationUser> signInManager,
+            IEmailSender emailSender) : PageModel
+    {
+        private readonly UserManager<ApplicationUser> _userManager = userManager;
+        //private readonly SignInManager<ApplicationUser> _signInManager = signInManager;
+        private readonly IEmailSender _emailSender = emailSender;
 
         /// <summary>
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
@@ -119,11 +112,13 @@ namespace SAMS.Areas.Identity.Pages.Account.Manage
                 var userId = await _userManager.GetUserIdAsync(user);
                 var code = await _userManager.GenerateChangeEmailTokenAsync(user, Input.NewEmail);
                 code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+#pragma warning disable IDE0037 // Use inferred member name
                 var callbackUrl = Url.Page(
                     "/Account/ConfirmEmailChange",
                     pageHandler: null,
                     values: new { area = "Identity", userId = userId, email = Input.NewEmail, code = code },
                     protocol: Request.Scheme);
+#pragma warning restore IDE0037 // Use inferred member name
                 await _emailSender.SendEmailAsync(
                     Input.NewEmail,
                     "Confirm your email",
@@ -155,11 +150,13 @@ namespace SAMS.Areas.Identity.Pages.Account.Manage
             var email = await _userManager.GetEmailAsync(user);
             var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
             code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+#pragma warning disable IDE0037 // Use inferred member name
             var callbackUrl = Url.Page(
                 "/Account/ConfirmEmail",
                 pageHandler: null,
                 values: new { area = "Identity", userId = userId, code = code },
                 protocol: Request.Scheme);
+#pragma warning restore IDE0037 // Use inferred member name
             await _emailSender.SendEmailAsync(
                 email,
                 "Confirm your email",

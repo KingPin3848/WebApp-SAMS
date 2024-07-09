@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using SAMS.Models;
 using System.ComponentModel.DataAnnotations;
+using System.Security.Cryptography;
 
 namespace SAMS.Controllers
 {
@@ -8,11 +9,11 @@ namespace SAMS.Controllers
     {
         [Required]
         [Display(Name = "School Id")]
-        public string? SchoolId { get; set; } = null!;
+        public string SchoolId { get; set; } = null!;
         [Required]
         [StringLength(32, ErrorMessage = "The Unique Code must be at least {2} and at max {1} characters long.", MinimumLength = 32)]
         [Display(Name = "Unique Code")]
-        public string? ActivationCode {  get; set; } = null!;
+        public string ActivationCode {  get; set; } = null!;
         [Display(Name = "Enable User Experience")]
         public Boolean? UserExperienceEnabled { get; set; }
         [Required]
@@ -22,5 +23,16 @@ namespace SAMS.Controllers
         [EmailAddress]
         [Display(Name = "School Issued Email Address")]
         public override string? Email { get => base.Email; set => base.Email = value; }
+
+        [Required]
+        [Range(0000, 9999)]
+        private int StudPin;
+
+        public int StudentPin
+        {
+            get { return StudPin; }
+            private set { StudPin = RandomNumberGenerator.GetInt32(0000,9999); }
+        }
+
     }
 }

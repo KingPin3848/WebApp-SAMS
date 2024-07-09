@@ -23,29 +23,20 @@ using Microsoft.AspNetCore.Authentication.Google;
 namespace SAMS.Areas.Identity.Pages.Account
 {
     [AllowAnonymous]
-    public class ExternalLoginModel : PageModel
-    {
-        private readonly SignInManager<ApplicationUser> _signInManager;
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly IUserStore<ApplicationUser> _userStore;
-        private readonly IUserEmailStore<ApplicationUser> _emailStore;
-        private readonly IEmailSender _emailSender;
-        private readonly ILogger<ExternalLoginModel> _logger;
-
-        public ExternalLoginModel(
+    public class ExternalLoginModel(
             SignInManager<ApplicationUser> signInManager,
             UserManager<ApplicationUser> userManager,
             IUserStore<ApplicationUser> userStore,
-            ILogger<ExternalLoginModel> logger,
-            IEmailSender emailSender)
-        {
-            _signInManager = signInManager;
-            _userManager = userManager;
-            _userStore = userStore;
-            _emailStore = GetEmailStore();
-            _logger = logger;
-            _emailSender = emailSender;
-        }
+            ILogger<ExternalLoginModel> logger
+            /*IEmailSender emailSender*/) : PageModel
+    {
+        private readonly SignInManager<ApplicationUser> _signInManager = signInManager;
+        private readonly UserManager<ApplicationUser> _userManager = userManager;
+        private readonly IUserStore<ApplicationUser> _userStore = userStore;
+        //private readonly IUserEmailStore<ApplicationUser> _emailStore = GetEmailStore();
+        //private readonly IEmailSender _emailSender = emailSender;
+        private readonly ILogger<ExternalLoginModel> _logger = logger;
+
 
         /// <summary>
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
@@ -72,6 +63,8 @@ namespace SAMS.Areas.Identity.Pages.Account
         /// </summary>
         [TempData]
         public string ErrorMessage { get; set; }
+
+        public IUserEmailStore<ApplicationUser> EmailStore => GetEmailStore();
 
         /// <summary>
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
@@ -173,79 +166,6 @@ namespace SAMS.Areas.Identity.Pages.Account
                 return RedirectToPage("EmailUnmatch");
             }
         }
-
-        //public async Task<IActionResult> OnPostConfirmationAsync(string returnUrl = null)
-        //{
-        //    returnUrl = returnUrl ?? Url.Content("~/");
-        //    // Get the information about the user from the external login provider
-        //    var info = await _signInManager.GetExternalLoginInfoAsync();
-        //    if (info == null)
-        //    {
-        //        ErrorMessage = "Error loading external login information during confirmation.";
-        //        return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
-        //    }
-
-        //    if (ModelState.IsValid)
-        //    {
-        //        var user = CreateUser();
-
-        //        await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
-        //        await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
-
-        //        var result = await _userManager.CreateAsync(user);
-        //        if (result.Succeeded)
-        //        {
-        //            result = await _userManager.AddLoginAsync(user, info);
-        //            if (result.Succeeded)
-        //            {
-        //                _logger.LogInformation("User created an account using {Name} provider.", info.LoginProvider);
-
-        //                var userId = await _userManager.GetUserIdAsync(user);
-        //                var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-        //                code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-        //                var callbackUrl = Url.Page(
-        //                    "/Account/ConfirmEmail",
-        //                    pageHandler: null,
-        //                    values: new { area = "Identity", userId = userId, code = code },
-        //                    protocol: Request.Scheme);
-
-        //                await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
-        //                    $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
-
-        //                // If account confirmation is required, we need to show the link if we don't have a real email sender
-        //                if (_userManager.Options.SignIn.RequireConfirmedAccount)
-        //                {
-        //                    return RedirectToPage("./RegisterConfirmation", new { Email = Input.Email });
-        //                }
-
-        //                await _signInManager.SignInAsync(user, isPersistent: false, info.LoginProvider);
-        //                return LocalRedirect(returnUrl);
-        //            }
-        //        }
-        //        foreach (var error in result.Errors)
-        //        {
-        //            ModelState.AddModelError(string.Empty, error.Description);
-        //        }
-        //    }
-
-        //    ProviderDisplayName = info.ProviderDisplayName;
-        //    ReturnUrl = returnUrl;
-        //    return Page();
-        //}
-
-        //private ApplicationUser CreateUser()
-        //{
-        //    try
-        //    {
-        //        return Activator.CreateInstance<ApplicationUser>();
-        //    }
-        //    catch
-        //    {
-        //        throw new InvalidOperationException($"Can't create an instance of '{nameof(ApplicationUser)}'. " +
-        //            $"Ensure that '{nameof(ApplicationUser)}' is not an abstract class and has a parameterless constructor, or alternatively " +
-        //            $"override the external login page in /Areas/Identity/Pages/Account/ExternalLogin.cshtml");
-        //    }
-        //}
 
         private IUserEmailStore<ApplicationUser> GetEmailStore()
         {

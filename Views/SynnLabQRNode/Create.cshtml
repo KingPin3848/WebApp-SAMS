@@ -1,4 +1,4 @@
-﻿@model SAMS.Models.SynnLabQRNodeModel
+﻿@model SAMS.Models.HandheldScannerNodeModel
 
 @{
     ViewData["Title"] = "Create";
@@ -6,40 +6,20 @@
 
 <h1>Create</h1>
 
-<h4>SynnLabQRNodeModel</h4>
+<h4>HandheldScannerNodeModel</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="ScannerID" class="control-label"></label>
-                <input asp-for="ScannerID" class="form-control" />
-                <span asp-validation-for="ScannerID" class="text-danger"></span>
+                <label asp-for="RoomIDMod" class="control-label"></label>
+                <select asp-for="RoomIDMod" class ="form-control" asp-items="ViewBag.RoomIDMod"></select>
             </div>
             <div class="form-group">
-                <label asp-for="SynnlabRoomIDMod" class="control-label"></label>
-                <select asp-for="SynnlabRoomIDMod" class ="form-control" asp-items="ViewBag.SynnlabRoomIDMod"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="ScannerMacAddressMod" class="control-label"></label>
-                <input asp-for="ScannerMacAddressMod" class="form-control" />
-                <span asp-validation-for="ScannerMacAddressMod" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ModelNumberMod" class="control-label"></label>
-                <input asp-for="ModelNumberMod" class="form-control" />
-                <span asp-validation-for="ModelNumberMod" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ScannerDeviceIPAddressMod" class="control-label"></label>
-                <input asp-for="ScannerDeviceIPAddressMod" class="form-control" />
-                <span asp-validation-for="ScannerDeviceIPAddressMod" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ScannerLabelMod" class="control-label"></label>
-                <input asp-for="ScannerLabelMod" class="form-control" />
-                <span asp-validation-for="ScannerLabelMod" class="text-danger"></span>
+                <label asp-for="SerialNumberMod" class="control-label"></label>
+                <input asp-for="SerialNumberMod" class="form-control" />
+                <span asp-validation-for="SerialNumberMod" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />

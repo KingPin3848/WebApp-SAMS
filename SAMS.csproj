@@ -4,6 +4,8 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>aspnet-SAMS-d1639124-4952-4092-9fab-0b0a082c1d26</UserSecretsId>
+    <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
+    <AnalysisLevel>latest-all</AnalysisLevel>
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="wwwroot\lib\bootstrap-5.3.2-dist\**" />
@@ -17,6 +19,8 @@
     <Folder Include="Areas\AttOfficePersonnel\Controllers\" />
     <Folder Include="Areas\AttOfficePersonnel\Data\" />
     <Folder Include="Areas\AttOfficePersonnel\Models\" />
+    <Folder Include="Areas\Class\Data\" />
+    <Folder Include="Areas\Class\Models\" />
     <Folder Include="Areas\Student\Data\" />
     <Folder Include="Areas\Student\Models\" />
     <Folder Include="Areas\Teacher\Data\" />
@@ -24,7 +28,6 @@
     <Folder Include="Controllers\DevelopmentManagement\" />
     <Folder Include="Controllers\Student Features\" />
     <Folder Include="Data\" />
-    <Folder Include="Models\" />
     <Folder Include="Views\InfoManagement\" />
     <Folder Include="wwwroot\css\" />
     <Folder Include="wwwroot\images\" />
@@ -55,5 +58,19 @@
     <PackageReference Include="Microsoft.Identity.Client" Version="4.61.3" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.2" />
     <PackageReference Include="WebEssentials.AspNetCore.PWA" Version="1.0.85" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Update="Areas\Class\Views\_ValidationScriptsPartial.cshtml">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="Areas\Class\Views\_ViewImports.cshtml">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="Areas\Class\Views\_ViewStart.cshtml">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
   </ItemGroup>
 </Project>

@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.CodeAnalysis.Elfie.Extensions;
 using SAMS.Controllers;
 using SAMS.Data;
 using SAMS.Interfaces;
@@ -11,30 +10,22 @@ using SAMS.Models;
 namespace SAMS.Areas.Student.Controllers
 {
     [Area("Student")]
-    public class FormController : Controller
+    public class FormController(/*ILogger<FormController> logger, */ApplicationDbContext context, /*SignInManager<ApplicationUser> signInManager, */UserManager<ApplicationUser> userManager) : Controller
     {
-        private readonly ILogger<FormController> _logger;
-        private readonly ApplicationDbContext _context;
-        private readonly SignInManager<ApplicationUser> _signInManager;
-        private readonly UserManager<ApplicationUser> _userManager;
+        //private readonly ILogger<FormController> _logger = logger;
+        private readonly ApplicationDbContext _context = context;
+        //private readonly SignInManager<ApplicationUser> _signInManager = signInManager;
+        private readonly UserManager<ApplicationUser> _userManager = userManager;
+        public InputModel Input = new();
 
-        public FormController(ILogger<FormController> logger, ApplicationDbContext context, SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager)
-        {
-            _logger = logger;
-            _context = context;
-            _signInManager = signInManager;
-            _userManager = userManager;
-            Input = new InputModel();
-        }
 
-        public InputModel Input { get; set; }
         [Bind]
         public class InputModel
         {
-            public string? courseiDs { get; set; }
-            public string? courseNames { get; set; }
-            public string? teacher {  get; set; }
-            public string? student { get; set; }
+            public string courseiDs = default!;
+            public string courseNames = default!;
+            public string teacher = default!;
+            public string student = default!;
 
         }
 
@@ -45,11 +36,11 @@ namespace SAMS.Areas.Student.Controllers
             var user = await _userManager.GetUserAsync(User);
             //var studId = int.Parse(user.SchoolId);
             //ViewBag.Schoolid = user?.SchoolId;
-            List<int> MWCourseIds = new List<int>();
-            List<int> TTCourseIds = new List<int>();
-            List<int> FriCourseIds = new List<int>();
+            List<int> MWCourseIds = [];
+            List<int> TTCourseIds = [];
+            List<int> FriCourseIds = [];
 
-            var sem2start = _context.schedulerModels.Where(a => a.Type == "Semester 2").Select(a => a.Date).FirstOrDefault();
+            var sem2start = _context.SchedulerModels.Where(a => a.Type == "Semester 2").Select(a => a.Date).FirstOrDefault();
             if (DateOnly.FromDateTime(DateTime.Now.Date) <= sem2start)
             {
                 //var sem1StudSchedule = _context.sem1StudSchedules.Find(studId);
@@ -58,8 +49,8 @@ namespace SAMS.Areas.Student.Controllers
                 //FriCourseIds = [sem1StudSchedule.FriBell2CourseIDMod, sem1StudSchedule.FriBell3CourseIDMod, sem1StudSchedule.FriBell4CourseIDMod, sem1StudSchedule.FriBell5CourseIDMod, sem1StudSchedule.FriBell6CourseIDMod, sem1StudSchedule.FriBell7CourseIDMod];
 
                 var date = DateTime.Now;
-                var chosenBellSched = _context.chosenBellSchedModels.FirstOrDefault().Name;
-                var determination = DetermineCurrentBell(chosenBellSched);
+                var chosenBellSched = _context.ChosenBellSchedModels.First().Name;
+                var determination = DetermineCurrentBell(chosenBellSched!);
                 var currentBell = determination[0];
                 TimeSpan startTimeAsDetermined = TimeSpan.Parse(determination[1]);
                 TimeSpan endTimeAsDetermined = TimeSpan.Parse(determination[2]);
@@ -72,17 +63,17 @@ namespace SAMS.Areas.Student.Controllers
                 //FriCourseIds = [sem2StudSchedule.FriBell2CourseIDMod, sem2StudSchedule.FriBell3CourseIDMod, sem2StudSchedule.FriBell4CourseIDMod, sem2StudSchedule.FriBell5CourseIDMod, sem2StudSchedule.FriBell6CourseIDMod, sem2StudSchedule.FriBell7CourseIDMod];
 
                 var date = DateTime.Now;
-                var chosenBellSched = _context.chosenBellSchedModels.FirstOrDefault().Name;
-                var determination = DetermineCurrentBell(chosenBellSched);
+                var chosenBellSched = _context.ChosenBellSchedModels.First().Name;
+                var determination = DetermineCurrentBell(chosenBellSched!);
                 var currentBell = determination[0];
                 TimeSpan startTimeAsDetermined = TimeSpan.Parse(determination[1]);
                 TimeSpan endTimeAsDetermined = TimeSpan.Parse(determination[2]);
             }
-            List<string> enrolledCourseNames = new List<string>();
-            var synnLabCourse = _context.activeCourseInfoModels.Where(a => a.CourseName == "SynnLab").Select(a => a.CourseId).FirstOrDefault();
+            List<string> enrolledCourseNames = [];
+            var synnLabCourse = _context.ActiveCourseInfoModels.Where(a => a.CourseName == "SynnLab").Select(a => a.CourseId).FirstOrDefault();
             foreach (var id in MWCourseIds)
             {
-                if(id == synnLabCourse)
+                if (id == synnLabCourse)
                 {
                     MWCourseIds.Remove(id);
                 }
@@ -90,16 +81,18 @@ namespace SAMS.Areas.Student.Controllers
 
 
             ViewData["courseiDs"] = new SelectList(MWCourseIds);
-            ViewData["courseNames"] = new SelectList(_context.activeCourseInfoModels, "CourseName", "CourseName");
+            ViewData["courseNames"] = new SelectList(_context.ActiveCourseInfoModels, "CourseName", "CourseName");
             //ViewData[""];
 
             return View();
         }
-/*
+
         [Authorize(Roles = "Student, Developer")]
         [HttpPost]
         [ValidateAntiForgeryToken]
+#pragma warning disable IDE0060 // Remove unused parameter
         public async Task<IActionResult> Form([Bind("option")] InputModel input)
+#pragma warning restore IDE0060 // Remove unused parameter
         {
             try
             {
@@ -111,13 +104,13 @@ namespace SAMS.Areas.Student.Controllers
                     return Json(new { dangertext = "User not found for the provided school ID." });
                 }
 
-                var chosenBellSchedule = _context.chosenBellSchedModels.Select(a => a.Name).ToList();
+                var chosenBellSchedule = _context.ChosenBellSchedModels.Select(a => a.Name).ToList();
                 if (chosenBellSchedule == null || chosenBellSchedule.Count == 0)
                 {
                     return Json(new { dangertext = "Chosen Bell Schedule for the day not found. Please contact the administrator and developer for additional assistance." });
                 }
 
-                var determination = DetermineCurrentBell(chosenBellSchedule[0]);
+                var determination = DetermineCurrentBell(chosenBellSchedule[0]!);
                 var currentBell = determination[0];
                 TimeSpan startTimeAsDetermined = TimeSpan.Parse(determination[1]);
                 TimeSpan endTimeAsDetermined = TimeSpan.Parse(determination[2]);
@@ -134,8 +127,8 @@ namespace SAMS.Areas.Student.Controllers
                 }
 
                 var studId = int.Parse(schoolIDdb);
-                var studentSchedule = await _context.sem1StudSchedules.FindAsync(studId);
-                var sem2start = _context.schedulerModels.Where(a => a.Type == "Semester 2").Select(a => a.Date).FirstOrDefault();
+                var studentSchedule = await _context.Sem1StudSchedules.FindAsync(studId);
+                var sem2start = _context.SchedulerModels.Where(a => a.Type == "Semester 2").Select(a => a.Date).FirstOrDefault();
                 if (DateOnly.FromDateTime(DateTime.Now.Date) >= sem2start)
                 {
                     //studentSchedule = await _context.sem2StudSchedules.FindAsync(studId);
@@ -155,13 +148,13 @@ namespace SAMS.Areas.Student.Controllers
                     return Json(new { dangertext = "Invalid Course Id. This is an error on our end. Please contact the developers and share the whole experience step-by-step on what happened exactly." });
                 }
 
-                var roomIdForCourse = _context.activeCourseInfoModels.Where(a => a.CourseId == courseIdForCurrentBell).Select(a => a.CourseRoomID).ToList().FirstOrDefault();
+                var roomIdForCourse = _context.ActiveCourseInfoModels.Where(a => a.CourseId == courseIdForCurrentBell).Select(a => a.CourseRoomID).ToList().FirstOrDefault();
                 if (roomIdForCourse == 0)
                 {
                     return Json(new { dangertext = "Room ID not found for the course. Please check with the admins to add the respective roomid in SAMS." });
                 }
 
-                var expectedQRCode = _context.roomQRCodeModels.Where(a => a.RoomId == roomIdForCourse).Select(a => a.Code).ToList().FirstOrDefault();
+                var expectedQRCode = _context.RoomQRCodeModels.Where(a => a.RoomId == roomIdForCourse).Select(a => a.Code).ToList().FirstOrDefault();
                 if (expectedQRCode == null)
                 {
                     return Json(new { dangertext = "Expected QR Code not found for the room you are in at right now. Please contact the admin to add the room in SAMS." });
@@ -172,14 +165,14 @@ namespace SAMS.Areas.Student.Controllers
                 //And the hall-pass still using the If statements.
                 //And the same algorithm would go to the form feature as well, but excluding the daily attendance option.
 
-                var bellEntryExists = _context.bellAttendanceModels.Any(a =>
+                var bellEntryExists = _context.BellAttendanceModels.Any(a =>
                     a.StudentId == studId &&
                     a.DateTime.Date == DateTime.Now.Date &&
                     a.BellNumId == currentBell &&
                     a.Status == "Unknown");
                 if (bellEntryExists)
                 {
-                    var bellAttendanceEntry = _context.bellAttendanceModels.First(a =>
+                    var bellAttendanceEntry = _context.BellAttendanceModels.First(a =>
                         a.StudentId == studId &&
                         a.DateTime.Date == DateTime.Now.Date &&
                         a.BellNumId == currentBell &&
@@ -203,17 +196,17 @@ namespace SAMS.Areas.Student.Controllers
                         timeStamp.Comments = "Student was marked present because the student scanned in within 25 minutes of the start of the bell. Please contact the teacher/admin/attendance office for any questions or concerns regarding this.";
                     }
 
-                    _context.bellAttendanceModels.Update(bellAttendanceEntry);
-                    _context.timestampModels.Add(timeStamp);
+                    _context.BellAttendanceModels.Update(bellAttendanceEntry);
+                    _context.TimestampModels.Add(timeStamp);
                 }
 
-                var studLocationEntry = _context.studentLocationModels.Any(a => a.StudentId == studId);
+                var studLocationEntry = _context.StudentLocationModels.Any(a => a.StudentId == studId);
                 if (studLocationEntry)
                 {
-                    var studLocation = _context.studentLocationModels.FirstOrDefault(a => a.StudentId == studId);
+                    var studLocation = _context.StudentLocationModels.FirstOrDefault(a => a.StudentId == studId);
                     if (studLocation != null)
                     {
-                        var room = await _context.roomLocationInfoModels.FindAsync(roomIdForCourse);
+                        var room = await _context.RoomLocationInfoModels.FindAsync(roomIdForCourse);
                         studLocation.StudentLocation = $"{room?.RoomNumberMod} - {room?.Teacher?.TeacherFirstNameMod} {room?.Teacher?.TeacherLastNameMod}";
                         var timestamp = new TimestampModel
                         {
@@ -222,8 +215,8 @@ namespace SAMS.Areas.Student.Controllers
                             MadeBy = "Scan Feature of SAMS",
                             Comments = $"The student scanned to update their location to {room?.RoomNumberMod} - {room?.Teacher?.TeacherFirstNameMod} {room?.Teacher?.TeacherLastNameMod}"
                         };
-                        _context.timestampModels.Add(timestamp);
-                        _context.studentLocationModels.Update(studLocation);
+                        _context.TimestampModels.Add(timestamp);
+                        _context.StudentLocationModels.Update(studLocation);
                     }
                 }
 
@@ -235,8 +228,8 @@ namespace SAMS.Areas.Student.Controllers
                 return Json(new { dangertext = $"An error occurred: {ex.Message}" });
             }
         }
-*/
-        private int GetCourseIdForCurrentBell(string currentBell, Sem1StudSchedule studentSchedule)
+
+        private static int GetCourseIdForCurrentBell(string currentBell, Sem1StudSchedule studentSchedule)
         {
             switch (currentBell)
             {
@@ -296,7 +289,7 @@ namespace SAMS.Areas.Student.Controllers
             {
                 case "Daily Bell Schedule":
                     {
-                        List<IBellSchedule> dailySchedule = _context.dailyBellScheduleModels.OrderBy(a => a.StartTime).Cast<IBellSchedule>().ToList();
+                        List<IBellSchedule> dailySchedule = [.. _context.DailyBellScheduleModels.OrderBy(a => a.StartTime).Cast<IBellSchedule>()];
                         foreach (var entry in dailySchedule)
                         {
                             IBellSchedule bell = entry;
@@ -305,8 +298,8 @@ namespace SAMS.Areas.Student.Controllers
                                 startTimeDetermined = bell.StartTime.ToString();
                                 endTimeDetermined = bell.EndTime.ToString();
                                 bellName = bell.BellName;
-                                returnStuff[0] = startTimeDetermined;
-                                returnStuff[1] = bellName;
+                                returnStuff[0] = bellName;
+                                returnStuff[1] = startTimeDetermined;
                                 returnStuff[2] = endTimeDetermined;
                             }
                         }
@@ -314,7 +307,7 @@ namespace SAMS.Areas.Student.Controllers
                     }
                 case "Extended Aves Bell Schedule":
                     {
-                        List<IBellSchedule> extSchedule = _context.extendedAvesModels.OrderBy(a => a.StartTime).Cast<IBellSchedule>().ToList();
+                        List<IBellSchedule> extSchedule = [.. _context.ExtendedAvesModels.OrderBy(a => a.StartTime).Cast<IBellSchedule>()];
                         foreach (var entry in extSchedule)
                         {
                             IBellSchedule bell = entry;
@@ -323,8 +316,8 @@ namespace SAMS.Areas.Student.Controllers
                                 startTimeDetermined = bell.StartTime.ToString();
                                 endTimeDetermined = bell.EndTime.ToString();
                                 bellName = bell.BellName;
-                                returnStuff[0] = startTimeDetermined;
-                                returnStuff[1] = bellName;
+                                returnStuff[0] = bellName;
+                                returnStuff[1] = startTimeDetermined;
                                 returnStuff[2] = endTimeDetermined;
                             }
                         }
@@ -332,7 +325,7 @@ namespace SAMS.Areas.Student.Controllers
                     }
                 case "Pep Rally Bell Schedule":
                     {
-                        List<IBellSchedule> pepSchedule = _context.pepRallyBellScheduleModels.OrderBy(a => a.StartTime).Cast<IBellSchedule>().ToList();
+                        List<IBellSchedule> pepSchedule = [.. _context.PepRallyBellScheduleModels.OrderBy(a => a.StartTime).Cast<IBellSchedule>()];
                         foreach (var entry in pepSchedule)
                         {
                             IBellSchedule bell = entry;
@@ -341,8 +334,8 @@ namespace SAMS.Areas.Student.Controllers
                                 startTimeDetermined = bell.StartTime.ToString();
                                 endTimeDetermined = bell.EndTime.ToString();
                                 bellName = bell.BellName;
-                                returnStuff[0] = startTimeDetermined;
-                                returnStuff[1] = bellName;
+                                returnStuff[0] = bellName;
+                                returnStuff[1] = startTimeDetermined;
                                 returnStuff[2] = endTimeDetermined;
                             }
                         }
@@ -350,7 +343,7 @@ namespace SAMS.Areas.Student.Controllers
                     }
                 case "2 Hour Delay Bell Schedule":
                     {
-                        List<IBellSchedule> twoSchedule = _context.twoHrDelayBellScheduleModels.OrderBy(a => a.StartTime).Cast<IBellSchedule>().ToList();
+                        List<IBellSchedule> twoSchedule = [.. _context.TwoHrDelayBellScheduleModels.OrderBy(a => a.StartTime).Cast<IBellSchedule>()];
                         foreach (var entry in twoSchedule)
                         {
                             IBellSchedule bell = entry;
@@ -359,8 +352,26 @@ namespace SAMS.Areas.Student.Controllers
                                 startTimeDetermined = bell.StartTime.ToString();
                                 endTimeDetermined = bell.EndTime.ToString();
                                 bellName = bell.BellName;
-                                returnStuff[0] = startTimeDetermined;
-                                returnStuff[1] = bellName;
+                                returnStuff[0] = bellName;
+                                returnStuff[1] = startTimeDetermined;
+                                returnStuff[2] = endTimeDetermined;
+                            }
+                        }
+                        return returnStuff;
+                    }
+                case "Custom Bell Schedule":
+                    {
+                        List<IBellSchedule> custSchedule = [.. _context.CustomSchedules.OrderBy(a => a.StartTime).Where(a => a.BellName.Contains("Bell ")).Cast<IBellSchedule>()];
+                        foreach (var entry in custSchedule)
+                        {
+                            IBellSchedule bell = entry;
+                            if (time >= bell.StartTime && time <= bell.EndTime)
+                            {
+                                startTimeDetermined = bell.StartTime.ToString();
+                                endTimeDetermined = bell.EndTime.ToString();
+                                bellName = bell.BellName;
+                                returnStuff[0] = bellName;
+                                returnStuff[1] = startTimeDetermined;
                                 returnStuff[2] = endTimeDetermined;
                             }
                         }

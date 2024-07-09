@@ -10,19 +10,14 @@ using SAMS.Models;
 
 namespace SAMS.Controllers.InfoManagement
 {
-    public class RoomLocationInfoController : Controller
+    public class RoomLocationInfoController(ApplicationDbContext context) : Controller
     {
-        private readonly ApplicationDbContext _context;
-
-        public RoomLocationInfoController(ApplicationDbContext context)
-        {
-            _context = context;
-        }
+        private readonly ApplicationDbContext _context = context;
 
         // GET: RoomLocationInfo
         public async Task<IActionResult> Index()
         {
-            return View(await _context.roomLocationInfoModels.ToListAsync());
+            return View(await _context.RoomLocationInfoModels.ToListAsync());
         }
 
         // GET: RoomLocationInfo/Details/5
@@ -33,7 +28,7 @@ namespace SAMS.Controllers.InfoManagement
                 return NotFound();
             }
 
-            var roomLocationInfoModel = await _context.roomLocationInfoModels
+            var roomLocationInfoModel = await _context.RoomLocationInfoModels
                 .FirstOrDefaultAsync(m => m.RoomNumberMod == id);
             if (roomLocationInfoModel == null)
             {
@@ -73,7 +68,7 @@ namespace SAMS.Controllers.InfoManagement
                 return NotFound();
             }
 
-            var roomLocationInfoModel = await _context.roomLocationInfoModels.FindAsync(id);
+            var roomLocationInfoModel = await _context.RoomLocationInfoModels.FindAsync(id);
             if (roomLocationInfoModel == null)
             {
                 return NotFound();
@@ -124,7 +119,7 @@ namespace SAMS.Controllers.InfoManagement
                 return NotFound();
             }
 
-            var roomLocationInfoModel = await _context.roomLocationInfoModels
+            var roomLocationInfoModel = await _context.RoomLocationInfoModels
                 .FirstOrDefaultAsync(m => m.RoomNumberMod == id);
             if (roomLocationInfoModel == null)
             {
@@ -139,10 +134,10 @@ namespace SAMS.Controllers.InfoManagement
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var roomLocationInfoModel = await _context.roomLocationInfoModels.FindAsync(id);
+            var roomLocationInfoModel = await _context.RoomLocationInfoModels.FindAsync(id);
             if (roomLocationInfoModel != null)
             {
-                _context.roomLocationInfoModels.Remove(roomLocationInfoModel);
+                _context.RoomLocationInfoModels.Remove(roomLocationInfoModel);
             }
 
             await _context.SaveChangesAsync();
@@ -151,7 +146,7 @@ namespace SAMS.Controllers.InfoManagement
 
         private bool RoomLocationInfoModelExists(int id)
         {
-            return _context.roomLocationInfoModels.Any(e => e.RoomNumberMod == id);
+            return _context.RoomLocationInfoModels.Any(e => e.RoomNumberMod == id);
         }
     }
 }

@@ -10,19 +10,14 @@ using SAMS.Models;
 
 namespace SAMS.Controllers.InfoManagement
 {
-    public class TeacherInfoController : Controller
+    public class TeacherInfoController(ApplicationDbContext context) : Controller
     {
-        private readonly ApplicationDbContext _context;
-
-        public TeacherInfoController(ApplicationDbContext context)
-        {
-            _context = context;
-        }
+        private readonly ApplicationDbContext _context = context;
 
         // GET: TeacherInfo
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.teacherInfoModels.Include(t => t.Room);
+            var applicationDbContext = _context.TeacherInfoModels.Include(t => t.Room);
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -34,7 +29,7 @@ namespace SAMS.Controllers.InfoManagement
                 return NotFound();
             }
 
-            var teacherInfoModel = await _context.teacherInfoModels
+            var teacherInfoModel = await _context.TeacherInfoModels
                 .Include(t => t.Room)
                 .FirstOrDefaultAsync(m => m.TeacherID == id);
             if (teacherInfoModel == null)
@@ -48,7 +43,7 @@ namespace SAMS.Controllers.InfoManagement
         // GET: TeacherInfo/Create
         public IActionResult Create()
         {
-            ViewData["RoomAssignedId"] = new SelectList(_context.roomLocationInfoModels, "RoomNumberMod", "RoomNumberMod");
+            ViewData["RoomAssignedId"] = new SelectList(_context.RoomLocationInfoModels, "RoomNumberMod", "RoomNumberMod");
             return View();
         }
 
@@ -65,7 +60,7 @@ namespace SAMS.Controllers.InfoManagement
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["RoomAssignedId"] = new SelectList(_context.roomLocationInfoModels, "RoomNumberMod", "RoomNumberMod", teacherInfoModel.RoomAssignedId);
+            ViewData["RoomAssignedId"] = new SelectList(_context.RoomLocationInfoModels, "RoomNumberMod", "RoomNumberMod", teacherInfoModel.RoomAssignedId);
             return View(teacherInfoModel);
         }
 
@@ -77,12 +72,12 @@ namespace SAMS.Controllers.InfoManagement
                 return NotFound();
             }
 
-            var teacherInfoModel = await _context.teacherInfoModels.FindAsync(id);
+            var teacherInfoModel = await _context.TeacherInfoModels.FindAsync(id);
             if (teacherInfoModel == null)
             {
                 return NotFound();
             }
-            ViewData["RoomAssignedId"] = new SelectList(_context.roomLocationInfoModels, "RoomNumberMod", "RoomNumberMod", teacherInfoModel.RoomAssignedId);
+            ViewData["RoomAssignedId"] = new SelectList(_context.RoomLocationInfoModels, "RoomNumberMod", "RoomNumberMod", teacherInfoModel.RoomAssignedId);
             return View(teacherInfoModel);
         }
 
@@ -118,7 +113,7 @@ namespace SAMS.Controllers.InfoManagement
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["RoomAssignedId"] = new SelectList(_context.roomLocationInfoModels, "RoomNumberMod", "RoomNumberMod", teacherInfoModel.RoomAssignedId);
+            ViewData["RoomAssignedId"] = new SelectList(_context.RoomLocationInfoModels, "RoomNumberMod", "RoomNumberMod", teacherInfoModel.RoomAssignedId);
             return View(teacherInfoModel);
         }
 
@@ -130,7 +125,7 @@ namespace SAMS.Controllers.InfoManagement
                 return NotFound();
             }
 
-            var teacherInfoModel = await _context.teacherInfoModels
+            var teacherInfoModel = await _context.TeacherInfoModels
                 .Include(t => t.Room)
                 .FirstOrDefaultAsync(m => m.TeacherID == id);
             if (teacherInfoModel == null)
@@ -146,10 +141,10 @@ namespace SAMS.Controllers.InfoManagement
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
-            var teacherInfoModel = await _context.teacherInfoModels.FindAsync(id);
+            var teacherInfoModel = await _context.TeacherInfoModels.FindAsync(id);
             if (teacherInfoModel != null)
             {
-                _context.teacherInfoModels.Remove(teacherInfoModel);
+                _context.TeacherInfoModels.Remove(teacherInfoModel);
             }
 
             await _context.SaveChangesAsync();
@@ -158,7 +153,7 @@ namespace SAMS.Controllers.InfoManagement
 
         private bool TeacherInfoModelExists(string id)
         {
-            return _context.teacherInfoModels.Any(e => e.TeacherID == id);
+            return _context.TeacherInfoModels.Any(e => e.TeacherID == id);
         }
     }
 }

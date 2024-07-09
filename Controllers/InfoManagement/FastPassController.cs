@@ -10,19 +10,14 @@ using SAMS.Models;
 
 namespace SAMS.Controllers.InfoManagement
 {
-    public class FastPassController : Controller
+    public class FastPassController(ApplicationDbContext context) : Controller
     {
-        private readonly ApplicationDbContext _context;
-
-        public FastPassController(ApplicationDbContext context)
-        {
-            _context = context;
-        }
+        private readonly ApplicationDbContext _context = context;
 
         // GET: FastPass
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.fastPassModels.Include(f => f.Room).Include(f => f.Sem1StudSchedule).Include(f => f.Sem2StudSchedule).Include(f => f.Student);
+            var applicationDbContext = _context.FastPassModels.Include(f => f.Room).Include(f => f.Sem1StudSchedule).Include(f => f.Sem2StudSchedule).Include(f => f.Student);
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -34,7 +29,7 @@ namespace SAMS.Controllers.InfoManagement
                 return NotFound();
             }
 
-            var fastPassModel = await _context.fastPassModels
+            var fastPassModel = await _context.FastPassModels
                 .Include(f => f.Room)
                 .Include(f => f.Sem1StudSchedule)
                 .Include(f => f.Sem2StudSchedule)
@@ -51,10 +46,10 @@ namespace SAMS.Controllers.InfoManagement
         // GET: FastPass/Create
         public IActionResult Create()
         {
-            ViewData["EndLocationID"] = new SelectList(_context.roomLocationInfoModels, "RoomNumberMod", "RoomNumberMod");
-            ViewData["CourseIDFromStudentSchedule"] = new SelectList(_context.sem1StudSchedules, "StudentID", "StudentID");
-            ViewData["CourseIDFromStudentSchedule"] = new SelectList(_context.sem2StudSchedules, "StudentID", "StudentID");
-            ViewData["StudentID"] = new SelectList(_context.studentInfoModels, "StudentID", "StudentID");
+            ViewData["EndLocationID"] = new SelectList(_context.RoomLocationInfoModels, "RoomNumberMod", "RoomNumberMod");
+            ViewData["CourseIDFromStudentSchedule"] = new SelectList(_context.Sem1StudSchedules, "StudentID", "StudentID");
+            ViewData["CourseIDFromStudentSchedule"] = new SelectList(_context.Sem2StudSchedules, "StudentID", "StudentID");
+            ViewData["StudentID"] = new SelectList(_context.StudentInfoModels, "StudentID", "StudentID");
             return View();
         }
 
@@ -71,10 +66,10 @@ namespace SAMS.Controllers.InfoManagement
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["EndLocationID"] = new SelectList(_context.roomLocationInfoModels, "RoomNumberMod", "RoomNumberMod", fastPassModel.EndLocationID);
-            ViewData["CourseIDFromStudentSchedule"] = new SelectList(_context.sem1StudSchedules, "StudentID", "StudentID", fastPassModel.CourseIDFromStudentSchedule);
-            ViewData["CourseIDFromStudentSchedule"] = new SelectList(_context.sem2StudSchedules, "StudentID", "StudentID", fastPassModel.CourseIDFromStudentSchedule);
-            ViewData["StudentID"] = new SelectList(_context.studentInfoModels, "StudentID", "StudentID", fastPassModel.StudentID);
+            ViewData["EndLocationID"] = new SelectList(_context.RoomLocationInfoModels, "RoomNumberMod", "RoomNumberMod", fastPassModel.EndLocationID);
+            ViewData["CourseIDFromStudentSchedule"] = new SelectList(_context.Sem1StudSchedules, "StudentID", "StudentID", fastPassModel.CourseIDFromStudentSchedule);
+            ViewData["CourseIDFromStudentSchedule"] = new SelectList(_context.Sem2StudSchedules, "StudentID", "StudentID", fastPassModel.CourseIDFromStudentSchedule);
+            ViewData["StudentID"] = new SelectList(_context.StudentInfoModels, "StudentID", "StudentID", fastPassModel.StudentID);
             return View(fastPassModel);
         }
 
@@ -86,15 +81,15 @@ namespace SAMS.Controllers.InfoManagement
                 return NotFound();
             }
 
-            var fastPassModel = await _context.fastPassModels.FindAsync(id);
+            var fastPassModel = await _context.FastPassModels.FindAsync(id);
             if (fastPassModel == null)
             {
                 return NotFound();
             }
-            ViewData["EndLocationID"] = new SelectList(_context.roomLocationInfoModels, "RoomNumberMod", "RoomNumberMod", fastPassModel.EndLocationID);
-            ViewData["CourseIDFromStudentSchedule"] = new SelectList(_context.sem1StudSchedules, "StudentID", "StudentID", fastPassModel.CourseIDFromStudentSchedule);
-            ViewData["CourseIDFromStudentSchedule"] = new SelectList(_context.sem2StudSchedules, "StudentID", "StudentID", fastPassModel.CourseIDFromStudentSchedule);
-            ViewData["StudentID"] = new SelectList(_context.studentInfoModels, "StudentID", "StudentID", fastPassModel.StudentID);
+            ViewData["EndLocationID"] = new SelectList(_context.RoomLocationInfoModels, "RoomNumberMod", "RoomNumberMod", fastPassModel.EndLocationID);
+            ViewData["CourseIDFromStudentSchedule"] = new SelectList(_context.Sem1StudSchedules, "StudentID", "StudentID", fastPassModel.CourseIDFromStudentSchedule);
+            ViewData["CourseIDFromStudentSchedule"] = new SelectList(_context.Sem2StudSchedules, "StudentID", "StudentID", fastPassModel.CourseIDFromStudentSchedule);
+            ViewData["StudentID"] = new SelectList(_context.StudentInfoModels, "StudentID", "StudentID", fastPassModel.StudentID);
             return View(fastPassModel);
         }
 
@@ -130,10 +125,10 @@ namespace SAMS.Controllers.InfoManagement
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["EndLocationID"] = new SelectList(_context.roomLocationInfoModels, "RoomNumberMod", "RoomNumberMod", fastPassModel.EndLocationID);
-            ViewData["CourseIDFromStudentSchedule"] = new SelectList(_context.sem1StudSchedules, "StudentID", "StudentID", fastPassModel.CourseIDFromStudentSchedule);
-            ViewData["CourseIDFromStudentSchedule"] = new SelectList(_context.sem2StudSchedules, "StudentID", "StudentID", fastPassModel.CourseIDFromStudentSchedule);
-            ViewData["StudentID"] = new SelectList(_context.studentInfoModels, "StudentID", "StudentID", fastPassModel.StudentID);
+            ViewData["EndLocationID"] = new SelectList(_context.RoomLocationInfoModels, "RoomNumberMod", "RoomNumberMod", fastPassModel.EndLocationID);
+            ViewData["CourseIDFromStudentSchedule"] = new SelectList(_context.Sem1StudSchedules, "StudentID", "StudentID", fastPassModel.CourseIDFromStudentSchedule);
+            ViewData["CourseIDFromStudentSchedule"] = new SelectList(_context.Sem2StudSchedules, "StudentID", "StudentID", fastPassModel.CourseIDFromStudentSchedule);
+            ViewData["StudentID"] = new SelectList(_context.StudentInfoModels, "StudentID", "StudentID", fastPassModel.StudentID);
             return View(fastPassModel);
         }
 
@@ -145,7 +140,7 @@ namespace SAMS.Controllers.InfoManagement
                 return NotFound();
             }
 
-            var fastPassModel = await _context.fastPassModels
+            var fastPassModel = await _context.FastPassModels
                 .Include(f => f.Room)
                 .Include(f => f.Sem1StudSchedule)
                 .Include(f => f.Sem2StudSchedule)
@@ -164,10 +159,10 @@ namespace SAMS.Controllers.InfoManagement
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
-            var fastPassModel = await _context.fastPassModels.FindAsync(id);
+            var fastPassModel = await _context.FastPassModels.FindAsync(id);
             if (fastPassModel != null)
             {
-                _context.fastPassModels.Remove(fastPassModel);
+                _context.FastPassModels.Remove(fastPassModel);
             }
 
             await _context.SaveChangesAsync();
@@ -176,7 +171,7 @@ namespace SAMS.Controllers.InfoManagement
 
         private bool FastPassModelExists(string id)
         {
-            return _context.fastPassModels.Any(e => e.FastPassIDMod == id);
+            return _context.FastPassModels.Any(e => e.FastPassIDMod == id);
         }
     }
 }
