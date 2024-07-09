@@ -17,7 +17,7 @@ namespace SAMS.Models
         public TeacherInfoModel? Teacher { get; set; } = null!;
         public ICollection<ActiveCourseInfoModel>? ActiveCourseInfos { get; set; } = null!;
         public ICollection<FastPassModel>? FastPassesIssued { get; set; } = null!;
-        public SynnLabQRNodeModel? SynnLabQRNode { get; set; } = null!;
+        public HandheldScannerNodeModel? SynnLabQRNode { get; set; } = null!;
         public RoomQRCodeModel? RoomQRCode { get; set; } = null!;
     }
 }

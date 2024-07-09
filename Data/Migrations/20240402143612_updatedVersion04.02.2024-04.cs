@@ -141,7 +141,7 @@ namespace SAMS.Data.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_synnLabQRNodeModels_SynnlabRoomIDMod",
                 table: "synnLabQRNodeModels",
-                column: "SynnlabRoomIDMod",
+                column: "RoomIDMod",
                 unique: true);
 
             migrationBuilder.CreateIndex(
@@ -178,7 +178,7 @@ namespace SAMS.Data.Migrations
             migrationBuilder.AddForeignKey(
                 name: "FK_synnLabQRNodeModels_roomLocationInfoModels_SynnlabRoomIDMod",
                 table: "synnLabQRNodeModels",
-                column: "SynnlabRoomIDMod",
+                column: "RoomIDMod",
                 principalTable: "roomLocationInfoModels",
                 principalColumn: "RoomId");
 

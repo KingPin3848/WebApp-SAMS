@@ -15,9 +15,9 @@ namespace SAMS.Services
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-                await HolidayRun();
+                await HolidayRun().ConfigureAwait(true);
                 // Wait for two minutes before checking again - COOL DOWN!!!!
-                await Task.Delay(TimeSpan.FromMinutes(2), stoppingToken);
+                await Task.Delay(TimeSpan.FromMinutes(2), stoppingToken).ConfigureAwait(true);
             }
         }
 
@@ -33,7 +33,7 @@ namespace SAMS.Services
             if (holidayDates == null)
             {
                 _logger.LogWarning("Holidays is null and the task if delayed by 1 DAY. Done by the if statement in holidayRun");
-                await Task.Delay(TimeSpan.FromDays(1));
+                await Task.Delay(TimeSpan.FromDays(1)).ConfigureAwait(true);
             }
             else
             {
@@ -42,11 +42,11 @@ namespace SAMS.Services
                     if (date == todayDate)
                     {
                         _logger.LogWarning("Today is a holiday and the task is delayed by 1 DAY. Done by the if statement in holidayRun");
-                        await Task.Delay(TimeSpan.FromDays(1));
+                        await Task.Delay(TimeSpan.FromDays(1)).ConfigureAwait(true);
                     }
                     else
                     {
-                        await MarkAbsentTask();
+                        await MarkAbsentTask().ConfigureAwait(true);
                     }
                 }
             }
@@ -60,7 +60,7 @@ namespace SAMS.Services
 
             var date = DateTime.Now.Date;
             var time = DateTime.Now.TimeOfDay;
-            var students = await userManager.GetUsersInRoleAsync("Student");
+            var students = await userManager.GetUsersInRoleAsync("Student").ConfigureAwait(true);
             var noncheckDailyCourses = context.ActiveCourseInfoModels.Where(a => a.DailyAttChecked == false).ToList();
             var noncheckBellCourses = context.ActiveCourseInfoModels.Where(a => a.B2BAttChecked == false).ToList();
             var chosenBellSchedName = context.ChosenBellSchedModels.Select(a => a.Name).FirstOrDefault();
@@ -70,23 +70,23 @@ namespace SAMS.Services
             {
                 case "Daily Bell Schedule":
                     chosenBellSched = [.. context.DailyBellScheduleModels.Where(a => a.BellName.Contains("Bell")).OrderBy(a => a.StartTime).Cast<IBellSchedule>()];
-                    await NormalRunner(students, date, time, noncheckDailyCourses, noncheckBellCourses, chosenBellSched);
+                    await NormalRunner(students, date, time, noncheckDailyCourses, noncheckBellCourses, chosenBellSched).ConfigureAwait(true);
                     break;
                 case "Extended Aves Bell Schedule":
                     chosenBellSched = [.. context.ExtendedAvesModels.Where(a => a.BellName.Contains("Bell")).OrderBy(a => a.StartTime).Cast<IBellSchedule>()];
-                    await NormalRunner(students, date, time, noncheckDailyCourses, noncheckBellCourses, chosenBellSched);
+                    await NormalRunner(students, date, time, noncheckDailyCourses, noncheckBellCourses, chosenBellSched).ConfigureAwait(true);
                     break;
                 case "Pep Rally Bell Schedule":
                     chosenBellSched = [.. context.PepRallyBellScheduleModels.Where(a => a.BellName.Contains("Bell")).OrderBy(a => a.StartTime).Cast<IBellSchedule>()];
-                    await NormalRunner(students, date, time, noncheckDailyCourses, noncheckBellCourses, chosenBellSched);
+                    await NormalRunner(students, date, time, noncheckDailyCourses, noncheckBellCourses, chosenBellSched).ConfigureAwait(true);
                     break;
                 case "2 Hour Delay Bell Schedule":
                     chosenBellSched = [.. context.TwoHrDelayBellScheduleModels.Where(a => a.BellName.Contains("Bell")).OrderBy(a => a.StartTime).Cast<IBellSchedule>()];
-                    await NormalRunner(students, date, time, noncheckDailyCourses, noncheckBellCourses, chosenBellSched);
+                    await NormalRunner(students, date, time, noncheckDailyCourses, noncheckBellCourses, chosenBellSched).ConfigureAwait(true);
                     break;
                 case "Custom Bell Schedule":
                     chosenBellSched = [.. context.CustomSchedules.Where(a => a.BellName.Contains("Bell")).OrderBy(a => a.StartTime).Cast<IBellSchedule>()];
-                    await CustomRunner(students, date, time, noncheckDailyCourses, noncheckBellCourses, chosenBellSched);
+                    await CustomRunner(students, date, time, noncheckDailyCourses, noncheckBellCourses, chosenBellSched).ConfigureAwait(true);
                     break;
                 default:
                     chosenBellSched = null;
@@ -118,7 +118,7 @@ namespace SAMS.Services
                         {
                             var studentId = int.Parse(student.SchoolId!);
                             var sem2start = context.SchedulerModels.Where(a => a.Type == "Semester 2").Select(a => a.Date).FirstOrDefault();
-                            IStudentSchedule? studentSchedule = (DateOnly.FromDateTime(DateTime.Now.Date) >= sem2start) ? (await context.Sem2StudSchedules.FindAsync(studentId)) : (await context.Sem1StudSchedules.FindAsync(studentId));
+                            IStudentSchedule? studentSchedule = (DateOnly.FromDateTime(DateTime.Now.Date) >= sem2start) ? (await context.Sem2StudSchedules.FindAsync(studentId).ConfigureAwait(true)) : (await context.Sem1StudSchedules.FindAsync(studentId).ConfigureAwait(true));
                             var sem2started = (DateOnly.FromDateTime(DateTime.Now.Date) >= sem2start);
                             int bellCourseId;
                             if (sem2started)
@@ -136,7 +136,7 @@ namespace SAMS.Services
                             // If the course for this bell is in noncheckDailyCourses, skip to the next student
                             if (noncheckBelltrue || noncheckDailytrue)
                             {
-                                _logger.LogInformation("Course was found inside the noncheck course list. noncheckBell list: {noncheckBelltrue}, noncheckDaily list: {noncheckDailytrue} Cannot mark absent for that class.", noncheckBelltrue, noncheckDailytrue);
+                                _logger.LogInformation("Course was found inside the noncheck course list. noncheckBell list: {NoncheckBelltrue}, noncheckDaily list: {NoncheckDailytrue} Cannot mark absent for that class.", noncheckBelltrue, noncheckDailytrue);
                             }
                             else
                             {
@@ -169,7 +169,7 @@ namespace SAMS.Services
                                     attendanceEntry.Status = "Absent";
                                     context.BellAttendanceModels.Update(attendanceEntry);
                                     context.TimestampModels.Add(timeStamp);
-                                    await context.SaveChangesAsync();
+                                    await context.SaveChangesAsync().ConfigureAwait(true);
                                 }
                             }
                         }
@@ -201,7 +201,7 @@ namespace SAMS.Services
                         {
                             var studentId = int.Parse(student.SchoolId!);
                             var sem2start = context.SchedulerModels.Where(a => a.Type == "Semester 2").Select(a => a.Date).FirstOrDefault();
-                            IStudentSchedule? studentSchedule = (DateOnly.FromDateTime(DateTime.Now.Date) >= sem2start) ? (await context.Sem2StudSchedules.FindAsync(studentId)) : (await context.Sem1StudSchedules.FindAsync(studentId));
+                            IStudentSchedule? studentSchedule = (DateOnly.FromDateTime(DateTime.Now.Date) >= sem2start) ? (await context.Sem2StudSchedules.FindAsync(studentId).ConfigureAwait(true)) : (await context.Sem1StudSchedules.FindAsync(studentId).ConfigureAwait(true));
                             var sem2started = (DateOnly.FromDateTime(DateTime.Now.Date) >= sem2start);
                             int bellCourseId;
                             if (sem2started)
@@ -219,7 +219,7 @@ namespace SAMS.Services
                             // If the course for this bell is in noncheckDailyCourses, skip to the next student
                             if (noncheckBelltrue || noncheckDailytrue)
                             {
-                                _logger.LogInformation("Course was found inside the noncheck course list. noncheckBell list: {noncheckBelltrue}, noncheckDaily list: {noncheckDailytrue} Cannot mark absent for that class.", noncheckBelltrue, noncheckDailytrue);
+                                _logger.LogInformation("Course was found inside the noncheck course list. noncheckBell list: {NoncheckBelltrue}, noncheckDaily list: {NoncheckDailytrue} Cannot mark absent for that class.", noncheckBelltrue, noncheckDailytrue);
                             }
                             else
                             {
@@ -252,7 +252,7 @@ namespace SAMS.Services
                                     attendanceEntry.Status = "Absent";
                                     context.BellAttendanceModels.Update(attendanceEntry);
                                     context.TimestampModels.Add(timeStamp);
-                                    await context.SaveChangesAsync();
+                                    await context.SaveChangesAsync().ConfigureAwait(true);
                                 }
                             }
                         }

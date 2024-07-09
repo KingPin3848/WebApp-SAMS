@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using SAMS.Models;
 using System.ComponentModel.DataAnnotations;
+using System.Security.Cryptography;
 
 namespace SAMS.Controllers
 {
@@ -22,5 +23,16 @@ namespace SAMS.Controllers
         [EmailAddress]
         [Display(Name = "School Issued Email Address")]
         public override string? Email { get => base.Email; set => base.Email = value; }
+
+        [Required]
+        [Range(0000, 9999)]
+        private int StudPin;
+
+        public int StudentPin
+        {
+            get { return StudPin; }
+            private set { StudPin = RandomNumberGenerator.GetInt32(0000,9999); }
+        }
+
     }
 }

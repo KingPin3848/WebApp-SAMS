@@ -1079,7 +1079,7 @@ namespace SAMS.Data.Migrations
                     b.ToTable("substituteInfoModels");
                 });
 
-            modelBuilder.Entity("SAMS.Models.SynnLabQRNodeModel", b =>
+            modelBuilder.Entity("SAMS.Models.HandheldScannerNodeModel", b =>
                 {
                     b.Property<string>("ScannerID")
                         .HasColumnType("nvarchar(450)");
@@ -1100,12 +1100,12 @@ namespace SAMS.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("SynnlabRoomIDMod")
+                    b.Property<int>("RoomIDMod")
                         .HasColumnType("int");
 
                     b.HasKey("ScannerID");
 
-                    b.HasIndex("SynnlabRoomIDMod")
+                    b.HasIndex("RoomIDMod")
                         .IsUnique();
 
                     b.ToTable("synnLabQRNodeModels");
@@ -1658,11 +1658,11 @@ namespace SAMS.Data.Migrations
                     b.Navigation("Student");
                 });
 
-            modelBuilder.Entity("SAMS.Models.SynnLabQRNodeModel", b =>
+            modelBuilder.Entity("SAMS.Models.HandheldScannerNodeModel", b =>
                 {
                     b.HasOne("SAMS.Models.RoomLocationInfoModel", "Room")
                         .WithOne("SynnLabQRNode")
-                        .HasForeignKey("SAMS.Models.SynnLabQRNodeModel", "SynnlabRoomIDMod")
+                        .HasForeignKey("SAMS.Models.HandheldScannerNodeModel", "RoomIDMod")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 

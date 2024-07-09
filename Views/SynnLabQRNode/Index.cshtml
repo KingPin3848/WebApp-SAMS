@@ -1,4 +1,4 @@
-﻿@model IEnumerable<SAMS.Models.SynnLabQRNodeModel>
+﻿@model IEnumerable<SAMS.Models.HandheldScannerNodeModel>
 
 @{
     ViewData["Title"] = "Index";
@@ -13,16 +13,7 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.ScannerMacAddressMod)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ModelNumberMod)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ScannerDeviceIPAddressMod)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ScannerLabelMod)
+                @Html.DisplayNameFor(model => model.SerialNumberMod)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Room)
@@ -34,16 +25,7 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.ScannerMacAddressMod)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ModelNumberMod)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ScannerDeviceIPAddressMod)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ScannerLabelMod)
+                @Html.DisplayFor(modelItem => item.SerialNumberMod)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Room.RoomNumberMod)

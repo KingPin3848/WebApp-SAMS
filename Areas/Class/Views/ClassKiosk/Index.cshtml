@@ -1,0 +1,87 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["Title"] = "Class Kiosk";
+}
+@model SAMS.Areas.Class.Controllers.QRCodeModel
+
+<h1>Class Check-in Kiosk</h1>
+<title>@ViewData["Title"]</title>
+
+<h2>Follow the instructions below.</h2>
+
+<p id="instructions" style="color: green;">
+    Slide your Student ID card where the QR Code faces upwards (or top) into the card-holder and wait for further instructions.
+</p>
+
+@using (Html.BeginForm("Index", "ClassKiosk", FormMethod.Post, new { id = "kioskForm"}))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-floating pb-2">
+        <input asp-for="ScannedCode" class="form-control" id="scannedcode" />
+        <label asp-for="ScannedCode"></label>
+        <span asp-validation-for="ScannedCode" class="text-danger"></span>
+    </div>
+
+    <div class="form-floating pb-2">
+        <input asp-for="StudentPin" class="form-control" id="studentpin" />
+        <label asp-for="StudentPin"></label>
+        <span asp-validation-for="StudentPin" class="text-danger"></span>
+    </div>
+
+    <div class="form-group pt-4">
+        <button type="button" class="btn btn-primary" onclick="getData()">Submit</button>
+    </div>
+}
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    function getData() {
+        let scannedCode = document.getElementById('scannedcode').innerText;
+        let studpin = document.getElementById('studentpin').innerText;
+
+        sendData(scannedCode, studpin);
+    }
+
+    function sendData(ScannedCode, StudentPin) {
+        let realdata = {
+            ScannedCode: ScannedCode,
+            StudentPin: StudentPin
+        };
+
+        let token = $('input[name="__RequestVerificationToken"]').val();
+
+        $.ajax(
+            {
+                type: "POST",
+                url: "@Url.Action("Index", "ClassKiosk")",
+                data: JSON.stringify(realdata),
+                contentType: 'application/json',
+                dataType: 'json',
+                headers: {
+                    "RequestVerificationToken": token
+                },
+                success: function (response) {
+                    if (response.success) {
+                        document.getElementById("id").hidden;
+                        $('instructions').text(response.message);
+                        setTimeout(function () {
+                            location.reload();
+                        }, response.seconds);
+                    }
+                    else {
+                        document.getElementById("instructions").innerText = response.message;
+                        setTimeout(function () {
+                            location.reload();
+                        }, response.seconds);
+                    }
+                },
+                error: function (xhr, status, response) {
+                    console.error(xhr.responseText);
+                }
+            }
+        )
+    }
+</script>
