@@ -32,7 +32,7 @@ namespace SAMS.Areas.Teacher.Controllers
                 return NotFound();
             }
 
-            var courses = _context.activeCourseInfoModels.Where(a => a.CourseTeacherID == user.SchoolId).ToList();
+            var courses = _context.ActiveCourseInfoModels.Where(a => a.CourseTeacherID == user.SchoolId).ToList();
             List<string> bells = new List<string>();
 
             for (int i = 0; i < courses.Count; i++)

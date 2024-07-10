@@ -23,7 +23,7 @@ namespace SAMS.Controllers.InfoManagement
         //AUTOCOMPLETE
         public JsonResult Autocomplete(string prefix)
         {
-            var students = (from student in _context.studentInfoModels
+            var students = (from student in _context.StudentInfoModels
                             where student.StudentFirstNameMod.StartsWith(prefix)
                             select new
                             {
@@ -37,7 +37,7 @@ namespace SAMS.Controllers.InfoManagement
         // GET: StudentInfoModels
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.studentInfoModels.Include(s => s.Counselor).Include(s => s.BellAttendances).Include(s => s.DailyAttendances).Include(s => s.Sem1StudSchedule).Include(s => s.Sem2StudSchedule).Include(s => s.HallPasses);
+            var applicationDbContext = _context.StudentInfoModels.Include(s => s.Counselor).Include(s => s.BellAttendances).Include(s => s.DailyAttendances).Include(s => s.Sem1StudSchedule).Include(s => s.Sem2StudSchedule).Include(s => s.HallPasses);
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -49,7 +49,7 @@ namespace SAMS.Controllers.InfoManagement
                 return NotFound();
             }
 
-            var studentInfoModel = await _context.studentInfoModels
+            var studentInfoModel = await _context.StudentInfoModels
                 .Include(s => s.AssignedEASuport)
                 .Include(s => s.Counselor)
                 .FirstOrDefaultAsync(m => m.StudentID == id);
@@ -64,8 +64,8 @@ namespace SAMS.Controllers.InfoManagement
         // GET: StudentInfoModels/Create
         public IActionResult Create()
         {
-            ViewData["StudentEAID"] = new SelectList(_context.eASuportInfoModels, "EaID", "EaID");
-            ViewData["StudentCounselorID"] = new SelectList(_context.counselorModels, "CounselorId", "CounselorId");
+            ViewData["StudentEAID"] = new SelectList(_context.EASuportInfoModels, "EaID", "EaID");
+            ViewData["StudentCounselorID"] = new SelectList(_context.CounselorModels, "CounselorId", "CounselorId");
             return View();
         }
 
@@ -82,8 +82,8 @@ namespace SAMS.Controllers.InfoManagement
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["StudentEAID"] = new SelectList(_context.eASuportInfoModels, "EaID", "EaID", studentInfoModel.StudentEAID);
-            ViewData["StudentCounselorID"] = new SelectList(_context.counselorModels, "CounselorId", "CounselorId", studentInfoModel.StudentCounselorID);
+            ViewData["StudentEAID"] = new SelectList(_context.EASuportInfoModels, "EaID", "EaID", studentInfoModel.StudentEAID);
+            ViewData["StudentCounselorID"] = new SelectList(_context.CounselorModels, "CounselorId", "CounselorId", studentInfoModel.StudentCounselorID);
             return View(studentInfoModel);
         }
 
@@ -95,13 +95,13 @@ namespace SAMS.Controllers.InfoManagement
                 return NotFound();
             }
 
-            var studentInfoModel = await _context.studentInfoModels.FindAsync(id);
+            var studentInfoModel = await _context.StudentInfoModels.FindAsync(id);
             if (studentInfoModel == null)
             {
                 return NotFound();
             }
-            ViewData["StudentEAID"] = new SelectList(_context.eASuportInfoModels, "EaID", "EaID", studentInfoModel.StudentEAID);
-            ViewData["StudentCounselorID"] = new SelectList(_context.counselorModels, "CounselorId", "CounselorId", studentInfoModel.StudentCounselorID);
+            ViewData["StudentEAID"] = new SelectList(_context.EASuportInfoModels, "EaID", "EaID", studentInfoModel.StudentEAID);
+            ViewData["StudentCounselorID"] = new SelectList(_context.CounselorModels, "CounselorId", "CounselorId", studentInfoModel.StudentCounselorID);
             return View(studentInfoModel);
         }
 
@@ -137,8 +137,8 @@ namespace SAMS.Controllers.InfoManagement
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["StudentEAID"] = new SelectList(_context.eASuportInfoModels, "EaID", "EaID", studentInfoModel.StudentEAID);
-            ViewData["StudentCounselorID"] = new SelectList(_context.counselorModels, "CounselorId", "CounselorId", studentInfoModel.StudentCounselorID);
+            ViewData["StudentEAID"] = new SelectList(_context.EASuportInfoModels, "EaID", "EaID", studentInfoModel.StudentEAID);
+            ViewData["StudentCounselorID"] = new SelectList(_context.CounselorModels, "CounselorId", "CounselorId", studentInfoModel.StudentCounselorID);
             return View(studentInfoModel);
         }
 
@@ -150,7 +150,7 @@ namespace SAMS.Controllers.InfoManagement
                 return NotFound();
             }
 
-            var studentInfoModel = await _context.studentInfoModels
+            var studentInfoModel = await _context.StudentInfoModels
                 .Include(s => s.AssignedEASuport)
                 .Include(s => s.Counselor)
                 .FirstOrDefaultAsync(m => m.StudentID == id);
@@ -167,10 +167,10 @@ namespace SAMS.Controllers.InfoManagement
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var studentInfoModel = await _context.studentInfoModels.FindAsync(id);
+            var studentInfoModel = await _context.StudentInfoModels.FindAsync(id);
             if (studentInfoModel != null)
             {
-                _context.studentInfoModels.Remove(studentInfoModel);
+                _context.StudentInfoModels.Remove(studentInfoModel);
             }
 
             await _context.SaveChangesAsync();
@@ -179,7 +179,7 @@ namespace SAMS.Controllers.InfoManagement
 
         private bool StudentInfoModelExists(int id)
         {
-            return _context.studentInfoModels.Any(e => e.StudentID == id);
+            return _context.StudentInfoModels.Any(e => e.StudentID == id);
         }
     }
 }

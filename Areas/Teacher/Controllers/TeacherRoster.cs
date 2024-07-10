@@ -39,7 +39,7 @@ namespace SAMS.Areas.Teacher.Controllers
                 return NotFound();
             }
 
-            var activeCourses = _context.activeCourseInfoModels.Where(a => a.CourseTeacherID == user.SchoolId).ToList();
+            var activeCourses = _context.ActiveCourseInfoModels.Where(a => a.CourseTeacherID == user.SchoolId).ToList();
 
             var students = await _userManager.GetUsersInRoleAsync("Student");
 
@@ -49,16 +49,16 @@ namespace SAMS.Areas.Teacher.Controllers
             {
                 var studentID = int.Parse(student.SchoolId);
 
-                var sem2start = _context.schedulerModels.Where(a => a.Type == "Semester 2").Select(a => a.Date).FirstOrDefault();
+                var sem2start = _context.SchedulerModels.Where(a => a.Type == "Semester 2").Select(a => a.Date).FirstOrDefault();
                 int bellCourseId;
                 if (DateOnly.FromDateTime(DateTime.Now.Date) >= sem2start)
                 {
-                    var studentSchedule = await _context.sem2StudSchedules.FindAsync(studentID);
+                    var studentSchedule = await _context.Sem2StudSchedules.FindAsync(studentID);
                     bellCourseId = GetS2BellCourseId(studentSchedule, bell);
                 }
                 else
                 {
-                    var studentSchedule = await _context.sem1StudSchedules.FindAsync(studentID);
+                    var studentSchedule = await _context.Sem1StudSchedules.FindAsync(studentID);
                     bellCourseId = GetS1BellCourseId(studentSchedule, bell);
                 }
 
@@ -66,7 +66,7 @@ namespace SAMS.Areas.Teacher.Controllers
                 {
                     if(course.CourseId == bellCourseId)
                     {
-                        studentsInBell.Add(await _context.studentInfoModels.FindAsync(studentID));
+                        studentsInBell.Add(await _context.StudentInfoModels.FindAsync(studentID));
                     }
                 }
 

@@ -121,7 +121,7 @@ namespace SAMS.Areas.Identity.Pages.Account
                 return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
             }
 
-            var dbuser = await _userManager.FindByEmailAsync(googleemail);
+            var dbuser = await _userManager.FindByEmailAsync(googleemail).ConfigureAwait(true);
             if (dbuser == null)
             {
                 ErrorMessage = "Not a registered user on the Synnovation Lab AMS. Please contact the administrators if you think this is wrong.";

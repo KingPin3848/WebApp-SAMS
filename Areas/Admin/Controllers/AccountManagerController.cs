@@ -402,12 +402,13 @@ namespace SAMS.Areas.Admin.Controllers
                     return NotFound();
                 }
 
-                var schoolId = user.SchoolId ?? throw new Exception("Failed to retrieve School Id of the user for deletion.");
-                var roles = await _userManager.GetRolesAsync(user).ConfigureAwait(true) ?? throw new Exception("Failed to retrieve user roles.");
+                string schoolId = user.SchoolId ?? string.Empty;
+                var roles = await _userManager.GetRolesAsync(user).ConfigureAwait(true) ?? throw new Exception("Roles not found");
                 foreach (var role in roles)
                 {
                     switch (role)
                     {
+
                         case "Student":
                             {
                                 var studId = int.Parse(schoolId);
@@ -424,11 +425,27 @@ namespace SAMS.Areas.Admin.Controllers
                         case "Teacher":
                             {
                                 var teacherid = schoolId;
-                                var courses = _context.ActiveCourseInfoModels.Where(a => a.CourseTeacherID == teacherid).ToList() ?? throw new Exception("Unable to retrieve teacher's courses for deletion.");
-                                var teacherInfo = _context.TeacherInfoModels.Where(a => a.TeacherID == teacherid).ToList() ?? throw new Exception("Unable to retrieve teacher data for deletion.");
+                                List<ActiveCourseInfoModel>? courses = _context.ActiveCourseInfoModels.Where(a => a.CourseTeacherID == teacherid).ToList() ?? null;
+                                List<TeacherInfoModel>? teacherInfo = _context.TeacherInfoModels.Where(a => a.TeacherID == teacherid).ToList() ?? null;
 
-                                var deletion1 = _context.Remove(courses);
-                                var deletion2 = _context.Remove(teacherInfo);
+                                if (courses == null)
+                                {
+                                    Console.WriteLine("Courses is null");
+                                }
+                                else
+                                {
+                                    var deletion1 = _context.Remove(courses);
+                                }
+
+                                if (teacherInfo == null)
+                                {
+                                    Console.WriteLine("Teacher Info is null");
+                                }
+                                else
+                                {
+                                    var deletion2 = _context.Remove(teacherInfo);
+                                }
+
                                 await _context.SaveChangesAsync().ConfigureAwait(true);
                                 break;
                             }
