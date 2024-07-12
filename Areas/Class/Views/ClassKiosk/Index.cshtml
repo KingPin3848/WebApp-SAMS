@@ -4,6 +4,7 @@
 @{
     ViewData["Title"] = "Class Kiosk";
 }
+@using SAMS.Areas.Class.Controllers
 @model SAMS.Areas.Class.Controllers.QRCodeModel
 
 <h1>Class Check-in Kiosk</h1>
@@ -36,19 +37,18 @@
     </div>
 }
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     function getData() {
-        let scannedCode = document.getElementById('scannedcode').innerText;
-        let studpin = document.getElementById('studentpin').innerText;
+        var scannedCode = document.getElementById('scannedcode').value;
+        var studpin = document.getElementById('studentpin').value;
 
         sendData(scannedCode, studpin);
     }
 
     function sendData(ScannedCode, StudentPin) {
         let realdata = {
-            ScannedCode: ScannedCode,
-            StudentPin: StudentPin
+            'LocalScannedCode': ScannedCode,
+            'LocalStudentPin': StudentPin
         };
 
         let token = $('input[name="__RequestVerificationToken"]').val();
@@ -57,29 +57,41 @@
             {
                 type: "POST",
                 url: "@Url.Action("Index", "ClassKiosk")",
-                data: JSON.stringify(realdata),
-                contentType: 'application/json',
-                dataType: 'json',
+                data: realdata,
                 headers: {
                     "RequestVerificationToken": token
                 },
                 success: function (response) {
-                    if (response.success) {
+                    if (response.success == true) {
                         document.getElementById("id").hidden;
-                        $('instructions').text(response.message);
+                        $('#instructions').text(response.message);
                         setTimeout(function () {
                             location.reload();
                         }, response.seconds);
                     }
                     else {
-                        document.getElementById("instructions").innerText = response.message;
+                        $('#instructions').text(response.message);
+                        $('#instructions').css("color","red");
                         setTimeout(function () {
                             location.reload();
                         }, response.seconds);
                     }
                 },
-                error: function (xhr, status, response) {
-                    console.error(xhr.responseText);
+                error: function(response) {
+                    if (response.success == true) {
+                        document.getElementById("id").hidden;
+                        $('#instructions').text(response.message);
+                        setTimeout(function () {
+                            location.reload();
+                        }, response.seconds);
+                    }
+                    else {
+                        $('#instructions').text(response.message);
+                        $('#instructions').css("color", "red");
+                        setTimeout(function () {
+                            location.reload();
+                        }, response.seconds);
+                    }
                 }
             }
         )

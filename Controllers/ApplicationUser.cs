@@ -26,13 +26,7 @@ namespace SAMS.Controllers
 
         [Required]
         [Range(0000, 9999)]
-        private int StudPin;
-
-        public int StudentPin
-        {
-            get { return StudPin; }
-            private set { StudPin = RandomNumberGenerator.GetInt32(0000,9999); }
-        }
+        public int StudentPin { get; private set; }
 
     }
 }
