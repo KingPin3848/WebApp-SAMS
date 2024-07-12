@@ -424,12 +424,31 @@ namespace SAMS.Areas.Admin.Controllers
                         case "Teacher":
                             {
                                 var teacherid = schoolId;
-                                var courses = _context.ActiveCourseInfoModels.Where(a => a.CourseTeacherID == teacherid).ToList() ?? throw new Exception("Unable to retrieve teacher's courses for deletion.");
-                                var teacherInfo = _context.TeacherInfoModels.Where(a => a.TeacherID == teacherid).ToList() ?? throw new Exception("Unable to retrieve teacher data for deletion.");
+                                List<ActiveCourseInfoModel>? courses = _context.ActiveCourseInfoModels.Where(a => a.CourseTeacherID == teacherid).ToList() ?? throw new Exception("Unable to retrieve teacher's courses for deletion.");
+                                List<TeacherInfoModel>? teacherInfo = _context.TeacherInfoModels.Where(a => a.TeacherID == teacherid).ToList() ?? throw new Exception("Unable to retrieve teacher data for deletion.");
 
-                                var deletion1 = _context.Remove(courses);
-                                var deletion2 = _context.Remove(teacherInfo);
-                                await _context.SaveChangesAsync().ConfigureAwait(true);
+                                if (courses.Count == 0)
+                                {
+#pragma warning disable CA1848 // Use the LoggerMessage delegates
+                                    _logger.LogInformation("Courses couldn't be found.");
+#pragma warning restore CA1848 // Use the LoggerMessage delegates
+                                } else
+                                {
+                                    var deletion1 = _context.Remove(courses);
+                                    await _context.SaveChangesAsync().ConfigureAwait(true);
+                                }
+
+                                if (teacherInfo.Count == 0)
+                                {
+#pragma warning disable CA1848 // Use the LoggerMessage delegates
+                                    _logger.LogInformation("Teacher information couldn't be found.");
+#pragma warning restore CA1848 // Use the LoggerMessage delegates
+                                } else
+                                {
+                                    var deletion2 = _context.Remove(teacherInfo);
+                                    await _context.SaveChangesAsync().ConfigureAwait(true);
+                                }
+
                                 break;
                             }
                         case "Attendance Office Member":

@@ -31,22 +31,23 @@ namespace SAMS.Areas.Class.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Index(QRCodeModel input)
+        public IActionResult Index(string LocalScannedCode, string LocalStudentPin)
         {
             //Necessary variables to get services from ServiceScopeFactory
             using var scope = _serviceScopeFactory.CreateAsyncScope();
             using var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
             var datetime = DateTime.Now;
 
-            if (input is null)
+            if ((LocalScannedCode is null) || (LocalStudentPin is null))
             {
                 return Json(new { error = "The QR Code reading and Pin number cannot be empty. Please try again." });
             }
 
             //Necessary variables for each element inside QRCodeModel parameter
-            string localScannedCode = input.ScannedCode;
-            int localStudPin = input.StudentPin;
-            string subScanNum = localScannedCode[..4];
+            string localScannedCode = LocalScannedCode.Substring(4);
+            int localStudPin = int.Parse(LocalStudentPin);
+            
+            string subScanNum = LocalScannedCode[..4];
             int scannernumber = new();
             if (int.TryParse(subScanNum, out scannernumber))
             {
@@ -81,8 +82,8 @@ namespace SAMS.Areas.Class.Controllers
         private bool CodeVerifier(string code)
         {
             using var scope = _serviceScopeFactory.CreateScope();
-            using UserStore<ApplicationUser> userStore = scope.ServiceProvider.GetRequiredService<UserStore<ApplicationUser>>();
-            ApplicationUser dbStudentUser = userStore.Users.Where(a => a.ActivationCode == code).First();
+            using UserManager<ApplicationUser> userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+            ApplicationUser dbStudentUser = userManager.Users.Where(a => a.ActivationCode == code).First();
 
             if (code == dbStudentUser.ActivationCode)
             {
@@ -97,8 +98,8 @@ namespace SAMS.Areas.Class.Controllers
         private bool PinVerifier(int pin)
         {
             using var scope = _serviceScopeFactory.CreateScope();
-            using var userStore = scope.ServiceProvider.GetRequiredService<UserStore<ApplicationUser>>();
-            ApplicationUser dbStudentUser = userStore.Users.Where(a => a.StudentPin == pin).First();
+            using var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+            ApplicationUser dbStudentUser = userManager.Users.Where(a => a.StudentPin == pin).First();
 
             if(pin == dbStudentUser.StudentPin)
             {
@@ -140,7 +141,7 @@ namespace SAMS.Areas.Class.Controllers
                     //We do nothing here.
                 }
 
-                if (currentbell == "School not in session!")
+                if (currentbell == "School not in session!" || currentbell == "Bell 0")
                 {
                     MessAge = "School is not in session and you cannot sign in right now. If you think this is a mistake, please contact the admin and the developers ASAP.";
                     ReFresh = true;
@@ -562,9 +563,11 @@ namespace SAMS.Areas.Class.Controllers
     public class QRCodeModel
     {
         [Required]
-        [StringLength(32, ErrorMessage = "The Unique Code must be at least {2} and at max {1} characters long.", MinimumLength = 32)]
+        [Display(Name = "Scanned Code")]
+        [StringLength(36, ErrorMessage = "The Unique Code must be at least {2} and at max {1} characters long.", MinimumLength = 36)]
         public string ScannedCode { get; set; } = default!;
         [Required]
+        [Display(Name = "Student Pin")]
         public int StudentPin { get; set; } = default!;
     }
 }
