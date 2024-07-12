@@ -4,26 +4,16 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SAMS.Controllers;
 using SAMS.Data;
+using SAMS.Interfaces;
 using SAMS.Models;
 
 namespace SAMS.Areas.Teacher.Controllers
 {
     [Area("Teacher")]
     [Authorize(Roles = "Teacher")]
-    public class TeacherRoster : Controller
+    public class TeacherRoster(IServiceScopeFactory serviceScopeFactory) : Controller
     {
-        private readonly ILogger<TeacherRoster> _logger;
-        private readonly ApplicationDbContext _context;
-        private readonly SignInManager<ApplicationUser> _signInManager;
-        private readonly UserManager<ApplicationUser> _userManager;
-        
-        public TeacherRoster(ILogger<TeacherRoster> logger, ApplicationDbContext context, SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager)
-        {
-            _logger = logger;
-            _context = context;
-            _signInManager = signInManager;
-            _userManager = userManager;
-        }
+        private readonly IServiceScopeFactory ScopeFactory = serviceScopeFactory;
 
         public IActionResult Index()
         {
@@ -33,7 +23,11 @@ namespace SAMS.Areas.Teacher.Controllers
         [HttpGet]
         public async Task<IActionResult> Roster(int bell)
         {
-            var user = await _userManager.GetUserAsync(User);
+            using var scope = ScopeFactory.CreateAsyncScope();
+            var _context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+            var _userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+
+            var user = await _userManager.GetUserAsync(User).ConfigureAwait(true);
             if (user == null)
             {
                 return NotFound();
@@ -41,32 +35,42 @@ namespace SAMS.Areas.Teacher.Controllers
 
             var activeCourses = _context.ActiveCourseInfoModels.Where(a => a.CourseTeacherID == user.SchoolId).ToList();
 
-            var students = await _userManager.GetUsersInRoleAsync("Student");
+            var students = await _userManager.GetUsersInRoleAsync("Student").ConfigureAwait(true);
 
-            List<StudentInfoModel> studentsInBell = new List<StudentInfoModel>();
+            List<StudentInfoModel> studentsInBell = [];
 
             foreach (var student in students)
             {
-                var studentID = int.Parse(student.SchoolId);
+                int studentID = new();
+
+                if (int.TryParse(student.SchoolId, out studentID))
+                {
+                    //Do nothing
+                }
+                else 
+                {
+                    return NotFound();
+                }
 
                 var sem2start = _context.SchedulerModels.Where(a => a.Type == "Semester 2").Select(a => a.Date).FirstOrDefault();
+                IStudentSchedule? studentSchedule = (DateOnly.FromDateTime(DateTime.Now.Date) >= sem2start) ? (await _context.Sem2StudSchedules.FindAsync(studentID).ConfigureAwait(true)) : (await _context.Sem1StudSchedules.FindAsync(studentID).ConfigureAwait(true));
+                var sem2started = (DateOnly.FromDateTime(DateTime.Now.Date) >= sem2start);
                 int bellCourseId;
-                if (DateOnly.FromDateTime(DateTime.Now.Date) >= sem2start)
-                {
-                    var studentSchedule = await _context.Sem2StudSchedules.FindAsync(studentID);
-                    bellCourseId = GetS2BellCourseId(studentSchedule, bell);
+
+                if (sem2started)
+                { 
+                    bellCourseId = GetS2BellCourseId(studentSchedule!, bell);
                 }
                 else
                 {
-                    var studentSchedule = await _context.Sem1StudSchedules.FindAsync(studentID);
-                    bellCourseId = GetS1BellCourseId(studentSchedule, bell);
+                    bellCourseId = GetS1BellCourseId(studentSchedule!, bell);
                 }
 
                 foreach(var course in activeCourses)
                 {
                     if(course.CourseId == bellCourseId)
                     {
-                        studentsInBell.Add(await _context.StudentInfoModels.FindAsync(studentID));
+                        studentsInBell.Add(_context.StudentInfoModels.Where(a => a.StudentID == studentID).First());
                     }
                 }
 
@@ -78,7 +82,7 @@ namespace SAMS.Areas.Teacher.Controllers
 
         }
 
-        private int GetS1BellCourseId(Sem1StudSchedule studentSchedule, int bell)
+        private static int GetS1BellCourseId(IStudentSchedule studentSchedule, int bell)
         {
             switch (bell)
             {
@@ -153,7 +157,7 @@ namespace SAMS.Areas.Teacher.Controllers
             }
         }
 
-        private int GetS2BellCourseId(Sem2StudSchedule studentSchedule, int bell)
+        private static int GetS2BellCourseId(IStudentSchedule studentSchedule, int bell)
         {
             switch (bell)
             {
