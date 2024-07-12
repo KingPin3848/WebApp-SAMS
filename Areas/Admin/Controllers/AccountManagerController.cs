@@ -428,7 +428,7 @@ namespace SAMS.Areas.Admin.Controllers
                                 List<ActiveCourseInfoModel>? courses = _context.ActiveCourseInfoModels.Where(a => a.CourseTeacherID == teacherid).ToList() ?? null;
                                 List<TeacherInfoModel>? teacherInfo = _context.TeacherInfoModels.Where(a => a.TeacherID == teacherid).ToList() ?? null;
 
-                                if (courses == null)
+                                if (courses.Count() == 0)
                                 {
                                     Console.WriteLine("Courses is null");
                                 }
@@ -437,7 +437,7 @@ namespace SAMS.Areas.Admin.Controllers
                                     var deletion1 = _context.Remove(courses);
                                 }
 
-                                if (teacherInfo == null)
+                                if (teacherInfo.Count() == 0)
                                 {
                                     Console.WriteLine("Teacher Info is null");
                                 }
