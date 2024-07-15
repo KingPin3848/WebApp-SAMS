@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Identity;
+using System.ComponentModel.DataAnnotations;
 
 namespace SAMS.Models
 {
@@ -6,16 +7,37 @@ namespace SAMS.Models
     {
         [Key]
         [Display(Name = ("Developer ID"))]
-        public int DeveloperID { get; set; } = 0!;
+        [Required]
+        [ProtectedPersonalData]
+        public required int DeveloperID { get; set; }
+
+
         [Display(Name = ("First Name"))]
-        public string DeveloperFirstNameMod { get; set; } = null!;
+        [Required]
+        [ProtectedPersonalData]
+        public required string DeveloperFirstNameMod { get; set; }
+
+
         [Display(Name = ("Middle Name"))]
-        public string DeveloperMiddleNameMod { get; set; } = null!;
+        [ProtectedPersonalData]
+        public string? DeveloperMiddleNameMod { get; set; }
+
+
         [Display(Name = ("Last Name"))]
-        public string DeveloperLastNameMod { get; set; } = null!;
+        [Required]
+        [ProtectedPersonalData]
+        public required string DeveloperLastNameMod { get; set; }
+
+
         [Display(Name = ("Preferred Name"))]
-        public string DeveloperPreferredNameMod { get; set; } = null!;
+        [ProtectedPersonalData]
+        public string? DeveloperPreferredNameMod { get; set; }
+
+
         [Display(Name = ("Email Address"))]
-        public string DeveloperEmailMod { get; set; } = null!;
+        [EmailAddress]
+        [Required]
+        [ProtectedPersonalData]
+        public required string DeveloperEmailMod { get; set; }
     }
 }

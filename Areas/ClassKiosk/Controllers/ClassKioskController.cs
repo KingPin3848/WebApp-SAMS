@@ -1,20 +1,14 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using NuGet.Common;
-using OfficeOpenXml.FormulaParsing.Exceptions;
 using SAMS.Controllers;
 using SAMS.Data;
 using SAMS.Interfaces;
 using SAMS.Models;
 using System.ComponentModel.DataAnnotations;
-using System.Data.Common;
-using System.Drawing.Text;
 
-namespace SAMS.Areas.Class.Controllers
+namespace SAMS.Areas.ClassKiosk.Controllers
 {
-    [Area("Class")]
+    [Area("ClassKiosk")]
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
     public class ClassKioskController(IServiceScopeFactory serviceScopeFactory) : Controller
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
@@ -40,13 +34,21 @@ namespace SAMS.Areas.Class.Controllers
 
             if ((LocalScannedCode is null) || (LocalStudentPin is null))
             {
-                return Json(new { error = "The QR Code reading and Pin number cannot be empty. Please try again." });
+                return Json(new { success = false, message = "The QR Code reading and Pin number cannot be empty. Please try again in a few seconds.", refresh = true, seconds = 10000 });
             }
 
             //Necessary variables for each element inside QRCodeModel parameter
-            string localScannedCode = LocalScannedCode.Substring(4);
-            int localStudPin = int.Parse(LocalStudentPin);
-            
+            string localScannedCode = LocalScannedCode[4..];
+            int localStudPin = new();
+            if (int.TryParse(LocalStudentPin, out localStudPin))
+            {
+                //Do nothing
+            }
+            else
+            {
+                return Json(new { success = true, message = "Couldn't verify your Student ID.", refresh = true, seconds = 10000 });
+            }
+
             string subScanNum = LocalScannedCode[..4];
             int scannernumber = new();
             if (int.TryParse(subScanNum, out scannernumber))
@@ -63,9 +65,16 @@ namespace SAMS.Areas.Class.Controllers
                     var dbname = dbStudentUser.UserName;
                     bool marker = AttendanceMarker(dbStudentUser, scannernumber, datetime).Result;
                     int timseconds = 0;
-                    if (marker) { timseconds = 5000; } else { timseconds = 10000; }
+                    if (marker)
+                    {
+                        timseconds = 5000;
+                    }
+                    else
+                    {
+                        timseconds = 10000;
+                    }
 
-                    return Json(new { success = marker, message = $"Authentication was successful, {dbname}.\n\nMessage: {MessAge};", refresh = ReFresh, seconds = timseconds });
+                    return Json(new { success = marker, message = $"Authentication was successful, {dbname}.\n\nMessage: {MessAge}", refresh = ReFresh, seconds = timseconds });
                 }
                 else
                 {
@@ -101,7 +110,7 @@ namespace SAMS.Areas.Class.Controllers
             using var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
             ApplicationUser dbStudentUser = userManager.Users.Where(a => a.StudentPin == pin).First();
 
-            if(pin == dbStudentUser.StudentPin)
+            if (pin == dbStudentUser.StudentPin)
             {
                 return true;
             }
@@ -331,7 +340,8 @@ namespace SAMS.Areas.Class.Controllers
                             return false;
                         }
 
-                    } else
+                    }
+                    else
                     {
                         MessAge = "Couldn't retrieve the student Id for authentication.";
                         ReFresh = true;

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Identity;
+using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 
 namespace SAMS.Models
@@ -7,25 +8,52 @@ namespace SAMS.Models
     {
         [Key]
         [Display(Name = ("Nurse ID"))]
-        public string NurseID { get; set; } = null!;
+        [Required]
+        [ProtectedPersonalData]
+        public required string NurseID { get; set; }
+
+
         [Display(Name = ("First Name"))]
-        public string NurseFirstNameMod { get; set; } = null!;
-        [AllowNull]
+        [Required]
+        [ProtectedPersonalData]
+        public required string NurseFirstNameMod { get; set; }
+
+        
         [Display(Name = ("Middle Name"))]
-        public string NurseMiddleNameMod { get; set; } = null!;
+        [ProtectedPersonalData]
+        public string? NurseMiddleNameMod { get; set; }
+
+
         [Display(Name = ("Last Name"))]
-        public string NurseLastNameMod { get; set; } = null!;
+        [Required]
+        [ProtectedPersonalData]
+        public required string NurseLastNameMod { get; set; }
+
+
         [Display(Name = ("Preferred Name"))]
-        public string NursePreferredNameMod { get; set; } = null!;
+        [ProtectedPersonalData]
+        public string? NursePreferredNameMod { get; set; }
+
+
         [Display(Name = ("Email Address"))]
-        public string NurseEmailMod { get; set; } = null!;
+        [EmailAddress]
+        [Required]
+        [ProtectedPersonalData]
+        public required string NurseEmailMod { get; set; }
+
+
         [Display(Name = ("Phone Ext."))]
-        public string NursePhoneMod { get; set; } = null!;
+        [ProtectedPersonalData]
+        public string? NursePhoneMod { get; set; }
+
+
 
         //Navigation properties
+#pragma warning disable CA2227 // Collection properties should be read only
         public ICollection<HallPassInfoModel>? AssignedHallPasses { get; set; } = null!;
         public ICollection<HallPassInfoModel>? AddressedHallPasses { get; set; } = null!;
         public ICollection<PassRequestInfoModel>? RequestAssignedHallPasses { get; set; } = null!;
         public ICollection<PassRequestInfoModel>? RequestAddressedHallPasses { get; set; } = null!;
+#pragma warning restore CA2227 // Collection properties should be read only
     }
 }
