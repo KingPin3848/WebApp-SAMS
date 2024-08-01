@@ -1,0 +1,76 @@
+﻿@{
+    ViewData["Title"] = "StudentInfo";
+}
+
+<h1>Student Info</h1>
+
+<form method="post" asp-area="" asp-controller="StudentInfoSearch" asp-action="Search">
+
+    <div>
+        <input type="radio" name="filter" value="StudentID" id="studentid" />
+        <label for="studentid">Student ID</label>
+
+        <input type="radio" name="filter" value="Name" id="name" />
+        <label for="name">Student Name</label>
+    </div>
+
+    <div>
+        <input type="text" id="text" onkeyup="getData()" />
+    </div>
+
+</form>
+
+<div id="searchResults"> </div>
+
+<script>
+
+    function getData() {
+        var filter = $('input[name="filter"]:checked').val();
+        var query = $('#text').val();
+        setData(filter, query);
+    }
+
+    function setData(filter, data) {
+        var sendData = {
+            "Filter": filter,
+            "SearchQuery": data
+        }
+        $.ajax({
+            url: '/StudentInfoSearch/Search',
+            type: 'POST',
+            data: sendData,
+            success: function(response){
+
+                $('#searchResults').empty();
+
+                var searchResults = document.getElementById('searchResults');
+
+                for (var i = 0; i < response.search_results.length; i++){
+                    var studentID = response.search_results[i].StudentID;
+                    var firstName = response.search_results[i].StudentFirstNameMod;
+                    var middleName = response.search_results[i].StudentMiddleNameMod;
+                    var lastName = response.search_results[i].StudentLastNameMod;
+
+                    var p = document.createElement("p");
+                    p.textContent = "Student ID: " + studentID + " Name: " + firstName + " " + middleName + " " + lastName;
+                    searchResults.appendChild(p);
+                }
+            }
+            error: function (response) {
+
+                $('#searchResults').empty();
+
+                for (var i = 0; i <= response.search_results.length; i++) {
+                    var firstName = response.search_results[i].StudentFirstNameMod;
+                    var middleName = response.search_results[i].StudentMiddleNameMod;
+                    var lastName = response.search_results[i].StudentLastNameMod;
+
+                    $('#searchResults').append('<p>' + firstName + ' (' + lastName + ')</p> <br>');
+
+                }
+            }
+
+        });
+    };
+
+</script>
