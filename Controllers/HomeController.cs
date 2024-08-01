@@ -203,10 +203,10 @@ namespace SAMS.Controllers
                             _context.TimestampModels.Add(timeStamp);
                         }
 
-                        var studLocationEntry = _context.StudentLocationModels.Any(a => a.StudentId == studId);
+                        var studLocationEntry = _context.StudentLocationModels.Any(a => a.StudentIdMod == studId);
                         if (studLocationEntry)
                         {
-                            var studLocation = _context.StudentLocationModels.FirstOrDefault(a => a.StudentId == studId);
+                            var studLocation = _context.StudentLocationModels.FirstOrDefault(a => a.StudentIdMod == studId);
                             if (studLocation != null)
                             {
                                 var room = await _context.RoomLocationInfoModels.FindAsync(roomIdForCourse);
@@ -563,7 +563,7 @@ switch (scheduleForTheDay)
                 {
                     atTheTimeBell = dailyBellSchedNames[i];
                     int studidpassed = int.Parse(passedschoolid);
-                    var dailyAttRecord = await _context.dailyAttendanceModels.Where(a => (a.StudentId == studidpassed) && (a.AttendanceDate == DateTime.Now.Date)).FirstOrDefaultAsync();
+                    var dailyAttRecord = await _context.dailyAttendanceModels.Where(a => (a.StudentIdMod == studidpassed) && (a.AttendanceDate == DateTime.Now.Date)).FirstOrDefaultAsync();
 
                     if (dailyAttRecord == null)
                     {

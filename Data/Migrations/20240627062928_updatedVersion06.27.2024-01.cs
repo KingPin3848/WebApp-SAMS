@@ -522,7 +522,7 @@ namespace SAMS.Data.Migrations
             migrationBuilder.AddPrimaryKey(
                 name: "PK_StudentLocationModels",
                 table: "StudentLocationModels",
-                column: "StudentId");
+                column: "StudentIdMod");
 
             migrationBuilder.AddPrimaryKey(
                 name: "PK_StudentInfoModels",
@@ -647,7 +647,7 @@ namespace SAMS.Data.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_BellAttendanceModels_StudentId",
                 table: "BellAttendanceModels",
-                column: "StudentId");
+                column: "StudentIdMod");
 
             migrationBuilder.AddForeignKey(
                 name: "FK_ActiveCourseInfoModels_RoomLocationInfoModels_CourseRoomID",
@@ -687,14 +687,14 @@ namespace SAMS.Data.Migrations
             migrationBuilder.AddForeignKey(
                 name: "FK_BellAttendanceModels_StudentInfoModels_StudentId",
                 table: "BellAttendanceModels",
-                column: "StudentId",
+                column: "StudentIdMod",
                 principalTable: "StudentInfoModels",
                 principalColumn: "StudentID");
 
             migrationBuilder.AddForeignKey(
                 name: "FK_DailyAttendanceModels_StudentInfoModels_StudentId",
                 table: "DailyAttendanceModels",
-                column: "StudentId",
+                column: "StudentIdMod",
                 principalTable: "StudentInfoModels",
                 principalColumn: "StudentID");
 
@@ -1483,7 +1483,7 @@ namespace SAMS.Data.Migrations
             migrationBuilder.AddPrimaryKey(
                 name: "PK_studentLocationModels",
                 table: "studentLocationModels",
-                column: "StudentId");
+                column: "StudentIdMod");
 
             migrationBuilder.AddPrimaryKey(
                 name: "PK_studentInfoModels",
@@ -1658,7 +1658,7 @@ namespace SAMS.Data.Migrations
             migrationBuilder.AddForeignKey(
                 name: "FK_dailyAttendanceModels_studentInfoModels_StudentId",
                 table: "dailyAttendanceModels",
-                column: "StudentId",
+                column: "StudentIdMod",
                 principalTable: "studentInfoModels",
                 principalColumn: "StudentID");
 

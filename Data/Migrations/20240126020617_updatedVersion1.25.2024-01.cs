@@ -141,7 +141,7 @@ namespace SAMS.Data.Migrations
                 table: "studentScheduleInfoModels",
                 column: "StudentID",
                 principalTable: "bellAttendanceModels",
-                principalColumn: "StudentId");
+                principalColumn: "StudentIdMod");
 
             migrationBuilder.AddForeignKey(
                 name: "FK_substituteInfoModels_teacherInfoModels_ManagedTeacherIdMod",

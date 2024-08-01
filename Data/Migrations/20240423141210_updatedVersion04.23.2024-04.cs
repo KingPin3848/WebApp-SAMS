@@ -11,7 +11,7 @@ namespace SAMS.Data.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<int>(
-                name: "StudentId",
+                name: "StudentIdMod",
                 table: "bellAttendanceModels",
                 type: "int",
                 nullable: false,
@@ -22,7 +22,7 @@ namespace SAMS.Data.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "StudentId",
+                name: "StudentIdMod",
                 table: "bellAttendanceModels");
         }
     }

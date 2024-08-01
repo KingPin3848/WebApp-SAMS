@@ -168,10 +168,10 @@ namespace SAMS.Areas.Student.Controllers
                             await _context.SaveChangesAsync();
                         }
 
-                        var studLocationEntry = _context.StudentLocationModels.Any(a => a.StudentId == studId);
+                        var studLocationEntry = _context.StudentLocationModels.Any(a => a.StudentIdMod == studId);
                         if (studLocationEntry)
                         {
-                            var studLocation = _context.StudentLocationModels.FirstOrDefault(a => a.StudentId == studId);
+                            var studLocation = _context.StudentLocationModels.FirstOrDefault(a => a.StudentIdMod == studId);
                             if (studLocation != null)
                             {
                                 var room = await _context.RoomLocationInfoModels.FindAsync(roomIdForCourse);
@@ -192,7 +192,7 @@ namespace SAMS.Areas.Student.Controllers
                                 var room = await _context.RoomLocationInfoModels.FindAsync(roomIdForCourse);
                                 var location = new StudentLocationModel
                                 {
-                                    StudentId = studId,
+                                    StudentIdMod = studId,
                                     StudentName = $"{_context.StudentInfoModels.Where(a => a.StudentID == studId).Select(a => a.StudentFirstNameMod)} {_context.StudentInfoModels.Where(a => a.StudentID == studId).Select(a => a.StudentMiddleNameMod)} {_context.StudentInfoModels.Where(a => a.StudentID == studId).Select(a => a.StudentLastNameMod)}",
                                     StudentLocation = $"Unknown Tag!  -  {room?.RoomNumberMod} - {room?.Teacher?.TeacherFirstNameMod} {room?.Teacher?.TeacherLastNameMod}"
                                 };

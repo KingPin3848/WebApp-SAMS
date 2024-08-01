@@ -368,7 +368,7 @@ namespace SAMS.Data.Migrations
 
             modelBuilder.Entity("SAMS.Models.BellAttendanceModel", b =>
                 {
-                    b.Property<int>("StudentId")
+                    b.Property<int>("StudentIdMod")
                         .HasColumnType("int");
 
                     b.Property<int>("BellAttendanceId")
@@ -402,7 +402,7 @@ namespace SAMS.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("StudentId");
+                    b.HasKey("StudentIdMod");
 
                     b.HasIndex("CourseId");
 
@@ -486,12 +486,12 @@ namespace SAMS.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("StudentId")
+                    b.Property<int>("StudentIdMod")
                         .HasColumnType("int");
 
                     b.HasKey("AttendanceId");
 
-                    b.HasIndex("StudentId");
+                    b.HasIndex("StudentIdMod");
 
                     b.ToTable("dailyAttendanceModels");
                 });
@@ -1127,11 +1127,11 @@ namespace SAMS.Data.Migrations
 
             modelBuilder.Entity("SAMS.Models.StudentLocationModel", b =>
                 {
-                    b.Property<int>("StudentId")
+                    b.Property<int>("StudentIdMod")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("StudentId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("StudentIdMod"));
 
                     b.Property<string>("StudentLocation")
                         .HasColumnType("nvarchar(max)");
@@ -1139,7 +1139,7 @@ namespace SAMS.Data.Migrations
                     b.Property<string>("StudentName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("StudentId");
+                    b.HasKey("StudentIdMod");
 
                     b.ToTable("studentLocationModels");
                 });
@@ -1356,7 +1356,7 @@ namespace SAMS.Data.Migrations
 
                     b.HasOne("SAMS.Models.StudentInfoModel", "StudentInfo")
                         .WithMany("BellAttendances")
-                        .HasForeignKey("StudentId")
+                        .HasForeignKey("StudentIdMod")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
@@ -1369,7 +1369,7 @@ namespace SAMS.Data.Migrations
                 {
                     b.HasOne("SAMS.Models.StudentInfoModel", "Student")
                         .WithMany("DailyAttendances")
-                        .HasForeignKey("StudentId")
+                        .HasForeignKey("StudentIdMod")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 

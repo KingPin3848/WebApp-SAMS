@@ -29,7 +29,7 @@ namespace SAMS.Controllers.InfoManagement
             }
 
             var studentLocationModel = await _context.StudentLocationModels
-                .FirstOrDefaultAsync(m => m.StudentId == id);
+                .FirstOrDefaultAsync(m => m.StudentIdMod == id);
             if (studentLocationModel == null)
             {
                 return NotFound();
@@ -49,7 +49,7 @@ namespace SAMS.Controllers.InfoManagement
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("StudentId,StudentName,StudentLocation")] StudentLocationModel studentLocationModel)
+        public async Task<IActionResult> Create([Bind("StudentIdMod,StudentName,StudentLocation")] StudentLocationModel studentLocationModel)
         {
             if (ModelState.IsValid)
             {
@@ -81,9 +81,9 @@ namespace SAMS.Controllers.InfoManagement
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("StudentId,StudentName,StudentLocation")] StudentLocationModel studentLocationModel)
+        public async Task<IActionResult> Edit(int id, [Bind("StudentIdMod,StudentName,StudentLocation")] StudentLocationModel studentLocationModel)
         {
-            if (id != studentLocationModel.StudentId)
+            if (id != studentLocationModel.StudentIdMod)
             {
                 return NotFound();
             }
@@ -97,7 +97,7 @@ namespace SAMS.Controllers.InfoManagement
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!StudentLocationModelExists(studentLocationModel.StudentId))
+                    if (!StudentLocationModelExists(studentLocationModel.StudentIdMod))
                     {
                         return NotFound();
                     }
@@ -120,7 +120,7 @@ namespace SAMS.Controllers.InfoManagement
             }
 
             var studentLocationModel = await _context.StudentLocationModels
-                .FirstOrDefaultAsync(m => m.StudentId == id);
+                .FirstOrDefaultAsync(m => m.StudentIdMod == id);
             if (studentLocationModel == null)
             {
                 return NotFound();
@@ -146,7 +146,7 @@ namespace SAMS.Controllers.InfoManagement
 
         private bool StudentLocationModelExists(int id)
         {
-            return _context.StudentLocationModels.Any(e => e.StudentId == id);
+            return _context.StudentLocationModels.Any(e => e.StudentIdMod == id);
         }
     }
 }

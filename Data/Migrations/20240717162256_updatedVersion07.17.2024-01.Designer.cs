@@ -12,15 +12,15 @@ using SAMS.Data;
 namespace SAMS.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240329023442_updatedVersion03.28.2024-02")]
-    partial class updatedVersion0328202402
+    [Migration("20240717162256_updatedVersion07.17.2024-01")]
+    partial class updatedVersion0717202401
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.3")
+                .HasAnnotation("ProductVersion", "8.0.7")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -171,13 +171,16 @@ namespace SAMS.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("ActivationCode")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(32)
+                        .HasColumnType("nvarchar(32)");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
+                        .IsRequired()
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
@@ -208,6 +211,7 @@ namespace SAMS.Data.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("Role")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SchoolId")
@@ -216,6 +220,9 @@ namespace SAMS.Data.Migrations
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("StudentPin")
+                        .HasColumnType("int");
 
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
@@ -291,7 +298,7 @@ namespace SAMS.Data.Migrations
 
                     b.HasIndex("CourseTeacherID");
 
-                    b.ToTable("activeCourseInfoModels");
+                    b.ToTable("ActiveCourseInfoModels");
                 });
 
             modelBuilder.Entity("SAMS.Models.AdminInfoModel", b =>
@@ -316,20 +323,17 @@ namespace SAMS.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("AdminMiddleNameMod")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("AdminPhoneMod")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("AdminPreferredNameMod")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("AdminID");
 
-                    b.ToTable("adminInfoModels");
+                    b.ToTable("AdminInfoModels");
                 });
 
             modelBuilder.Entity("SAMS.Models.AttendanceOfficeMemberModel", b =>
@@ -350,29 +354,26 @@ namespace SAMS.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("AoMemberMiddleNameMod")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("AoMemberPhoneMod")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("AoMemberPreferredNameMod")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("AoMemberID");
 
-                    b.ToTable("attendanceOfficeMemberModels");
+                    b.ToTable("AttendanceOfficeMemberModels");
                 });
 
             modelBuilder.Entity("SAMS.Models.BellAttendanceModel", b =>
                 {
-                    b.Property<int>("StudentIdMod")
+                    b.Property<int>("BellAttendanceId")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int>("BellAttendanceId")
-                        .HasColumnType("int");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BellAttendanceId"));
 
                     b.Property<string>("BellNumId")
                         .IsRequired()
@@ -402,7 +403,10 @@ namespace SAMS.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("StudentIdMod");
+                    b.Property<int>("StudentIdMod")
+                        .HasColumnType("int");
+
+                    b.HasKey("BellAttendanceId");
 
                     b.HasIndex("CourseId");
 
@@ -410,7 +414,9 @@ namespace SAMS.Data.Migrations
 
                     b.HasIndex("Sem2StudScheduleStudentID");
 
-                    b.ToTable("bellAttendanceModels");
+                    b.HasIndex("StudentIdMod");
+
+                    b.ToTable("BellAttendanceModels");
                 });
 
             modelBuilder.Entity("SAMS.Models.ChosenBellSchedModel", b =>
@@ -427,7 +433,7 @@ namespace SAMS.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ChosenBellSchedModel");
+                    b.ToTable("ChosenBellSchedModels");
                 });
 
             modelBuilder.Entity("SAMS.Models.CounselorModel", b =>
@@ -448,19 +454,37 @@ namespace SAMS.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CounselorMiddleName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("CounselorPhone")
-                        .HasColumnType("int");
+                    b.Property<string>("CounselorPhone")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CounselorPreferredName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("CounselorId");
 
-                    b.ToTable("counselorModels");
+                    b.ToTable("CounselorModels");
+                });
+
+            modelBuilder.Entity("SAMS.Models.CustomScheduleModel", b =>
+                {
+                    b.Property<TimeSpan>("StartTime")
+                        .HasColumnType("time");
+
+                    b.Property<string>("BellName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<TimeSpan>("Duration")
+                        .HasColumnType("time");
+
+                    b.Property<TimeSpan>("EndTime")
+                        .HasColumnType("time");
+
+                    b.HasKey("StartTime");
+
+                    b.ToTable("CustomSchedules");
                 });
 
             modelBuilder.Entity("SAMS.Models.DailyAttendanceModel", b =>
@@ -471,8 +495,8 @@ namespace SAMS.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AttendanceId"));
 
-                    b.Property<DateTime?>("AttendanceDate")
-                        .HasColumnType("datetime2");
+                    b.Property<DateOnly?>("AttendanceDate")
+                        .HasColumnType("date");
 
                     b.Property<string>("ChosenBellSchedule")
                         .IsRequired()
@@ -493,7 +517,7 @@ namespace SAMS.Data.Migrations
 
                     b.HasIndex("StudentIdMod");
 
-                    b.ToTable("dailyAttendanceModels");
+                    b.ToTable("DailyAttendanceModels");
                 });
 
             modelBuilder.Entity("SAMS.Models.DailyBellScheduleModel", b =>
@@ -513,7 +537,7 @@ namespace SAMS.Data.Migrations
 
                     b.HasKey("StartTime");
 
-                    b.ToTable("dailyBellScheduleModels");
+                    b.ToTable("DailyBellScheduleModels");
                 });
 
             modelBuilder.Entity("SAMS.Models.DeveloperInfoModel", b =>
@@ -537,16 +561,14 @@ namespace SAMS.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("DeveloperMiddleNameMod")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("DeveloperPreferredNameMod")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("DeveloperID");
 
-                    b.ToTable("developerInfoModels");
+                    b.ToTable("DeveloperInfoModels");
                 });
 
             modelBuilder.Entity("SAMS.Models.EASuportInfoModel", b =>
@@ -567,15 +589,12 @@ namespace SAMS.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("EaMiddleNameMod")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("EaPhoneMod")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("EaPreferredNameMod")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("EaStudentManaged")
@@ -583,7 +602,7 @@ namespace SAMS.Data.Migrations
 
                     b.HasKey("EaID");
 
-                    b.ToTable("eASuportInfoModels");
+                    b.ToTable("EASuportInfoModels");
                 });
 
             modelBuilder.Entity("SAMS.Models.ExtendedAvesBellScheduleModel", b =>
@@ -603,7 +622,7 @@ namespace SAMS.Data.Migrations
 
                     b.HasKey("StartTime");
 
-                    b.ToTable("extendedAvesModels");
+                    b.ToTable("ExtendedAvesModels");
                 });
 
             modelBuilder.Entity("SAMS.Models.FastPassModel", b =>
@@ -647,7 +666,7 @@ namespace SAMS.Data.Migrations
 
                     b.HasIndex("StudentID");
 
-                    b.ToTable("fastPassModels");
+                    b.ToTable("FastPassModels");
                 });
 
             modelBuilder.Entity("SAMS.Models.HallPassInfoModel", b =>
@@ -694,7 +713,29 @@ namespace SAMS.Data.Migrations
 
                     b.HasIndex("StudentID");
 
-                    b.ToTable("hallPassInfoModels");
+                    b.ToTable("HallPassInfoModels");
+                });
+
+            modelBuilder.Entity("SAMS.Models.HandheldScannerNodeModel", b =>
+                {
+                    b.Property<int>("ScannerID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ScannerID"));
+
+                    b.Property<int>("RoomIDMod")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SerialNumberMod")
+                        .HasColumnType("int");
+
+                    b.HasKey("ScannerID");
+
+                    b.HasIndex("RoomIDMod")
+                        .IsUnique();
+
+                    b.ToTable("HandheldScannerNodeModels");
                 });
 
             modelBuilder.Entity("SAMS.Models.LawEnforcementInfoModel", b =>
@@ -715,20 +756,17 @@ namespace SAMS.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LaweMiddleNameMod")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LawePhoneMod")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LawePreferredNameMod")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("LawenfID");
 
-                    b.ToTable("lawEnforcementInfoModels");
+                    b.ToTable("LawEnforcementInfoModels");
                 });
 
             modelBuilder.Entity("SAMS.Models.NurseInfoModel", b =>
@@ -749,20 +787,17 @@ namespace SAMS.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NurseMiddleNameMod")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NursePhoneMod")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NursePreferredNameMod")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("NurseID");
 
-                    b.ToTable("nurseInfoModels");
+                    b.ToTable("NurseInfoModels");
                 });
 
             modelBuilder.Entity("SAMS.Models.PassRequestInfoModel", b =>
@@ -820,7 +855,7 @@ namespace SAMS.Data.Migrations
 
                     b.HasIndex("StudentID");
 
-                    b.ToTable("passRequestInfoModels");
+                    b.ToTable("PassRequestInfoModels");
                 });
 
             modelBuilder.Entity("SAMS.Models.PepRallyBellScheduleModel", b =>
@@ -840,20 +875,13 @@ namespace SAMS.Data.Migrations
 
                     b.HasKey("StartTime");
 
-                    b.ToTable("pepRallyBellScheduleModels");
+                    b.ToTable("PepRallyBellScheduleModels");
                 });
 
             modelBuilder.Entity("SAMS.Models.RoomLocationInfoModel", b =>
                 {
-                    b.Property<int>("RoomId")
-                        .ValueGeneratedOnAdd()
+                    b.Property<int>("RoomNumberMod")
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RoomId"));
-
-                    b.Property<string>("RoomNumberMod")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("RoomScannerId")
                         .HasColumnType("int");
@@ -862,9 +890,9 @@ namespace SAMS.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("RoomId");
+                    b.HasKey("RoomNumberMod");
 
-                    b.ToTable("roomLocationInfoModels");
+                    b.ToTable("RoomLocationInfoModels");
                 });
 
             modelBuilder.Entity("SAMS.Models.RoomQRCodeModel", b =>
@@ -878,13 +906,16 @@ namespace SAMS.Data.Migrations
 
                     b.HasKey("RoomId");
 
-                    b.ToTable("roomQRCodeModels");
+                    b.ToTable("RoomQRCodeModels");
                 });
 
             modelBuilder.Entity("SAMS.Models.SchedulerModel", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateOnly>("Date")
                         .HasColumnType("date");
@@ -899,7 +930,7 @@ namespace SAMS.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("schedulerModels");
+                    b.ToTable("SchedulerModels");
                 });
 
             modelBuilder.Entity("SAMS.Models.Sem1StudSchedule", b =>
@@ -973,7 +1004,7 @@ namespace SAMS.Data.Migrations
 
                     b.HasKey("StudentID");
 
-                    b.ToTable("sem1StudSchedules");
+                    b.ToTable("Sem1StudSchedules");
                 });
 
             modelBuilder.Entity("SAMS.Models.Sem2StudSchedule", b =>
@@ -1047,7 +1078,7 @@ namespace SAMS.Data.Migrations
 
                     b.HasKey("StudentID");
 
-                    b.ToTable("sem2StudSchedules");
+                    b.ToTable("Sem2StudSchedules");
                 });
 
             modelBuilder.Entity("SAMS.Models.StudentInfoModel", b =>
@@ -1061,7 +1092,7 @@ namespace SAMS.Data.Migrations
                     b.Property<string>("EASuportEaID")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<bool>("HasEASupport")
+                    b.Property<bool?>("HasEASupport")
                         .HasColumnType("bit");
 
                     b.Property<string>("Parentguard1EmailMod")
@@ -1073,11 +1104,9 @@ namespace SAMS.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Parentguard2EmailMod")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Parentguard2NameMod")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("StudentCounselorID")
@@ -1103,15 +1132,12 @@ namespace SAMS.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("StudentMiddleNameMod")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("StudentPhoneMod")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("StudentPreferredNameMod")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("StudentID");
@@ -1122,7 +1148,7 @@ namespace SAMS.Data.Migrations
 
                     b.HasIndex("StudentEAID");
 
-                    b.ToTable("studentInfoModels");
+                    b.ToTable("StudentInfoModels");
                 });
 
             modelBuilder.Entity("SAMS.Models.StudentLocationModel", b =>
@@ -1133,6 +1159,9 @@ namespace SAMS.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("StudentIdMod"));
 
+                    b.Property<int>("StudentIdMod")
+                        .HasColumnType("int");
+
                     b.Property<string>("StudentLocation")
                         .HasColumnType("nvarchar(max)");
 
@@ -1141,39 +1170,10 @@ namespace SAMS.Data.Migrations
 
                     b.HasKey("StudentIdMod");
 
-                    b.ToTable("studentLocationModels");
-                });
-
-            modelBuilder.Entity("SAMS.Models.HandheldScannerNodeModel", b =>
-                {
-                    b.Property<string>("ScannerID")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("ModelNumberMod")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ScannerDeviceIPAddressMod")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ScannerLabelMod")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ScannerMacAddressMod")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("RoomIDMod")
-                        .HasColumnType("int");
-
-                    b.HasKey("ScannerID");
-
-                    b.HasIndex("RoomIDMod")
+                    b.HasIndex("StudentIdMod")
                         .IsUnique();
 
-                    b.ToTable("synnLabQRNodeModels");
+                    b.ToTable("StudentLocationModels");
                 });
 
             modelBuilder.Entity("SAMS.Models.TeacherInfoModel", b =>
@@ -1197,18 +1197,15 @@ namespace SAMS.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TeacherMiddleNameMod")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TeacherPhoneMod")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TeacherPreferredNameMod")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("Teaches5Days")
+                    b.Property<bool?>("Teaches5Days")
                         .HasColumnType("bit");
 
                     b.HasKey("TeacherID");
@@ -1217,7 +1214,7 @@ namespace SAMS.Data.Migrations
                         .IsUnique()
                         .HasFilter("[RoomAssignedId] IS NOT NULL");
 
-                    b.ToTable("teacherInfoModels");
+                    b.ToTable("TeacherInfoModels");
                 });
 
             modelBuilder.Entity("SAMS.Models.TimestampModel", b =>
@@ -1242,7 +1239,7 @@ namespace SAMS.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("timestampModels");
+                    b.ToTable("TimestampModels");
                 });
 
             modelBuilder.Entity("SAMS.Models.TwoHrDelayBellScheduleModel", b =>
@@ -1262,7 +1259,7 @@ namespace SAMS.Data.Migrations
 
                     b.HasKey("StartTime");
 
-                    b.ToTable("twoHrDelayBellScheduleModels");
+                    b.ToTable("TwoHrDelayBellScheduleModels");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -1515,6 +1512,17 @@ namespace SAMS.Data.Migrations
                     b.Navigation("Student");
                 });
 
+            modelBuilder.Entity("SAMS.Models.HandheldScannerNodeModel", b =>
+                {
+                    b.HasOne("SAMS.Models.RoomLocationInfoModel", "Room")
+                        .WithOne("SynnLabQRNode")
+                        .HasForeignKey("SAMS.Models.HandheldScannerNodeModel", "RoomIDMod")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Room");
+                });
+
             modelBuilder.Entity("SAMS.Models.PassRequestInfoModel", b =>
                 {
                     b.HasOne("SAMS.Models.AdminInfoModel", "AddressedByAdmin")
@@ -1679,15 +1687,15 @@ namespace SAMS.Data.Migrations
                     b.Navigation("EASuport");
                 });
 
-            modelBuilder.Entity("SAMS.Models.HandheldScannerNodeModel", b =>
+            modelBuilder.Entity("SAMS.Models.StudentLocationModel", b =>
                 {
-                    b.HasOne("SAMS.Models.RoomLocationInfoModel", "Room")
-                        .WithOne("SynnLabQRNode")
-                        .HasForeignKey("SAMS.Models.HandheldScannerNodeModel", "RoomIDMod")
+                    b.HasOne("SAMS.Models.StudentInfoModel", "Student")
+                        .WithOne("StudentLocation")
+                        .HasForeignKey("SAMS.Models.StudentLocationModel", "StudentIdMod")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.Navigation("Room");
+                    b.Navigation("Student");
                 });
 
             modelBuilder.Entity("SAMS.Models.TeacherInfoModel", b =>
@@ -1809,6 +1817,9 @@ namespace SAMS.Data.Migrations
                     b.Navigation("Sem1StudSchedule");
 
                     b.Navigation("Sem2StudSchedule");
+
+                    b.Navigation("StudentLocation")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("SAMS.Models.TeacherInfoModel", b =>

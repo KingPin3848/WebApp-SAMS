@@ -118,6 +118,7 @@ namespace SAMS.Models
         public ICollection<PassRequestInfoModel>? PassRequestsForStudent { get; set; } = null!;
         public Sem1StudSchedule? Sem1StudSchedule { get; set; } = null!;
         public Sem2StudSchedule? Sem2StudSchedule { get; set; } = null!;
+        //public StudentLocationModel StudentLocation {  get; set; } = null!;
 #pragma warning restore CA2227 // Collection properties should be read only
     }
 }

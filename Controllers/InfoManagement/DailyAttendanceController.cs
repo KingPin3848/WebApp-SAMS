@@ -43,7 +43,7 @@ namespace SAMS.Controllers.InfoManagement
         // GET: DailyAttendance/Create
         public IActionResult Create()
         {
-            ViewData["StudentId"] = new SelectList(_context.StudentInfoModels, "StudentID", "StudentID");
+            ViewData["StudentIdMod"] = new SelectList(_context.StudentInfoModels, "StudentID", "StudentID");
             return View();
         }
 
@@ -52,7 +52,7 @@ namespace SAMS.Controllers.InfoManagement
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("AttendanceId,StudentId,AttendanceDate,Status,ReasonForAbsence,ChosenBellSchedule")] DailyAttendanceModel dailyAttendanceModel)
+        public async Task<IActionResult> Create([Bind("AttendanceId,StudentIdMod,AttendanceDate,Status,ReasonForAbsence,ChosenBellSchedule")] DailyAttendanceModel dailyAttendanceModel)
         {
             if (ModelState.IsValid)
             {
@@ -60,7 +60,7 @@ namespace SAMS.Controllers.InfoManagement
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["StudentId"] = new SelectList(_context.StudentInfoModels, "StudentID", "StudentID", dailyAttendanceModel.StudentId);
+            ViewData["StudentIdMod"] = new SelectList(_context.StudentInfoModels, "StudentID", "StudentID", dailyAttendanceModel.StudentId);
             return View(dailyAttendanceModel);
         }
 
@@ -77,7 +77,7 @@ namespace SAMS.Controllers.InfoManagement
             {
                 return NotFound();
             }
-            ViewData["StudentId"] = new SelectList(_context.StudentInfoModels, "StudentID", "StudentID", dailyAttendanceModel.StudentId);
+            ViewData["StudentIdMod"] = new SelectList(_context.StudentInfoModels, "StudentID", "StudentID", dailyAttendanceModel.StudentId);
             return View(dailyAttendanceModel);
         }
 
@@ -86,7 +86,7 @@ namespace SAMS.Controllers.InfoManagement
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("AttendanceId,StudentId,AttendanceDate,Status,ReasonForAbsence,ChosenBellSchedule")] DailyAttendanceModel dailyAttendanceModel)
+        public async Task<IActionResult> Edit(int id, [Bind("AttendanceId,StudentIdMod,AttendanceDate,Status,ReasonForAbsence,ChosenBellSchedule")] DailyAttendanceModel dailyAttendanceModel)
         {
             if (id != dailyAttendanceModel.AttendanceId)
             {
@@ -113,7 +113,7 @@ namespace SAMS.Controllers.InfoManagement
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["StudentId"] = new SelectList(_context.StudentInfoModels, "StudentID", "StudentID", dailyAttendanceModel.StudentId);
+            ViewData["StudentIdMod"] = new SelectList(_context.StudentInfoModels, "StudentID", "StudentID", dailyAttendanceModel.StudentId);
             return View(dailyAttendanceModel);
         }
 

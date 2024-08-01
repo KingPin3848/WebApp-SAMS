@@ -2,10 +2,12 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using SAMS.Controllers;
 using SAMS.Data;
 using SAMS.Interfaces;
 using SAMS.Models;
+using System.Text.RegularExpressions;
 
 namespace SAMS.Areas.Teacher.Controllers
 {
@@ -15,6 +17,7 @@ namespace SAMS.Areas.Teacher.Controllers
     {
         private readonly IServiceScopeFactory ScopeFactory = serviceScopeFactory;
 
+        [HttpGet]
         public IActionResult Index()
         {
             return View();

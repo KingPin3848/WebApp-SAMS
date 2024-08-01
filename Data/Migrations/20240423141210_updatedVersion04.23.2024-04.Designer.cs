@@ -403,7 +403,7 @@ namespace SAMS.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("StudentId")
+                    b.Property<int>("StudentIdMod")
                         .HasColumnType("int");
 
                     b.Property<int?>("StudentInfoStudentID")
@@ -511,12 +511,12 @@ namespace SAMS.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("StudentId")
+                    b.Property<int>("StudentIdMod")
                         .HasColumnType("int");
 
                     b.HasKey("AttendanceId");
 
-                    b.HasIndex("StudentId");
+                    b.HasIndex("StudentIdMod");
 
                     b.ToTable("dailyAttendanceModels");
                 });
@@ -1148,11 +1148,11 @@ namespace SAMS.Data.Migrations
 
             modelBuilder.Entity("SAMS.Models.StudentLocationModel", b =>
                 {
-                    b.Property<int>("StudentId")
+                    b.Property<int>("StudentIdMod")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("StudentId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("StudentIdMod"));
 
                     b.Property<string>("StudentLocation")
                         .HasColumnType("nvarchar(max)");
@@ -1160,7 +1160,7 @@ namespace SAMS.Data.Migrations
                     b.Property<string>("StudentName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("StudentId");
+                    b.HasKey("StudentIdMod");
 
                     b.ToTable("studentLocationModels");
                 });
@@ -1372,7 +1372,7 @@ namespace SAMS.Data.Migrations
                 {
                     b.HasOne("SAMS.Models.StudentInfoModel", "Student")
                         .WithMany("DailyAttendances")
-                        .HasForeignKey("StudentId")
+                        .HasForeignKey("StudentIdMod")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
