@@ -400,7 +400,7 @@ namespace SAMS.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("StudentIdMod")
+                    b.Property<int>("StudentId")
                         .HasColumnType("int");
 
                     b.HasKey("BellAttendanceId");
@@ -411,7 +411,7 @@ namespace SAMS.Data.Migrations
 
                     b.HasIndex("Sem2StudScheduleStudentID");
 
-                    b.HasIndex("StudentIdMod");
+                    b.HasIndex("StudentId");
 
                     b.ToTable("BellAttendanceModels", (string)null);
                 });
@@ -507,12 +507,12 @@ namespace SAMS.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("StudentIdMod")
+                    b.Property<int>("StudentId")
                         .HasColumnType("int");
 
                     b.HasKey("AttendanceId");
 
-                    b.HasIndex("StudentIdMod");
+                    b.HasIndex("StudentId");
 
                     b.ToTable("DailyAttendanceModels", (string)null);
                 });
@@ -1151,12 +1151,6 @@ namespace SAMS.Data.Migrations
             modelBuilder.Entity("SAMS.Models.StudentLocationModel", b =>
                 {
                     b.Property<int>("StudentIdMod")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("StudentIdMod"));
-
-                    b.Property<int>("StudentIdMod")
                         .HasColumnType("int");
 
                     b.Property<string>("StudentLocation")
@@ -1164,11 +1158,6 @@ namespace SAMS.Data.Migrations
 
                     b.Property<string>("StudentName")
                         .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("StudentIdMod");
-
-                    b.HasIndex("StudentIdMod")
-                        .IsUnique();
 
                     b.ToTable("StudentLocationModels", (string)null);
                 });
@@ -1347,7 +1336,7 @@ namespace SAMS.Data.Migrations
 
                     b.HasOne("SAMS.Models.StudentInfoModel", "StudentInfo")
                         .WithMany("BellAttendances")
-                        .HasForeignKey("StudentIdMod")
+                        .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
@@ -1360,7 +1349,7 @@ namespace SAMS.Data.Migrations
                 {
                     b.HasOne("SAMS.Models.StudentInfoModel", "Student")
                         .WithMany("DailyAttendances")
-                        .HasForeignKey("StudentIdMod")
+                        .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
@@ -1684,17 +1673,6 @@ namespace SAMS.Data.Migrations
                     b.Navigation("EASuport");
                 });
 
-            modelBuilder.Entity("SAMS.Models.StudentLocationModel", b =>
-                {
-                    b.HasOne("SAMS.Models.StudentInfoModel", "Student")
-                        .WithOne("StudentLocation")
-                        .HasForeignKey("SAMS.Models.StudentLocationModel", "StudentIdMod")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("Student");
-                });
-
             modelBuilder.Entity("SAMS.Models.TeacherInfoModel", b =>
                 {
                     b.HasOne("SAMS.Models.RoomLocationInfoModel", "Room")
@@ -1814,9 +1792,6 @@ namespace SAMS.Data.Migrations
                     b.Navigation("Sem1StudSchedule");
 
                     b.Navigation("Sem2StudSchedule");
-
-                    b.Navigation("StudentLocation")
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("SAMS.Models.TeacherInfoModel", b =>
