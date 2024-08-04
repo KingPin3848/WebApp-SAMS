@@ -648,7 +648,7 @@ namespace SAMS.Data.Migrations
                         name: "FK_studentScheduleInfoModels_bellAttendanceModels_StudentID",
                         column: x => x.StudentID,
                         principalTable: "bellAttendanceModels",
-                        principalColumn: "StudentIdMod");
+                        principalColumn: "StudentId");
                     table.ForeignKey(
                         name: "FK_studentScheduleInfoModels_studentInfoModels_StudentID",
                         column: x => x.StudentID,
@@ -749,7 +749,7 @@ namespace SAMS.Data.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_dailyAttendanceModels_StudentId",
                 table: "dailyAttendanceModels",
-                column: "StudentIdMod");
+                column: "StudentId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_fastPassModels_CourseIDFromStudentSchedule",

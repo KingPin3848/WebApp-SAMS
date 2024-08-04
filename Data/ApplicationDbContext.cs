@@ -372,11 +372,11 @@ namespace SAMS.Data
                 .HasForeignKey(c => c.StudentEAID)
                 .OnDelete(DeleteBehavior.NoAction);
 
-            //builder.Entity<StudentInfoModel>()
-            //    .HasOne(a => a.StudentLocation)
-            //    .WithOne(a => a.Student)
-            //    .HasForeignKey<StudentLocationModel>(a => a.StudentIdMod)
-            //    .OnDelete(DeleteBehavior.NoAction);
+            builder.Entity<StudentInfoModel>()
+                .HasOne(a => a.StudentLocation)
+                .WithOne(a => a.Student)
+                .HasForeignKey<StudentLocationModel>(a => a.StudentIdMod)
+                .OnDelete(DeleteBehavior.NoAction);
 
             //Student Schedule Info Model Relationships
             builder.Entity<Sem1StudSchedule>()

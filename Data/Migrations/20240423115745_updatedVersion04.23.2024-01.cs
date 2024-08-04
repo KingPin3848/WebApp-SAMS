@@ -35,7 +35,7 @@ namespace SAMS.Data.Migrations
                 table: "bellAttendanceModels");
 
             migrationBuilder.DropColumn(
-                name: "StudentIdMod",
+                name: "StudentId",
                 table: "bellAttendanceModels");
 
             migrationBuilder.RenameColumn(
@@ -105,7 +105,7 @@ namespace SAMS.Data.Migrations
                 newName: "IX_bellAttendanceModels_Sem1StudScheduleStudentID");
 
             migrationBuilder.AddColumn<int>(
-                name: "StudentIdMod",
+                name: "StudentId",
                 table: "bellAttendanceModels",
                 type: "int",
                 nullable: false,
@@ -114,7 +114,7 @@ namespace SAMS.Data.Migrations
             migrationBuilder.AddPrimaryKey(
                 name: "PK_bellAttendanceModels",
                 table: "bellAttendanceModels",
-                column: "StudentIdMod");
+                column: "StudentId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_bellAttendanceModels_CourseId",
@@ -145,7 +145,7 @@ namespace SAMS.Data.Migrations
             migrationBuilder.AddForeignKey(
                 name: "FK_bellAttendanceModels_studentInfoModels_StudentId",
                 table: "bellAttendanceModels",
-                column: "StudentIdMod",
+                column: "StudentId",
                 principalTable: "studentInfoModels",
                 principalColumn: "StudentID");
         }

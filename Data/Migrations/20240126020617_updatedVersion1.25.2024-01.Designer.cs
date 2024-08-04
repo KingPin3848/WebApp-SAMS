@@ -363,7 +363,7 @@ namespace SAMS.Data.Migrations
 
             modelBuilder.Entity("SAMS.Models.BellAttendanceModel", b =>
                 {
-                    b.Property<int>("StudentIdMod")
+                    b.Property<int>("StudentId")
                         .HasColumnType("int");
 
                     b.Property<int>("BellAttendanceId")
@@ -386,7 +386,7 @@ namespace SAMS.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("StudentIdMod");
+                    b.HasKey("StudentId");
 
                     b.HasIndex("ScheduleId");
 
@@ -488,12 +488,12 @@ namespace SAMS.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("StudentIdMod")
+                    b.Property<int>("StudentId")
                         .HasColumnType("int");
 
                     b.HasKey("AttendanceId");
 
-                    b.HasIndex("StudentIdMod");
+                    b.HasIndex("StudentId");
 
                     b.ToTable("dailyAttendanceModels");
                 });
@@ -1272,7 +1272,7 @@ namespace SAMS.Data.Migrations
 
                     b.HasOne("SAMS.Models.StudentInfoModel", "StudentInfo")
                         .WithMany("BellAttendances")
-                        .HasForeignKey("StudentIdMod")
+                        .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
@@ -1312,7 +1312,7 @@ namespace SAMS.Data.Migrations
                 {
                     b.HasOne("SAMS.Models.StudentInfoModel", "Student")
                         .WithMany("DailyAttendances")
-                        .HasForeignKey("StudentIdMod")
+                        .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
