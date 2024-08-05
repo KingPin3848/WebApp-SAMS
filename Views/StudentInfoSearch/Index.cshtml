@@ -39,7 +39,7 @@
             url: '/StudentInfoSearch/Search',
             type: 'POST',
             data: sendData,
-            success: function(response){
+            success: function(response) {
 
                 $('#searchResults').empty();
 
@@ -60,13 +60,17 @@
 
                 $('#searchResults').empty();
 
-                for (var i = 0; i <= response.search_results.length; i++) {
-                    var firstName = response.search_results[i].StudentFirstNameMod;
-                    var middleName = response.search_results[i].StudentMiddleNameMod;
-                    var lastName = response.search_results[i].StudentLastNameMod;
+                var searchResults = document.getElementById('searchResults');
 
-                    $('#searchResults').append('<p>' + firstName + ' (' + lastName + ')</p> <br>');
+                for (var i = 0; i < response.search_results.length; i++) {
+                    var studentID = response.search_results[i].studentID;
+                    var firstName = response.search_results[i].studentFirstNameMod;
+                    var middleName = response.search_results[i].studentMiddleNameMod;
+                    var lastName = response.search_results[i].studentLastNameMod;
 
+                    var p = document.createElement("p");
+                    p.textContent = "Student ID: " + studentID + " Name: " + firstName + " " + middleName + " " + lastName;
+                    searchResults.appendChild(p);
                 }
             }
 
