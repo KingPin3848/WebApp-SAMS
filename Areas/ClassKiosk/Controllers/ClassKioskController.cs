@@ -1,10 +1,13 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.Operations;
+using Microsoft.Extensions.FileSystemGlobbing.Internal;
 using SAMS.Controllers;
 using SAMS.Data;
 using SAMS.Interfaces;
 using SAMS.Models;
 using System.ComponentModel.DataAnnotations;
+using System.Text.RegularExpressions;
 
 namespace SAMS.Areas.ClassKiosk.Controllers
 {
@@ -278,10 +281,10 @@ namespace SAMS.Areas.ClassKiosk.Controllers
                                 await dbcontext.SaveChangesAsync().ConfigureAwait(true);
                             }
 
-                            var studLocationEntry = dbcontext.StudentLocationModels.Any(a => a.StudentId == studId);
+                            var studLocationEntry = dbcontext.StudentLocationModels.Any(a => a.StudentIdMod == studId);
                             if (studLocationEntry)
                             {
-                                var studLocation = dbcontext.StudentLocationModels.First(a => a.StudentId == studId);
+                                var studLocation = dbcontext.StudentLocationModels.First(a => a.StudentIdMod == studId);
                                 if (studLocation != null)
                                 {
                                     datetime = DateTime.Now;
@@ -312,7 +315,7 @@ namespace SAMS.Areas.ClassKiosk.Controllers
                                 var room = await dbcontext.RoomLocationInfoModels.FindAsync(roomIdByScanner).ConfigureAwait(true);
                                 var studLocation = new StudentLocationModel
                                 {
-                                    StudentId = studId,
+                                    StudentIdMod = studId,
                                     StudentName = (dbcontext.StudentInfoModels.Where(a => a.StudentID == studId).First().StudentFirstNameMod) + (dbcontext.StudentInfoModels.Where(a => a.StudentID == studId).First().StudentLastNameMod),
                                     StudentLocation = $"{room!.RoomNumberMod} - {room!.Teacher!.TeacherFirstNameMod} {room!.Teacher!.TeacherLastNameMod}"
                                 };
@@ -388,13 +391,6 @@ namespace SAMS.Areas.ClassKiosk.Controllers
                 }
             }
             return false;
-        }
-
-        private string GetBellSchedule()
-        {
-            using var scope = _serviceScopeFactory.CreateScope();
-            using var dbcontext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-            return (dbcontext.ChosenBellSchedModels.First().Name!);
         }
 
         private List<string> GetCurrentBell(string sched)
@@ -522,8 +518,14 @@ namespace SAMS.Areas.ClassKiosk.Controllers
             }
         }
 
-        private static int GetCourseIdForCurrentBell(string currentBell, IStudentSchedule studentSchedule)
+        private int GetCourseIdForCurrentBell(string currentBell, IStudentSchedule studentSchedule)
         {
+
+            if (currentBell.Contains("Transition", StringComparison.Ordinal))
+            {
+                return (TransitionHandler(currentBell, studentSchedule));
+            }
+
             switch (currentBell)
             {
                 case "Bell 1":
@@ -564,9 +566,320 @@ namespace SAMS.Areas.ClassKiosk.Controllers
                         return studentSchedule.Bell7MonWedCourseIDMod;
                     }
                     return studentSchedule.Bell7TueThurCourseIDMod;
+                case "Aves Bell":
+                    return studentSchedule.AvesBellCourseIDMod;
+                case "Extended Aves Bell":
+                    return studentSchedule.AvesBellCourseIDMod;
+                default:
+                    return (DefaultWorker(currentBell, studentSchedule));
+            }
+        }
+
+        private int TransitionHandler(string currentBell, IStudentSchedule studentSchedule)
+        {
+            string bellsched = GetBellSchedule();
+            if (bellsched == "Daily Bell Schedule")
+            {
+                return (DailyTransition(currentBell, studentSchedule));
+            }
+            else if (bellsched == "Extended Aves Bell Schedule")
+            {
+                return (ExtendedAvesTransition(currentBell, studentSchedule));
+            }
+            else if (bellsched == "Pep Rally Bell Schedule")
+            {
+                return (PepRallyTransition(currentBell, studentSchedule));
+            }
+            else if (bellsched == "Custom Bell Schedule")
+            {
+                return (CustomTransition(currentBell, studentSchedule));
+            }
+            else
+            {
+                return 0;
+            }
+        }
+        private static int DailyTransition(string currentBell, IStudentSchedule studentSchedule)
+        {
+            switch (currentBell)
+            {
+                case "Transition 1":
+                    {
+                        if (DateTime.Now.Date.DayOfWeek == DayOfWeek.Monday || DateTime.Now.Date.DayOfWeek == DayOfWeek.Wednesday)
+                        {
+                            return studentSchedule.Bell2MonWedCourseIDMod;
+                        }
+                        return studentSchedule.Bell2TueThurCourseIDMod;
+                    }
+                case "Transition 2":
+                    {
+                        return studentSchedule.AvesBellCourseIDMod;
+                    }
+                case "Transition 3":
+                    {
+                        if (DateTime.Now.Date.DayOfWeek == DayOfWeek.Monday || DateTime.Now.Date.DayOfWeek == DayOfWeek.Wednesday)
+                        {
+                            return studentSchedule.Bell3MonWedCourseIDMod;
+                        }
+                        return studentSchedule.Bell3TueThurCourseIDMod;
+                    }
+                case "Transition 4":
+                    {
+                        if (DateTime.Now.Date.DayOfWeek == DayOfWeek.Monday || DateTime.Now.Date.DayOfWeek == DayOfWeek.Wednesday)
+                        {
+                            return studentSchedule.Bell4MonWedCourseIDMod;
+                        }
+                        return studentSchedule.Bell4TueThurCourseIDMod;
+                    }
+                case "Transition 5":
+                    {
+                        if (DateTime.Now.Date.DayOfWeek == DayOfWeek.Monday || DateTime.Now.Date.DayOfWeek == DayOfWeek.Wednesday)
+                        {
+                            return studentSchedule.Bell6MonWedCourseIDMod;
+                        }
+                        return studentSchedule.Bell6TueThurCourseIDMod;
+                    }
+                case "Transition 6":
+                    {
+                        if (DateTime.Now.Date.DayOfWeek == DayOfWeek.Monday || DateTime.Now.Date.DayOfWeek == DayOfWeek.Wednesday)
+                        {
+                            return studentSchedule.Bell7MonWedCourseIDMod;
+                        }
+                        return studentSchedule.Bell7TueThurCourseIDMod;
+                    }
                 default:
                     return 0;
             }
+        }
+        private static int ExtendedAvesTransition(string currentBell, IStudentSchedule studentSchedule)
+        {
+            switch (currentBell)
+            {
+                case "Transition 1":
+                    {
+                        if (DateTime.Now.Date.DayOfWeek == DayOfWeek.Monday || DateTime.Now.Date.DayOfWeek == DayOfWeek.Wednesday)
+                        {
+                            return studentSchedule.Bell2MonWedCourseIDMod;
+                        }
+                        return studentSchedule.Bell2TueThurCourseIDMod;
+                    }
+                case "Transition 2":
+                    {
+                        return studentSchedule.AvesBellCourseIDMod;
+                    }
+                case "Transition 3":
+                    {
+                        if (DateTime.Now.Date.DayOfWeek == DayOfWeek.Monday || DateTime.Now.Date.DayOfWeek == DayOfWeek.Wednesday)
+                        {
+                            return studentSchedule.Bell3MonWedCourseIDMod;
+                        }
+                        return studentSchedule.Bell3TueThurCourseIDMod;
+                    }
+                case "Transition 4":
+                    {
+                        if (DateTime.Now.Date.DayOfWeek == DayOfWeek.Monday || DateTime.Now.Date.DayOfWeek == DayOfWeek.Wednesday)
+                        {
+                            return studentSchedule.Bell4MonWedCourseIDMod;
+                        }
+                        return studentSchedule.Bell4TueThurCourseIDMod;
+                    }
+                case "Transition 5":
+                    {
+                        if (DateTime.Now.Date.DayOfWeek == DayOfWeek.Monday || DateTime.Now.Date.DayOfWeek == DayOfWeek.Wednesday)
+                        {
+                            return studentSchedule.Bell5MonWedCourseIDMod;
+                        }
+                        return studentSchedule.Bell5TueThurCourseIDMod;
+                    }
+                case "Transition 6":
+                    {
+                        if (DateTime.Now.Date.DayOfWeek == DayOfWeek.Monday || DateTime.Now.Date.DayOfWeek == DayOfWeek.Wednesday)
+                        {
+                            return studentSchedule.Bell6MonWedCourseIDMod;
+                        }
+                        return studentSchedule.Bell6TueThurCourseIDMod;
+                    }
+                case "Transition 7":
+                    {
+                        if (DateTime.Now.Date.DayOfWeek == DayOfWeek.Monday || DateTime.Now.Date.DayOfWeek == DayOfWeek.Wednesday)
+                        {
+                            return studentSchedule.Bell7MonWedCourseIDMod;
+                        }
+                        return studentSchedule.Bell7TueThurCourseIDMod;
+                    }
+                default:
+                    return 0;
+            }
+        }
+        private static int PepRallyTransition(string currentBell, IStudentSchedule studentSchedule)
+        {
+            switch (currentBell)
+            {
+                case "Transition 1":
+                    {
+                        if (DateTime.Now.Date.DayOfWeek == DayOfWeek.Monday || DateTime.Now.Date.DayOfWeek == DayOfWeek.Wednesday)
+                        {
+                            return studentSchedule.Bell2MonWedCourseIDMod;
+                        }
+                        return studentSchedule.Bell2TueThurCourseIDMod;
+                    }
+                case "Transition 2":
+                    {
+                        if (DateTime.Now.Date.DayOfWeek == DayOfWeek.Monday || DateTime.Now.Date.DayOfWeek == DayOfWeek.Wednesday)
+                        {
+                            return studentSchedule.Bell3MonWedCourseIDMod;
+                        }
+                        return studentSchedule.Bell3TueThurCourseIDMod;
+                    }
+                case "Transition 3":
+                    {
+                        if (DateTime.Now.Date.DayOfWeek == DayOfWeek.Monday || DateTime.Now.Date.DayOfWeek == DayOfWeek.Wednesday)
+                        {
+                            return studentSchedule.Bell4MonWedCourseIDMod;
+                        }
+                        return studentSchedule.Bell4TueThurCourseIDMod;
+                    }
+                case "Transition 4":
+                    {
+                        if (DateTime.Now.Date.DayOfWeek == DayOfWeek.Monday || DateTime.Now.Date.DayOfWeek == DayOfWeek.Wednesday)
+                        {
+                            return studentSchedule.Bell6MonWedCourseIDMod;
+                        }
+                        return studentSchedule.Bell6TueThurCourseIDMod;
+                    }
+                case "Transition 5":
+                    {
+                        if (DateTime.Now.Date.DayOfWeek == DayOfWeek.Monday || DateTime.Now.Date.DayOfWeek == DayOfWeek.Wednesday)
+                        {
+                            return studentSchedule.Bell5MonWedCourseIDMod;
+                        }
+                        return studentSchedule.Bell5TueThurCourseIDMod;
+                    }
+                case "Transition 6":
+                    {
+                        if (DateTime.Now.Date.DayOfWeek == DayOfWeek.Monday || DateTime.Now.Date.DayOfWeek == DayOfWeek.Wednesday)
+                        {
+                            return studentSchedule.Bell7MonWedCourseIDMod;
+                        }
+                        return studentSchedule.Bell7TueThurCourseIDMod;
+                    }
+                default:
+                    return 0;
+            }
+        }
+        private int CustomTransition(string currentBell, IStudentSchedule studentSchedule)
+        {
+            using var scope = _serviceScopeFactory.CreateAsyncScope();
+            var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
+            var customSchedule = context.CustomSchedules;
+
+
+            var transitionMappings = new Dictionary<string, Func<string>>
+            {
+                { "Transition 1", () => customSchedule.SkipWhile(a => a.BellName == "Transition 1").Skip(1).First().BellName },
+                { "Transition 2", () => customSchedule.SkipWhile(a => a.BellName == "Transition 2").Skip(1).First().BellName },
+                { "Transition 3", () => customSchedule.SkipWhile(a => a.BellName == "Transition 3").Skip(1).First().BellName },
+                { "Transition 4", () => customSchedule.SkipWhile(a => a.BellName == "Transition 4").Skip(1).First().BellName },
+                { "Transition 5", () => customSchedule.SkipWhile(a => a.BellName == "Transition 5").Skip(1).First().BellName },
+                { "Transition 6", () => customSchedule.SkipWhile(a => a.BellName == "Transition 6").Skip(1).First().BellName },
+                { "Transition 7", () => customSchedule.SkipWhile(a => a.BellName == "Transition 7").Skip(1).First().BellName }
+            };
+
+            // Check if currentBell exists in transitionMappings
+            if (transitionMappings.TryGetValue(currentBell, out var getBellName))
+            {
+                string bellname = getBellName();
+                return DefaultWorker(bellname, studentSchedule);
+            }
+            else
+            {
+                return 0;
+            }
+        }
+        private static int DefaultWorker(string bellname, IStudentSchedule studentSchedule)
+        {
+            string pattern = @"Bell (\d+) ([ABC])?";
+            Match match = Regex.Match(bellname, pattern);
+            if (match.Success)
+            {
+                if (int.TryParse(match.Groups[1].Value, out int number))
+                {
+                    switch (number)
+                    {
+                        case 1:
+                            {
+                                return studentSchedule.Bell1CourseIDMod;
+                            }
+                        case 2:
+                            {
+                                if (DateTime.Now.Date.DayOfWeek == DayOfWeek.Monday || DateTime.Now.Date.DayOfWeek == DayOfWeek.Wednesday)
+                                {
+                                    return studentSchedule.Bell2MonWedCourseIDMod;
+                                }
+                                return studentSchedule.Bell2TueThurCourseIDMod;
+                            }
+                        case 3:
+                            {
+                                if (DateTime.Now.Date.DayOfWeek == DayOfWeek.Monday || DateTime.Now.Date.DayOfWeek == DayOfWeek.Wednesday)
+                                {
+                                    return studentSchedule.Bell3MonWedCourseIDMod;
+                                }
+                                return studentSchedule.Bell3TueThurCourseIDMod;
+                            }
+                        case 4:
+                            {
+                                if (DateTime.Now.Date.DayOfWeek == DayOfWeek.Monday || DateTime.Now.Date.DayOfWeek == DayOfWeek.Wednesday)
+                                {
+                                    return studentSchedule.Bell4MonWedCourseIDMod;
+                                }
+                                return studentSchedule.Bell4TueThurCourseIDMod;
+                            }
+                        case 5:
+                            {
+                                if (DateTime.Now.Date.DayOfWeek == DayOfWeek.Monday || DateTime.Now.Date.DayOfWeek == DayOfWeek.Wednesday)
+                                {
+                                    return studentSchedule.Bell5MonWedCourseIDMod;
+                                }
+                                return studentSchedule.Bell5TueThurCourseIDMod;
+                            }
+                        case 6:
+                            {
+                                if (DateTime.Now.Date.DayOfWeek == DayOfWeek.Monday || DateTime.Now.Date.DayOfWeek == DayOfWeek.Wednesday)
+                                {
+                                    return studentSchedule.Bell6MonWedCourseIDMod;
+                                }
+                                return studentSchedule.Bell6TueThurCourseIDMod;
+                            }
+                        case 7:
+                            {
+                                if (DateTime.Now.Date.DayOfWeek == DayOfWeek.Monday || DateTime.Now.Date.DayOfWeek == DayOfWeek.Wednesday)
+                                {
+                                    return studentSchedule.Bell7MonWedCourseIDMod;
+                                }
+                                return studentSchedule.Bell7TueThurCourseIDMod;
+                            }
+                        default:
+                            return 0;
+                    }
+                }
+                else
+                {
+                    return 0;
+                }
+
+            }
+            else
+            {
+                return 0;
+            }
+        }
+
+        private string GetBellSchedule()
+        {
+            using var scope = _serviceScopeFactory.CreateScope();
+            using var dbcontext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+            return (dbcontext.ChosenBellSchedModels.First().Name!);
         }
     }
 

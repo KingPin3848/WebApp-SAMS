@@ -11,20 +11,30 @@ using System.Diagnostics;
 namespace SAMS.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    public class AccountManagerController(ILogger<AccountManagerController> logger, IServiceScopeFactory serviceScopeFactory) : Controller
+    public class AccountManagerController : Controller
     {
-        private readonly ILogger<AccountManagerController> _logger = logger;
-        private readonly IServiceScopeFactory scopeFactory = serviceScopeFactory;
+        private readonly ILogger<AccountManagerController> _logger;
+        private readonly IServiceScopeFactory scopeFactory;
+        private readonly ApplicationDbContext context;
+        private readonly UserManager<ApplicationUser> userManager;
         //private readonly IEmailSender<ApplicationUser> _emailSender = emailSender;
 
-
+#pragma warning disable IDE0290 // Use primary constructor
+        public AccountManagerController(ILogger<AccountManagerController> logger, IServiceScopeFactory serviceScopeFactory, ApplicationDbContext Context, UserManager<ApplicationUser> UserManager)
+#pragma warning restore IDE0290 // Use primary constructor
+        {
+            _logger = logger;
+            scopeFactory = serviceScopeFactory;
+            context = Context;
+            userManager = UserManager;
+        }
 
         [HttpGet]
         // GET: AccountManager
         public async Task<IActionResult> Index()
         {
             using var scope = scopeFactory.CreateAsyncScope();
-            using var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+            var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
             //EventId = 1; CodeIdentifier = 74
             var users = userManager.Users.ToList();
@@ -54,7 +64,7 @@ namespace SAMS.Areas.Admin.Controllers
         public async Task<IActionResult> Details(string? id)
         {
             using var scope = scopeFactory.CreateAsyncScope();
-            using var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+            var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
             if (id == null)
             {
@@ -79,7 +89,7 @@ namespace SAMS.Areas.Admin.Controllers
         [RequireHttps]
         public ActionResult Create()
         {
-            using var scope = scopeFactory.CreateAsyncScope();
+            var scope = scopeFactory.CreateAsyncScope();
             var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
             ViewData["RoleId"] = new SelectList(context.Roles, "Name", "Name");
@@ -106,7 +116,7 @@ namespace SAMS.Areas.Admin.Controllers
                 {
                     var user = CreateUser();
                     using var scope = scopeFactory.CreateAsyncScope();
-                    using var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+                    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
                     IEnumerable<string> listRoles = input.Role!;
                     await userManager.SetUserNameAsync(user, input.SchoolId).ConfigureAwait(true);
@@ -479,9 +489,6 @@ namespace SAMS.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-            using var scope = scopeFactory.CreateAsyncScope();
-            var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-            var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
             var user = await userManager.FindByIdAsync(id).ConfigureAwait(true);
             if (user == null)
@@ -489,10 +496,8 @@ namespace SAMS.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            // Assuming you have a list of roles in your context similar to the StudentId in your example
             ViewData["RoleId"] = new SelectList(context.Roles, "Name", "Name", user.Role);
             return View(user);
-
         }
 
 
@@ -521,7 +526,7 @@ namespace SAMS.Areas.Admin.Controllers
             {
                 try
                 {
-                    using var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+                    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
                     var user = await userManager.FindByIdAsync(id).ConfigureAwait(true);
                     if (user == null)
@@ -609,7 +614,7 @@ namespace SAMS.Areas.Admin.Controllers
             }
 
             using var scope = scopeFactory.CreateAsyncScope();
-            using var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+            var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
             var user = await userManager.FindByIdAsync(id).ConfigureAwait(true);
             if (user == null)
@@ -711,7 +716,7 @@ namespace SAMS.Areas.Admin.Controllers
             try
             {
                 using var scope = scopeFactory.CreateAsyncScope();
-                using var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+                var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
                 var user = await userManager.FindByIdAsync(id).ConfigureAwait(true);
                 if (user == null)
@@ -762,13 +767,13 @@ namespace SAMS.Areas.Admin.Controllers
                             case "Teacher":
                                 {
                                     var teacherid = schoolId;
-                                    List<ActiveCourseInfoModel>? courses = context.ActiveCourseInfoModels.Where(a => a.CourseTeacherID == teacherid).ToList() ?? throw new InvalidOperationException("Unable to retrieve teacher's courses for deletion.");
-                                    List<TeacherInfoModel>? teacherInfo = context.TeacherInfoModels.Where(a => a.TeacherID == teacherid).ToList() ?? throw new InvalidOperationException("Unable to retrieve teacher data for deletion.");
+                                    List<ActiveCourseInfoModel>? courses = context.ActiveCourseInfoModels.Where(a => a.CourseTeacherID == teacherid).ToList();
+                                    List<TeacherInfoModel>? teacherInfo = context.TeacherInfoModels.Where(a => a.TeacherID == teacherid).ToList();
 
                                     if (courses.Count == 0)
                                     {
 #pragma warning disable CA1848 // Use the LoggerMessage delegates
-                                        _logger.LogInformation("Courses couldn't be found.");
+                                        _logger.LogInformation("Courses couldn't be found. Unable to retrieve teacher's courses for deletion.");
 #pragma warning restore CA1848 // Use the LoggerMessage delegates
                                     }
                                     else
@@ -780,7 +785,7 @@ namespace SAMS.Areas.Admin.Controllers
                                     if (teacherInfo.Count == 0)
                                     {
 #pragma warning disable CA1848 // Use the LoggerMessage delegates
-                                        _logger.LogInformation("Teacher information couldn't be found.");
+                                        _logger.LogInformation("Teacher information couldn't be found. Unable to retrieve teacher data for deletion.");
 #pragma warning restore CA1848 // Use the LoggerMessage delegates
                                     }
                                     else
@@ -812,10 +817,18 @@ namespace SAMS.Areas.Admin.Controllers
                             case "Synnovation Lab Admin":
                                 {
                                     var adminid = schoolId;
-                                    var admininfo = context.AdminInfoModels.Where(a => a.AdminID == adminid).ToList() ?? throw new InvalidOperationException("Unable to retrieve admin data for deletion.");
+                                    var admininfo = context.AdminInfoModels.Where(a => a.AdminID == adminid).ToList();
 
-                                    var deletion = context.Remove(admininfo);
-                                    await context.SaveChangesAsync().ConfigureAwait(true);
+                                    if (admininfo.Count == 0)
+                                    {
+                                        _logger.LogCritical("adminInfo is empty.");
+                                    }
+                                    else
+                                    {
+                                        var deletion = context.Remove(admininfo);
+                                        await context.SaveChangesAsync().ConfigureAwait(true);
+                                    }
+
                                     break;
                                 }
                             case "Education Support (EA)":
@@ -913,7 +926,7 @@ namespace SAMS.Areas.Admin.Controllers
 
 
 
-
+        [HttpGet]
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error(string Message)
         {

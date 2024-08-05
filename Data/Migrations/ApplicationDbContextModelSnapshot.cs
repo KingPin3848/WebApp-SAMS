@@ -1150,11 +1150,8 @@ namespace SAMS.Data.Migrations
 
             modelBuilder.Entity("SAMS.Models.StudentLocationModel", b =>
                 {
-                    b.Property<int>("StudentId")
-                        .ValueGeneratedOnAdd()
+                    b.Property<int>("StudentIdMod")
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("StudentId"));
 
                     b.Property<string>("StudentLocation")
                         .HasColumnType("nvarchar(max)");
@@ -1162,7 +1159,7 @@ namespace SAMS.Data.Migrations
                     b.Property<string>("StudentName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("StudentId");
+                    b.HasKey("StudentIdMod");
 
                     b.ToTable("StudentLocationModels");
                 });
@@ -1678,6 +1675,17 @@ namespace SAMS.Data.Migrations
                     b.Navigation("EASuport");
                 });
 
+            modelBuilder.Entity("SAMS.Models.StudentLocationModel", b =>
+                {
+                    b.HasOne("SAMS.Models.StudentInfoModel", "Student")
+                        .WithOne("StudentLocation")
+                        .HasForeignKey("SAMS.Models.StudentLocationModel", "StudentIdMod")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Student");
+                });
+
             modelBuilder.Entity("SAMS.Models.TeacherInfoModel", b =>
                 {
                     b.HasOne("SAMS.Models.RoomLocationInfoModel", "Room")
@@ -1797,6 +1805,9 @@ namespace SAMS.Data.Migrations
                     b.Navigation("Sem1StudSchedule");
 
                     b.Navigation("Sem2StudSchedule");
+
+                    b.Navigation("StudentLocation")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("SAMS.Models.TeacherInfoModel", b =>

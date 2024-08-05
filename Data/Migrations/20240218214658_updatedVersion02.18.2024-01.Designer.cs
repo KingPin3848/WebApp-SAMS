@@ -398,7 +398,7 @@ namespace SAMS.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("StudentId");
+                    b.HasKey("  ");
 
                     b.HasIndex("CourseId");
 

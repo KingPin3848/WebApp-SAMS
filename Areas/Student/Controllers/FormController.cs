@@ -200,10 +200,10 @@ namespace SAMS.Areas.Student.Controllers
                     _context.TimestampModels.Add(timeStamp);
                 }
 
-                var studLocationEntry = _context.StudentLocationModels.Any(a => a.StudentId == studId);
+                var studLocationEntry = _context.StudentLocationModels.Any(a => a.StudentIdMod == studId);
                 if (studLocationEntry)
                 {
-                    var studLocation = _context.StudentLocationModels.FirstOrDefault(a => a.StudentId == studId);
+                    var studLocation = _context.StudentLocationModels.FirstOrDefault(a => a.StudentIdMod == studId);
                     if (studLocation != null)
                     {
                         var room = await _context.RoomLocationInfoModels.FindAsync(roomIdForCourse);
