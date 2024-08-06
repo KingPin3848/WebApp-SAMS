@@ -15,12 +15,19 @@
     </div>
 
     <div>
-        <input type="text" id="text" onkeyup="getData()" />
+        <input type="text" id="text" onkeyup="getData()" size="82" />
     </div>
 
 </form>
 
 <div id="searchResults"> </div>
+
+<style>
+    .card:hover {
+        background-color: rgba(211, 211, 211, 0.5); 
+        transition: background-color 0.3s ease; 
+    }
+</style>
 
 <script>
 
@@ -39,39 +46,46 @@
             url: '/StudentInfoSearch/Search',
             type: 'POST',
             data: sendData,
-            success: function(response) {
+            success: function (response) {
 
+                console.log("Response received:", response);
                 $('#searchResults').empty();
 
-                var searchResults = document.getElementById('searchResults');
+                response.forEach(function (i) {
+                    var card = document.createElement("div");
+                    card.className = "card";
+                    card.style.width = "40rem";
+                    card.style.cursor = "pointer"; 
 
-                for (var i = 0; i < response.search_results.length; i++){
-                    var studentID = response.search_results[i].StudentID;
-                    var firstName = response.search_results[i].StudentFirstNameMod;
-                    var middleName = response.search_results[i].StudentMiddleNameMod;
-                    var lastName = response.search_results[i].StudentLastNameMod;
+                    var cardBody = document.createElement("div");
+                    cardBody.className = "card-body";
 
-                    var p = document.createElement("p");
-                    p.textContent = "Student ID: " + studentID + " Name: " + firstName + " " + middleName + " " + lastName;
-                    searchResults.appendChild(p);
-                }
+                    var cardTitle = document.createElement("h5");
+                    cardTitle.className = "card-title";
+                    cardTitle.textContent = "Student ID: " + i.studentID;
+
+                    var cardText = document.createElement("p");
+                    cardText.className = "card-text";
+                    cardText.textContent = "Name: " + i.studentFirstNameMod + " " + i.studentMiddleNameMod + " " + i.studentLastNameMod;
+
+                    cardBody.appendChild(cardTitle);
+                    cardBody.appendChild(cardText);
+                    card.appendChild(cardBody);
+                    searchResults.appendChild(card);
+
+                    card.addEventListener("click", function () {
+                        window.location.href = "/StudentInfoModels";
+                    });
+                });
+
             },
             error: function (response) {
 
                 $('#searchResults').empty();
 
-                var searchResults = document.getElementById('searchResults');
-
-                for (var i = 0; i < response.search_results.length; i++) {
-                    var studentID = response.search_results[i].studentID;
-                    var firstName = response.search_results[i].studentFirstNameMod;
-                    var middleName = response.search_results[i].studentMiddleNameMod;
-                    var lastName = response.search_results[i].studentLastNameMod;
-
-                    var p = document.createElement("p");
-                    p.textContent = "Student ID: " + studentID + " Name: " + firstName + " " + middleName + " " + lastName;
-                    searchResults.appendChild(p);
-                }
+                var p = document.createElement("p");
+                p.textContent = "Please Select a Search Option Above";
+                searchResults.appendChild(p);
             }
 
         });

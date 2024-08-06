@@ -33,15 +33,14 @@ namespace SAMS.Controllers
 
         [HttpPost]
         public async Task<IActionResult> Search(string filter, string SearchQuery)
-        
         {
             List<StudentInfoModel> search_results = new List<StudentInfoModel>();
 
-            if(filter == "StudentID")
+            if (filter == "StudentID")
             {
-                //search_results = await _context.StudentInfoModels.Where(a => a.StudentID == SearchQuery).ToListAsync();
-            } 
-            else if(filter == "Name")
+                search_results = await _context.StudentInfoModels.Where(a => a.StudentID.ToString().Contains(SearchQuery)).ToListAsync();
+            }
+            else if (filter == "Name")
             {
                 search_results = await _context.StudentInfoModels.Where(a => a.StudentPreferredNameMod.Contains(SearchQuery)).ToListAsync();
             }
@@ -50,16 +49,8 @@ namespace SAMS.Controllers
                 return NotFound();
             }
 
-            var varResults = Json(search_results);
-
-            _logger.LogInformation(varResults.ToString());
-
             return Json(search_results);
         }
-
-
-
-
 
 
         // GET: StudentInfoSearch/Details/5
