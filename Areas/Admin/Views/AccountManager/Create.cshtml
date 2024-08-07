@@ -20,7 +20,7 @@
             <div class="form-group pb-2">
                 <label asp-for="Role" class="form-label"></label>
                 <div class="form-floating">
-                    <select id="roleSelect" asp-for="Role" asp-items="(@ViewData["RoleId"] as SelectList)" required class="form-select" multiple onchange="handleSelectionChange()">
+                    <select id="roleSelect" asp-for="Role" asp-items="(@ViewData["RoleId"] as SelectList)" required class="form-select" multiple>
                     </select>
                     <span asp-validation-for="Role" class="text-danger"></span>
                 </div>
@@ -191,10 +191,19 @@
             
             
             @* Room Number Assigned to the Teacher - Optional (The requirement will always be false.) *@
-            <div class="form-floating pb-2" id="teacher2div" style="visibility: hidden;">
+@*             <div class="form-floating pb-2" id="teacher2div" style="visibility: hidden;">
                 <input asp-for="RoomAssignedId" id="teacher2input" class="form-control teachers" autocomplete="off" aria-required="false" disabled style="visibility: hidden;" />
                 <label asp-for="RoomAssignedId" id="teacher2label" style="visibility: hidden;"></label>
                 <span asp-validation-for="RoomAssignedId" id="teacher2span" class="text-danger" style="visibility: hidden;"></span>
+            </div> *@
+
+            <div class="form-group pb-2" id="teacher2div" style="visibility: hidden">
+                <label asp-for="RoomAssignedId" class="form-label" id="teacher2label"></label>
+                <div class="form-floating">
+                    <select id="teacher2input" asp-for="RoomAssignedId" asp-items="(@ViewData["Rooms"] as SelectList)" required class="form-select">
+                    </select>
+                    <span asp-validation-for="RoomAssignedId" class="text-danger" id="teacher2span"></span>
+                </div>
             </div>
 
             
@@ -231,10 +240,8 @@
     }, 1000); // Check every second
 
     function selections(something) {
-        switch(something) {
+        switch (something) {
             case "Teacher": {
-                document.getElementById('teacher1input').removeAttribute("disabled");
-                document.getElementById('teacher2input').removeAttribute("disabled");
                 var teacherVisibility = ["teacher1div", "teacher1input", "teacher1label", "teacher1span", "teacher2div", "teacher2input", "teacher2label", "teacher2span"];
                 var teacherInputsEnabled = ["teacher1input", "teacher2input"];
                 for (let i = 0; i < teacherVisibility.length; i++) {
@@ -246,20 +253,15 @@
                 }
                 break;
             }
-            // case "Substitute Teacher": {
-
-            //     break;
-            // }
             case "Student": {
-
                 var studentVisibility = ["stud1div", "stud1input", "stud1label", "stud1span", "stud2div", "stud2input", "stud2label", "stud2span", "stud3div", "stud3input", "stud3label", "stud3span", "stud4div", "stud4input", "stud4label", "stud4span", "stud5div", "stud5input", "stud5label", "stud5span", "stud6div", "stud6input", "stud6label", "stud6span", "stud7div", "stud7input", "stud7label", "stud7span", "stud8div", "stud8input", "stud8label", "stud8span"];
                 var studentInputsEnabled = ["stud1input", "stud2input", "stud3input", "stud4input", "stud5input", "stud6input", "stud7input", "stud8input"];
 
-                for (let i = 0; i < teacherVisibility.length; i++) {
+                for (let i = 0; i < studentVisibility.length; i++) {
                     document.getElementById(studentVisibility[i]).style.visibility = "visible";
                 }
 
-                for (let i = 0; i < teacherInputsEnabled.length; i++) {
+                for (let i = 0; i < studentInputsEnabled.length; i++) {
                     document.getElementById(studentInputsEnabled[i]).removeAttribute("disabled");
                 }
                 break;
@@ -270,11 +272,9 @@
         }
     }
 
-    function unselections() {
+    function unselections(something) {
         switch (something) {
             case "Teacher": {
-                document.getElementById('teacher1input').removeAttribute("disabled");
-                document.getElementById('teacher2input').removeAttribute("disabled");
                 var teacherVisibility = ["teacher1div", "teacher1input", "teacher1label", "teacher1span", "teacher2div", "teacher2input", "teacher2label", "teacher2span"];
                 var teacherInputsEnabled = ["teacher1input", "teacher2input"];
                 for (let i = 0; i < teacherVisibility.length; i++) {
@@ -282,25 +282,20 @@
                 }
 
                 for (let i = 0; i < teacherInputsEnabled.length; i++) {
-                    document.getElementById(teacherInputsEnabled[i]).setAttribute("disabled");
+                    document.getElementById(teacherInputsEnabled[i]).setAttribute("disabled", "true");
                 }
                 break;
             }
-            // case "Substitute Teacher": {
-
-            //     break;
-            // }
             case "Student": {
-
                 var studentVisibility = ["stud1div", "stud1input", "stud1label", "stud1span", "stud2div", "stud2input", "stud2label", "stud2span", "stud3div", "stud3input", "stud3label", "stud3span", "stud4div", "stud4input", "stud4label", "stud4span", "stud5div", "stud5input", "stud5label", "stud5span", "stud6div", "stud6input", "stud6label", "stud6span", "stud7div", "stud7input", "stud7label", "stud7span", "stud8div", "stud8input", "stud8label", "stud8span"];
                 var studentInputsEnabled = ["stud1input", "stud2input", "stud3input", "stud4input", "stud5input", "stud6input", "stud7input", "stud8input"];
 
-                for (let i = 0; i < teacherVisibility.length; i++) {
+                for (let i = 0; i < studentVisibility.length; i++) {
                     document.getElementById(studentVisibility[i]).style.visibility = "hidden";
                 }
 
-                for (let i = 0; i < teacherInputsEnabled.length; i++) {
-                    document.getElementById(studentInputsEnabled[i]).setAttribute("disabled");
+                for (let i = 0; i < studentInputsEnabled.length; i++) {
+                    document.getElementById(studentInputsEnabled[i]).setAttribute("disabled", "true");
                 }
                 break;
             }

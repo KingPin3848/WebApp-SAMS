@@ -18,7 +18,7 @@ namespace SAMS.Controllers
         public Boolean? UserExperienceEnabled { get; set; }
         [Required]
         [Display(Name = "Role(s)")]
-        public IList<string>? Role { get; set; }
+        public IList<string> Role { get; set; }
         [Required]
         [EmailAddress]
         [Display(Name = "School Issued Email Address")]

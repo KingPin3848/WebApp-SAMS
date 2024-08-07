@@ -7,12 +7,12 @@
     var attmeminfo = ViewData["Attendance Office Member Info"] as string;
     var hsadmininfo = ViewData["HS School Admin Info"] as string;
     var synnlabadmininfo = ViewData["Synnovation Lab Admin Info"] as string;
-    var eainfo = ViewData["EA Support Info"] as string;
     var nurseinfo = ViewData["Nurse Info"] as string;
     var lawenfinfo = ViewData["Law Enforcement Info"] as string;
     var scannermgmtinfo = ViewData["QR Code Scanner Management Info"] as string;
     var subteacherinfo = ViewData["Substitute Teacher Info"] as string;
     var districtadmininfo = ViewData["District Admin Info"] as string;
+    var counselorinfo = ViewData["Counselor Info"] as string;
 }
 <h1>Delete</h1>
 <h4>Account Manager</h4>
@@ -127,19 +127,6 @@
             <br />
             <br />
         }
-        @if (eainfo != null)
-        {
-            <h3 class="text-danger">You are about to delete EA's data as well. It includes:</h3>
-
-            <br />
-            <ul class="text-danger">
-                <li>
-                    Identifiable information
-                </li>
-            </ul>
-            <br />
-            <br />
-        }
         @if (nurseinfo != null)
         {
             <h3 class="text-danger">You are about to delete nurse's data as well. It includes:</h3>
@@ -202,8 +189,18 @@
             <br />
             <ul class="text-danger">
                 <li>
-                    Courses taught by the teacher
+                    Identifiable information
                 </li>
+            </ul>
+            <br />
+            <br />
+        }
+        @if (counselorinfo != null)
+        {
+            <h3 class="text-danger">You are about to delete counselor's data as well. It includes:</h3>
+
+            <br />
+            <ul class="text-danger">
                 <li>
                     Identifiable information
                 </li>

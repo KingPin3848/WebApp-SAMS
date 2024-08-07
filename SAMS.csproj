@@ -16,7 +16,6 @@
   <ItemGroup>
     <Folder Include="Areas\Admin\Data\" />
     <Folder Include="Areas\Admin\Models\" />
-    <Folder Include="Areas\AttOfficePersonnel\Controllers\" />
     <Folder Include="Areas\AttOfficePersonnel\Data\" />
     <Folder Include="Areas\AttOfficePersonnel\Models\" />
     <Folder Include="Areas\ClassKiosk\Data\" />

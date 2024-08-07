@@ -7,6 +7,8 @@ using SAMS.Data;
 using SAMS.Models;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
+using System.Globalization;
+using System.Security.Claims;
 
 namespace SAMS.Areas.Admin.Controllers
 {
@@ -14,17 +16,14 @@ namespace SAMS.Areas.Admin.Controllers
     public class AccountManagerController : Controller
     {
         private readonly ILogger<AccountManagerController> _logger;
-        private readonly IServiceScopeFactory scopeFactory;
         private readonly ApplicationDbContext context;
         private readonly UserManager<ApplicationUser> userManager;
+
         //private readonly IEmailSender<ApplicationUser> _emailSender = emailSender;
 
-#pragma warning disable IDE0290 // Use primary constructor
-        public AccountManagerController(ILogger<AccountManagerController> logger, IServiceScopeFactory serviceScopeFactory, ApplicationDbContext Context, UserManager<ApplicationUser> UserManager)
-#pragma warning restore IDE0290 // Use primary constructor
+        public AccountManagerController(ILogger<AccountManagerController> logger, ApplicationDbContext Context, UserManager<ApplicationUser> UserManager)
         {
             _logger = logger;
-            scopeFactory = serviceScopeFactory;
             context = Context;
             userManager = UserManager;
         }
@@ -33,9 +32,6 @@ namespace SAMS.Areas.Admin.Controllers
         // GET: AccountManager
         public async Task<IActionResult> Index()
         {
-            using var scope = scopeFactory.CreateAsyncScope();
-            var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-
             //EventId = 1; CodeIdentifier = 74
             var users = userManager.Users.ToList();
             List<ApplicationUser> unreals = [];
@@ -63,23 +59,35 @@ namespace SAMS.Areas.Admin.Controllers
         [RequireHttps]
         public async Task<IActionResult> Details(string? id)
         {
-            using var scope = scopeFactory.CreateAsyncScope();
-            var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+
+            var loggedinuserid = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (loggedinuserid is null)
+            {
+                return RedirectToAction("AutomatedError", "Error", new { number = 01, description = "Are you logged in?", reference = "Event ID = 1, Identifier = Acc72Det"});
+            }
+
+            var loggedinuser = await userManager.FindByIdAsync(loggedinuserid).ConfigureAwait(true);
+            if (loggedinuser is null)
+            {
+                return RedirectToAction("AutomatedError", "Error", new { number = 01, description = "Are you an alien? We couldn't authenticate you.", reference = "Event ID = 1, Identifier = Acc78Det"});
+            }
+
 
             if (id == null)
             {
-                //EventId = 2; CodeIdentifierNumber = 100
-                return NotFound();
+                //EventId = 2; CodeIdentifierNumber = Acc100Det
+                return RedirectToAction("AutomatedError", "Error", new { number = 02, description = "Did you forget to select a user?", reference = "Event ID = 2, Identifier = Acc100Det", user = loggedinuser });
             }
 
             var user = await userManager.FindByIdAsync(id).ConfigureAwait(true);
             if (user == null)
             {
                 //EventId = 2; CodeIdentifierNumber = 106
-                return NotFound();
+                return RedirectToAction("AutomatedError", "Error", new { number = 02, description = "Seems like you are not a registered user. Make sure the username is spelled correctly or logged in with your school Google Account.", reference = "Event ID = 2, Identifier = Acc100Det", user = loggedinuser });
             }
 
             return View(user);
+
         }
 
 
@@ -89,12 +97,10 @@ namespace SAMS.Areas.Admin.Controllers
         [RequireHttps]
         public ActionResult Create()
         {
-            var scope = scopeFactory.CreateAsyncScope();
-            var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
             ViewData["RoleId"] = new SelectList(context.Roles, "Name", "Name");
             ViewData["Counselors"] = new SelectList(context.CounselorModels, "CounselorId", "CounselorId");
-            ViewData["EAs"] = new SelectList(context.EASuportInfoModels, "EaID", "EaPreferredNameMod");
+            ViewData["Rooms"] = new SelectList(context.RoomLocationInfoModels, "RoomNumberMod", "RoomNumberMod");
             return View();
         }
 
@@ -102,54 +108,139 @@ namespace SAMS.Areas.Admin.Controllers
         [HttpPost]
         [RequireHttps]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Email,ActivationCode,SchoolId,Role")] InputModel input)
+        public async Task<IActionResult> Create(InputModel input)
         {
 #pragma warning disable CA1031 // Do not catch general exception types
             try
             {
+                //var loggedinuserid = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                //if (loggedinuserid is null)
+                //{
+                //    return RedirectToAction("Error", "Error", new { number = 01, description = "Are you logged in?", reference = "Event ID = 1, Identifier = Acc72Det"});
+                //}
+
+                //var loggedinuser = await userManager.FindByIdAsync(loggedinuserid).ConfigureAwait(true);
+                //if (loggedinuser is null)
+                //{
+                //    return RedirectToAction("Error", "Error", new { number = 01, description = "Are you an alien? We couldn't authenticate you.", reference = "Event ID = 1, Identifier = Acc78Det"});
+                //}
+
                 if (input is null)
                 {
                     return NotFound();
+                    //return RedirectToAction("Error", "Error", new { number = 02, description = "Did you forget to enter data into correct fields?", reference = "Event ID = 2, Identifier = Acc100Det", user = loggedinuser });
                 }
 
                 if (ModelState.IsValid)
                 {
                     var user = CreateUser();
-                    using var scope = scopeFactory.CreateAsyncScope();
-                    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
                     IEnumerable<string> listRoles = input.Role!;
-                    await userManager.SetUserNameAsync(user, input.SchoolId).ConfigureAwait(true);
-                    await userManager.SetEmailAsync(user, input.Email).ConfigureAwait(true);
                     user.Role = input.Role;
                     user.SchoolId = input.SchoolId!;
                     user.ActivationCode = input.ActivationCode!;
                     user.UserExperienceEnabled = false;
                     user.Email = input.Email;
                     user.EmailConfirmed = true;
+                    await userManager.SetUserNameAsync(user, input.SchoolId).ConfigureAwait(true);
+                    await userManager.SetEmailAsync(user, input.Email).ConfigureAwait(true);
                     var result = await userManager.CreateAsync(user).ConfigureAwait(true);
+                    var roadroller = await userManager.AddToRolesAsync(user, listRoles).ConfigureAwait(true);
 
                     if (result.Succeeded)
                     {
-                        //TO UPDATE ALL USER'S INFORMATION AKA ADDING THEIR ACTIVATION CODES, SCHOOLISSUEDID, ETC.
-                        var foundUser = await userManager.FindByEmailAsync(input.Email!).ConfigureAwait(true);
-                        if (foundUser != null)
-                        {
-                            var roadroller = await userManager.AddToRolesAsync(foundUser, listRoles).ConfigureAwait(true);
-                            if (roadroller.Succeeded)
-                            {
-                                return View();
-                            }
-                            else
-                            {
-                                foreach (var errors in roadroller.Errors)
-                                {
-                                    ModelState.AddModelError(string.Empty, errors.Description);
-                                }
-                            }
-                        }
                         LoggerMessage.Define(logLevel: LogLevel.Information, eventId: new EventId(30, "User creation"), "User created a new account without a password.");
                         //SNIPPET 1 FOR EMAIL GOES HERE
+
+                        foreach (var role in input.Role)
+                        {
+                            bool worked;
+                            switch (role)
+                            {
+                                case "HS School Admin":
+                                    {
+                                        worked = await AdminCreator(input.SchoolId, input.FirstName, input.MiddleName, input.LastName, input.PreferredName, input.Email, input.PhoneNumber, "High School").ConfigureAwait(true);
+                                        break;
+                                    }
+
+                                case "Counselor":
+                                    {
+                                        worked = await CounselorCreator(input.SchoolId, input.FirstName, input.MiddleName, input.LastName, input.PreferredName, input.Email, input.PhoneNumber).ConfigureAwait(true);
+                                        break;
+                                    }
+
+                                case "Synnovation Lab Admin":
+                                    {
+                                        worked = await AdminCreator(input.SchoolId, input.FirstName, input.MiddleName, input.LastName, input.PreferredName, input.Email, input.PhoneNumber, "Synnovation Lab").ConfigureAwait(true);
+                                        break;
+                                    }
+
+                                case "Attendance Office Member":
+                                    {
+                                        worked = await AttOfficeMemberCreator(input.SchoolId, input.FirstName, input.MiddleName, input.LastName, input.PreferredName, input.Email, input.PhoneNumber).ConfigureAwait(true);
+                                        break;
+                                    }
+
+                                case "Nurse":
+                                    {
+                                        worked = await NurseCreator(input.SchoolId, input.FirstName, input.MiddleName, input.LastName, input.PreferredName, input.Email, input.PhoneNumber).ConfigureAwait(true);
+                                        break;
+                                    }
+
+                                case "Law Enforcement":
+                                    {
+                                        worked = await LawEnfCreator(input.SchoolId, input.FirstName, input.MiddleName, input.LastName, input.PreferredName, input.Email, input.PhoneNumber).ConfigureAwait(true);
+                                        break;
+                                    }
+
+                                case "Teacher":
+                                    {
+                                        worked = await TeacherCreator(input.SchoolId, input.FirstName, input.MiddleName, input.LastName, input.PreferredName, input.Email, input.PhoneNumber, input.Teaches5Days, input.RoomAssignedId).ConfigureAwait(true);
+                                        break;
+                                    }
+
+                                //case "Substitute Teacher":
+                                //    {
+                                //        break;
+                                //    }
+
+                                case "Student":
+                                    {
+                                        int studId = new();
+                                        if (int.TryParse(input.SchoolId, out studId))
+                                        {
+                                            //Do nothing
+                                        }
+                                        else
+                                        {
+                                            return NotFound();
+                                            //return RedirectToAction("Error", "Error", new { number = 02, description = "Did you write a letter instead of number for student id?", reference = "Event ID = 2, Identifier = Acc236Cret", user = loggedinuser });
+                                        }
+                                        if (input.StudentGradYearMod.HasValue)
+                                        {
+                                            worked = await StudentCreator(studId, input.FirstName, input.MiddleName, input.LastName, input.PreferredName, input.Email, input.PhoneNumber, input.StudentGradYearMod.Value, input.StudentCounselorID!, input.Parentguard1NameMod!, input.Parentguard1EmailMod!, input.Parentguard2NameMod, input.Parentguard2EmailMod).ConfigureAwait(true);
+                                        }
+                                        else
+                                        {
+                                            return NotFound();
+                                            //return RedirectToAction("Error", "Error", new { number = 02, description = "Did you forget to add the student's grad year?", reference = "Event ID = 2, Identifier = Acc244Cret", user = loggedinuser });
+                                        }
+                                        break;
+                                    }
+
+                                case "District Admin":
+                                    {
+                                        worked = await AdminCreator(input.SchoolId, input.FirstName, input.MiddleName, input.LastName, input.PreferredName, input.Email, input.PhoneNumber, "District").ConfigureAwait(true);
+                                        break;
+                                    }
+                                default:
+                                    {
+                                        worked = true;
+                                        break;
+                                    }
+                            }
+                        }
+
                         return RedirectToAction(nameof(Index));
                     }
                     else
@@ -157,87 +248,6 @@ namespace SAMS.Areas.Admin.Controllers
                         foreach (var error in result.Errors)
                         {
                             ModelState.AddModelError(string.Empty, error.Description);
-                        }
-                    }
-
-                    foreach(var role in input.Role)
-                    {
-                        bool worked;
-                        switch (role)
-                        {
-                            case "HS School Admin":
-                                {
-                                    worked = await AdminCreator(input.SchoolId, input.FirstName, input.MiddleName, input.LastName, input.PreferredName, input.Email, input.PhoneNumber, "High School").ConfigureAwait(true);
-                                    break;
-                                }
-
-                            case "Synnovation Lab Admin":
-                                {
-                                    worked = await AdminCreator(input.SchoolId, input.FirstName, input.MiddleName, input.LastName, input.PreferredName, input.Email, input.PhoneNumber, "Synnovation Lab").ConfigureAwait(true);
-                                    break;
-                                }
-
-                            case "Attendance Office Member":
-                                {
-                                    worked = await AttOfficeMemberCreator(input.SchoolId, input.FirstName, input.MiddleName, input.LastName, input.PreferredName, input.Email, input.PhoneNumber).ConfigureAwait(true);
-                                    break;
-                                }
-
-                            case "Nurse":
-                                {
-                                    worked = await NurseCreator(input.SchoolId, input.FirstName, input.MiddleName, input.LastName, input.PreferredName, input.Email, input.PhoneNumber).ConfigureAwait(true);
-                                    break;
-                                }
-
-                            case "Law Enforcement":
-                                {
-                                    worked = await LawEnfCreator(input.SchoolId, input.FirstName, input.MiddleName, input.LastName, input.PreferredName, input.Email, input.PhoneNumber).ConfigureAwait(true);
-                                    break;
-                                }
-
-                            case "Teacher":
-                                {
-                                    worked = await TeacherCreator(input.SchoolId, input.FirstName, input.MiddleName, input.LastName, input.PreferredName, input.Email, input.PhoneNumber, input.Teaches5Days, input.RoomAssignedId).ConfigureAwait(true);
-                                    break;
-                                }
-
-                            //case "Substitute Teacher":
-                            //    {
-                            //        break;
-                            //    }
-
-                            case "Student":
-                                {
-                                    int studId = new();
-                                    if (int.TryParse(input.SchoolId, out studId))
-                                    {
-                                        //Do nothing
-                                    }
-                                    else
-                                    {
-                                        return NotFound();
-                                    }
-                                    if(input.StudentGradYearMod.HasValue)
-                                    {
-                                        worked = await StudentCreator(studId, input.FirstName, input.MiddleName, input.LastName, input.PreferredName, input.Email, input.PhoneNumber, input.StudentGradYearMod.Value, input.StudentCounselorID!, input.Parentguard1NameMod!, input.Parentguard1EmailMod!, input.Parentguard2NameMod, input.Parentguard2EmailMod).ConfigureAwait(true);
-                                    }
-                                    else
-                                    {
-                                        return NotFound();
-                                    }
-                                    break;
-                                }
-
-                            case "District Admin":
-                                {
-                                    worked = await AdminCreator(input.SchoolId, input.FirstName, input.MiddleName, input.LastName, input.PreferredName, input.Email, input.PhoneNumber, "District").ConfigureAwait(true);
-                                    break;
-                                }
-                            default:
-                                {
-                                    worked = true;
-                                    break;
-                                }
                         }
                     }
                 }
@@ -312,9 +322,6 @@ namespace SAMS.Areas.Admin.Controllers
                 RoomAssignedId = room
             };
 
-            using var scope = scopeFactory.CreateAsyncScope();
-            var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-
             await context.TeacherInfoModels.AddAsync(teacher).ConfigureAwait(true);
             return (context.SaveChangesAsync().IsCompletedSuccessfully);
         }
@@ -332,24 +339,8 @@ namespace SAMS.Areas.Admin.Controllers
                 AdminLabelMod = label
             };
 
-            using var scope = scopeFactory.CreateAsyncScope();
-            var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-
             await context.AdminInfoModels.AddAsync(admin).ConfigureAwait(true);
             return (context.SaveChangesAsync().IsCompletedSuccessfully);
-        }
-        private static string TypeOfAdminDetermination(List<string> roles)
-        {
-
-            foreach (var role in roles)
-            {
-                if (role.Contains("Admin", StringComparison.Ordinal))
-                {
-                    return role;
-                }
-            }
-
-            return "Not an admin.";
         }
         private async Task<bool> AttOfficeMemberCreator(string id, string fname, string? mname, string lname, string? pname, string email, string? phone)
         {
@@ -363,9 +354,6 @@ namespace SAMS.Areas.Admin.Controllers
                 AoMemberEmailMod = email,
                 AoMemberPhoneMod = phone
             };
-
-            using var scope = scopeFactory.CreateAsyncScope();
-            var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
             await context.AttendanceOfficeMemberModels.AddAsync(attendanceMember).ConfigureAwait(true);
             return (context.SaveChangesAsync().IsCompletedSuccessfully);
@@ -383,9 +371,6 @@ namespace SAMS.Areas.Admin.Controllers
                 NursePhoneMod = phone
             };
 
-            using var scope = scopeFactory.CreateAsyncScope();
-            var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-
             await context.NurseInfoModels.AddAsync(nurse).ConfigureAwait(true);
             return (context.SaveChangesAsync().IsCompletedSuccessfully);
         }
@@ -401,9 +386,6 @@ namespace SAMS.Areas.Admin.Controllers
                 LaweEmailMod = email,
                 LawePhoneMod = phone
             };
-
-            using var scope = scopeFactory.CreateAsyncScope();
-            var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
             await context.LawEnforcementInfoModels.AddAsync(lawenf).ConfigureAwait(true);
             return (context.SaveChangesAsync().IsCompletedSuccessfully);
@@ -427,17 +409,11 @@ namespace SAMS.Areas.Admin.Controllers
                 Parentguard2EmailMod = p2email
             };
 
-            using var scope = scopeFactory.CreateAsyncScope();
-            var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-
             await context.StudentInfoModels.AddAsync(student).ConfigureAwait(true);
             return (context.SaveChangesAsync().IsCompletedSuccessfully);
         }
         private string CounselorIdReturn(string fname)
         {
-            using var scope = scopeFactory.CreateAsyncScope();
-            var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-
             return context.CounselorModels.Where(a => a.CounselorFirstName == fname).Select(a => a.CounselorId).First();
         }
         private async Task<bool> CounselorCreator(string id, string fname, string? mname, string lname, string? pname, string email, string? phone)
@@ -452,9 +428,6 @@ namespace SAMS.Areas.Admin.Controllers
                 CounselorEmail = email,
                 CounselorPhone = phone
             };
-
-            using var scope = scopeFactory.CreateAsyncScope();
-            var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
             await context.CounselorModels.AddAsync(counselor).ConfigureAwait(true);
             return (context.SaveChangesAsync().IsCompletedSuccessfully);
@@ -472,9 +445,6 @@ namespace SAMS.Areas.Admin.Controllers
                 SubPhoneMod = phone
             };
 
-            using var scope = scopeFactory.CreateAsyncScope();
-            var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-
             await context.TeacherInfoModels.AddAsync(sub).ConfigureAwait(true);
             return (context.SaveChangesAsync().IsCompletedSuccessfully);
         }*/
@@ -485,6 +455,18 @@ namespace SAMS.Areas.Admin.Controllers
         [RequireHttps]
         public async Task<IActionResult> Edit(string id)
         {
+            //var loggedinuserid = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            //if (loggedinuserid is null)
+            //{
+            //    return RedirectToAction("Error", "Error", new { number = 01, description = "Are you logged in?", reference = "Event ID = 1, Identifier = Acc72Det"});
+            //}
+
+            //var loggedinuser = await userManager.FindByIdAsync(loggedinuserid).ConfigureAwait(true);
+            //if (loggedinuser is null)
+            //{
+            //    return RedirectToAction("Error", "Error", new { number = 01, description = "Are you an alien? We couldn't authenticate you.", reference = "Event ID = 1, Identifier = Acc78Det"});
+            //}
+
             if (id == null)
             {
                 return NotFound();
@@ -495,9 +477,147 @@ namespace SAMS.Areas.Admin.Controllers
             {
                 return NotFound();
             }
+            var userroles = await userManager.GetRolesAsync(user).ConfigureAwait(true);
+            InputModel inputmodel = new()
+            {
+                Email = string.Empty,
+                FirstName = string.Empty,
+                LastName = string.Empty,
+                ActivationCode = user.ActivationCode,
+                Role = user.Role,
+                SchoolId = string.Empty
+            };
+            foreach (var role in userroles)
+            {
+                switch (role)
+                {
+                    case "HS School Admin":
+                        {
+                            var info = context.AdminInfoModels.Where(a => a.AdminID == user.SchoolId).First();
+                            inputmodel.SchoolId = info.AdminID;
+                            inputmodel.FirstName = info.AdminFirstNameMod;
+                            inputmodel.MiddleName = info.AdminMiddleNameMod;
+                            inputmodel.LastName = info.AdminLastNameMod;
+                            inputmodel.PreferredName = info.AdminPreferredNameMod;
+                            inputmodel.PhoneNumber = info.AdminPhoneMod;
+                            inputmodel.Email = info.AdminEmailMod;
+                            break;
+                        }
+                    case "Synnovation Lab Admin":
+                        {
+                            var info = context.AdminInfoModels.Where(a => a.AdminID == user.SchoolId).First();
+                            inputmodel.SchoolId = info.AdminID;
+                            inputmodel.FirstName = info.AdminFirstNameMod;
+                            inputmodel.MiddleName = info.AdminMiddleNameMod;
+                            inputmodel.LastName = info.AdminLastNameMod;
+                            inputmodel.PreferredName = info.AdminPreferredNameMod;
+                            inputmodel.PhoneNumber = info.AdminPhoneMod;
+                            inputmodel.Email = info.AdminEmailMod;
+                            break;
+                        }
+                    case "Attendance Office Member":
+                        {
+                            var info = context.AttendanceOfficeMemberModels.Where(a => a.AoMemberID == user.SchoolId).First();
+                            inputmodel.SchoolId = info.AoMemberID;
+                            inputmodel.FirstName = info.AoMemberFirstNameMod;
+                            inputmodel.MiddleName = info.AoMemberMiddleNameMod;
+                            inputmodel.LastName = info.AoMemberLastNameMod;
+                            inputmodel.PreferredName = info.AoMemberPreferredNameMod;
+                            inputmodel.PhoneNumber = info.AoMemberPhoneMod;
+                            inputmodel.Email = info.AoMemberEmailMod;
+                            break;
+                        }
+                    case "Nurse":
+                        {
+                            var info = context.NurseInfoModels.Where(a => a.NurseID == user.SchoolId).First();
+                            inputmodel.SchoolId = info.NurseID;
+                            inputmodel.FirstName = info.NurseFirstNameMod;
+                            inputmodel.MiddleName = info.NurseMiddleNameMod;
+                            inputmodel.LastName = info.NurseLastNameMod;
+                            inputmodel.PreferredName = info.NursePreferredNameMod;
+                            inputmodel.PhoneNumber = info.NursePhoneMod;
+                            inputmodel.Email = info.NurseEmailMod;
+                            break;
+                        }
+                    case "Law Enforcement":
+                        {
+                            var info = context.LawEnforcementInfoModels.Where(a => a.LawenfID == user.SchoolId).First();
+                            inputmodel.SchoolId = info.LawenfID;
+                            inputmodel.FirstName = info.LaweFirstNameMod;
+                            inputmodel.MiddleName = info.LaweMiddleNameMod;
+                            inputmodel.LastName = info.LaweLastNameMod;
+                            inputmodel.PreferredName = info.LawePreferredNameMod;
+                            inputmodel.PhoneNumber = info.LawePhoneMod;
+                            inputmodel.Email = info.LaweEmailMod;
+                            break;
+                        }
+                    case "Teacher":
+                        {
+                            var info = context.TeacherInfoModels.Where(a => a.TeacherID == user.SchoolId).First();
+                            inputmodel.SchoolId = info.TeacherID;
+                            inputmodel.FirstName = info.TeacherFirstNameMod;
+                            inputmodel.MiddleName = info.TeacherMiddleNameMod;
+                            inputmodel.LastName = info.TeacherLastNameMod;
+                            inputmodel.PreferredName = info.TeacherPreferredNameMod;
+                            inputmodel.PhoneNumber = info.TeacherPhoneMod;
+                            inputmodel.Email = info.TeacherEmailMod;
+                            inputmodel.Teaches5Days = info.Teaches5Days;
+                            inputmodel.RoomAssignedId = info.RoomAssignedId;
+                            break;
+                        }
+                    case "Student":
+                        {
+                            if (int.TryParse(user.SchoolId, out int studentid))
+                            {
+                                var info = context.StudentInfoModels.Where(a => a.StudentID == studentid).First();
+                                inputmodel.SchoolId = studentid.ToString(CultureInfo.CurrentCulture);
+                                inputmodel.FirstName = info.StudentFirstNameMod;
+                                inputmodel.MiddleName = info.StudentMiddleNameMod;
+                                inputmodel.LastName = info.StudentLastNameMod;
+                                inputmodel.PreferredName = info.StudentPreferredNameMod;
+                                inputmodel.PhoneNumber = info.StudentPhoneMod;
+                                inputmodel.Email = info.StudentEmailMod;
+                                inputmodel.Parentguard1NameMod = info.Parentguard1NameMod;
+                                inputmodel.Parentguard1EmailMod = info.Parentguard1EmailMod;
+                                inputmodel.Parentguard2NameMod = info.Parentguard2NameMod;
+                                inputmodel.Parentguard2EmailMod = info.Parentguard2EmailMod;
+                            }
+                            break;
+                        }
+                    case "District Admin":
+                        {
+                            var info = context.AttendanceOfficeMemberModels.Where(a => a.AoMemberID == user.SchoolId).First();
+                            inputmodel.SchoolId = info.AoMemberID;
+                            inputmodel.FirstName = info.AoMemberFirstNameMod;
+                            inputmodel.MiddleName = info.AoMemberMiddleNameMod;
+                            inputmodel.LastName = info.AoMemberLastNameMod;
+                            inputmodel.PreferredName = info.AoMemberPreferredNameMod;
+                            inputmodel.PhoneNumber = info.AoMemberPhoneMod;
+                            inputmodel.Email = info.AoMemberEmailMod;
+                            break;
+                        }
+                    case "Counselor":
+                        {
+                            var info = context.CounselorModels.Where(a => a.CounselorId == user.SchoolId).First();
+                            inputmodel.SchoolId = info.CounselorId;
+                            inputmodel.FirstName = info.CounselorFirstName;
+                            inputmodel.MiddleName = info.CounselorMiddleName;
+                            inputmodel.LastName = info.CounselorLastName;
+                            inputmodel.PreferredName = info.CounselorPreferredName;
+                            inputmodel.PhoneNumber = info.CounselorPhone;
+                            inputmodel.Email = info.CounselorEmail;
+                            break;
+                        }
+                    default:
+                        {
+                            break;
+                        }
+                }
+            }
 
+            var model = new Tuple<ApplicationUser, InputModel>(user, inputmodel);
             ViewData["RoleId"] = new SelectList(context.Roles, "Name", "Name", user.Role);
-            return View(user);
+            return View(model);
         }
 
 
@@ -507,27 +627,40 @@ namespace SAMS.Areas.Admin.Controllers
         [HttpPost]
         [RequireHttps]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, ApplicationUser model)
+        public async Task<IActionResult> Edit(string id, ApplicationUser appuser, InputModel input)
         {
-            if (model is null)
+            //var loggedinuserid = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            //if (loggedinuserid is null)
+            //{
+            //    return RedirectToAction("Error", "Error", new { number = 01, description = "Are you logged in?", reference = "Event ID = 1, Identifier = Acc72Det"});
+            //}
+
+            //var loggedinuser = await userManager.FindByIdAsync(loggedinuserid).ConfigureAwait(true);
+            //if (loggedinuser is null)
+            //{
+            //    return RedirectToAction("Error", "Error", new { number = 01, description = "Are you an alien? We couldn't authenticate you.", reference = "Event ID = 1, Identifier = Acc78Det"});
+            //}
+
+            if (appuser is null)
             {
                 return NotFound();
             }
 
-            if (id != model.Id)
+            if (input is null)
             {
                 return NotFound();
             }
 
-            using var scope = scopeFactory.CreateAsyncScope();
-            var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+            if (id != appuser.Id)
+            {
+                return NotFound();
+            }
+
 
             if (ModelState.IsValid)
             {
                 try
                 {
-                    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-
                     var user = await userManager.FindByIdAsync(id).ConfigureAwait(true);
                     if (user == null)
                     {
@@ -535,10 +668,10 @@ namespace SAMS.Areas.Admin.Controllers
                     }
 
                     // Update the details
-                    user.Email = model.Email;
-                    user.ActivationCode = model.ActivationCode;
-                    user.SchoolId = model.SchoolId;
-                    user.Role = model.Role;
+                    user.Email = input.Email;
+                    user.ActivationCode = input.ActivationCode;
+                    user.SchoolId = input.SchoolId;
+                    user.Role = input.Role;
 
                     // Get the current roles of the user
                     var currentRoles = await userManager.GetRolesAsync(user).ConfigureAwait(true);
@@ -553,7 +686,7 @@ namespace SAMS.Areas.Admin.Controllers
                     }
 
                     // Add the user to the new role
-                    var addResult = await userManager.AddToRolesAsync(user, model.Role!).ConfigureAwait(true);
+                    var addResult = await userManager.AddToRolesAsync(user, input.Role).ConfigureAwait(true);
                     if (!addResult.Succeeded)
                     {
                         LoggerMessage.Define(logLevel: LogLevel.Error, eventId: new EventId(2, "Task failure."), "Failed to add user roles.");
@@ -565,7 +698,7 @@ namespace SAMS.Areas.Admin.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!UserExists(model.Id))
+                    if (!UserExists(appuser.Id))
                     {
                         return NotFound();
                     }
@@ -588,15 +721,386 @@ namespace SAMS.Areas.Admin.Controllers
             }
 
 
-            ViewData["RoleId"] = new SelectList(context.Roles, "Name", "Name", model.Role);
-            return View(model);
+            ViewData["RoleId"] = new SelectList(context.Roles, "Name", "Name", input.Role);
+            return View(appuser);
 
+        }
+
+        private bool Switcher(InputModel input, ApplicationUser appuser)
+        {
+            bool worked = new();
+            foreach (var role in input.Role)
+            {
+                switch (role)
+                {
+                    case "HS School Admin":
+                        {
+                            worked = AdminEditor(input, appuser, "High School");
+                            if (worked == false)
+                            {
+                                return false;
+                            }
+                            break;
+                        }
+
+                    case "Counselor":
+                        {
+                            worked = CounselorEditor(input, appuser);
+                            if (worked == false)
+                            {
+                                return false;
+                            }
+                            break;
+                        }
+
+                    case "Synnovation Lab Admin":
+                        {
+                            worked = AdminEditor(input, appuser, "Synnovation Lab");
+                            if (worked == false)
+                            {
+                                return false;
+                            }
+                            break;
+                        }
+
+                    case "Attendance Office Member":
+                        {
+                            worked = AttOfficeMemberEditor(input, appuser);
+                            if (worked == false)
+                            {
+                                return false;
+                            }
+                            break;
+                        }
+
+                    case "Nurse":
+                        {
+                            worked = NurseEditor(input, appuser);
+                            if (worked == false)
+                            {
+                                return false;
+                            }
+                            break;
+                        }
+
+                    case "Law Enforcement":
+                        {
+                            worked = LawEnfEditor(input, appuser);
+                            if (worked == false)
+                            {
+                                return false;
+                            }
+                            break;
+                        }
+
+                    case "Teacher":
+                        {
+                            worked = TeacherEditor(input, appuser);
+                            if (worked == false)
+                            {
+                                return false;
+                            }
+                            break;
+                        }
+
+                    //case "Substitute Teacher":
+                    //    {
+                    //        break;
+                    //    }
+
+                    case "Student":
+                        {
+                            int studId = new();
+                            if (int.TryParse(input.SchoolId, out studId))
+                            {
+                                //Do nothing
+                            }
+                            else
+                            {
+                                return false;
+                            }
+                            if (input.StudentGradYearMod.HasValue)
+                            {
+                                worked = StudentEditor(input, appuser);
+                                if (worked == false)
+                                {
+                                    return false;
+                                }
+                            }
+                            else
+                            {
+                                return false;
+                            }
+                            break;
+                        }
+
+                    case "District Admin":
+                        {
+                            worked = AdminEditor(input, appuser, "District");
+                            if (worked == false)
+                            {
+                                return false;
+                            }
+                            break;
+                        }
+                    default:
+                        {
+                            worked = true;
+                            break;
+                        }
+                }
+            }
+            return worked;
+        }
+
+        private bool TeacherEditor(InputModel input, ApplicationUser appuser)
+        {
+            var teacheruser = appuser;
+            var teacher = context.TeacherInfoModels.Where(a => a.TeacherID.Equals(input.SchoolId, StringComparison.Ordinal)).First();
+
+            if (teacheruser is null)
+            {
+                return false;
+            }
+
+            if (teacher is null)
+            {
+                return false;
+            }
+
+            //Edit all AppUser fields.
+            teacheruser.Email = input.Email;
+            teacheruser.ActivationCode = input.ActivationCode;
+
+
+            //Edit all TeacherInfoModel fields.
+            teacher.TeacherID = input.SchoolId;
+            teacher.TeacherFirstNameMod = input.FirstName;
+            teacher.TeacherMiddleNameMod = input.MiddleName;
+            teacher.TeacherLastNameMod = input.LastName;
+            teacher.TeacherPreferredNameMod = input.PreferredName;
+            teacher.TeacherEmailMod = input.Email;
+            teacher.TeacherPhoneMod = input.PhoneNumber;
+            teacher.Teaches5Days = input.Teaches5Days;
+            teacher.RoomAssignedId = input.RoomAssignedId;
+
+            context.TeacherInfoModels.Update(teacher);
+            return (context.SaveChangesAsync().IsCompletedSuccessfully);
+        }
+
+        private bool AdminEditor(InputModel input, ApplicationUser appuser, string label)
+        {
+            var adminuser = appuser;
+            var admin = context.AdminInfoModels.Where(a => a.AdminID.Equals(input.SchoolId, StringComparison.Ordinal)).First();
+
+            if (adminuser is null)
+            {
+                return false;
+            }
+
+            if (admin is null)
+            {
+                return false;
+            }
+
+            //Edit all AppUser fields.
+            adminuser.Email = input.Email;
+            adminuser.ActivationCode = input.ActivationCode;
+
+
+            //Edit all TeacherInfoModel fields.
+            admin.AdminID = input.SchoolId;
+            admin.AdminFirstNameMod = input.FirstName;
+            admin.AdminMiddleNameMod = input.MiddleName;
+            admin.AdminLastNameMod = input.LastName;
+            admin.AdminPreferredNameMod = input.PreferredName;
+            admin.AdminEmailMod = input.Email;
+            admin.AdminPhoneMod = input.PhoneNumber;
+            admin.AdminLabelMod = label;
+
+            context.AdminInfoModels.Update(admin);
+            return (context.SaveChangesAsync().IsCompletedSuccessfully);
+        }
+
+        private bool AttOfficeMemberEditor(InputModel input, ApplicationUser appuser)
+        {
+            var attofficememuser = appuser;
+            var attofficemem = context.AttendanceOfficeMemberModels.Where(a => a.AoMemberID.Equals(input.SchoolId, StringComparison.Ordinal)).First();
+
+            if (attofficememuser is null)
+            {
+                return false;
+            }
+
+            if (attofficemem is null)
+            {
+                return false;
+            }
+
+            //Edit all AppUser fields.
+            attofficememuser.Email = input.Email;
+            attofficememuser.ActivationCode = input.ActivationCode;
+
+
+            //Edit all TeacherInfoModel fields.
+            attofficemem.AoMemberID = input.SchoolId;
+            attofficemem.AoMemberFirstNameMod = input.FirstName;
+            attofficemem.AoMemberMiddleNameMod = input.MiddleName;
+            attofficemem.AoMemberLastNameMod = input.LastName;
+            attofficemem.AoMemberPreferredNameMod = input.PreferredName;
+            attofficemem.AoMemberEmailMod = input.Email;
+            attofficemem.AoMemberPhoneMod = input.PhoneNumber;
+
+            context.AttendanceOfficeMemberModels.Update(attofficemem);
+            return (context.SaveChangesAsync().IsCompletedSuccessfully);
+        }
+
+        private bool NurseEditor(InputModel input, ApplicationUser appuser)
+        {
+            var nurseuser = appuser;
+            var nurse = context.NurseInfoModels.Where(a => a.NurseID.Equals(input.SchoolId, StringComparison.Ordinal)).First();
+
+            if (nurseuser is null)
+            {
+                return false;
+            }
+
+            if (nurse is null)
+            {
+                return false;
+            }
+
+            //Edit all AppUser fields.
+            nurseuser.Email = input.Email;
+            nurseuser.ActivationCode = input.ActivationCode;
+
+
+            //Edit all TeacherInfoModel fields.
+            nurse.NurseID = input.SchoolId;
+            nurse.NurseFirstNameMod = input.FirstName;
+            nurse.NurseMiddleNameMod = input.MiddleName;
+            nurse.NurseLastNameMod = input.LastName;
+            nurse.NursePreferredNameMod = input.PreferredName;
+            nurse.NurseEmailMod = input.Email;
+            nurse.NursePhoneMod = input.PhoneNumber;
+
+            context.NurseInfoModels.Update(nurse);
+            return (context.SaveChangesAsync().IsCompletedSuccessfully);
+        }
+
+        private bool LawEnfEditor(InputModel input, ApplicationUser appuser)
+        {
+            var lawenfuser = appuser;
+            var lawenf = context.LawEnforcementInfoModels.Where(a => a.LawenfID.Equals(input.SchoolId, StringComparison.Ordinal)).First();
+
+            if (lawenfuser is null)
+            {
+                return false;
+            }
+
+            if (lawenf is null)
+            {
+                return false;
+            }
+
+            //Edit all AppUser fields.
+            lawenfuser.Email = input.Email;
+            lawenfuser.ActivationCode = input.ActivationCode;
+
+
+            //Edit all TeacherInfoModel fields.
+            lawenf.LawenfID = input.SchoolId;
+            lawenf.LaweFirstNameMod = input.FirstName;
+            lawenf.LaweMiddleNameMod = input.MiddleName;
+            lawenf.LaweLastNameMod = input.LastName;
+            lawenf.LawePreferredNameMod = input.PreferredName;
+            lawenf.LaweEmailMod = input.Email;
+            lawenf.LawePhoneMod = input.PhoneNumber;
+
+            context.LawEnforcementInfoModels.Update(lawenf);
+            return (context.SaveChangesAsync().IsCompletedSuccessfully);
+        }
+
+        private bool StudentEditor(InputModel input, ApplicationUser appuser)
+        {
+            var studentuser = appuser;
+            if (int.TryParse(input.SchoolId, out int studentid))
+            {
+                var student = context.StudentInfoModels.Where(a => a.StudentID == studentid).First();
+
+                if (studentuser is null)
+                {
+                    return false;
+                }
+
+                if (student is null)
+                {
+                    return false;
+                }
+
+                //Edit all AppUser fields.
+                studentuser.Email = input.Email;
+                studentuser.ActivationCode = input.ActivationCode;
+
+
+                //Edit all TeacherInfoModel fields.
+                student.StudentID = studentid;
+                student.StudentFirstNameMod = input.FirstName;
+                student.StudentMiddleNameMod = input.MiddleName;
+                student.StudentLastNameMod = input.LastName;
+                student.StudentPreferredNameMod = input.PreferredName;
+                student.StudentEmailMod = input.Email;
+                student.StudentPhoneMod = input.PhoneNumber;
+                student.Parentguard1NameMod = input.Parentguard1NameMod!;
+                student.Parentguard2NameMod = input.Parentguard2NameMod!;
+                student.Parentguard1EmailMod = input.Parentguard1EmailMod!;
+                student.Parentguard2EmailMod = input.Parentguard2EmailMod!;
+                student.StudentGradYearMod = input.StudentGradYearMod!.Value;
+                student.StudentCounselorID = input.StudentCounselorID!;
+                student.HasEASupport = input.HasEASupport;
+                student.StudentEAID = input.StudentEAID;
+
+                context.StudentInfoModels.Update(student);
+                return (context.SaveChangesAsync().IsCompletedSuccessfully);
+            }
+            return false;
+        }
+
+        private bool CounselorEditor(InputModel input, ApplicationUser appuser)
+        {
+            var counseloruser = appuser;
+            var counselor = context.CounselorModels.Where(a => a.CounselorId.Equals(input.SchoolId, StringComparison.Ordinal)).First();
+
+            if (counseloruser is null)
+            {
+                return false;
+            }
+
+            if (counselor is null)
+            {
+                return false;
+            }
+
+            //Edit all AppUser fields.
+            counseloruser.Email = input.Email;
+            counseloruser.ActivationCode = input.ActivationCode;
+
+
+            //Edit all TeacherInfoModel fields.
+            counselor.CounselorId = input.SchoolId;
+            counselor.CounselorFirstName = input.FirstName;
+            counselor.CounselorMiddleName = input.MiddleName;
+            counselor.CounselorLastName = input.LastName;
+            counselor.CounselorPreferredName = input.PreferredName;
+            counselor.CounselorEmail = input.Email;
+            counselor.CounselorPhone = input.PhoneNumber;
+
+            context.CounselorModels.Update(counselor);
+            return (context.SaveChangesAsync().IsCompletedSuccessfully);
         }
 
         private bool UserExists(string schoolId)
         {
-            using var scope = scopeFactory.CreateAsyncScope();
-            var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
             return context.Users.Any(e => e.SchoolId == schoolId);
         }
 
@@ -612,9 +1116,6 @@ namespace SAMS.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-
-            using var scope = scopeFactory.CreateAsyncScope();
-            var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
             var user = await userManager.FindByIdAsync(id).ConfigureAwait(true);
             if (user == null)
@@ -658,11 +1159,6 @@ namespace SAMS.Areas.Admin.Controllers
                             ViewData["Synnovation Lab Admin Info"] = "Present";
                             break;
                         }
-                    case "Education Support (EA)":
-                        {
-                            ViewData["EA Support Info"] = "Present";
-                            break;
-                        }
                     case "Nurse":
                         {
                             ViewData["Nurse Info"] = "Present";
@@ -694,6 +1190,11 @@ namespace SAMS.Areas.Admin.Controllers
                             break;
                             //return NotFound("Role not found!");
                         }
+                    case "Counselor":
+                        {
+                            ViewData["Counselor Info"] = "Present";
+                            break;
+                        }
                     default:
                         {
                             return NotFound("Role not found.");
@@ -715,9 +1216,6 @@ namespace SAMS.Areas.Admin.Controllers
 #pragma warning disable CA1031 // Do not catch general exception types
             try
             {
-                using var scope = scopeFactory.CreateAsyncScope();
-                var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-
                 var user = await userManager.FindByIdAsync(id).ConfigureAwait(true);
                 if (user == null)
                 {
@@ -737,7 +1235,6 @@ namespace SAMS.Areas.Admin.Controllers
                 }
                 else
                 {
-                    var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
                     foreach (var role in roles)
                     {
                         switch (role)
@@ -754,21 +1251,45 @@ namespace SAMS.Areas.Admin.Controllers
                                         return NotFound("Could not parse the school id for student. Please make sure the student Id is correct.");
                                     }
 
-                                    var studentInfo = await context.StudentInfoModels.FindAsync(studId).ConfigureAwait(true) ?? throw new InvalidOperationException("Unable to retrieve student data for deletion.");
-                                    var sem1sched = await context.Sem1StudSchedules.FindAsync(studId).ConfigureAwait(true) ?? throw new InvalidOperationException("Unable to retrieve student schedule 1 for deletion.");
-                                    var sem2sched = await context.Sem2StudSchedules.FindAsync(studId).ConfigureAwait(true) ?? throw new InvalidOperationException("Unable to retrieve student schedule 2 for deletion.");
+                                    var sem1sched = context.Sem1StudSchedules.Where(a => a.StudentID == studId).First();
+                                    if (sem1sched is null)
+                                    {
+                                        _logger.LogInformation("Unable to retrieve student schedule 1 for deletion.");
+                                    }
+                                    else
+                                    {
+                                        var sem1schedDeletion = context.Sem1StudSchedules.Remove(sem1sched);
+                                        await context.SaveChangesAsync().ConfigureAwait(true);
+                                    }
 
-                                    var studInfoDeletion = context.StudentInfoModels.Remove(studentInfo);
-                                    var sem1schedDeletion = context.Sem1StudSchedules.Remove(sem1sched);
-                                    var sem2schedDeletion = context.Sem2StudSchedules.Remove(sem2sched);
-                                    await context.SaveChangesAsync().ConfigureAwait(true);
+                                    var sem2sched = context.Sem2StudSchedules.Where(a => a.StudentID == studId).First();
+                                    if (sem2sched is null)
+                                    {
+                                        _logger.LogInformation("Unable to retrieve student schedule 2 for deletion.");
+                                    }
+                                    else
+                                    {
+                                        var sem2schedDeletion = context.Sem2StudSchedules.Remove(sem2sched);
+                                        await context.SaveChangesAsync().ConfigureAwait(true);
+                                    }
+
+                                    var studentInfo = await context.StudentInfoModels.FindAsync(studId).ConfigureAwait(true);
+                                    if (studentInfo is null)
+                                    {
+                                        _logger.LogInformation("Unable to retrieve student data for deletion.");
+                                    }
+                                    else
+                                    {
+                                        var studInfoDeletion = context.StudentInfoModels.Remove(studentInfo);
+                                        await context.SaveChangesAsync().ConfigureAwait(true);
+                                    }
                                     break;
                                 }
                             case "Teacher":
                                 {
                                     var teacherid = schoolId;
-                                    List<ActiveCourseInfoModel>? courses = context.ActiveCourseInfoModels.Where(a => a.CourseTeacherID == teacherid).ToList();
-                                    List<TeacherInfoModel>? teacherInfo = context.TeacherInfoModels.Where(a => a.TeacherID == teacherid).ToList();
+                                    List<ActiveCourseInfoModel> courses = [.. context.ActiveCourseInfoModels.Where(a => a.CourseTeacherID == teacherid)];
+                                    List<TeacherInfoModel> teacherInfo = [.. context.TeacherInfoModels.Where(a => a.TeacherID == teacherid)];
 
                                     if (courses.Count == 0)
                                     {
@@ -799,19 +1320,31 @@ namespace SAMS.Areas.Admin.Controllers
                             case "Attendance Office Member":
                                 {
                                     var attid = schoolId;
-                                    var attinfo = context.AttendanceOfficeMemberModels.Where(a => a.AoMemberID == attid).ToList() ?? throw new InvalidOperationException("Unable to retrieve attendance office member data for deletion.");
-
-                                    var deletion = context.Remove(attinfo);
-                                    await context.SaveChangesAsync().ConfigureAwait(true);
+                                    var attinfo = context.AttendanceOfficeMemberModels.Where(a => a.AoMemberID == attid).ToList();
+                                    if (attinfo.Count <= 0)
+                                    {
+                                        _logger.LogInformation("Unable to retrieve attendance office member data for deletion.");
+                                    }
+                                    else
+                                    {
+                                        var deletion = context.Remove(attinfo);
+                                        await context.SaveChangesAsync().ConfigureAwait(true);
+                                    }
                                     break;
                                 }
                             case "HS School Admin":
                                 {
                                     var adminid = schoolId;
-                                    var admininfo = context.AdminInfoModels.Where(a => a.AdminID == adminid).ToList() ?? throw new InvalidOperationException("Unable to retrieve admin data for deletion.");
-
-                                    var deletion = context.Remove(admininfo);
-                                    await context.SaveChangesAsync().ConfigureAwait(true);
+                                    var admininfo = context.AdminInfoModels.Where(a => a.AdminID == adminid).ToList();
+                                    if (admininfo.Count <= 0)
+                                    {
+                                        _logger.LogInformation("Unable to retrieve admin data for deletion.");
+                                    }
+                                    else
+                                    {
+                                        var deletion = context.Remove(admininfo);
+                                        await context.SaveChangesAsync().ConfigureAwait(true);
+                                    }
                                     break;
                                 }
                             case "Synnovation Lab Admin":
@@ -821,7 +1354,7 @@ namespace SAMS.Areas.Admin.Controllers
 
                                     if (admininfo.Count == 0)
                                     {
-                                        _logger.LogCritical("adminInfo is empty.");
+                                        LoggerMessage.Define(logLevel: LogLevel.Critical, eventId: new EventId(700, "Data retrieval failed."), $"Something went wrong. Following are the details. adminInfo is empty.");
                                     }
                                     else
                                     {
@@ -831,60 +1364,96 @@ namespace SAMS.Areas.Admin.Controllers
 
                                     break;
                                 }
-                            case "Education Support (EA)":
-                                {
-                                    var eaid = schoolId;
-                                    var eainfo = context.EASuportInfoModels.Where(a => a.EaID == eaid).ToList() ?? throw new InvalidOperationException("Unable to retrieve ea data for deletion.");
-
-                                    var deletion = context.Remove(eainfo);
-                                    await context.SaveChangesAsync().ConfigureAwait(true);
-                                    break;
-                                }
                             case "Nurse":
                                 {
                                     var nurseid = schoolId;
-                                    var nurseinfo = context.NurseInfoModels.Where(a => a.NurseID == nurseid).ToList() ?? throw new InvalidOperationException("Unable to retrieve nurse data for deletion.");
-
-                                    var deletion = context.Remove(nurseinfo);
-                                    await context.SaveChangesAsync().ConfigureAwait(true);
+                                    var nurseinfo = context.NurseInfoModels.Where(a => a.NurseID == nurseid).ToList();
+                                    if (nurseinfo.Count <= 0)
+                                    {
+                                        _logger.LogInformation("Unable to retrieve nurse data for deletion.");
+                                    }
+                                    else
+                                    {
+                                        var deletion = context.Remove(nurseinfo);
+                                        await context.SaveChangesAsync().ConfigureAwait(true);
+                                    }
                                     break;
                                 }
                             case "Law Enforcement":
                                 {
+                                    var lawenfid = schoolId;
+                                    var lawenfinfo = context.LawEnforcementInfoModels.Where(a => a.LawenfID == lawenfid).ToList();
+                                    if (lawenfinfo.Count <= 0)
+                                    {
+                                        _logger.LogInformation("Unable to retrieve law enforcement officer data for deletion.");
+                                    }
+
+                                    var deletion = context.Remove(lawenfinfo);
+                                    await context.SaveChangesAsync().ConfigureAwait(true);
+                                    break;
+                                }
+                            /*case "Synnovation Lab QR Code Scanner Management":
+                                {
                                     var adminid = schoolId;
-                                    var admininfo = context.LawEnforcementInfoModels.Where(a => a.LawenfID == adminid).ToList() ?? throw new InvalidOperationException("Unable to retrieve law enforcement officer data for deletion.");
+                                    var admininfo = context.HandheldScannerNodeModels.Where(a => a.ScannerID == adminid).ToList() ?? throw new Exception("Unable to retrieve scanner node data for deletion.");
 
                                     var deletion = context.Remove(admininfo);
                                     await context.SaveChangesAsync().ConfigureAwait(true);
                                     break;
-                                }
-                            //case "Synnovation Lab QR Code Scanner Management":
-                            //    {
-                            //        var adminid = schoolId;
-                            //        var admininfo = context.HandheldScannerNodeModels.Where(a => a.ScannerID == adminid).ToList() ?? throw new Exception("Unable to retrieve scanner node data for deletion.");
-
-                            //        var deletion = context.Remove(admininfo);
-                            //        await context.SaveChangesAsync().ConfigureAwait(true);
-                            //        break;
-                            //    }
+                                }*/
                             case "Substitute Teacher":
                                 {
                                     var teacherid = schoolId;
-                                    var courses = context.ActiveCourseInfoModels.Where(a => a.CourseTeacherID == teacherid).ToList() ?? throw new InvalidOperationException("Unable to retrieve teacher's courses for deletion.");
-                                    var teacherInfo = context.TeacherInfoModels.Where(a => a.TeacherID == teacherid).ToList() ?? throw new InvalidOperationException("Unable to retrieve teacher data for deletion.");
-
-                                    var deletion1 = context.Remove(courses);
-                                    var deletion2 = context.Remove(teacherInfo);
-                                    await context.SaveChangesAsync().ConfigureAwait(true);
+                                    var courses = context.ActiveCourseInfoModels.Where(a => a.CourseTeacherID == teacherid).ToList();
+                                    if (courses.Count <= 0)
+                                    {
+                                        _logger.LogInformation("Unable to retrieve teacher's courses for deletion.");
+                                    }
+                                    else
+                                    {
+                                        var deletion1 = context.Remove(courses);
+                                        await context.SaveChangesAsync().ConfigureAwait(true);
+                                    }
+                                    var teacherInfo = context.TeacherInfoModels.Where(a => a.TeacherID == teacherid).ToList();
+                                    if (teacherInfo.Count <= 0)
+                                    {
+                                        _logger.LogInformation("Unable to retrieve teacher data for deletion.");
+                                    }
+                                    else
+                                    {
+                                        var deletion2 = context.Remove(teacherInfo);
+                                        await context.SaveChangesAsync().ConfigureAwait(true);
+                                    }
                                     break;
                                 }
                             case "District Admin":
                                 {
                                     var adminid = schoolId;
-                                    var admininfo = context.AdminInfoModels.Where(a => a.AdminID == adminid).ToList() ?? throw new InvalidOperationException("Unable to retrieve admin data for deletion.");
-
-                                    var deletion = context.Remove(admininfo);
-                                    await context.SaveChangesAsync().ConfigureAwait(true);
+                                    var admininfo = context.AdminInfoModels.Where(a => a.AdminID == adminid).ToList();
+                                    if (admininfo.Count <= 0)
+                                    {
+                                        _logger.LogInformation("Unable to retrieve admin data for deletion.");
+                                    }
+                                    else
+                                    {
+                                        var deletion = context.Remove(admininfo);
+                                        await context.SaveChangesAsync().ConfigureAwait(true);
+                                    }
+                                    break;
+                                }
+                            case "Counselor":
+                                {
+                                    var cslrid = schoolId;
+                                    var cslrinfo = context.CounselorModels.Where(a => a.CounselorId == cslrid).ToList();
+                                    if (cslrinfo.Count <= 0)
+                                    {
+                                        _logger.LogInformation("Unable to retrieve counselor data for deletion.");
+                                    }
+                                    else
+                                    {
+                                        var deletion = context.Remove(cslrinfo);
+                                        await context.SaveChangesAsync().ConfigureAwait(true);
+                                    }
                                     break;
                                 }
                             case "Developer":
@@ -961,23 +1530,23 @@ namespace SAMS.Areas.Admin.Controllers
         //ALL COMMON REQUIRED AND OPTIONAL PERSONALLY IDENTIFIABLE INFORMATION OR PROTECTED PERSONAL INFORMATION STARTS HERE
         [Display(Name = "First Name")]
         [Required]
-        public required string FirstName { get; init; }
+        public required string FirstName { get; set; }
 
 
         [Display(Name = "Middle Name (Optional)")]
-        public string? MiddleName { get; init; }
+        public string? MiddleName { get; set; }
 
 
         [Display(Name = "Last Name")]
-        public required string LastName { get; init; }
+        public required string LastName { get; set; }
 
 
         [Display(Name = "Preferred Name (Optional)")]
-        public string? PreferredName { get; init; }
+        public string? PreferredName { get; set; }
 
 
         [Display(Name = "Phone Number/School Extension (Optional)")]
-        public string? PhoneNumber { get; init; }
+        public string? PhoneNumber { get; set; }
         //ALL COMMON REQUIRED PERSONALLY IDENTIFIABLE INFORMATION OR PROTECTED PERSONAL INFORMATION ENDS HERE
 
 
@@ -1022,7 +1591,7 @@ namespace SAMS.Areas.Admin.Controllers
 
 
         [Display(Name = ("EA Support?"))]
-        public Boolean? HasEASupport { get; set; }
+        public bool? HasEASupport { get; set; }
 
 
         [Display(Name = ("EA ID"))]
@@ -1050,7 +1619,7 @@ namespace SAMS.Areas.Admin.Controllers
 
         //ALL TEACHER REQUIRED INFORMATION STARTS HERE
         [Display(Name = ("Teaches all 5 days?"))]
-        public Boolean? Teaches5Days { get; set; }
+        public bool? Teaches5Days { get; set; }
 
         [Display(Name = "Assigned Room")]
         public int? RoomAssignedId { get; set; }

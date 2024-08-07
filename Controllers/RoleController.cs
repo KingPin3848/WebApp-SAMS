@@ -11,7 +11,7 @@ namespace SAMS.Controllers
 
         public async Task<IActionResult> CreateRole()
         {
-            var developer = await _roleManager.CreateAsync(new IdentityRole("Developer"));
+            var counselor = await _roleManager.CreateAsync(new IdentityRole("Counselor"));
             //var hsschooladmin = await _roleManager.CreateAsync(new IdentityRole("HS School Admin"));
             //var synnlabadmin = await _roleManager.CreateAsync(new IdentityRole("Synnovation Lab Admin"));
             //var teacher = await _roleManager.CreateAsync(new IdentityRole("Teacher"));
@@ -23,7 +23,7 @@ namespace SAMS.Controllers
             //var student = await _roleManager.CreateAsync(new IdentityRole("Student"));
             //var districtadmin = await _roleManager.CreateAsync(new IdentityRole("District Admin"));
 
-            if (developer.Succeeded)
+            if (counselor.Succeeded)
             {
                 Console.WriteLine("The Role Creation worked.");
                 return RedirectToAction("Index");
@@ -31,7 +31,7 @@ namespace SAMS.Controllers
             else
             {
                 Console.WriteLine("The role creation did not work.");
-                Console.WriteLine("School Admin: " + developer.Succeeded);
+                Console.WriteLine("School Admin: " + counselor.Succeeded);
             }
             return View();
         }
