@@ -23,7 +23,7 @@ namespace SAMS.Models
         public string ChosenBellSchedule { get; set; } = null!;
 
         //Navigation properties
-        public ActiveCourseInfoModel? ActiveCourses { get; set; } = null!;
-        public StudentInfoModel? StudentInfo { get; set; } = null!;
+        public ActiveCourseInfoModel ActiveCourses { get; set; } = default!;
+        public StudentInfoModel StudentInfo { get; set; } = default!;
     }
 }

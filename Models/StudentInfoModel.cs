@@ -108,16 +108,16 @@ namespace SAMS.Models
 
         //Navigation Properties
 #pragma warning disable CA2227 // Collection properties should be read only
-        public CounselorModel? Counselor { get; set; } = null!;
+        public CounselorModel Counselor { get; set; } = default!;
         public EASuportInfoModel? AssignedEASuport { get; set; } = null!;
-        public ICollection<HallPassInfoModel>? HallPasses { get; set; } = null!;
-        public ICollection<FastPassModel>? FastPasses { get; set; } = null!;
-        public ICollection<BellAttendanceModel>? BellAttendances { get; set; } = null!;
-        public ICollection<DailyAttendanceModel>? DailyAttendances { get; set; } = null!;
+        public ICollection<HallPassInfoModel> HallPasses { get; set; } = default!;
+        public ICollection<FastPassModel> FastPasses { get; set; } = default!;
+        public ICollection<BellAttendanceModel> BellAttendances { get; set; } = default!;
+        public ICollection<DailyAttendanceModel> DailyAttendances { get; set; } = default!;
         public EASuportInfoModel? EASuport { get; set; } = null!;
-        public ICollection<PassRequestInfoModel>? PassRequestsForStudent { get; set; } = null!;
-        public Sem1StudSchedule? Sem1StudSchedule { get; set; } = null!;
-        public Sem2StudSchedule? Sem2StudSchedule { get; set; } = null!;
+        public ICollection<PassRequestInfoModel> PassRequestsForStudent { get; set; } = default!;
+        public Sem1StudSchedule Sem1StudSchedule { get; set; } = default!;
+        public Sem2StudSchedule Sem2StudSchedule { get; set; } = default!;
         public StudentLocationModel StudentLocation { get; set; } = default!;
 #pragma warning restore CA2227 // Collection properties should be read only
     }
