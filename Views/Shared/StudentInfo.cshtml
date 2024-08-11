@@ -197,6 +197,21 @@
   </div>
 </div>
 
+<br />
+<br />
+        <div class="card">
+            <div class="card-header">
+                <h3>Student Bell Attendance</h3>
+            </div>
+            <div class="card-body">
+                <div class="form-group">
+                    <label for="attendanceDate">Select Date:</label>
+                    <input type="text" class="form-control" id="attendanceDate">
+                </div>
+                <button class="btn" id="searchButton">Search</button>
+                <div id="results"></div>
+            </div>
+        </div>
 </body>
 
 
@@ -215,7 +230,7 @@
         }
 
         addEvent(day, start, end, title) {
-            const event = document.createElement('div');
+            var event = document.createElement('div');
             event.classList.add('event');
             event.classList.add(`start-${start}`);
             event.classList.add(`end-${end}`);
@@ -237,20 +252,20 @@
     }
 
     document.addEventListener('DOMContentLoaded', () => {
-        const calendar = new Calendar();
+        var calendar = new Calendar();
 
-        const sem1MonWed = document.getElementById('sem1MonWed').value.split(',');
-        const sem1TuesThurs = document.getElementById('sem1TuesThurs').value.split(',');
-        const sem1Fri = document.getElementById('sem1Fri').value.split(',');
+        var sem1MonWed = document.getElementById('sem1MonWed').value.split(',');
+        var sem1TuesThurs = document.getElementById('sem1TuesThurs').value.split(',');
+        var sem1Fri = document.getElementById('sem1Fri').value.split(',');
 
-        const sem2MonWed = document.getElementById('sem2MonWed').value.split(',');
-        const sem2TuesThurs = document.getElementById('sem2TuesThurs').value.split(',');
-        const sem2Fri = document.getElementById('sem2Fri').value.split(',');
+        var sem2MonWed = document.getElementById('sem2MonWed').value.split(',');
+        var sem2TuesThurs = document.getElementById('sem2TuesThurs').value.split(',');
+        var sem2Fri = document.getElementById('sem2Fri').value.split(',');
 
         function loadSemester(semester) {
             calendar.clearEvents();
-            const events = [];
-            let i = 1;
+            var events = [];
+            var i = 1;
 
             if (semester === 1) {
                 sem1MonWed.forEach(item => {
@@ -321,4 +336,9 @@
 </script>
 
 
+<script>
+
+    //Stuff for Bell attendance
+
+</script>
 
