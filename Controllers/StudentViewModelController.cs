@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SAMS.Data;
+using System.Text.RegularExpressions;
 
 namespace SAMS.Controllers
 {
@@ -85,6 +86,28 @@ namespace SAMS.Controllers
             return View("StudentInfo", student);
         }
 
+        public IActionResult StudentDailyAttendanceSearch(DateOnly Date, int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var query = _context.DailyAttendanceModels.Where(a => a.StudentId == id).Where(a => a.AttendanceDate == Date).ToList();
+
+            List<List<string>> something = [];
+            foreach (var item in query)
+            {
+                List<string> something2 = [];
+                something2.Add(item.Status);
+                something2.Add(item.ReasonForAbsence);
+                something2.Add(item.ChosenBellSchedule);
+                something2.Add(item.AttendanceId.ToString());
+                something.Add(something2);
+            }
+            return Json(something);
+
+        }
 
         public IActionResult StudentBellAttendanceSearch(DateTime Date, int? id)
         {
@@ -100,13 +123,96 @@ namespace SAMS.Controllers
                 List<string> something2 = [];
                 something2.Add(item.BellNumId);
                 something2.Add(item.Status);
-                something2.Add(item.ActiveCourses!.CourseName);
+                var courseID = item.CourseId;
+                var courseName = _context.ActiveCourseInfoModels.Where(a => a.CourseId == courseID).First().CourseName;
+                something2.Add(courseName);
                 something2.Add(item.ReasonForAbsence);
                 something2.Add(item.ChosenBellSchedule);
+                something2.Add(item.BellAttendanceId.ToString());
                 something.Add(something2);
             }
             return Json(something);
         }
 
+        public IActionResult StudentLocation(DateTime Date, int id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+#pragma warning disable CA1305 // Specify IFormatProvider
+            var query = _context.TimestampModels.Where(a => a.ActionMade == "Student Location Update").Where(b => b.Comments.Contains(id.ToString())).Where(c => c.Timestamp.Date == Date.Date).ToList();
+#pragma warning restore CA1305 // Specify IFormatProvider
+
+            List<string> studID = [];
+            List<string> oldLocation = [];
+            List<string> newLocation = [];
+            List<string> timestamp = [];
+            List<List<string>> results = [];
+
+
+            string pattern = @"Student\s+(.*?)\s+scanned.*?from\s+(.*?)\s+to\s+(.*)";
+
+            foreach (var item in query)
+            {
+                Match match = Regex.Match(item.Comments, pattern);
+
+                if (match.Success)
+                {
+#pragma warning disable CA1305 // Specify IFormatProvider
+                    if (match.Groups[1].Value != id.ToString())
+                    {
+                        //do nothing
+                    }
+                    else
+                    {
+                        List<string> temp = [];
+
+                        temp.Add(match.Groups[2].Value);
+                        temp.Add(match.Groups[3].Value);
+#pragma warning disable CA1305 // Specify IFormatProvider
+                        temp.Add(item.Timestamp.ToString());
+#pragma warning restore CA1305 // Specify IFormatProvider
+
+                        results.Add(temp);
+                    }
+#pragma warning restore CA1305 // Specify IFormatProvider
+                }
+            }
+
+
+            return Json(results);
+        }
+
+        [HttpPost]
+        public IActionResult UpdateBellAttendanceStatus(int id, string status, string reason)
+        {
+            var query = _context.BellAttendanceModels.FirstOrDefault(a => a.BellAttendanceId == id);
+            if (query == null)
+            {
+                return NotFound();
+            }
+            query.Status = status;
+            query.ReasonForAbsence = reason;
+            _context.SaveChanges();
+
+            return Json(status);
+        }
+
+        [HttpPost]
+        public IActionResult UpdateDailyAttendanceStatus(int id, string status, string reason)
+        {
+            var query = _context.DailyAttendanceModels.FirstOrDefault(a => a.AttendanceId == id);
+            if (query == null)
+            {
+                return NotFound();
+            }
+            query.Status = status;
+            query.ReasonForAbsence = reason;
+            _context.SaveChanges();
+
+            return Json(status);
+        }
     }
 }

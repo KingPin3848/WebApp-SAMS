@@ -32,6 +32,6 @@ namespace SAMS.Models
         //Navigation properties
         public TeacherInfoModel Teacher { get; set; } = default!;
         public RoomLocationInfoModel Room { get; set; } = default!;
-        public ICollection<BellAttendanceModel>? BellAttendances { get; set; } = default!;
+        public ICollection<BellAttendanceModel> BellAttendances { get; set; } = default!;
     }
 }

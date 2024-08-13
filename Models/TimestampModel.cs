@@ -7,9 +7,9 @@ namespace SAMS.Models
     {
         [Key]
         public int Id { get; set; }
-        public DateTime? Timestamp { get; set; }
-        public string? ActionMade { get; set; }
-        public string? MadeBy { get; set; }
-        public string? Comments { get; set; }
+        public DateTime Timestamp { get; set; }
+        public string ActionMade { get; set; } = string.Empty;
+        public string MadeBy { get; set; } = string.Empty;
+        public string Comments { get; set; } = string.Empty;
     }
 }
