@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.TagHelpers;
 using Microsoft.EntityFrameworkCore;
 using SAMS.Controllers;
 using SAMS.Data;
 using SAMS.Models;
 using System.ComponentModel.DataAnnotations;
-using System.Diagnostics;
 using System.Globalization;
 using System.Security.Claims;
 
@@ -18,6 +18,8 @@ namespace SAMS.Areas.Admin.Controllers
         private readonly ILogger<AccountManagerController> _logger;
         private readonly ApplicationDbContext context;
         private readonly UserManager<ApplicationUser> userManager;
+
+        private ReportModel report { get; set; } = default!;
 
         //private readonly IEmailSender<ApplicationUser> _emailSender = emailSender;
 
@@ -63,13 +65,13 @@ namespace SAMS.Areas.Admin.Controllers
             var loggedinuserid = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (loggedinuserid is null)
             {
-                return RedirectToAction("AutomatedError", "Error", new { number = 01, description = "Are you logged in?", reference = "Event ID = 1, Identifier = Acc72Det"});
+                return RedirectToAction("AutomatedError", "Error", new { number = 01, description = "Are you logged in?", reference = "Event ID = 1, Identifier = Acc72Det" });
             }
 
             var loggedinuser = await userManager.FindByIdAsync(loggedinuserid).ConfigureAwait(true);
             if (loggedinuser is null)
             {
-                return RedirectToAction("AutomatedError", "Error", new { number = 01, description = "Are you an alien? We couldn't authenticate you.", reference = "Event ID = 1, Identifier = Acc78Det"});
+                return RedirectToAction("AutomatedError", "Error", new { number = 01, description = "Are you an alien? We couldn't authenticate you.", reference = "Event ID = 1, Identifier = Acc78Det" });
             }
 
 
@@ -216,15 +218,7 @@ namespace SAMS.Areas.Admin.Controllers
                                             return NotFound();
                                             //return RedirectToAction("Error", "Error", new { number = 02, description = "Did you write a letter instead of number for student id?", reference = "Event ID = 2, Identifier = Acc236Cret", user = loggedinuser });
                                         }
-                                        if (input.StudentGradYearMod.HasValue)
-                                        {
-                                            worked = await StudentCreator(studId, input.FirstName, input.MiddleName, input.LastName, input.PreferredName, input.Email, input.PhoneNumber, input.StudentGradYearMod.Value, input.StudentCounselorID!, input.Parentguard1NameMod!, input.Parentguard1EmailMod!, input.Parentguard2NameMod, input.Parentguard2EmailMod).ConfigureAwait(true);
-                                        }
-                                        else
-                                        {
-                                            return NotFound();
-                                            //return RedirectToAction("Error", "Error", new { number = 02, description = "Did you forget to add the student's grad year?", reference = "Event ID = 2, Identifier = Acc244Cret", user = loggedinuser });
-                                        }
+                                        worked = await StudentCreator(studId, input.FirstName, input.MiddleName, input.LastName, input.PreferredName, input.Email, input.PhoneNumber, input.StudentGradYearMod, input.StudentCounselorID!, input.Parentguard1NameMod!, input.Parentguard1EmailMod!, input.Parentguard2NameMod, input.Parentguard2EmailMod).ConfigureAwait(true);
                                         break;
                                     }
 
@@ -614,21 +608,39 @@ namespace SAMS.Areas.Admin.Controllers
                         }
                 }
             }
+            var model = new EditAccountModel()
+            {
+                User = user,
+                Input = inputmodel
+            };
 
-            var model = new Tuple<ApplicationUser, InputModel>(user, inputmodel);
             ViewData["RoleId"] = new SelectList(context.Roles, "Name", "Name", user.Role);
             return View(model);
         }
-
-
-
 
         // POST: AccountManager/Edit/5
         [HttpPost]
         [RequireHttps]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, ApplicationUser appuser, InputModel input)
+        public async Task<IActionResult> Edit(EditAccountModel accountmodel)
         {
+            /* Stepwise Summary of the Action Method: Edit - HTTP POST
+             * Step 01:
+                        * Within this method at Comment 01, the code first checks if the user is 
+                        * logged in or not and if not, it makes the user to login to their account. Once the 
+                        * user is logged in, it checks for the user's DB ID (not the school id), and then finds
+                        * the user from that ID retrieved only for verification and authentication purposes above
+                        * the normal login authentication since 2FA is not completely enabled to be used throughout
+                        * the whole project and/or solution.
+             * Step 02:
+                        * 
+             */
+
+
+            /* Comment 01 (Code Snippet Description):
+             * The following lines of code will make sure the user is logged in if not and get the user id for verification, authentication purposes of the method.
+             */
+
             //var loggedinuserid = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             //if (loggedinuserid is null)
             //{
@@ -641,17 +653,9 @@ namespace SAMS.Areas.Admin.Controllers
             //    return RedirectToAction("Error", "Error", new { number = 01, description = "Are you an alien? We couldn't authenticate you.", reference = "Event ID = 1, Identifier = Acc78Det"});
             //}
 
-            if (appuser is null)
-            {
-                return NotFound();
-            }
-
-            if (input is null)
-            {
-                return NotFound();
-            }
-
-            if (id != appuser.Id)
+            /* Null check to make sure that the parameter "accountmodel" is not empty and has all the required values to be edited/updated.
+             */
+            if (accountmodel is null)
             {
                 return NotFound();
             }
@@ -661,44 +665,18 @@ namespace SAMS.Areas.Admin.Controllers
             {
                 try
                 {
-                    var user = await userManager.FindByIdAsync(id).ConfigureAwait(true);
-                    if (user == null)
+                    if (await Switcher(accountmodel).ConfigureAwait(true))
                     {
-                        return NotFound();
+                        //Do nothing
                     }
-
-                    // Update the details
-                    user.Email = input.Email;
-                    user.ActivationCode = input.ActivationCode;
-                    user.SchoolId = input.SchoolId;
-                    user.Role = input.Role;
-
-                    // Get the current roles of the user
-                    var currentRoles = await userManager.GetRolesAsync(user).ConfigureAwait(true);
-
-                    // Remove the user from the current roles
-                    var removeResult = await userManager.RemoveFromRolesAsync(user, currentRoles).ConfigureAwait(true);
-                    if (!removeResult.Succeeded)
+                    else
                     {
-                        LoggerMessage.Define(logLevel: LogLevel.Error, eventId: new EventId(2, "Task failure."), "Failed to remove user roles.");
-                        // Handle the error
-                        return RedirectToAction("Error", new { Message = "Failed to remove user roles." });
+                        return RedirectToAction("AutomatedError", "Error", new { });
                     }
-
-                    // Add the user to the new role
-                    var addResult = await userManager.AddToRolesAsync(user, input.Role).ConfigureAwait(true);
-                    if (!addResult.Succeeded)
-                    {
-                        LoggerMessage.Define(logLevel: LogLevel.Error, eventId: new EventId(2, "Task failure."), "Failed to add user roles.");
-                        // Handle the error
-                        return RedirectToAction("Error", new { Message = "Failed to add user roles." });
-                    }
-
-                    await userManager.UpdateAsync(user).ConfigureAwait(true);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!UserExists(appuser.Id))
+                    if (!UserExists(accountmodel.User.Id))
                     {
                         return NotFound();
                     }
@@ -721,86 +699,50 @@ namespace SAMS.Areas.Admin.Controllers
             }
 
 
-            ViewData["RoleId"] = new SelectList(context.Roles, "Name", "Name", input.Role);
-            return View(appuser);
+            ViewData["RoleId"] = new SelectList(context.Roles, "Name", "Name", accountmodel.Input.Role);
+            return View(accountmodel);
 
         }
 
-        private bool Switcher(InputModel input, ApplicationUser appuser)
+        private async Task<bool> Switcher(EditAccountModel accountmodel)
         {
-            bool worked = new();
-            foreach (var role in input.Role)
+            foreach (var role in accountmodel.Input.Role)
             {
                 switch (role)
                 {
                     case "HS School Admin":
                         {
-                            worked = AdminEditor(input, appuser, "High School");
-                            if (worked == false)
-                            {
-                                return false;
-                            }
-                            break;
+                            return (await AdminEditor(accountmodel.Input, accountmodel.User, "High School").ConfigureAwait(true));
                         }
 
                     case "Counselor":
                         {
-                            worked = CounselorEditor(input, appuser);
-                            if (worked == false)
-                            {
-                                return false;
-                            }
-                            break;
+                            return (await CounselorEditor(accountmodel.Input, accountmodel.User).ConfigureAwait(true));
                         }
 
                     case "Synnovation Lab Admin":
                         {
-                            worked = AdminEditor(input, appuser, "Synnovation Lab");
-                            if (worked == false)
-                            {
-                                return false;
-                            }
-                            break;
+                            return (await AdminEditor(accountmodel.Input, accountmodel.User, "Synnovation Lab").ConfigureAwait(true));
                         }
 
                     case "Attendance Office Member":
                         {
-                            worked = AttOfficeMemberEditor(input, appuser);
-                            if (worked == false)
-                            {
-                                return false;
-                            }
-                            break;
+                            return (await AttOfficeMemberEditor(accountmodel.Input, accountmodel.User).ConfigureAwait(true));
                         }
 
                     case "Nurse":
                         {
-                            worked = NurseEditor(input, appuser);
-                            if (worked == false)
-                            {
-                                return false;
-                            }
-                            break;
+                            return (await NurseEditor(accountmodel.Input, accountmodel.User).ConfigureAwait(true));
                         }
 
                     case "Law Enforcement":
                         {
-                            worked = LawEnfEditor(input, appuser);
-                            if (worked == false)
-                            {
-                                return false;
-                            }
-                            break;
+                            return (await LawEnfEditor(accountmodel.Input, accountmodel.User).ConfigureAwait(true));
                         }
 
                     case "Teacher":
                         {
-                            worked = TeacherEditor(input, appuser);
-                            if (worked == false)
-                            {
-                                return false;
-                            }
-                            break;
+                            return (await TeacherEditor(accountmodel.Input, accountmodel.User).ConfigureAwait(true));
                         }
 
                     //case "Substitute Teacher":
@@ -810,293 +752,342 @@ namespace SAMS.Areas.Admin.Controllers
 
                     case "Student":
                         {
-                            int studId = new();
-                            if (int.TryParse(input.SchoolId, out studId))
-                            {
-                                //Do nothing
-                            }
-                            else
-                            {
-                                return false;
-                            }
-                            if (input.StudentGradYearMod.HasValue)
-                            {
-                                worked = StudentEditor(input, appuser);
-                                if (worked == false)
-                                {
-                                    return false;
-                                }
-                            }
-                            else
-                            {
-                                return false;
-                            }
-                            break;
+                            return (await StudentEditor(accountmodel.Input, accountmodel.User).ConfigureAwait(true));
                         }
 
                     case "District Admin":
                         {
-                            worked = AdminEditor(input, appuser, "District");
-                            if (worked == false)
-                            {
-                                return false;
-                            }
-                            break;
+                            return (await AdminEditor(accountmodel.Input, accountmodel.User, "District").ConfigureAwait(true));
                         }
                     default:
                         {
-                            worked = true;
-                            break;
+                            return false;
                         }
                 }
-            }
-            return worked;
-        }
-
-        private bool TeacherEditor(InputModel input, ApplicationUser appuser)
-        {
-            var teacheruser = appuser;
-            var teacher = context.TeacherInfoModels.Where(a => a.TeacherID.Equals(input.SchoolId, StringComparison.Ordinal)).First();
-
-            if (teacheruser is null)
-            {
-                return false;
-            }
-
-            if (teacher is null)
-            {
-                return false;
-            }
-
-            //Edit all AppUser fields.
-            teacheruser.Email = input.Email;
-            teacheruser.ActivationCode = input.ActivationCode;
-
-
-            //Edit all TeacherInfoModel fields.
-            teacher.TeacherID = input.SchoolId;
-            teacher.TeacherFirstNameMod = input.FirstName;
-            teacher.TeacherMiddleNameMod = input.MiddleName;
-            teacher.TeacherLastNameMod = input.LastName;
-            teacher.TeacherPreferredNameMod = input.PreferredName;
-            teacher.TeacherEmailMod = input.Email;
-            teacher.TeacherPhoneMod = input.PhoneNumber;
-            teacher.Teaches5Days = input.Teaches5Days;
-            teacher.RoomAssignedId = input.RoomAssignedId;
-
-            context.TeacherInfoModels.Update(teacher);
-            return (context.SaveChangesAsync().IsCompletedSuccessfully);
-        }
-
-        private bool AdminEditor(InputModel input, ApplicationUser appuser, string label)
-        {
-            var adminuser = appuser;
-            var admin = context.AdminInfoModels.Where(a => a.AdminID.Equals(input.SchoolId, StringComparison.Ordinal)).First();
-
-            if (adminuser is null)
-            {
-                return false;
-            }
-
-            if (admin is null)
-            {
-                return false;
-            }
-
-            //Edit all AppUser fields.
-            adminuser.Email = input.Email;
-            adminuser.ActivationCode = input.ActivationCode;
-
-
-            //Edit all TeacherInfoModel fields.
-            admin.AdminID = input.SchoolId;
-            admin.AdminFirstNameMod = input.FirstName;
-            admin.AdminMiddleNameMod = input.MiddleName;
-            admin.AdminLastNameMod = input.LastName;
-            admin.AdminPreferredNameMod = input.PreferredName;
-            admin.AdminEmailMod = input.Email;
-            admin.AdminPhoneMod = input.PhoneNumber;
-            admin.AdminLabelMod = label;
-
-            context.AdminInfoModels.Update(admin);
-            return (context.SaveChangesAsync().IsCompletedSuccessfully);
-        }
-
-        private bool AttOfficeMemberEditor(InputModel input, ApplicationUser appuser)
-        {
-            var attofficememuser = appuser;
-            var attofficemem = context.AttendanceOfficeMemberModels.Where(a => a.AoMemberID.Equals(input.SchoolId, StringComparison.Ordinal)).First();
-
-            if (attofficememuser is null)
-            {
-                return false;
-            }
-
-            if (attofficemem is null)
-            {
-                return false;
-            }
-
-            //Edit all AppUser fields.
-            attofficememuser.Email = input.Email;
-            attofficememuser.ActivationCode = input.ActivationCode;
-
-
-            //Edit all TeacherInfoModel fields.
-            attofficemem.AoMemberID = input.SchoolId;
-            attofficemem.AoMemberFirstNameMod = input.FirstName;
-            attofficemem.AoMemberMiddleNameMod = input.MiddleName;
-            attofficemem.AoMemberLastNameMod = input.LastName;
-            attofficemem.AoMemberPreferredNameMod = input.PreferredName;
-            attofficemem.AoMemberEmailMod = input.Email;
-            attofficemem.AoMemberPhoneMod = input.PhoneNumber;
-
-            context.AttendanceOfficeMemberModels.Update(attofficemem);
-            return (context.SaveChangesAsync().IsCompletedSuccessfully);
-        }
-
-        private bool NurseEditor(InputModel input, ApplicationUser appuser)
-        {
-            var nurseuser = appuser;
-            var nurse = context.NurseInfoModels.Where(a => a.NurseID.Equals(input.SchoolId, StringComparison.Ordinal)).First();
-
-            if (nurseuser is null)
-            {
-                return false;
-            }
-
-            if (nurse is null)
-            {
-                return false;
-            }
-
-            //Edit all AppUser fields.
-            nurseuser.Email = input.Email;
-            nurseuser.ActivationCode = input.ActivationCode;
-
-
-            //Edit all TeacherInfoModel fields.
-            nurse.NurseID = input.SchoolId;
-            nurse.NurseFirstNameMod = input.FirstName;
-            nurse.NurseMiddleNameMod = input.MiddleName;
-            nurse.NurseLastNameMod = input.LastName;
-            nurse.NursePreferredNameMod = input.PreferredName;
-            nurse.NurseEmailMod = input.Email;
-            nurse.NursePhoneMod = input.PhoneNumber;
-
-            context.NurseInfoModels.Update(nurse);
-            return (context.SaveChangesAsync().IsCompletedSuccessfully);
-        }
-
-        private bool LawEnfEditor(InputModel input, ApplicationUser appuser)
-        {
-            var lawenfuser = appuser;
-            var lawenf = context.LawEnforcementInfoModels.Where(a => a.LawenfID.Equals(input.SchoolId, StringComparison.Ordinal)).First();
-
-            if (lawenfuser is null)
-            {
-                return false;
-            }
-
-            if (lawenf is null)
-            {
-                return false;
-            }
-
-            //Edit all AppUser fields.
-            lawenfuser.Email = input.Email;
-            lawenfuser.ActivationCode = input.ActivationCode;
-
-
-            //Edit all TeacherInfoModel fields.
-            lawenf.LawenfID = input.SchoolId;
-            lawenf.LaweFirstNameMod = input.FirstName;
-            lawenf.LaweMiddleNameMod = input.MiddleName;
-            lawenf.LaweLastNameMod = input.LastName;
-            lawenf.LawePreferredNameMod = input.PreferredName;
-            lawenf.LaweEmailMod = input.Email;
-            lawenf.LawePhoneMod = input.PhoneNumber;
-
-            context.LawEnforcementInfoModels.Update(lawenf);
-            return (context.SaveChangesAsync().IsCompletedSuccessfully);
-        }
-
-        private bool StudentEditor(InputModel input, ApplicationUser appuser)
-        {
-            var studentuser = appuser;
-            if (int.TryParse(input.SchoolId, out int studentid))
-            {
-                var student = context.StudentInfoModels.Where(a => a.StudentID == studentid).First();
-
-                if (studentuser is null)
-                {
-                    return false;
-                }
-
-                if (student is null)
-                {
-                    return false;
-                }
-
-                //Edit all AppUser fields.
-                studentuser.Email = input.Email;
-                studentuser.ActivationCode = input.ActivationCode;
-
-
-                //Edit all TeacherInfoModel fields.
-                student.StudentID = studentid;
-                student.StudentFirstNameMod = input.FirstName;
-                student.StudentMiddleNameMod = input.MiddleName;
-                student.StudentLastNameMod = input.LastName;
-                student.StudentPreferredNameMod = input.PreferredName;
-                student.StudentEmailMod = input.Email;
-                student.StudentPhoneMod = input.PhoneNumber;
-                student.Parentguard1NameMod = input.Parentguard1NameMod!;
-                student.Parentguard2NameMod = input.Parentguard2NameMod!;
-                student.Parentguard1EmailMod = input.Parentguard1EmailMod!;
-                student.Parentguard2EmailMod = input.Parentguard2EmailMod!;
-                student.StudentGradYearMod = input.StudentGradYearMod!.Value;
-                student.StudentCounselorID = input.StudentCounselorID!;
-                student.HasEASupport = input.HasEASupport;
-                student.StudentEAID = input.StudentEAID;
-
-                context.StudentInfoModels.Update(student);
-                return (context.SaveChangesAsync().IsCompletedSuccessfully);
             }
             return false;
         }
 
-        private bool CounselorEditor(InputModel input, ApplicationUser appuser)
+        private async Task<bool> TeacherEditor(InputModel input, ApplicationUser newappuser)
         {
-            var counseloruser = appuser;
-            var counselor = context.CounselorModels.Where(a => a.CounselorId.Equals(input.SchoolId, StringComparison.Ordinal)).First();
-
-            if (counseloruser is null)
+            if (newappuser is null || input is null)
             {
                 return false;
             }
 
-            if (counselor is null)
+            var newteacher = new TeacherInfoModel()
+            {
+                TeacherID = newappuser.SchoolId,
+                TeacherFirstNameMod = input.FirstName,
+                TeacherMiddleNameMod = input.MiddleName,
+                TeacherLastNameMod = input.LastName,
+                TeacherPreferredNameMod = input.PreferredName,
+                TeacherEmailMod = newappuser.Email!,
+                TeacherPhoneMod = input.PhoneNumber,
+                Teaches5Days = input.Teaches5Days,
+                RoomAssignedId = input.RoomAssignedId
+            };
+
+            context.Entry(newteacher).State = EntityState.Modified;
+
+            try
+            {
+                if (await context.SaveChangesAsync().ConfigureAwait(false) > 0)
+                {
+                    return true;
+                }
+                else
+                {
+                    context.Entry(newteacher).State = EntityState.Unchanged;
+                    await context.SaveChangesAsync().ConfigureAwait(false);
+                    return false;
+                }
+            }
+            catch (DbUpdateException ex)
+            {
+                LoggerMessage.Define(logLevel: LogLevel.Error, eventId: new EventId(1, "Database could not be updated."), $"Something went wrong. Following are the details. \n\n {ex.Message} \n\n {ex.Data} \n\n {ex.InnerException} \n\n {ex.Source} \n\n {ex.StackTrace} \n\n {ex.TargetSite}");
+                return false;
+            }
+            catch (OperationCanceledException ex)
+            {
+                LoggerMessage.Define(logLevel: LogLevel.Error, eventId: new EventId(1, "Database could not be updated."), $"Something went wrong. Following are the details. \n\n {ex.Message} \n\n {ex.Data} \n\n {ex.InnerException} \n\n {ex.Source} \n\n {ex.StackTrace} \n\n {ex.TargetSite}");
+                return false;
+            }
+        }
+
+        private async Task<bool> AdminEditor(InputModel input, ApplicationUser newappuser, string label)
+        {
+            if (newappuser is null || input is null)
             {
                 return false;
             }
 
-            //Edit all AppUser fields.
-            counseloruser.Email = input.Email;
-            counseloruser.ActivationCode = input.ActivationCode;
+            var newadmin = new AdminInfoModel()
+            {
+                AdminID = newappuser.SchoolId,
+                AdminFirstNameMod = input.FirstName,
+                AdminMiddleNameMod = input.MiddleName,
+                AdminLastNameMod = input.LastName,
+                AdminEmailMod = newappuser.Email,
+                AdminPhoneMod = input.PhoneNumber,
+                AdminLabelMod = label
+            };
+            context.Entry(newadmin).State = EntityState.Modified;
 
+            try
+            {
+                if (await context.SaveChangesAsync().ConfigureAwait(false) > 0)
+                {
+                    return true;
+                }
+                else
+                {
+                    context.Entry(newadmin).State = EntityState.Unchanged;
+                    await context.SaveChangesAsync().ConfigureAwait(false);
+                    return false;
+                }
+            }
+            catch (DbUpdateException ex)
+            {
+                LoggerMessage.Define(logLevel: LogLevel.Error, eventId: new EventId(1, "Database could not be updated."), $"Something went wrong. Following are the details. \n\n {ex.Message} \n\n {ex.Data} \n\n {ex.InnerException} \n\n {ex.Source} \n\n {ex.StackTrace} \n\n {ex.TargetSite}");
+                return false;
+            }
+            catch (OperationCanceledException ex)
+            {
+                LoggerMessage.Define(logLevel: LogLevel.Error, eventId: new EventId(1, "Database could not be updated."), $"Something went wrong. Following are the details. \n\n {ex.Message} \n\n {ex.Data} \n\n {ex.InnerException} \n\n {ex.Source} \n\n {ex.StackTrace} \n\n {ex.TargetSite}");
+                return false;
+            }
+        }
 
-            //Edit all TeacherInfoModel fields.
-            counselor.CounselorId = input.SchoolId;
-            counselor.CounselorFirstName = input.FirstName;
-            counselor.CounselorMiddleName = input.MiddleName;
-            counselor.CounselorLastName = input.LastName;
-            counselor.CounselorPreferredName = input.PreferredName;
-            counselor.CounselorEmail = input.Email;
-            counselor.CounselorPhone = input.PhoneNumber;
+        private async Task<bool> AttOfficeMemberEditor(InputModel input, ApplicationUser newappuser)
+        {
+            if (newappuser is null || input is null)
+            {
+                return false;
+            }
 
-            context.CounselorModels.Update(counselor);
-            return (context.SaveChangesAsync().IsCompletedSuccessfully);
+            var newattofficemem = new AttendanceOfficeMemberModel()
+            {
+                AoMemberID = newappuser.SchoolId,
+                AoMemberFirstNameMod = input.FirstName,
+                AoMemberMiddleNameMod = input.MiddleName,
+                AoMemberLastNameMod = input.LastName,
+                AoMemberPreferredNameMod = input.PreferredName,
+                AoMemberEmailMod = newappuser.Email!,
+                AoMemberPhoneMod = input.PhoneNumber
+            };
+            context.Entry(newattofficemem).State = EntityState.Modified;
+
+            try
+            {
+                if (await context.SaveChangesAsync().ConfigureAwait(false) > 0)
+                {
+                    return true;
+                }
+                else
+                {
+                    context.Entry(newattofficemem).State = EntityState.Unchanged;
+                    await context.SaveChangesAsync().ConfigureAwait(false);
+                    return false;
+                }
+            }
+            catch (DbUpdateException ex)
+            {
+                LoggerMessage.Define(logLevel: LogLevel.Error, eventId: new EventId(1, "Database could not be updated."), $"Something went wrong. Following are the details. \n\n {ex.Message} \n\n {ex.Data} \n\n {ex.InnerException} \n\n {ex.Source} \n\n {ex.StackTrace} \n\n {ex.TargetSite}");
+                return false;
+            }
+            catch (OperationCanceledException ex)
+            {
+                LoggerMessage.Define(logLevel: LogLevel.Error, eventId: new EventId(1, "Database could not be updated."), $"Something went wrong. Following are the details. \n\n {ex.Message} \n\n {ex.Data} \n\n {ex.InnerException} \n\n {ex.Source} \n\n {ex.StackTrace} \n\n {ex.TargetSite}");
+                return false;
+            }
+        }
+
+        private async Task<bool> NurseEditor(InputModel input, ApplicationUser newappuser)
+        {
+            if (newappuser is null || input is null)
+            {
+                return false;
+            }
+
+            var newnurse = new NurseInfoModel()
+            {
+                NurseID = newappuser.SchoolId,
+                NurseFirstNameMod = input.FirstName,
+                NurseMiddleNameMod = input.MiddleName,
+                NurseLastNameMod = input.LastName,
+                NursePreferredNameMod = input.PreferredName,
+                NurseEmailMod = newappuser.Email!,
+                NursePhoneMod = input.PhoneNumber
+            };
+            context.Entry(newnurse).State = EntityState.Modified;
+
+            try
+            {
+                if (await context.SaveChangesAsync().ConfigureAwait(false) > 0)
+                {
+                    return true;
+                }
+                else
+                {
+                    context.Entry(newnurse).State = EntityState.Unchanged;
+                    await context.SaveChangesAsync().ConfigureAwait(false);
+                    return false;
+                }
+            }
+            catch (DbUpdateException ex)
+            {
+                LoggerMessage.Define(logLevel: LogLevel.Error, eventId: new EventId(1, "Database could not be updated."), $"Something went wrong. Following are the details. \n\n {ex.Message} \n\n {ex.Data} \n\n {ex.InnerException} \n\n {ex.Source} \n\n {ex.StackTrace} \n\n {ex.TargetSite}");
+                return false;
+            }
+            catch (OperationCanceledException ex)
+            {
+                LoggerMessage.Define(logLevel: LogLevel.Error, eventId: new EventId(1, "Database could not be updated."), $"Something went wrong. Following are the details. \n\n {ex.Message} \n\n {ex.Data} \n\n {ex.InnerException} \n\n {ex.Source} \n\n {ex.StackTrace} \n\n {ex.TargetSite}");
+                return false;
+            }
+        }
+
+        private async Task<bool> LawEnfEditor(InputModel input, ApplicationUser newappuser)
+        {
+            if (newappuser is null || input is null)
+            {
+                return false;
+            }
+
+            var newlawenf = new LawEnforcementInfoModel()
+            {
+                LawenfID = newappuser.SchoolId,
+                LaweFirstNameMod = input.FirstName,
+                LaweMiddleNameMod = input.MiddleName,
+                LaweLastNameMod = input.LastName,
+                LawePreferredNameMod = input.PreferredName,
+                LaweEmailMod = newappuser.Email!,
+                LawePhoneMod = input.PhoneNumber
+            };
+            context.Entry(newlawenf).State = EntityState.Modified;
+
+            try
+            {
+                if (await context.SaveChangesAsync().ConfigureAwait(false) > 0)
+                {
+                    return true;
+                }
+                else
+                {
+                    context.Entry(newlawenf).State = EntityState.Unchanged;
+                    await context.SaveChangesAsync().ConfigureAwait(false);
+                    return false;
+                }
+            }
+            catch (DbUpdateException ex)
+            {
+                LoggerMessage.Define(logLevel: LogLevel.Error, eventId: new EventId(1, "Database could not be updated."), $"Something went wrong. Following are the details. \n\n {ex.Message} \n\n {ex.Data} \n\n {ex.InnerException} \n\n {ex.Source} \n\n {ex.StackTrace} \n\n {ex.TargetSite}");
+                return false;
+            }
+            catch (OperationCanceledException ex)
+            {
+                LoggerMessage.Define(logLevel: LogLevel.Error, eventId: new EventId(1, "Database could not be updated."), $"Something went wrong. Following are the details. \n\n {ex.Message} \n\n {ex.Data} \n\n {ex.InnerException} \n\n {ex.Source} \n\n {ex.StackTrace} \n\n {ex.TargetSite}");
+                return false;
+            }
+        }
+
+        private async Task<bool> StudentEditor(InputModel input, ApplicationUser newappuser)
+        {
+            if (int.TryParse(input.SchoolId, out int studentid))
+            {
+                if (newappuser is null || input is null)
+                {
+                    return false;
+                }
+                var newstudent = new StudentInfoModel()
+                {
+                    StudentID = studentid,
+                    StudentFirstNameMod = input.FirstName,
+                    StudentMiddleNameMod = input.MiddleName,
+                    StudentLastNameMod = input.LastName,
+                    StudentPreferredNameMod = input.PreferredName,
+                    StudentEmailMod = newappuser.Email!,
+                    StudentPhoneMod = input.PhoneNumber,
+                    StudentGradYearMod = input.StudentGradYearMod,
+                    StudentCounselorID = input.StudentCounselorID!,
+                    HasEASupport = input.HasEASupport,
+                    StudentEAID = input.StudentEAID,
+                    Parentguard1NameMod = input.Parentguard1NameMod!,
+                    Parentguard1EmailMod = input.Parentguard1EmailMod!,
+                    Parentguard2NameMod = input.Parentguard2NameMod,
+                    Parentguard2EmailMod = input.Parentguard2EmailMod
+                };
+                context.Entry(newstudent).State = EntityState.Modified;
+
+                try
+                {
+                    if (await context.SaveChangesAsync().ConfigureAwait(false) > 0)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        context.Entry(newstudent).State = EntityState.Unchanged;
+                        await context.SaveChangesAsync().ConfigureAwait(false);
+                        return false;
+                    }
+                }
+                catch (DbUpdateException ex)
+                {
+                    LoggerMessage.Define(logLevel: LogLevel.Error, eventId: new EventId(1, "Database could not be updated."), $"Something went wrong. Following are the details. \n\n {ex.Message} \n\n {ex.Data} \n\n {ex.InnerException} \n\n {ex.Source} \n\n {ex.StackTrace} \n\n {ex.TargetSite}");
+                    return false;
+                }
+                catch (OperationCanceledException ex)
+                {
+                    LoggerMessage.Define(logLevel: LogLevel.Error, eventId: new EventId(1, "Database could not be updated."), $"Something went wrong. Following are the details. \n\n {ex.Message} \n\n {ex.Data} \n\n {ex.InnerException} \n\n {ex.Source} \n\n {ex.StackTrace} \n\n {ex.TargetSite}");
+                    return false;
+                }
+            }
+            return false;
+        }
+
+        private async Task<bool> CounselorEditor(InputModel input, ApplicationUser newappuser)
+        {
+            if (newappuser is null || input is null)
+            {
+                return false;
+            }
+
+            var newcounselor = new CounselorModel()
+            {
+                CounselorId = newappuser.SchoolId,
+                CounselorFirstName = input.FirstName,
+                CounselorMiddleName = input.MiddleName,
+                CounselorLastName = input.LastName,
+                CounselorPreferredName = input.PreferredName,
+                CounselorEmail = input.Email,
+                CounselorPhone = input.PhoneNumber
+            };
+            context.Entry(newcounselor).State = EntityState.Modified;
+
+            try
+            {
+                if (await context.SaveChangesAsync().ConfigureAwait(false) > 0)
+                {
+                    return true;
+                }
+                else
+                {
+                    context.Entry(newcounselor).State = EntityState.Unchanged;
+                    await context.SaveChangesAsync().ConfigureAwait(false);
+                    return false;
+                }
+            }
+            catch (DbUpdateException ex)
+            {
+                LoggerMessage.Define(logLevel: LogLevel.Error, eventId: new EventId(1, "Database could not be updated."), $"Something went wrong. Following are the details. \n\n {ex.Message} \n\n {ex.Data} \n\n {ex.InnerException} \n\n {ex.Source} \n\n {ex.StackTrace} \n\n {ex.TargetSite}");
+                return false;
+            }
+            catch (OperationCanceledException ex)
+            {
+                LoggerMessage.Define(logLevel: LogLevel.Error, eventId: new EventId(1, "Database could not be updated."), $"Something went wrong. Following are the details. \n\n {ex.Message} \n\n {ex.Data} \n\n {ex.InnerException} \n\n {ex.Source} \n\n {ex.StackTrace} \n\n {ex.TargetSite}");
+                return false;
+            }
         }
 
         private bool UserExists(string schoolId)
@@ -1104,7 +1095,121 @@ namespace SAMS.Areas.Admin.Controllers
             return context.Users.Any(e => e.SchoolId == schoolId);
         }
 
+        private async Task<bool> UserEditor(EditAccountModel accountmodel, string useridforreporting)
+        {
+            if (accountmodel is null)
+            {
+                return false;
+            }
 
+            var user = await userManager.FindByIdAsync(accountmodel.User.Id).ConfigureAwait(false);
+            if (user is null)
+            {
+                return false;
+            }
+
+            // Update the details in ApplicationUser
+            user.Role = accountmodel.Input.Role;
+
+            // Get the current roles of the user
+            var currentRoles = await userManager.GetRolesAsync(user).ConfigureAwait(false);
+
+            // Remove the user from the current roles
+            var removeResult = await userManager.RemoveFromRolesAsync(user, currentRoles).ConfigureAwait(false);
+            if (!removeResult.Succeeded)
+            {
+                LoggerMessage.Define(logLevel: LogLevel.Error, eventId: new EventId(2, "Task failure."), "Failed to remove user roles.");
+                // Handle the error
+                return false;
+            }
+
+            // Add the user to the new role
+            var addResult = await userManager.AddToRolesAsync(user, accountmodel.Input.Role).ConfigureAwait(false);
+            if (addResult.Succeeded)
+            {
+                try
+                {
+                    var result = await userManager.UpdateAsync(user).ConfigureAwait(false);
+                    if (!result.Succeeded)
+                    {
+                        report.Severity = ReportModel.SeverityLevel.High;
+                        report.TypeOfReport = ReportModel.ErrorType.ProcessingError;
+                        report.StatusOfReport = ReportModel.Status.SubmittedToAppropriatePersonnel;
+                        report.Description = "Failed to update the user.";
+                        report.DeveloperReference = "AccEdt1139";
+                        report.UserId = useridforreporting;
+                        report.Number = 01;
+                        await context.ErrorProcessingModel.AddAsync(report).ConfigureAwait(true);
+                        return false;
+                    }
+                    return true;
+                }
+                catch (DbUpdateConcurrencyException ex)
+                {
+                    _logger.LogCritical(ex.ToString());
+                    report.Severity = ReportModel.SeverityLevel.High;
+                    report.TypeOfReport = ReportModel.ErrorType.ProcessingError;
+                    report.StatusOfReport = ReportModel.Status.SubmittedToAppropriatePersonnel;
+                    report.Description = "Database could not be concurrently updated.";
+                    report.DeveloperReference = "AccEdt1154";
+                    report.UserId = useridforreporting;
+                    report.Number = 01;
+                    await context.ErrorProcessingModel.AddAsync(report).ConfigureAwait(true);
+                    return false;
+                }
+                catch (DbUpdateException ex)
+                {
+                    _logger.LogCritical(ex.ToString());
+                    report.Severity = ReportModel.SeverityLevel.High;
+                    report.TypeOfReport = ReportModel.ErrorType.ProcessingError;
+                    report.StatusOfReport = ReportModel.Status.SubmittedToAppropriatePersonnel;
+                    report.Description = "Database could not be updated.";
+                    report.DeveloperReference = "AccEdt1167";
+                    report.UserId = useridforreporting;
+                    report.Number = 01;
+                    await context.ErrorProcessingModel.AddAsync(report).ConfigureAwait(true);
+                    return false;
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogCritical(ex.ToString());
+                    report.Severity = ReportModel.SeverityLevel.High;
+                    report.TypeOfReport = ReportModel.ErrorType.ProcessingError;
+                    report.StatusOfReport = ReportModel.Status.SubmittedToAppropriatePersonnel;
+                    report.Description = "An unknown exception occurred.";
+                    report.DeveloperReference = "AccEdt1162";
+                    report.UserId = useridforreporting;
+                    report.Number = 01;
+                    await context.ErrorProcessingModel.AddAsync(report).ConfigureAwait(true);
+                    return false;
+                }
+            }
+            else
+            {
+                var returnaddresult = await userManager.AddToRolesAsync(user, currentRoles).ConfigureAwait(false);
+                if (returnaddresult.Succeeded)
+                {
+                    report.Severity = ReportModel.SeverityLevel.High;
+                    report.TypeOfReport = ReportModel.ErrorType.ProcessingError;
+                    report.StatusOfReport = ReportModel.Status.SubmittedToAppropriatePersonnel;
+                    report.Description = "Failed to add roles to the user. Roles revert was successful.";
+                    report.DeveloperReference = "AccEdt1196";
+                    report.UserId = useridforreporting;
+                    report.Number = 01;
+                    await context.ErrorProcessingModel.AddAsync(report).ConfigureAwait(true);
+                    return false;
+                }
+                report.Severity = ReportModel.SeverityLevel.High;
+                report.TypeOfReport = ReportModel.ErrorType.ProcessingError;
+                report.StatusOfReport = ReportModel.Status.SubmittedToAppropriatePersonnel;
+                report.Description = "It is now impossible for the developers to add back the previous roles since the news roles couldn't be added, and in attempt to revert, the revert failed.";
+                report.DeveloperReference = "AccEdt1206";
+                report.UserId = useridforreporting;
+                report.Number = 01;
+                await context.ErrorProcessingModel.AddAsync(report).ConfigureAwait(true);
+                return false;
+            }
+        }
 
 
         // GET: AccountManager/Delete/5
@@ -1494,15 +1599,10 @@ namespace SAMS.Areas.Admin.Controllers
         }
 
 
-
-        [HttpGet]
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error(string Message)
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier, Message = Message });
-        }
     }
 
+    /* A custom model for the Create Action(s) to make sure the data is not directly affected through the HTTP requests.
+     */
     public class InputModel
     {
         //ALL REQUIRED ACCOUNT INFORMATION STARTS FROM HERE
@@ -1583,7 +1683,7 @@ namespace SAMS.Areas.Admin.Controllers
 
         //ALL STUDENT REQUIRED INFORMATION STARTS HERE
         [Display(Name = ("Student Graduation Year (Required)"))]
-        public DateTime? StudentGradYearMod { get; set; }
+        public DateTime StudentGradYearMod { get; set; } = new();
 
 
         [Display(Name = ("Assigned Counselor (Required)"))]
@@ -1624,5 +1724,13 @@ namespace SAMS.Areas.Admin.Controllers
         [Display(Name = "Assigned Room")]
         public int? RoomAssignedId { get; set; }
         //ALL TEACHER REQUIRED INFORMATION ENDS HERE
+    }
+
+    /* A custom model for the Edit Action(s) to make sure the data is not directly affected through the HTTP requests.
+    */
+    public class EditAccountModel
+    {
+        public required ApplicationUser User { get; set; }
+        public required InputModel Input { get; set; }
     }
 }

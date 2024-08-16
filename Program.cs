@@ -27,6 +27,8 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.R
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
+builder.Services.AddDataProtection();
+builder.Services.AddSession();
 builder.Services.AddControllersWithViews();
 
 //Google Authentication Service

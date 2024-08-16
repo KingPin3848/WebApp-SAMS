@@ -1,97 +1,83 @@
-﻿@model Tuple<SAMS.Controllers.ApplicationUser, SAMS.Areas.Admin.Controllers.InputModel>
-@{
-    ViewData["Title"] = "Edit Account";
-}
+﻿@model SAMS.Areas.Admin.Controllers.EditAccountModel
 
 <h1>Edit</h1>
-<title>@ViewData["Title"]</title>
+<title>Edit Account</title>
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Edit" method="post">
             <h2>Edit an account.</h2>
             <hr />
             <div asp-validation-summary="All" class="text-danger pb-2"></div>
-            <input type="hidden" asp-for="Item1.Id" />
+
+            @*
+                All required "User" properties that cannot be seen to the user at all, but are just there somewhere and possibly stored in the server.
+            *@
+            <input type="hidden" asp-for="User.Id" />
+            <input type="hidden" asp-for="User.ActivationCode" />
+            <input type="hidden" asp-for="User.Role" />
+            <input type="hidden" asp-for="User.Email" />
+            <input type="hidden" asp-for="User.SchoolId" />
+
+            @*
+                All required "Input" properties that cannot be seen to the user at all, but are just there somwhere and possibly stored in the server.
+            *@
+            <input type="hidden" asp-for="Input.SchoolId" />
+            <input type="hidden" asp-for="Input.Email" />
+            <input type="hidden" asp-for="Input.ActivationCode" />
+
             @* Role(s) - Required *@
             <div class="form-group pb-2">
-                <label asp-for="Item2.Role" class="form-label"></label>
+                <label asp-for="Input.Role" class="form-label"></label>
                 <div class="form-floating">
-                    <select id="roleSelect" asp-for="Item2.Role" asp-items="(@ViewData["RoleId"] as SelectList)" required class="form-select" multiple>
+                    <select id="roleSelect" asp-for="Input.Role" asp-items="(@ViewData["RoleId"] as SelectList)" required class="form-select" multiple>
                     </select>
-                    <span asp-validation-for="Item2.Role" class="text-danger"></span>
+                    <span asp-validation-for="Input.Role" class="text-danger"></span>
                 </div>
-            </div>
-
-
-
-            @* School ID - Required *@
-            <div class="form-floating pb-2">
-                <input asp-for="Item2.SchoolId" class="form-control" required aria-required="true" />
-                <label asp-for="Item2.SchoolId"></label>
-                <span asp-validation-for="Item2.SchoolId" class="text-danger"></span>
-            </div>
-
-
-
-            @* Email Address - Required *@
-            <div class="form-floating pb-2">
-                <input asp-for="Item2.Email" class="form-control" required aria-required="true" />
-                <label asp-for="Item2.Email"></label>
-                <span asp-validation-for="Item2.Email" class="text-danger"></span>
-            </div>
-
-
-
-            @* Activation Code - Required *@
-            <div class="form-floating pb-2">
-                <input asp-for="Item2.ActivationCode" class="form-control" required aria-required="true" />
-                <label asp-for="Item2.ActivationCode"></label>
-                <span asp-validation-for="Item2.ActivationCode" class="text-danger"></span>
             </div>
 
 
 
             @* First Name - Required *@
             <div class="form-floating pb-2">
-                <input asp-for="Item2.FirstName" class="form-control" autocomplete="off" required aria-required="true" />
-                <label asp-for="Item2.FirstName"></label>
-                <span asp-validation-for="Item2.FirstName" class="text-danger"></span>
+                <input asp-for="Input.FirstName" class="form-control" autocomplete="off" required aria-required="true" />
+                <label asp-for="Input.FirstName"></label>
+                <span asp-validation-for="Input.FirstName" class="text-danger"></span>
             </div>
 
 
 
             @* Middle Name - Optional *@
             <div class="form-floating pb-2">
-                <input asp-for="Item2.MiddleName" class="form-control" autocomplete="off" aria-required="false" />
-                <label asp-for="Item2.MiddleName"></label>
-                <span asp-validation-for="Item2.MiddleName" class="text-danger"></span>
+                <input asp-for="Input.MiddleName" class="form-control" autocomplete="off" aria-required="false" />
+                <label asp-for="Input.MiddleName"></label>
+                <span asp-validation-for="Input.MiddleName" class="text-danger"></span>
             </div>
 
 
 
             @* Last Name - Required *@
             <div class="form-floating pb-2">
-                <input asp-for="Item2.LastName" class="form-control" autocomplete="off" required aria-required="true" />
-                <label asp-for="Item2.LastName"></label>
-                <span asp-validation-for="Item2.LastName" class="text-danger"></span>
+                <input asp-for="Input.LastName" class="form-control" autocomplete="off" required aria-required="true" />
+                <label asp-for="Input.LastName"></label>
+                <span asp-validation-for="Input.LastName" class="text-danger"></span>
             </div>
 
 
 
             @* Preferred Name - Optional *@
             <div class="form-floating pb-2">
-                <input asp-for="Item2.PreferredName" class="form-control" autocomplete="off" aria-required="false" />
-                <label asp-for="Item2.PreferredName"></label>
-                <span asp-validation-for="Item2.PreferredName" class="text-danger"></span>
+                <input asp-for="Input.PreferredName" class="form-control" autocomplete="off" aria-required="false" />
+                <label asp-for="Input.PreferredName"></label>
+                <span asp-validation-for="Input.PreferredName" class="text-danger"></span>
             </div>
 
 
 
             @* Phone Number - Optional *@
             <div class="form-floating pb-2">
-                <input asp-for="Item2.PhoneNumber" class="form-control" autocomplete="off" aria-required="false" />
-                <label asp-for="Item2.PhoneNumber"></label>
-                <span asp-validation-for="Item2.PhoneNumber" class="text-danger"></span>
+                <input asp-for="Input.PhoneNumber" class="form-control" autocomplete="off" aria-required="false" />
+                <label asp-for="Input.PhoneNumber"></label>
+                <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
             </div>
 
 
@@ -100,20 +86,20 @@
 
             @* Student Graduation Year - Required only if selected Role includes Student *@
             <div class="form-floating pb-2 students" id="stud1div" style="visibility: hidden;">
-                <input asp-for="Item2.StudentGradYearMod" id="stud1input" style="visibility: hidden;" disabled class="form-control" autocomplete="off" aria-required="false" />
-                <label asp-for="Item2.StudentGradYearMod" id="stud1label" style="visibility: hidden;"></label>
-                <span asp-validation-for="Item2.StudentGradYearMod" id="stud1span" class="text-danger" style="visibility: hidden;"></span>
+                <input asp-for="Input.StudentGradYearMod" id="stud1input" style="visibility: hidden;" disabled class="form-control" autocomplete="off" aria-required="false" />
+                <label asp-for="Input.StudentGradYearMod" id="stud1label" style="visibility: hidden;"></label>
+                <span asp-validation-for="Input.StudentGradYearMod" id="stud1span" class="text-danger" style="visibility: hidden;"></span>
             </div>
 
 
 
             @* Student Counselor ID - Required only if selected Role includes Student *@
             <div class="form-group pb-2" id="stud2div" style="visibility: hidden;">
-                <label asp-for="Item2.StudentCounselorID" id="stud2label" style="visibility: hidden;" class="form-label"></label>
+                <label asp-for="Input.StudentCounselorID" id="stud2label" style="visibility: hidden;" class="form-label"></label>
                 <div class="form-floating">
-                    <select asp-for="Item2.StudentCounselorID" asp-items="(@ViewData["Counselors"] as SelectList)" id="stud2input" style="visibility: hidden;" disabled class="form-select" aria-required="false">
+                    <select asp-for="Input.StudentCounselorID" asp-items="(@ViewData["Counselors"] as SelectList)" id="stud2input" style="visibility: hidden;" disabled class="form-select" aria-required="false">
                     </select>
-                    <span asp-validation-for="Item2.StudentCounselorID" id="stud2span" style="visibility: hidden;" class="text-danger"></span>
+                    <span asp-validation-for="Input.StudentCounselorID" id="stud2span" style="visibility: hidden;" class="text-danger"></span>
                 </div>
             </div>
 
@@ -121,54 +107,54 @@
 
             @* Has EA Support - Optional only if selected Role includes Student (The requirement will always be false.) *@
             <div class="form-floating pb-2" id="stud3div" style="visibility: hidden;">
-                <input asp-for="Item2.HasEASupport" id="stud3input" class="form-control" disabled autocomplete="off" aria-required="false" style="visibility: hidden;" />
-                <label asp-for="Item2.HasEASupport" id="stud3label" style="visibility: hidden;"></label>
-                <span asp-validation-for="Item2.HasEASupport" id="stud3span" class="text-danger" style="visibility: hidden;"></span>
+                <input asp-for="Input.HasEASupport" id="stud3input" class="form-control" disabled autocomplete="off" aria-required="false" style="visibility: hidden;" />
+                <label asp-for="Input.HasEASupport" id="stud3label" style="visibility: hidden;"></label>
+                <span asp-validation-for="Input.HasEASupport" id="stud3span" class="text-danger" style="visibility: hidden;"></span>
             </div>
 
 
 
             @* Assigned EA Support's ID - Required only if (selected Role includes Student) and (the checkbox above is checked). (The requirement will always be false.) *@
             <div class="form-floating pb-2 students" id="stud4div" style="visibility: hidden;">
-                <input asp-for="Item2.StudentEAID" id="stud4input" class="form-control" autocomplete="off" disabled aria-required="false" style="visibility: hidden;" />
-                <label asp-for="Item2.StudentEAID" id="stud4label" style="visibility: hidden;"></label>
-                <span asp-validation-for="Item2.StudentEAID" id="stud4span" class="text-danger" style="visibility: hidden;"></span>
+                <input asp-for="Input.StudentEAID" id="stud4input" class="form-control" autocomplete="off" disabled aria-required="false" style="visibility: hidden;" />
+                <label asp-for="Input.StudentEAID" id="stud4label" style="visibility: hidden;"></label>
+                <span asp-validation-for="Input.StudentEAID" id="stud4span" class="text-danger" style="visibility: hidden;"></span>
             </div>
 
 
 
             @* Parent/Guardian 1 Full Name - Required only if selected Role includes Student *@
             <div class="form-floating pb-2 students" id="stud5div" style="visibility: hidden;">
-                <input asp-for="Item2.Parentguard1NameMod" id="stud5input" style="visibility: hidden;" class="form-control" disabled autocomplete="off" aria-required="false" />
-                <label asp-for="Item2.Parentguard1NameMod" id="stud5label" style="visibility: hidden;"></label>
-                <span asp-validation-for="Item2.Parentguard1NameMod" id="stud5span" class="text-danger" style="visibility: hidden;"></span>
+                <input asp-for="Input.Parentguard1NameMod" id="stud5input" style="visibility: hidden;" class="form-control" disabled autocomplete="off" aria-required="false" />
+                <label asp-for="Input.Parentguard1NameMod" id="stud5label" style="visibility: hidden;"></label>
+                <span asp-validation-for="Input.Parentguard1NameMod" id="stud5span" class="text-danger" style="visibility: hidden;"></span>
             </div>
 
 
 
             @* Parent/Guardian 1 Email Address - Required only if selected Role includes Student *@
             <div class="form-floating pb-2 students" id="stud6div" style="visibility: hidden;">
-                <input asp-for="Item2.Parentguard1EmailMod" id="stud6input" class="form-control" disabled autocomplete="off" aria-required="false" style="visibility: hidden;" />
-                <label asp-for="Item2.Parentguard1EmailMod" id="stud6label" style="visibility: hidden;"></label>
-                <span asp-validation-for="Item2.Parentguard1EmailMod" id="stud6span" class="text-danger" style="visibility: hidden;"></span>
+                <input asp-for="Input.Parentguard1EmailMod" id="stud6input" class="form-control" disabled autocomplete="off" aria-required="false" style="visibility: hidden;" />
+                <label asp-for="Input.Parentguard1EmailMod" id="stud6label" style="visibility: hidden;"></label>
+                <span asp-validation-for="Input.Parentguard1EmailMod" id="stud6span" class="text-danger" style="visibility: hidden;"></span>
             </div>
 
 
 
             @* Parent/Guardian 2 Full Name - Optional to be entered only if and when selected Role includes Student *@
             <div class="form-floating pb-2 students" id="stud7div" style="visibility: hidden;">
-                <input asp-for="Item2.Parentguard2NameMod" id="stud7input" class="form-control" disabled autocomplete="off" aria-required="false" style="visibility: hidden;" />
-                <label asp-for="Item2.Parentguard2NameMod" id="stud7label" style="visibility: hidden;"></label>
-                <span asp-validation-for="Item2.Parentguard2NameMod" id="stud7span" class="text-danger" style="visibility: hidden;"></span>
+                <input asp-for="Input.Parentguard2NameMod" id="stud7input" class="form-control" disabled autocomplete="off" aria-required="false" style="visibility: hidden;" />
+                <label asp-for="Input.Parentguard2NameMod" id="stud7label" style="visibility: hidden;"></label>
+                <span asp-validation-for="Input.Parentguard2NameMod" id="stud7span" class="text-danger" style="visibility: hidden;"></span>
             </div>
 
 
 
             @* Parent/Guardian 2 Email Address - Optional to be entered only if and when selected Role includes Student *@
             <div class="form-floating pb-2 students" id="stud8div" style="visibility: hidden;">
-                <input asp-for="Item2.Parentguard2EmailMod" id="stud8input" class="form-control" disabled autocomplete="off" aria-required="false" style="visibility: hidden;" />
-                <label asp-for="Item2.Parentguard2EmailMod" id="stud8label" style="visibility: hidden;"></label>
-                <span asp-validation-for="Item2.Parentguard2EmailMod" id="stud8span" class="text-danger" style="visibility: hidden;"></span>
+                <input asp-for="Input.Parentguard2EmailMod" id="stud8input" class="form-control" disabled autocomplete="off" aria-required="false" style="visibility: hidden;" />
+                <label asp-for="Input.Parentguard2EmailMod" id="stud8label" style="visibility: hidden;"></label>
+                <span asp-validation-for="Input.Parentguard2EmailMod" id="stud8span" class="text-danger" style="visibility: hidden;"></span>
             </div>
 
 
@@ -179,18 +165,18 @@
 
             @* Teacher Teaches All 5 Days? - Optional (The requirement will always be false.) *@
             <div class="form-floating pb-2" id="teacher1div" style="visibility: hidden;">
-                <input asp-for="Item2.Teaches5Days" id="teacher1input" class="form-control" autocomplete="off" aria-required="false" disabled style="visibility: hidden;" />
-                <label asp-for="Item2.Teaches5Days" id="teacher1label" style="visibility: hidden;"></label>
-                <span asp-validation-for="Item2.Teaches5Days" id="teacher1span" class="text-danger" style="visibility: hidden;"></span>
+                <input asp-for="Input.Teaches5Days" id="teacher1input" class="form-control" autocomplete="off" aria-required="false" disabled style="visibility: hidden;" />
+                <label asp-for="Input.Teaches5Days" id="teacher1label" style="visibility: hidden;"></label>
+                <span asp-validation-for="Input.Teaches5Days" id="teacher1span" class="text-danger" style="visibility: hidden;"></span>
             </div>
 
 
 
             @* Room Number Assigned to the Teacher - Optional (The requirement will always be false.) *@
             <div class="form-floating pb-2" id="teacher2div" style="visibility: hidden;">
-                <input asp-for="Item2.RoomAssignedId" id="teacher2input" class="form-control teachers" autocomplete="off" aria-required="false" disabled style="visibility: hidden;" />
-                <label asp-for="Item2.RoomAssignedId" id="teacher2label" style="visibility: hidden;"></label>
-                <span asp-validation-for="Item2.RoomAssignedId" id="teacher2span" class="text-danger" style="visibility: hidden;"></span>
+                <input asp-for="Input.RoomAssignedId" id="teacher2input" class="form-control teachers" autocomplete="off" aria-required="false" disabled style="visibility: hidden;" />
+                <label asp-for="Input.RoomAssignedId" id="teacher2label" style="visibility: hidden;"></label>
+                <span asp-validation-for="Input.RoomAssignedId" id="teacher2span" class="text-danger" style="visibility: hidden;"></span>
             </div>
 
 
@@ -204,91 +190,95 @@
 </div>
 
 <script>
-    var selectElement = document.getElementById('roleSelect');
-    var currentValues = Array.from(selectElement.selectedOptions).map(option => option.value);
+    document.addEventListener("DOMContentLoad", function () {
+        var selectElement = document.getElementById('roleSelect');
+        var currentValues = Array.from(selectElement.selectedOptions).map(option => option.value);
 
-    // Use setInterval to continuously check the selected options
-    setInterval(function () {
-        var selectedOptions = Array.from(selectElement.selectedOptions);
-        var newValues = selectedOptions.map(option => option.value);
+        currentValues.forEach(value => selections(value));
 
-        // Find options that were selected
-        var selected = newValues.filter(value => !currentValues.includes(value));
-        selected.forEach(value => selections(value));
+        // Use setInterval to continuously check the selected options
+        setInterval(function () {
+            var selectedOptions = Array.from(selectElement.selectedOptions);
+            var newValues = selectedOptions.map(option => option.value);
 
-        // Find options that were unselected
-        var unselected = currentValues.filter(value => !newValues.includes(value));
-        unselected.forEach(value => unselections(value));
+            // Find options that were selected
+            var selected = newValues.filter(value => !currentValues.includes(value));
+            selected.forEach(value => selections(value));
 
-        // Update the current selected options
-        currentValues = newValues;
-    }, 1000); // Check every second
+            // Find options that were unselected
+            var unselected = currentValues.filter(value => !newValues.includes(value));
+            unselected.forEach(value => unselections(value));
 
-    function selections(something) {
-        switch (something) {
-            case "Teacher": {
-                var teacherVisibility = ["teacher1div", "teacher1input", "teacher1label", "teacher1span", "teacher2div", "teacher2input", "teacher2label", "teacher2span"];
-                var teacherInputsEnabled = ["teacher1input", "teacher2input"];
-                for (let i = 0; i < teacherVisibility.length; i++) {
-                    document.getElementById(teacherVisibility[i]).style.visibility = "visible";
+            // Update the current selected options
+            currentValues = newValues;
+        }, 1000); // Check every second
+
+        function selections(something) {
+            switch (something) {
+                case "Teacher": {
+                    var teacherVisibility = ["teacher1div", "teacher1input", "teacher1label", "teacher1span", "teacher2div", "teacher2input", "teacher2label", "teacher2span"];
+                    var teacherInputsEnabled = ["teacher1input", "teacher2input"];
+                    for (let i = 0; i < teacherVisibility.length; i++) {
+                        document.getElementById(teacherVisibility[i]).style.visibility = "visible";
+                    }
+
+                    for (let i = 0; i < teacherInputsEnabled.length; i++) {
+                        document.getElementById(teacherInputsEnabled[i]).removeAttribute("disabled");
+                    }
+                    break;
                 }
+                case "Student": {
+                    var studentVisibility = ["stud1div", "stud1input", "stud1label", "stud1span", "stud2div", "stud2input", "stud2label", "stud2span", "stud3div", "stud3input", "stud3label", "stud3span", "stud4div", "stud4input", "stud4label", "stud4span", "stud5div", "stud5input", "stud5label", "stud5span", "stud6div", "stud6input", "stud6label", "stud6span", "stud7div", "stud7input", "stud7label", "stud7span", "stud8div", "stud8input", "stud8label", "stud8span"];
+                    var studentInputsEnabled = ["stud1input", "stud2input", "stud3input", "stud4input", "stud5input", "stud6input", "stud7input", "stud8input"];
 
-                for (let i = 0; i < teacherInputsEnabled.length; i++) {
-                    document.getElementById(teacherInputsEnabled[i]).removeAttribute("disabled");
-                }
-                break;
-            }
-            case "Student": {
-                var studentVisibility = ["stud1div", "stud1input", "stud1label", "stud1span", "stud2div", "stud2input", "stud2label", "stud2span", "stud3div", "stud3input", "stud3label", "stud3span", "stud4div", "stud4input", "stud4label", "stud4span", "stud5div", "stud5input", "stud5label", "stud5span", "stud6div", "stud6input", "stud6label", "stud6span", "stud7div", "stud7input", "stud7label", "stud7span", "stud8div", "stud8input", "stud8label", "stud8span"];
-                var studentInputsEnabled = ["stud1input", "stud2input", "stud3input", "stud4input", "stud5input", "stud6input", "stud7input", "stud8input"];
+                    for (let i = 0; i < studentVisibility.length; i++) {
+                        document.getElementById(studentVisibility[i]).style.visibility = "visible";
+                    }
 
-                for (let i = 0; i < studentVisibility.length; i++) {
-                    document.getElementById(studentVisibility[i]).style.visibility = "visible";
+                    for (let i = 0; i < studentInputsEnabled.length; i++) {
+                        document.getElementById(studentInputsEnabled[i]).removeAttribute("disabled");
+                    }
+                    break;
                 }
-
-                for (let i = 0; i < studentInputsEnabled.length; i++) {
-                    document.getElementById(studentInputsEnabled[i]).removeAttribute("disabled");
+                default: {
+                    break;
                 }
-                break;
-            }
-            default: {
-                break;
-            }
-        }
-    }
-
-    function unselections(something) {
-        switch (something) {
-            case "Teacher": {
-                var teacherVisibility = ["teacher1div", "teacher1input", "teacher1label", "teacher1span", "teacher2div", "teacher2input", "teacher2label", "teacher2span"];
-                var teacherInputsEnabled = ["teacher1input", "teacher2input"];
-                for (let i = 0; i < teacherVisibility.length; i++) {
-                    document.getElementById(teacherVisibility[i]).style.visibility = "hidden";
-                }
-
-                for (let i = 0; i < teacherInputsEnabled.length; i++) {
-                    document.getElementById(teacherInputsEnabled[i]).setAttribute("disabled", "true");
-                }
-                break;
-            }
-            case "Student": {
-                var studentVisibility = ["stud1div", "stud1input", "stud1label", "stud1span", "stud2div", "stud2input", "stud2label", "stud2span", "stud3div", "stud3input", "stud3label", "stud3span", "stud4div", "stud4input", "stud4label", "stud4span", "stud5div", "stud5input", "stud5label", "stud5span", "stud6div", "stud6input", "stud6label", "stud6span", "stud7div", "stud7input", "stud7label", "stud7span", "stud8div", "stud8input", "stud8label", "stud8span"];
-                var studentInputsEnabled = ["stud1input", "stud2input", "stud3input", "stud4input", "stud5input", "stud6input", "stud7input", "stud8input"];
-
-                for (let i = 0; i < studentVisibility.length; i++) {
-                    document.getElementById(studentVisibility[i]).style.visibility = "hidden";
-                }
-
-                for (let i = 0; i < studentInputsEnabled.length; i++) {
-                    document.getElementById(studentInputsEnabled[i]).setAttribute("disabled", "true");
-                }
-                break;
-            }
-            default: {
-                break;
             }
         }
-    }
+
+        function unselections(something) {
+            switch (something) {
+                case "Teacher": {
+                    var teacherVisibility = ["teacher1div", "teacher1input", "teacher1label", "teacher1span", "teacher2div", "teacher2input", "teacher2label", "teacher2span"];
+                    var teacherInputsEnabled = ["teacher1input", "teacher2input"];
+                    for (let i = 0; i < teacherVisibility.length; i++) {
+                        document.getElementById(teacherVisibility[i]).style.visibility = "hidden";
+                    }
+
+                    for (let i = 0; i < teacherInputsEnabled.length; i++) {
+                        document.getElementById(teacherInputsEnabled[i]).setAttribute("disabled", "true");
+                    }
+                    break;
+                }
+                case "Student": {
+                    var studentVisibility = ["stud1div", "stud1input", "stud1label", "stud1span", "stud2div", "stud2input", "stud2label", "stud2span", "stud3div", "stud3input", "stud3label", "stud3span", "stud4div", "stud4input", "stud4label", "stud4span", "stud5div", "stud5input", "stud5label", "stud5span", "stud6div", "stud6input", "stud6label", "stud6span", "stud7div", "stud7input", "stud7label", "stud7span", "stud8div", "stud8input", "stud8label", "stud8span"];
+                    var studentInputsEnabled = ["stud1input", "stud2input", "stud3input", "stud4input", "stud5input", "stud6input", "stud7input", "stud8input"];
+
+                    for (let i = 0; i < studentVisibility.length; i++) {
+                        document.getElementById(studentVisibility[i]).style.visibility = "hidden";
+                    }
+
+                    for (let i = 0; i < studentInputsEnabled.length; i++) {
+                        document.getElementById(studentInputsEnabled[i]).setAttribute("disabled", "true");
+                    }
+                    break;
+                }
+                default: {
+                    break;
+                }
+            }
+        }
+    });
 </script>
 
 @section Scripts {

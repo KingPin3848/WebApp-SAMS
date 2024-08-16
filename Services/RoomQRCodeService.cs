@@ -1,6 +1,7 @@
 ﻿using SAMS.Data;
 using SAMS.Models;
 
+#pragma warning disable CA1848
 namespace SAMS.Services
 {
     public class RoomQRCodeService(ILogger<RoomQRCodeService> logger, IServiceScopeFactory scopeFactory) : BackgroundService
@@ -12,11 +13,11 @@ namespace SAMS.Services
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-                await HolidayRun();
+                await HolidayRun(stoppingToken).ConfigureAwait(true);
             }
         }
 
-        private async Task HolidayRun()
+        private async Task HolidayRun(CancellationToken stoppingToken)
         {
             using var scope = _scopeFactory.CreateAsyncScope();
 
@@ -28,7 +29,7 @@ namespace SAMS.Services
             if (holidayDates == null)
             {
                 _logger.LogWarning("Holidays is null and the task if delayed by 1 DAY. Done by the if statement in holidayRun");
-                await Task.Delay(TimeSpan.FromDays(1));
+                await Task.Delay(TimeSpan.FromDays(1), stoppingToken).ConfigureAwait(true);
             }
             else
             {
@@ -37,22 +38,22 @@ namespace SAMS.Services
                     if (date == todayDate)
                     {
                         _logger.LogWarning("Today is a holiday and the task is delayed by 1 DAY. Done by the if statement in holidayRun");
-                        await Task.Delay(TimeSpan.FromDays(1));
+                        await Task.Delay(TimeSpan.FromDays(1), stoppingToken).ConfigureAwait(true);
                     }
                     else
                     {
-                        await ScheduleRunner();
+                        await ScheduleRunner(stoppingToken).ConfigureAwait(true);
                     }
                 }
             }
         }
 
-        private async Task ScheduleRunner()
+        private async Task ScheduleRunner(CancellationToken stoppingToken)
         {
             using var scope = _scopeFactory.CreateAsyncScope();
             var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
-            var chosenBellSched = context.ChosenBellSchedModels.Select(a => a.Name).ToList();
+            var chosenBellSched = context.ChosenBellSchedModels.Select(a => a.Name).First();
             var dateTime = DateTime.Now;
             var day = dateTime.DayOfWeek;
 
@@ -60,78 +61,172 @@ namespace SAMS.Services
             {
                 var time = dateTime.TimeOfDay;
 
-                switch (chosenBellSched[0])
+                switch (chosenBellSched)
                 {
                     case "Daily Bell Schedule":
                         {
-                            TimeSpan dailyBellStart = new(7, 15, 00);
-                            if (time >= dailyBellStart && time <= new TimeSpan(07, 20, 00))
+                            var bells = context.DailyBellScheduleModels.Select(a => a.BellName).ToList();
+                            var startTimes = context.DailyBellScheduleModels.Select(a => a.StartTime).ToList();
+                            var endTimes = context.DailyBellScheduleModels.Select(a => a.EndTime).ToList();
+
+                            for (int i = 0; i < bells.Count; i++)
                             {
-                                ChangeQRCode();
-                                break;
+                                if (bells[i] == "Bell 0" || bells[i].Contains("Transition", StringComparison.Ordinal))
+                                {
+                                    bells.Remove(bells[i]);
+                                    startTimes.Remove(startTimes[i]);
+                                    endTimes.Remove(endTimes[i]);
+                                }
+                            }
+
+                            if (bells.Count == startTimes.Count && bells.Count == endTimes.Count && startTimes.Count == endTimes.Count)
+                            {
+                                for (int i = 0; i < bells.Count; i++)
+                                {
+                                    if (time >= startTimes[i] && time <= startTimes[i].Add(TimeSpan.FromMinutes(5)))
+                                    {
+                                        ChangeQRCode(stoppingToken);
+                                        await Task.Delay(TimeSpan.FromMinutes(15), stoppingToken).ConfigureAwait(true);
+                                    }
+                                }
                             }
                             break;
                         }
 
                     case "Pep Rally Bell Schedule":
                         {
-                            TimeSpan peprallyStart = new(7, 15, 00);
-                            if (time >= peprallyStart && time <= new TimeSpan(07, 20, 00))
+                            var bells = context.PepRallyBellScheduleModels.Select(a => a.BellName).ToList();
+                            var startTimes = context.PepRallyBellScheduleModels.Select(a => a.StartTime).ToList();
+                            var endTimes = context.PepRallyBellScheduleModels.Select(a => a.EndTime).ToList();
+
+                            for (int i = 0; i < bells.Count; i++)
                             {
-                                ChangeQRCode();
-                                break;
+                                if (bells[i] == "Bell 0" || bells[i].Contains("Transition", StringComparison.Ordinal))
+                                {
+                                    bells.Remove(bells[i]);
+                                    startTimes.Remove(startTimes[i]);
+                                    endTimes.Remove(endTimes[i]);
+                                }
+                            }
+
+                            if (bells.Count == startTimes.Count && bells.Count == endTimes.Count && startTimes.Count == endTimes.Count)
+                            {
+                                for (int i = 0; i < bells.Count; i++)
+                                {
+                                    if (time >= startTimes[i] && time <= startTimes[i].Add(TimeSpan.FromMinutes(5)))
+                                    {
+                                        ChangeQRCode(stoppingToken);
+                                        await Task.Delay(TimeSpan.FromMinutes(15), stoppingToken).ConfigureAwait(true);
+                                    }
+                                }
                             }
                             break;
                         }
 
                     case "2 Hour Delay Bell Schedule":
                         {
-                            TimeSpan _2hrdelStart = new(9, 15, 00);
-                            if (time >= _2hrdelStart && time <= new TimeSpan(09, 20, 00))
+                            var bells = context.TwoHrDelayBellScheduleModels.Select(a => a.BellName).ToList();
+                            var startTimes = context.TwoHrDelayBellScheduleModels.Select(a => a.StartTime).ToList();
+                            var endTimes = context.TwoHrDelayBellScheduleModels.Select(a => a.EndTime).ToList();
+
+                            for (int i = 0; i < bells.Count; i++)
                             {
-                                ChangeQRCode();
-                                break;
+                                if (bells[i] == "Bell 0" || bells[i].Contains("Transition", StringComparison.Ordinal))
+                                {
+                                    bells.Remove(bells[i]);
+                                    startTimes.Remove(startTimes[i]);
+                                    endTimes.Remove(endTimes[i]);
+                                }
+                            }
+
+                            if (bells.Count == startTimes.Count && bells.Count == endTimes.Count && startTimes.Count == endTimes.Count)
+                            {
+                                for (int i = 0; i < bells.Count; i++)
+                                {
+                                    if (time >= startTimes[i] && time <= startTimes[i].Add(TimeSpan.FromMinutes(5)))
+                                    {
+                                        ChangeQRCode(stoppingToken);
+                                        await Task.Delay(TimeSpan.FromMinutes(15), stoppingToken).ConfigureAwait(true);
+                                    }
+                                }
                             }
                             break;
                         }
 
                     case "Extended Aves Bell Schedule":
                         {
-                            TimeSpan extAvesStart = new(7, 15, 00);
-                            if (time >= extAvesStart && time <= new TimeSpan(07, 20, 00))
+                            var bells = context.ExtendedAvesModels.Select(a => a.BellName).ToList();
+                            var startTimes = context.ExtendedAvesModels.Select(a => a.StartTime).ToList();
+                            var endTimes = context.ExtendedAvesModels.Select(a => a.EndTime).ToList();
+
+                            for (int i = 0; i < bells.Count; i++)
                             {
-                                ChangeQRCode();
-                                break;
+                                if (bells[i] == "Bell 0" || bells[i].Contains("Transition", StringComparison.Ordinal))
+                                {
+                                    bells.Remove(bells[i]);
+                                    startTimes.Remove(startTimes[i]);
+                                    endTimes.Remove(endTimes[i]);
+                                }
+                            }
+
+                            if (bells.Count == startTimes.Count && bells.Count == endTimes.Count && startTimes.Count == endTimes.Count)
+                            {
+                                for (int i = 0; i < bells.Count; i++)
+                                {
+                                    if (time >= startTimes[i] && time <= startTimes[i].Add(TimeSpan.FromMinutes(5)))
+                                    {
+                                        ChangeQRCode(stoppingToken);
+                                        await Task.Delay(TimeSpan.FromMinutes(15), stoppingToken).ConfigureAwait(true);
+                                    }
+                                }
                             }
                             break;
                         }
 
                     case "Custom Bell Schedule":
                         {
-                            TimeSpan customScheduleStartTime = context.CustomSchedules.OrderBy(a => a.StartTime).Where(a => a.BellName.Contains("Bell ")).First().StartTime;
-                            if (time >= customScheduleStartTime.Subtract(TimeSpan.FromMinutes(5)) && time <= customScheduleStartTime)
+                            var bells = context.CustomSchedules.Select(a => a.BellName).ToList();
+                            var startTimes = context.CustomSchedules.Select(a => a.StartTime).ToList();
+                            var endTimes = context.CustomSchedules.Select(a => a.EndTime).ToList();
+
+                            for (int i = 0; i < bells.Count; i++)
                             {
-                                ChangeQRCode();
-                                break;
+                                if (bells[i] == "Bell 0" || bells[i].Contains("Transition", StringComparison.Ordinal))
+                                {
+                                    bells.Remove(bells[i]);
+                                    startTimes.Remove(startTimes[i]);
+                                    endTimes.Remove(endTimes[i]);
+                                }
+                            }
+
+                            if (bells.Count == startTimes.Count && bells.Count == endTimes.Count && startTimes.Count == endTimes.Count)
+                            {
+                                for (int i = 0; i < bells.Count; i++)
+                                {
+                                    if (time >= startTimes[i] && time <= startTimes[i].Add(TimeSpan.FromMinutes(5)))
+                                    {
+                                        ChangeQRCode(stoppingToken);
+                                        await Task.Delay(TimeSpan.FromMinutes(15), stoppingToken).ConfigureAwait(true);
+                                    }
+                                }
                             }
                             break;
                         }
 
                     default:
                         {
-                            await Task.Delay(TimeSpan.FromDays(1));
+                            await Task.Delay(TimeSpan.FromDays(1), stoppingToken).ConfigureAwait(true);
                             break;
                         }
                 }
-                await Task.Delay(TimeSpan.FromMinutes(20));
             }
             else
             {
-                await Task.Delay(TimeSpan.FromDays(1));
+                await Task.Delay(TimeSpan.FromDays(1), stoppingToken).ConfigureAwait(true);
             }
         }
 
-        private async void ChangeQRCode()
+        private async void ChangeQRCode(CancellationToken stoppingToken)
         {
             using var scope = _scopeFactory.CreateAsyncScope();
             var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
@@ -179,7 +274,8 @@ namespace SAMS.Services
                     context.TimestampModels.Add(timeStamp);
                 }
             }
-            await context.SaveChangesAsync();
+            await context.SaveChangesAsync(stoppingToken).ConfigureAwait(true);
         }
     }
 }
+#pragma warning restore CA1848

@@ -1,0 +1,135 @@
+﻿@* <table class="table">
+    <thead>
+        <tr>
+            <th>
+@Html.DisplayNameFor(model => model.TypeOfReport)
+            </th>
+            <th>
+@Html.DisplayNameFor(model => model.Number)
+            </th>
+            <th>
+@Html.DisplayNameFor(model => model.DeveloperReference)
+            </th>
+            <th>
+@Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+@Html.DisplayNameFor(model => model.UserId)
+            </th>
+            <th>
+@Html.DisplayNameFor(model => model.StatusOfReport)
+            </th>
+            <th>
+@Html.DisplayNameFor(model => model.Severity)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model)
+{
+                    <tr>
+                        <td>
+            @Html.DisplayFor(modelItem => item.TypeOfReport)
+                        </td>
+                        <td>
+            @Html.DisplayFor(modelItem => item.Number)
+                        </td>
+                        <td>
+            @Html.DisplayFor(modelItem => item.DeveloperReference)
+                        </td>
+                        <td>
+            @Html.DisplayFor(modelItem => item.Description)
+                        </td>
+                        <td>
+            @Html.DisplayFor(modelItem => item.UserId)
+                        </td>
+                        <td>
+            @Html.DisplayFor(modelItem => item.StatusOfReport)
+                        </td>
+                        <td>
+            @Html.DisplayFor(modelItem => item.Severity)
+                        </td>
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@item.ReportId">Edit</a> |
+                            <a asp-action="Details" asp-route-id="@item.ReportId">Details</a> |
+                            <a asp-action="Delete" asp-route-id="@item.ReportId">Delete</a>
+                        </td>
+                    </tr>
+}
+    </tbody>
+</table>
+*@
+
+
+@model IEnumerable<SAMS.Models.ReportModel>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New Case</a>
+</p>
+
+<div class="justify-content-center">
+    <button class="btn btn-info disabled" id="SelfReported" onclick="getData('MyCases')">
+        My Cases
+    </button>
+
+    <button class="btn btn-info active" id="AllItems" onclick="getData('AllCases')">
+        All Cases
+    </button>
+</div>
+
+
+
+<br />
+<br />
+
+
+
+<div id="buttons" class="justify-content-start">
+    <button class="me-2" id="Submitted" type="button" onclick="getSubmitted()">Submitted</button>
+    <button class="me-2" id="UnderReview" type="button" onclick="getUnderReview()">Under Review</button>
+    <button class="me-2" id="AdditionInfoReq" type="button" onclick="getAdditionalInfoReq()">Reviewed & Additional Info Required</button>
+    <button class="" id="Resolved" type="button" onclick="getResolved()">Resolved</button>
+</div>
+
+<div id="results">
+</div>
+
+<div id="paging" class="pagination">
+</div>
+
+<script>
+    function getData(caselisttype) {
+
+        if (caselisttype == "MyCases") {
+            var receivedData = new Array();
+            var mycasesurl = @Url.Action("MyCases", "Report");
+            try {
+                const response = await(mycasesurl, {
+                    mode: "same-origin",
+                    method: "GET"
+                };
+
+                if (!response.ok) {
+                    throw new Error(`Response status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                aligner(data);
+            }
+            catch (error) {
+                console.error(error.message);
+            }
+        }
+    }
+
+    function aligner(data) {
+        console.log(data);
+    }
+</script>

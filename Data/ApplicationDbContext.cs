@@ -44,7 +44,7 @@ namespace SAMS.Data
         public DbSet<TimestampModel> TimestampModels { get; set; } = default!;
         public DbSet<SchedulerModel> SchedulerModels { get; set; } = default!;
         public DbSet<CustomScheduleModel> CustomSchedules { get; set; } = default!;
-        public DbSet<ProcessingErrorReportModel> ErrorProcessingModel { get; set; } = default!;
+        public DbSet<ReportModel> ErrorProcessingModel { get; set; } = default!;
 
         protected override void OnModelCreating(ModelBuilder builder)
         {           

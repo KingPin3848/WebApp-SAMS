@@ -49,12 +49,15 @@ namespace SAMS.Areas.Teacher.Controllers
 
         private async Task<bool> Report(int number, string description, string reference, ApplicationUser user)
         {
-            ProcessingErrorReportModel report = new()
+            ReportModel report = new()
             {
+                TypeOfReport = ReportModel.ErrorType.ProcessingError,
                 Number = number,
-                Description = description,
                 DeveloperReference = reference,
-                UserId = user.SchoolId
+                Description = description,
+                UserId = user.SchoolId,
+                StatusOfReport = ReportModel.Status.SubmittedToAppropriatePersonnel,
+                Severity = ReportModel.SeverityLevel.Medium
             };
             context.ErrorProcessingModel.Add(report);
             var result = await context.SaveChangesAsync().ConfigureAwait(true);
@@ -71,12 +74,15 @@ namespace SAMS.Areas.Teacher.Controllers
 
         private async Task<bool> UnauthorizedReportError(int number, string description, string reference)
         {
-            ProcessingErrorReportModel report = new()
+            ReportModel report = new()
             {
+                TypeOfReport = ReportModel.ErrorType.ProcessingError,
                 Number = number,
-                Description = description,
                 DeveloperReference = reference,
-                UserId = "Anonymous. Possible Data Breach."
+                Description = description,
+                UserId = "Anonymous. Possible Data Breach.",
+                StatusOfReport = ReportModel.Status.SubmittedToAppropriatePersonnel,
+                Severity = ReportModel.SeverityLevel.High
             };
             context.ErrorProcessingModel.Add(report);
             var result = await context.SaveChangesAsync().ConfigureAwait(true);

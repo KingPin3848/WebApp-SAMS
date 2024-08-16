@@ -23,6 +23,9 @@ csharp_space_around_binary_operators = before_and_after
 # IDE1006: Naming Styles
 dotnet_diagnostic.IDE1006.severity = none
 
+# IDE0079: Remove unnecessary suppression
+dotnet_diagnostic.IDE0079.severity = suggestion
+
 [*.{cs,vb}]
 #### Naming styles ####
 
