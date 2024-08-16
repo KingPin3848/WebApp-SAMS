@@ -1,14 +1,36 @@
 ﻿@{
     ViewData["Title"] = "Dashboard";
 }
+@model SAMS.Controllers.QRCodeModel;
+
 
 <h1>Dashboard</h1>
 
 <div>
 
+    @if (User?.IsInRole("Synnovation Lab Admin") == true)
+    {
+        <partial name="_SynLabAdminPartial.cshtml" />
+    }
     @if (User?.IsInRole("Teacher") == true)
     {
         <partial name="_TeacherPartial.cshtml"/>
+    }
+    @if (User?.IsInRole("Student") == true)
+    {
+        <partial name="_StudentPartial.cshtml" />
+    }
+    @if (User?.IsInRole("Developer") == true)
+    {
+        <partial name="_DeveloperPartial.cshtml" />
+    }
+    @if (User?.IsInRole("Synnovation Lab QR Code Scanner Management") == true)
+    {
+        <partial name="_QRCodeScannerPartial.cshtml" />
+    }
+    @if (User?.IsInRole("Law Enforcement") == true)
+    {
+        <partial name="_LawEnforcePartial.cshtml" />
     }
 
 </div>

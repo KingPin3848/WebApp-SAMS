@@ -95,7 +95,7 @@ namespace SAMS.Areas.Identity.Pages.Account
         {
             if(User.IsInRole("Teacher"))
             {
-                returnUrl = returnUrl ?? Url.Action("Dashbaord", "TeacherDashboard");
+                returnUrl = returnUrl ?? "~/Dashboard/Dashboard";
             }
             else
             {

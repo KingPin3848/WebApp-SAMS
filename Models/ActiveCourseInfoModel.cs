@@ -17,7 +17,7 @@ namespace SAMS.Models
         [Display(Name = ("Teacher"))]
         public string CourseTeacherID { get; set; } = null!;
         [Display(Name = ("Room"))]
-        public int CourseRoomID { get; set; } = 0!;
+        public required int CourseRoomID { get; set; } = 0!;
         [Display(Name = ("Bell Number"))]
         public string CourseBellNumber { get; set; } = null!;
         [Display(Name = ("Length"))]

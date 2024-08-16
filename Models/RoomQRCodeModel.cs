@@ -6,8 +6,8 @@ namespace SAMS.Models
     public class RoomQRCodeModel
     {
         [Key]
-        public int RoomId { get; set; }
-        public string Code { get; set; } = null!;
+        public required int RoomId { get; set; }
+        public required string Code { get; set; }
 
         //Navigation Properties
         public RoomLocationInfoModel? Room { get; set; } = null!;
