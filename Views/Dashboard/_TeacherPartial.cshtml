@@ -28,10 +28,24 @@
         max-width: 300px;
     }
 
+    #qrcode {
+        width: 160px;
+        height: 160px;
+        margin-top: 15px;
+    }
+
 </style>
 
+    <script type="text/javascript" src="~/davidshimjs-qrcodejs-04f46c6/davidshimjs-qrcodejs-04f46c6/qrcode.min.js"></script>
+
 <body>
-    <br/>
+
+    <div id="qrcode"></div>
+    <script>
+            new QRCode(document.getElementById("qrcode"), "@ViewBag.Code");
+    </script>
+
+    <br />
 
     <h3>
         Bells
@@ -54,14 +68,6 @@
         }
 
     </div>
-
-    @foreach (var item in Model.Code)
-    {
-
-        <div class="qrCode"></div>
-        <div class="qrCodeData" data-url="@item"></div>
-    }
-
 
     <table class="table-borderless justify-content-start">
         <tr class="row">
@@ -100,7 +106,7 @@
                     <a class="btn" asp-area="" asp-controller="StudentInfoSearch" asp-action="Index">
                         <img src="/images/ScanQRCode.png" class="card-img-top" style="border-radius:35px;">
                         <div class="card-body">
-                                <h5 class="card-title">Student Info Search</h5>
+                            <h5 class="card-title">Student Info Search</h5>
                         </div>
                     </a>
                 </div>
@@ -116,7 +122,7 @@
                 </h3>
                 <div class="card" style="width: 14rem; border-radius:35px;">
                     <a class="btn" asp-area="Admin" asp-controller="AccountManager" asp-action="Index">
-                        <img src="/images/ScanQRCode.png" class="card-img-top"  style="border-radius:35px;">
+                        <img src="/images/ScanQRCode.png" class="card-img-top" style="border-radius:35px;">
                         <div class="card-body">
                             <h5 class="card-title">Account Management</h5>
                         </div>
@@ -144,7 +150,3 @@
     </table>
 </body>
 
-@section Scripts {
-    <script type="text/javascript" src="~/lib/qrcode.js"></script>
-    <script type="text/javascript" src="~/js/qr-dashboard.js"></script>
-}

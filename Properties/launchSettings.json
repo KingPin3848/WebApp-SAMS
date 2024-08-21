@@ -1,12 +1,4 @@
-﻿{
-  "iisSettings": {
-    "windowsAuthentication": false,
-    "anonymousAuthentication": true,
-    "iisExpress": {
-      "applicationUrl": "http://localhost:36796",
-      "sslPort": 44327
-    }
-  },
+{
   "profiles": {
     "IIS Express": {
       "commandName": "IISExpress",
@@ -17,18 +9,26 @@
     },
     "SAMS": {
       "commandName": "Project",
-      "dotnetRunMessages": true,
       "launchBrowser": true,
-      "applicationUrl": "https://localhost:7159;http://localhost:5159",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
-      }
+      },
+      "dotnetRunMessages": true,
+      "applicationUrl": "https://localhost:7159;http://localhost:5159"
     }
   },
   "Authentication": {
     "Google": {
       "ClientId": "445580851705-pe0dptd01le5ol1d8ajn7dirkec5tmjd.apps.googleusercontent.com",
       "ClientSecret": "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"
+    }
+  },
+  "iisSettings": {
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
+    "iisExpress": {
+      "applicationUrl": "http://localhost:36796",
+      "sslPort": 44327
     }
   }
 }

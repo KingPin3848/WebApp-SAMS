@@ -42,7 +42,7 @@ namespace SAMS.Controllers
 
             var model = new QRCodeModel()
             {
-                Code = []
+                Code = string.Empty
             };
             var userroles = await _userManager.GetRolesAsync(loggedinuser).ConfigureAwait(true);
             foreach (var role in userroles)
@@ -131,15 +131,18 @@ namespace SAMS.Controllers
                             else
                             {
 #pragma warning disable CA1305
-                                var activeBellBasedCourses = _context.ActiveCourseInfoModels.Where(a => a.CourseTeacherID == schoolid).Where(a => a.CourseBellNumber.Contains(currentBell.ToString())).ToList();
+                                var activeBellBasedCourses = _context.ActiveCourseInfoModels.Where(a => a.CourseTeacherID == schoolid).Where(a => a.CourseBellNumber.Contains(currentBell.ToString())).First();
 #pragma warning restore CA1305
                                 List<int> roomids = [];
-                                foreach (var course in activeBellBasedCourses)
-                                {
-                                    roomids.Add(course.CourseRoomID);
-                                }
-                                var roomidsUnique = roomids.Distinct().ToList();
-                                foreach (var roomid in roomidsUnique)
+                                /*                                foreach (var course in activeBellBasedCourses)
+                                                                {
+                                                                    roomids.Add(course.CourseRoomID);
+                                                                }*/
+
+                                roomids.Add(activeBellBasedCourses.CourseRoomID);
+
+                                //var roomidsUnique = roomids.Distinct().ToList();
+                                foreach (var roomid in roomids)
                                 {
                                     if (roomid is 0 || roomid is -1)
                                     {
@@ -147,7 +150,8 @@ namespace SAMS.Controllers
                                     }
                                     else
                                     {
-                                        model.Code.Add(_context.RoomQRCodeModels.Where(a => a.RoomId == roomid).First().Code);
+                                        model.Code = _context.RoomQRCodeModels.Where(a => a.RoomId == roomid).First().Code;
+                                        ViewBag.Code = model.Code;
                                     }
                                 }
                             }
@@ -251,6 +255,6 @@ namespace SAMS.Controllers
 
     public class QRCodeModel
     {
-        public required List<string> Code { get; set; }
+        public required string Code { get; set; }
     }
 }
