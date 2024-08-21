@@ -69,7 +69,7 @@ namespace SAMS.Areas.Student.Controllers
                     {
                         return Json(new { dangertext = "Your StudentId could not be retrived because it is not a number. Please contact an administrator ASAP and notify them of this error." });
                     }
-                    var sem2start = _context.SchedulerModels.Where(a => a.Type == "Semester 2").Select(a => a.Date).FirstOrDefault();
+                    var sem2start = _context.SchedulerModels.Where(a => a.Type == SchedulerModel.Types.Semester2).Select(a => a.Date).FirstOrDefault();
                     IStudentSchedule? studentSchedule = (DateOnly.FromDateTime(DateTime.Now.Date) >= sem2start) ? (await _context.Sem2StudSchedules.FindAsync(studId)) : (await _context.Sem1StudSchedules.FindAsync(studId));
                     if (studentSchedule == null)
                     {

@@ -30,7 +30,7 @@ namespace SAMS.Services
 
             var _context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
-            var holidayDates = _context.SchedulerModels.Where(a => a.Type == "No School @SHS").Select(a => a.Date).ToList();
+            var holidayDates = _context.SchedulerModels.Where(a => a.Type == SchedulerModel.Types.NoSchool).Select(a => a.Date).ToList();
             var todayDate = DateOnly.FromDateTime(DateTime.Now.Date);
 
             if (holidayDates == null)
@@ -203,7 +203,7 @@ namespace SAMS.Services
 
                 for (int bell = 0; bell <= 7; bell++)
                 {
-                    var sem2start = _context.SchedulerModels.Where(a => a.Type == "Semester 2").Select(a => a.Date).FirstOrDefault();
+                    var sem2start = _context.SchedulerModels.Where(a => a.Type == SchedulerModel.Types.Semester2).Select(a => a.Date).FirstOrDefault();
                     IStudentSchedule? studentSchedule = (DateOnly.FromDateTime(DateTime.Now.Date) >= sem2start) ? (await _context.Sem2StudSchedules.FindAsync(studentId)) : (await _context.Sem1StudSchedules.FindAsync(studentId));
                     var sem2started = (DateOnly.FromDateTime(DateTime.Now.Date) >= sem2start);
                     int bellCourseId;
@@ -295,7 +295,7 @@ namespace SAMS.Services
                 int studentId = int.Parse(student.SchoolId!);
                 foreach (var bell in todayBells)
                 {
-                    var sem2start = context.SchedulerModels.Where(a => a.Type == "Semester 2").Select(a => a.Date).FirstOrDefault();
+                    var sem2start = context.SchedulerModels.Where(a => a.Type == SchedulerModel.Types.Semester2).Select(a => a.Date).FirstOrDefault();
                     IStudentSchedule? studentSchedule = (DateOnly.FromDateTime(DateTime.Now.Date) >= sem2start) ? (await context.Sem2StudSchedules.FindAsync(studentId)) : (await context.Sem1StudSchedules.FindAsync(studentId));
                     var sem2started = (DateOnly.FromDateTime(DateTime.Now.Date) >= sem2start);
                     int bellCourseId;

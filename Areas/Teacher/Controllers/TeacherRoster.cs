@@ -55,7 +55,7 @@ namespace SAMS.Areas.Teacher.Controllers
                     return NotFound();
                 }
 
-                var sem2start = _context.SchedulerModels.Where(a => a.Type == "Semester 2").Select(a => a.Date).FirstOrDefault();
+                var sem2start = _context.SchedulerModels.Where(a => a.Type == SchedulerModel.Types.Semester2).Select(a => a.Date).FirstOrDefault();
                 IStudentSchedule? studentSchedule = (DateOnly.FromDateTime(DateTime.Now.Date) >= sem2start) ? (await _context.Sem2StudSchedules.FindAsync(studentID).ConfigureAwait(true)) : (await _context.Sem1StudSchedules.FindAsync(studentID).ConfigureAwait(true));
                 var sem2started = (DateOnly.FromDateTime(DateTime.Now.Date) >= sem2start);
                 int bellCourseId;

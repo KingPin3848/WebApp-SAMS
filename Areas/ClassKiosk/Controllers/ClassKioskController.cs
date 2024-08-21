@@ -167,7 +167,7 @@ namespace SAMS.Areas.ClassKiosk.Controllers
                     if (int.TryParse(student.SchoolId, out studId))
                     {
 
-                        var sem2start = dbcontext.SchedulerModels.Where(a => a.Type == "Semester 2").Select(a => a.Date).First();
+                        var sem2start = dbcontext.SchedulerModels.Where(a => a.Type == SchedulerModel.Types.Semester2).Select(a => a.Date).First();
                         IStudentSchedule? studentSchedule = (DateOnly.FromDateTime(DateTime.Now.Date) >= sem2start) ? (await dbcontext.Sem2StudSchedules.FindAsync(studId).ConfigureAwait(true)) : (await dbcontext.Sem1StudSchedules.FindAsync(studId).ConfigureAwait(true));
                         if (studentSchedule == null)
                         {

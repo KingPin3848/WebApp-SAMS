@@ -21,7 +21,7 @@ namespace SAMS.Services
 
             var _context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
-            var holidayDates = _context.SchedulerModels.Where(a => a.Type == "No School @SHS").Select(a => a.Date).ToList();
+            var holidayDates = _context.SchedulerModels.Where(a => a.Type == SchedulerModel.Types.NoSchool).Select(a => a.Date).ToList();
             var todayDate = DateOnly.FromDateTime(DateTime.Now.Date);
 
             if (holidayDates == null)

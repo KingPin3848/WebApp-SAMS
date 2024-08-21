@@ -1,18 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SAMS.Data;
 using SAMS.Models;
 
 namespace SAMS.Controllers
 {
-    public class SchedulerController(ApplicationDbContext context) : Controller
+    public class SchedulerController : Controller
     {
-        private readonly ApplicationDbContext _context = context;
+        private readonly ApplicationDbContext _context;
+
+        public SchedulerController(ApplicationDbContext context)
+        {
+            _context = context;
+        }
 
         // GET: Scheduler
         public async Task<IActionResult> Index()

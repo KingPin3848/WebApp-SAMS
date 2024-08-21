@@ -27,7 +27,7 @@ namespace SAMS.Services
 
             var _context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
-            var holidayDates = _context.SchedulerModels.Where(a => a.Type == "No School @SHS").Select(a => a.Date).ToList();
+            var holidayDates = _context.SchedulerModels.Where(a => a.Type == SchedulerModel.Types.NoSchool).Select(a => a.Date).ToList();
             var todayDate = DateOnly.FromDateTime(DateTime.Now.Date);
 
             if (holidayDates == null)
@@ -130,7 +130,7 @@ namespace SAMS.Services
                         foreach (var student in students)
                         {
                             var studentId = int.Parse(student.SchoolId!);
-                            var sem2start = _context.SchedulerModels.Where(a => a.Type == "Semester 2").Select(a => a.Date).FirstOrDefault();
+                            var sem2start = _context.SchedulerModels.Where(a => a.Type == SchedulerModel.Types.Semester2).Select(a => a.Date).FirstOrDefault();
                             int bellCourseId;
                             if (DateOnly.FromDateTime(DateTime.Now.Date) >= sem2start)
                             {
@@ -203,7 +203,7 @@ namespace SAMS.Services
                     foreach (var student in students)
                     {
                         var studentId = int.Parse(student.SchoolId!);
-                        var sem2start = _context.SchedulerModels.Where(a => a.Type == "Semester 2").Select(a => a.Date).FirstOrDefault();
+                        var sem2start = _context.SchedulerModels.Where(a => a.Type == SchedulerModel.Types.Semester2).Select(a => a.Date).FirstOrDefault();
                         int bellCourseId;
                         if (DateOnly.FromDateTime(DateTime.Now.Date) >= sem2start)
                         {

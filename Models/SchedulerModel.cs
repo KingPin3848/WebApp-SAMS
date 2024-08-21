@@ -11,7 +11,17 @@ namespace SAMS.Models
         public string NameOfEvent { get; set; } = null!;
         [Display(Name = "Date of event")]
         public DateOnly Date {  get; set; }
+
+        public enum Types
+        {
+            [Display(Name = "Semester 1 Start")]
+            Semester1,
+            [Display(Name = "Semester 2 Start")]
+            Semester2,
+            [Display(Name = "No School for students @SHS")]
+            NoSchool
+        }
         [Display(Name = "Type of event")]
-        public string Type { get; set; } = null!;
+        public Types Type { get; set; }
     }
 }
