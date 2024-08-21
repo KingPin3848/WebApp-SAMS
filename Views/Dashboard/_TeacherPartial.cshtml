@@ -13,6 +13,7 @@
         max-width: 400px;
         float: right;
         width: 350px;
+        clear: right;
     }
 
     .card h3 {
@@ -30,28 +31,14 @@
 
     #qrcode {
         width: 160px;
-        height: 160px;
+        height: 240px;
         margin-top: 15px;
     }
 
 </style>
 
     <script type="text/javascript" src="~/davidshimjs-qrcodejs-04f46c6/davidshimjs-qrcodejs-04f46c6/qrcode.min.js"></script>
-
 <body>
-
-    <div id="qrcode"></div>
-    <script>
-            new QRCode(document.getElementById("qrcode"), "@ViewBag.Code");
-    </script>
-
-    <br />
-
-    <h3>
-        Bells
-    </h3>
-
-    <br />
 
     <div class="schedule-card">
         <div class="card-header">
@@ -68,6 +55,33 @@
         }
 
     </div>
+
+    <div class="card" style="width: 20rem; border-radius:35px;">
+        <div class="card-body">
+            <h5 class="card-title">Scan QR Code to Sign in</h5>
+            <div id="qrcode"></div>
+        </div>
+    </div>
+    <script>
+
+        new QRCode(document.getElementById("qrcode"), {
+            text: "@ViewBag.Code",
+            width: 225,
+            height: 225,
+            colorDark: "#000000",
+            colorLight: "#ffffff",
+            correctLevel: QRCode.CorrectLevel.H
+        });
+
+    </script>
+
+    <br />
+
+    <h3>
+        Bells
+    </h3>
+
+    <br />
 
     <table class="table-borderless justify-content-start">
         <tr class="row">
