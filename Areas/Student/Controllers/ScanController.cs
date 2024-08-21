@@ -20,7 +20,7 @@ namespace SAMS.Areas.Student.Controllers
         //[Authorize(Roles = "Student, Developer")]
         public async Task<IActionResult> Scan()
         {
-            var user = await _userManager.GetUserAsync(User);
+            var user = await _userManager.GetUserAsync(User).ConfigureAwait(true);
             ViewBag.Schoolid = user?.SchoolId;
             return View();
         }
@@ -33,20 +33,16 @@ namespace SAMS.Areas.Student.Controllers
             try
             {
                 var time = DateTime.Now.TimeOfDay;
-                var user = await _userManager.GetUserAsync(User);
+                var user = await _userManager.GetUserAsync(User).ConfigureAwait(true);
 
                 if (user == null)
                 {
                     return Json(new { dangertext = "User not found for the provided school ID." });
                 }
 
-                var chosenBellSchedule = _context.ChosenBellSchedModels.Select(a => a.Name).ToList();
-                if (chosenBellSchedule == null || chosenBellSchedule.Count == 0)
-                {
-                    return Json(new { dangertext = "Chosen Bell Schedule for the day not found. Please contact the administrator and developer for additional assistance." });
-                }
+                var chosenBellSchedule = _context.ChosenBellSchedModels.Select(a => a.Name).First();
 
-                var determination = DetermineCurrentBell(chosenBellSchedule[0]!);
+                var determination = DetermineCurrentBell(chosenBellSchedule);
                 var currentBell = determination[0];
                 TimeSpan startTimeAsDetermined = TimeSpan.Parse(determination[1]);
                 TimeSpan endTimeAsDetermined = TimeSpan.Parse(determination[2]);
@@ -65,7 +61,14 @@ namespace SAMS.Areas.Student.Controllers
                 var passedID = issuedSchoolId;
                 if (schoolIDdb == passedID)
                 {
-                    int studId = int.Parse(schoolIDdb);
+                    if (int.TryParse(schoolIDdb, out int studId))
+                    {
+                        //Do nothing
+                    }
+                    else
+                    {
+                        return Json(new { dangertext = "Your StudentId could not be retrived because it is not a number. Please contact an administrator ASAP and notify them of this error." });
+                    }
                     var sem2start = _context.SchedulerModels.Where(a => a.Type == "Semester 2").Select(a => a.Date).FirstOrDefault();
                     IStudentSchedule? studentSchedule = (DateOnly.FromDateTime(DateTime.Now.Date) >= sem2start) ? (await _context.Sem2StudSchedules.FindAsync(studId)) : (await _context.Sem1StudSchedules.FindAsync(studId));
                     if (studentSchedule == null)
@@ -166,6 +169,32 @@ namespace SAMS.Areas.Student.Controllers
                             _context.BellAttendanceModels.Update(bellAttendanceEntry);
                             _context.TimestampModels.Add(timeStamp);
                             await _context.SaveChangesAsync();
+                        }
+                        else
+                        {
+                            if (time >= startTimeAsDetermined.Add(TimeSpan.FromMinutes(5)) && time <= endTimeAsDetermined)
+                            {
+                                var bellattendanceentry = new BellAttendanceModel()
+                                {
+                                    StudentId = studId,
+                                    DateTime = DateTime.Now,
+                                    Status = "Tardy",
+                                    ReasonForAbsence = "",
+                                    BellNumId = currentBell,
+                                    CourseId = courseIdForCurrentBell,
+                                    ChosenBellSchedule = chosenBellSchedule
+                                };
+                                var timestamp = new TimestampModel()
+                                {
+                                    Timestamp = DateTime.Now,
+                                    ActionMade = $"Student added and marked Tardy automatically at {DateTime.Now} for Bell Attendance",
+                                    MadeBy = $"SAMS Program - {DateTime.Now} - Automatic Scan Add and Update",
+                                    Comments = $"Student was marked tardy because the student scanned in 5 minutes after the start of the bell. Please contact the teacher/admin/attendance office for any questions or concerns regarding this."
+                                };
+                                _context.BellAttendanceModels.Add(bellattendanceentry);
+                                _context.TimestampModels.Add(timestamp);
+                                await _context.SaveChangesAsync().ConfigureAwait(true);
+                            }
                         }
 
                         var studLocationEntry = _context.StudentLocationModels.Any(a => a.StudentIdMod == studId);

@@ -58,7 +58,7 @@ namespace SAMS.Controllers
             var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
             var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
-            var chosenBellSched = context.ChosenBellSchedModels.Select(a => a.Name).ToList();
+            var chosenBellSched = context.ChosenBellSchedModels.Select(a => a.Name).First();
             var dateTime = DateTime.Now;
             var day = dateTime.DayOfWeek;
 
@@ -70,7 +70,7 @@ namespace SAMS.Controllers
                 TimeSpan _2hrdelStart = new(9, 15, 00);
                 TimeSpan extAvesStart = new(7, 15, 00);
 
-                switch (chosenBellSched[0])
+                switch (chosenBellSched)
                 {
                     case "Daily Bell Schedule":
                         {
@@ -179,7 +179,7 @@ namespace SAMS.Controllers
                                 AttendanceDate = date,
                                 Status = "Unknown",
                                 ReasonForAbsence = "NA",
-                                ChosenBellSchedule = chosenBellSched[0]!
+                                ChosenBellSchedule = chosenBellSched.ToString()
                             };
                             _context.DailyAttendanceModels.Add(newEntry);
                             await _context.SaveChangesAsync();

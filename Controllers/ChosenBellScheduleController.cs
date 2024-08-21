@@ -53,6 +53,10 @@ namespace SAMS.Controllers
         {
             if (ModelState.IsValid)
             {
+                if (chosenBellSchedModel is null)
+                {
+                    return NotFound();
+                }
                 List<string> scheds = ["Daily Bell Schedule", "Pep Rally Bell Schedule", "2 Hour Delay Bell Schedule", "Extended Aves Bell Schedule", "Custom Bell Schedule"];
                 if (scheds.Contains(chosenBellSchedModel.Name!))
                 {
@@ -90,6 +94,11 @@ namespace SAMS.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] ChosenBellSchedModel chosenBellSchedModel)
         {
+            if (chosenBellSchedModel is null)
+            {
+                return NotFound();
+            }
+
             if (id != chosenBellSchedModel.Id)
             {
                 return NotFound();

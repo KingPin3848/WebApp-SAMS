@@ -86,7 +86,7 @@ namespace SAMS.Services
                                     if (time >= startTimes[i] && time <= startTimes[i].Add(TimeSpan.FromMinutes(5)))
                                     {
                                         ChangeQRCode(stoppingToken);
-                                        await Task.Delay(TimeSpan.FromMinutes(15), stoppingToken).ConfigureAwait(true);
+                                        await Task.Delay(TimeSpan.FromMinutes(15), stoppingToken).ConfigureAwait(false);
                                     }
                                 }
                             }
@@ -116,7 +116,7 @@ namespace SAMS.Services
                                     if (time >= startTimes[i] && time <= startTimes[i].Add(TimeSpan.FromMinutes(5)))
                                     {
                                         ChangeQRCode(stoppingToken);
-                                        await Task.Delay(TimeSpan.FromMinutes(15), stoppingToken).ConfigureAwait(true);
+                                        await Task.Delay(TimeSpan.FromMinutes(15), stoppingToken).ConfigureAwait(false);
                                     }
                                 }
                             }
@@ -146,7 +146,7 @@ namespace SAMS.Services
                                     if (time >= startTimes[i] && time <= startTimes[i].Add(TimeSpan.FromMinutes(5)))
                                     {
                                         ChangeQRCode(stoppingToken);
-                                        await Task.Delay(TimeSpan.FromMinutes(15), stoppingToken).ConfigureAwait(true);
+                                        await Task.Delay(TimeSpan.FromMinutes(15), stoppingToken).ConfigureAwait(false);
                                     }
                                 }
                             }
@@ -176,7 +176,7 @@ namespace SAMS.Services
                                     if (time >= startTimes[i] && time <= startTimes[i].Add(TimeSpan.FromMinutes(5)))
                                     {
                                         ChangeQRCode(stoppingToken);
-                                        await Task.Delay(TimeSpan.FromMinutes(15), stoppingToken).ConfigureAwait(true);
+                                        await Task.Delay(TimeSpan.FromMinutes(15), stoppingToken).ConfigureAwait(false);
                                     }
                                 }
                             }
@@ -206,7 +206,7 @@ namespace SAMS.Services
                                     if (time >= startTimes[i] && time <= startTimes[i].Add(TimeSpan.FromMinutes(5)))
                                     {
                                         ChangeQRCode(stoppingToken);
-                                        await Task.Delay(TimeSpan.FromMinutes(15), stoppingToken).ConfigureAwait(true);
+                                        await Task.Delay(TimeSpan.FromMinutes(15), stoppingToken).ConfigureAwait(false);
                                     }
                                 }
                             }
