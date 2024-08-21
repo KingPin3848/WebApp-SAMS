@@ -1,11 +1,11 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using SAMS.Controllers;
 using SAMS.Data;
+using System.Security.Claims;
+using SAMS.Interfaces;
+using System.Text.RegularExpressions;
 
-namespace SAMS.Areas.Teacher.Controllers
+namespace SAMS.Controllers
 {
     public class DashboardController : Controller
     {
@@ -22,29 +22,199 @@ namespace SAMS.Areas.Teacher.Controllers
             _userManager = userManager;
         }
 
+
+        [HttpGet]
         // GET: DashboardController
         public async Task<IActionResult> Dashboard()
         {
 
-            var user = await _userManager.GetUserAsync(User);
-            if (user == null)
+            var loggedinuserid = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (loggedinuserid is null)
             {
-                return NotFound();
+                return RedirectToAction("AutomatedError", "Error", new { number = 01, description = "Are you logged in?", reference = "Event ID = 1, Identifier = Acc72Det" });
             }
 
-            var courses = _context.ActiveCourseInfoModels.Where(a => a.CourseTeacherID == user.SchoolId).ToList();
-            List<string> bells = new List<string>();
-
-            for (int i = 0; i < courses.Count; i++)
+            var loggedinuser = await _userManager.FindByIdAsync(loggedinuserid).ConfigureAwait(true);
+            if (loggedinuser is null)
             {
-                bells.Add(courses[i].CourseBellNumber);
+                return RedirectToAction("AutomatedError", "Error", new { number = 03, description = "Couldn't find you.", reference = "Event ID = 2, Identifier = Something" });
             }
 
-            //Remove any duplicates from the bells list
-            bells = new HashSet<string>(bells).ToList();
-            ViewBag.Bells = bells;
+            var model = new QRCodeModel()
+            {
+                Code = []
+            };
+            var userroles = await _userManager.GetRolesAsync(loggedinuser).ConfigureAwait(true);
+            foreach (var role in userroles)
+            {
+                switch (role)
+                {
+                    case "Teacher":
+                        {
+                            //Global Variables for "Teacher" case.
+                            var schoolid = loggedinuser.SchoolId;
 
-            return View();
+                            var courses = _context.ActiveCourseInfoModels.Where(a => a.CourseTeacherID == schoolid).ToList();
+                            List<string> bells = [];
+
+                            for (int i = 0; i < courses.Count; i++)
+                            {
+                                bells.Add(courses[i].CourseBellNumber);
+                            }
+                            //Remove any duplicates from the bells list
+                            bells = new HashSet<string>(bells).ToList();
+                            ViewBag.Bells = bells;
+
+                            var chosenbellschedule = _context.ChosenBellSchedModels.First().Name;
+                            List<IBellSchedule>? chosenBellSched;
+
+                            switch (chosenbellschedule)
+                            {
+                                case "Daily Bell Schedule":
+                                    chosenBellSched = [.. _context.DailyBellScheduleModels.Where(a => a.BellName.Contains("Bell")).OrderBy(a => a.StartTime).Cast<IBellSchedule>()];
+                                    chosenBellSched.Remove(chosenBellSched.First());
+                                    chosenBellSched.Remove(chosenBellSched.Last());
+                                    break;
+                                case "Extended Aves Bell Schedule":
+                                    chosenBellSched = [.. _context.ExtendedAvesModels.Where(a => a.BellName.Contains("Bell")).OrderBy(a => a.StartTime).Cast<IBellSchedule>()];
+                                    break;
+                                case "Pep Rally Bell Schedule":
+                                    chosenBellSched = [.. _context.PepRallyBellScheduleModels.Where(a => a.BellName.Contains("Bell")).OrderBy(a => a.StartTime).Cast<IBellSchedule>()];
+                                    break;
+                                case "2 Hour Delay Bell Schedule":
+                                    chosenBellSched = [.. _context.TwoHrDelayBellScheduleModels.Where(a => a.BellName.Contains("Bell")).OrderBy(a => a.StartTime).Cast<IBellSchedule>()];
+                                    break;
+                                case "Custom Bell Schedule":
+                                    chosenBellSched = [.. _context.CustomSchedules.Where(a => a.BellName.Contains("Bell")).OrderBy(a => a.StartTime).Cast<IBellSchedule>()];
+                                    break;
+                                default:
+                                    chosenBellSched = null;
+                                    _logger.LogInformation("A schedule was chosen other than the ones offered. Possible breach try.");
+                                    break;
+                            }
+
+                            if(chosenBellSched == null)
+                            {
+                                return RedirectToAction("AutomatedError", "Error", new { number = 01, description = "being null isnt so bad, you just cant be referenced", reference = "Event ID = 1, Identifier = Dash96CTDash" });
+                            }
+
+                            List<List<string>> schedule = [];
+                            foreach (var item in chosenBellSched)
+                            {
+                                List<string> temp = [];
+                                temp.Add(item.BellName);
+                                temp.Add(item.StartTime.ToString());
+                                temp.Add(item.EndTime.ToString());
+                                schedule.Add(temp);
+                            }
+
+                            ViewBag.Schedule = schedule;
+
+
+
+                            //The following code gets the course schedule for the student to display on the side of teacher partial. 
+
+
+                            /* Code Snippet Summary:
+                             * The following code uses the Teacher ID and the Current Bells that teacher has to retrieve the Room ID.
+                             * This room id is used generate the QR code displayed in the teacher dashboard.
+                             */
+
+                            /* Comment 01:
+                             * It checks if the currentbell is anything else than integers between 1 and 7.
+                             */
+                            var currentBell = GetCurrentBell();
+                            if (currentBell < 1 || currentBell > 7)
+                            {
+                                //do nothing
+                            }
+                            else
+                            {
+#pragma warning disable CA1305
+                                var activeBellBasedCourses = _context.ActiveCourseInfoModels.Where(a => a.CourseTeacherID == schoolid).Where(a => a.CourseBellNumber.Contains(currentBell.ToString())).ToList();
+#pragma warning restore CA1305
+                                List<int> roomids = [];
+                                foreach (var course in activeBellBasedCourses)
+                                {
+                                    roomids.Add(course.CourseRoomID);
+                                }
+                                var roomidsUnique = roomids.Distinct().ToList();
+                                foreach (var roomid in roomidsUnique)
+                                {
+                                    if (roomid is 0 || roomid is -1)
+                                    {
+                                        //Do Nothing
+                                    }
+                                    else
+                                    {
+                                        model.Code.Add(_context.RoomQRCodeModels.Where(a => a.RoomId == roomid).First().Code);
+                                    }
+                                }
+                            }
+                            break;
+                        }
+                }
+            }
+
+            return View(model);
+        }
+
+        private int GetCurrentBell()
+        {
+            var chosenbellschedule = _context.ChosenBellSchedModels.First().Name;
+            List<IBellSchedule>? chosenBellSched;
+
+            switch (chosenbellschedule)
+            {
+                case "Daily Bell Schedule":
+                    chosenBellSched = [.. _context.DailyBellScheduleModels.Where(a => a.BellName.Contains("Bell")).OrderBy(a => a.StartTime).Cast<IBellSchedule>()];
+                    break;
+                case "Extended Aves Bell Schedule":
+                    chosenBellSched = [.. _context.ExtendedAvesModels.Where(a => a.BellName.Contains("Bell")).OrderBy(a => a.StartTime).Cast<IBellSchedule>()];
+                    break;
+                case "Pep Rally Bell Schedule":
+                    chosenBellSched = [.. _context.PepRallyBellScheduleModels.Where(a => a.BellName.Contains("Bell")).OrderBy(a => a.StartTime).Cast<IBellSchedule>()];
+                    break;
+                case "2 Hour Delay Bell Schedule":
+                    chosenBellSched = [.. _context.TwoHrDelayBellScheduleModels.Where(a => a.BellName.Contains("Bell")).OrderBy(a => a.StartTime).Cast<IBellSchedule>()];
+                    break;
+                case "Custom Bell Schedule":
+                    chosenBellSched = [.. _context.CustomSchedules.Where(a => a.BellName.Contains("Bell")).OrderBy(a => a.StartTime).Cast<IBellSchedule>()];
+                    break;
+                default:
+                    chosenBellSched = null;
+                    _logger.LogInformation("A schedule was chosen other than the ones offered. Possible breach try.");
+                    return -1;
+            }
+
+            if (chosenBellSched is null)
+            {
+                return -1;
+            }
+
+            var currentTime = DateTime.Now.TimeOfDay;
+            foreach (var bell in chosenBellSched)
+            {
+                if (currentTime >= bell.StartTime && currentTime <= bell.EndTime)
+                {
+#pragma warning disable SYSLIB1045
+                    Match match = Regex.Match(bell.BellName, @"Bell (\d+)");
+#pragma warning restore SYSLIB1045
+                    if (match.Success)
+                    {
+                        if (int.TryParse(match.Groups[1].Value, out int bellNumber))
+                        {
+                            return bellNumber;
+                        }
+                        else
+                        {
+                            return -1;
+                        }
+                    }
+                    return -1;
+                }
+            }
+            return -1;
         }
 
         //GET: ClassAttendance
@@ -79,4 +249,8 @@ namespace SAMS.Areas.Teacher.Controllers
         }
     }
 
+    public class QRCodeModel
+    {
+        public required List<string> Code { get; set; }
+    }
 }

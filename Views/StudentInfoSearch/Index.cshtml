@@ -1,0 +1,94 @@
+﻿@{
+    ViewData["Title"] = "StudentInfo";
+}
+
+<h1>Student Info</h1>
+
+<form method="post" asp-area="" asp-controller="StudentInfoSearch" asp-action="Search">
+
+    <div>
+        <input type="radio" name="filter" value="StudentID" id="studentid" />
+        <label for="studentid">Student ID</label>
+
+        <input type="radio" name="filter" value="Name" id="name" />
+        <label for="name">Student Name</label>
+    </div>
+
+    <div>
+        <input type="text" id="text" onkeyup="getData()" size="82" />
+    </div>
+
+</form>
+
+<div id="searchResults"> </div>
+
+<style>
+    .card:hover {
+        background-color: rgba(211, 211, 211, 0.5); 
+        transition: background-color 0.3s ease; 
+    }
+</style>
+
+<script>
+
+    function getData() {
+        var filter = $('input[name="filter"]:checked').val();
+        var query = $('#text').val();
+        setData(filter, query);
+    }
+
+    function setData(filter, data) {
+        var sendData = {
+            "Filter": filter,
+            "SearchQuery": data
+        }
+        $.ajax({
+            url: '/StudentInfoSearch/Search',
+            type: 'POST',
+            data: sendData,
+            success: function (response) {
+
+                console.log("Response received:", response);
+                $('#searchResults').empty();
+
+                response.forEach(function (i) {
+                    var card = document.createElement("div");
+                    card.className = "card";
+                    card.style.width = "40rem";
+                    card.style.cursor = "pointer"; 
+
+                    var cardBody = document.createElement("div");
+                    cardBody.className = "card-body";
+
+                    var cardTitle = document.createElement("h5");
+                    cardTitle.className = "card-title";
+                    cardTitle.textContent = "Student ID: " + i.studentID;
+
+                    var cardText = document.createElement("p");
+                    cardText.className = "card-text";
+                    cardText.textContent = "Name: " + i.studentFirstNameMod + " " + i.studentMiddleNameMod + " " + i.studentLastNameMod;
+
+                    cardBody.appendChild(cardTitle);
+                    cardBody.appendChild(cardText);
+                    card.appendChild(cardBody);
+                    searchResults.appendChild(card);
+
+                    card.addEventListener("click", function () {
+                        window.location.href = "/StudentViewModel/StudentInfo/" + i.studentID;
+                    });
+                });
+
+            },
+            error: function (response) {
+
+                $('#searchResults').empty();
+
+                var p = document.createElement("p");
+                p.textContent = "Please Select a Search Option Above";
+                searchResults.appendChild(p);
+            }
+
+        });
+    };
+
+</script>

@@ -1,4 +1,4 @@
-﻿@model IEnumerable<SAMS.Models.DailyAttendanceModel>
+﻿@model IEnumerable<SAMS.Models.BellAttendanceModel>
 
 @{
     ViewData["Title"] = "Index";
@@ -13,7 +13,7 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.AttendanceDate)
+                @Html.DisplayNameFor(model => model.DateTime)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Status)
@@ -22,10 +22,16 @@
                 @Html.DisplayNameFor(model => model.ReasonForAbsence)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.BellNumId)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.ChosenBellSchedule)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Student)
+                @Html.DisplayNameFor(model => model.ActiveCourses)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StudentInfo)
             </th>
             <th></th>
         </tr>
@@ -34,7 +40,7 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.AttendanceDate)
+                @Html.DisplayFor(modelItem => item.DateTime)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Status)
@@ -43,15 +49,21 @@
                 @Html.DisplayFor(modelItem => item.ReasonForAbsence)
             </td>
             <td>
+                @Html.DisplayFor(modelItem => item.BellNumId)
+            </td>
+            <td>
                 @Html.DisplayFor(modelItem => item.ChosenBellSchedule)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Student.StudentID)
+                @Html.DisplayFor(modelItem => item.ActiveCourses.CourseId)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.AttendanceId">Edit</a> |
+                @Html.DisplayFor(modelItem => item.StudentInfo.Parentguard1EmailMod)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.BellAttendanceId">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.StudentId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.AttendanceId">Delete</a>
+                <a asp-action="Delete" asp-route-id="@item.BellAttendanceId">Delete</a>
             </td>
         </tr>
 }

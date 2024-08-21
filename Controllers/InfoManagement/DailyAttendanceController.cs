@@ -31,7 +31,7 @@ namespace SAMS.Controllers.InfoManagement
 
             var dailyAttendanceModel = await _context.DailyAttendanceModels
                 .Include(d => d.Student)
-                .FirstOrDefaultAsync(m => m.AttendanceId == id);
+                .FirstOrDefaultAsync(m => m.StudentId == id);
             if (dailyAttendanceModel == null)
             {
                 return NotFound();

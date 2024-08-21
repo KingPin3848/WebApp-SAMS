@@ -1,34 +1,116 @@
-﻿
-@*
+﻿@*
     For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 *@
 
-<h3>
-    Bells
-</h3>
-<br />
+<style>
 
-<table class="table-borderless">
-    <tr class="row">
-        @for (int i = 0; i < ViewBag.Bells.Count; i++)
+    .card {
+        border: 2px solid #ccc;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 16px;
+        margin: 16px;
+        max-width: 300px;
+        float: right;
+    }
+
+    .card h3 {
+        margin: 16px 0 8px;
+    }
+
+</style>
+
+<body>
+
+    <h3>
+        Bells
+    </h3>
+
+    <br />
+
+    <div class="card">
+        <div class="card-header">
+            <h3>Schedule</h3>
+        </div>
+
+        @foreach (var item in ViewBag.Schedule)
         {
+            <div class="card">
+                <p>@item[0]</p>
+                <p>Start time: @item[1]</p>
+                <p>End Time: @item[2]</p>
+            </div>
+        }
+
+    </div>
+
+    @foreach (var item in Model.Code)
+    {
+
+        <div class="qrCode"></div>
+        <div class="qrCodeData" data-url="@item"></div>
+    }
+
+
+    <table class="table-borderless justify-content-start">
+        <tr class="row">
+            @for (int i = 0; i < ViewBag.Bells.Count; i++)
+            {
+                <td class="col">
+                    <div class="card" style="width: 14rem; border-radius:35px; float:left; padding-left: 10px;">
+                        <a class="btn" asp-area="Teacher" asp-controller="TeacherRoster" asp-action="Roster" asp-route-bell="@ViewBag.Bells[i]">
+                            <img src="/images/ScanQRCode.png" class="card-img-top" alt="Bell @ViewBag.Bells[i]" style="border-radius:35px;">
+                            <div class="card-body">
+                                @if (ViewBag.Bells[i] == "Aves")
+                                {
+                                    <h5 class="card-title">Aves Bell Attendance</h5>
+                                }
+                                else
+                                {
+                                    <h5 class="card-title">Bell @ViewBag.Bells[i] Attendance</h5>
+                                }
+                            </div>
+                        </a>
+                    </div>
+                </td>
+            }
+        </tr>
+        <tr class="row">
             <td class="col">
-                <div class="card" style="width: 12rem; border-radius:35px;">
-                    <a class="btn" asp-area="Teacher" asp-controller="TeacherRoster" asp-action="Roster" asp-route-bell="@ViewBag.Bells[i]">
-                        <img src="/images/ScanQRCode.png" class="card-img-top" alt="Bell @ViewBag.Bells[i]" style="border-radius:35px;">
+                <div class="card" style="width: 14rem; border-radius:35px;">
+                    <a class="btn" asp-area="Teacher" asp-controller="StudentInfoSearch" asp-action="Index">
+                        <img src="/images/ScanQRCode.png" class="card-img-top" style="border-radius:35px;">
                         <div class="card-body">
-                            @if (ViewBag.Bells[i] == "Aves")
-                            {
-                                <h5 class="card-title">Aves Bell Attendance</h5>
-                            }
-                            else
-                            {
-                                <h5 class="card-title">Bell @ViewBag.Bells[i] Attendance</h5>
-                            }
+                                <h5 class="card-title">Student Info Search</h5>
                         </div>
                     </a>
                 </div>
             </td>
-        }
-    </tr>
-</table>
+            <td class="col">
+                <div class="card" style="width: 14rem; border-radius:35px;">
+                    <a class="btn" asp-area="Teacher" asp-controller="StudentInfoSearch" asp-action="Index">
+                        <img src="/images/ScanQRCode.png" class="card-img-top"  style="border-radius:35px;">
+                        <div class="card-body">
+                            <h5 class="card-title">Student Location (live)</h5>
+                        </div>
+                    </a>
+                </div>
+            </td>
+            <td class="col">
+                <div class="card" style="width: 14rem; border-radius:35px;">
+                    <a class="btn" asp-area="Teacher" asp-controller="StudentInfoSearch" asp-action="Index">
+                        <img src="/images/ScanQRCode.png" class="card-img-top" style="border-radius:35px;">
+                        <div class="card-body">
+                            <h5 class="card-title">Case Management</h5>
+                        </div>
+                    </a>
+                </div>
+            </td>
+        </tr>
+    </table>
+</body>
+
+@section Scripts {
+    <script type="text/javascript" src="~/lib/qrcode.js"></script>
+    <script type="text/javascript" src="~/js/qr-dashboard.js"></script>
+}

@@ -17,7 +17,7 @@ namespace SAMS.Models
         [Display(Name = ("Teacher"))]
         public string CourseTeacherID { get; set; } = null!;
         [Display(Name = ("Room"))]
-        public int CourseRoomID { get; set; } = 0!;
+        public required int CourseRoomID { get; set; } = 0!;
         [Display(Name = ("Bell Number"))]
         public string CourseBellNumber { get; set; } = null!;
         [Display(Name = ("Length"))]
@@ -30,8 +30,8 @@ namespace SAMS.Models
         public Boolean? B2BAttChecked { get; set; }
 
         //Navigation properties
-        public TeacherInfoModel? Teacher { get; set; } = null!;
-        public RoomLocationInfoModel? Room { get; set; } = null!;
-        public ICollection<BellAttendanceModel>? BellAttendances { get; set; } = null!;
+        public TeacherInfoModel Teacher { get; set; } = default!;
+        public RoomLocationInfoModel Room { get; set; } = default!;
+        public ICollection<BellAttendanceModel> BellAttendances { get; set; } = default!;
     }
 }

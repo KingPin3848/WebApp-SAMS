@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.Operations;
 using Microsoft.Extensions.FileSystemGlobbing.Internal;
@@ -287,21 +288,46 @@ namespace SAMS.Areas.ClassKiosk.Controllers
                                 var studLocation = dbcontext.StudentLocationModels.First(a => a.StudentIdMod == studId);
                                 if (studLocation != null)
                                 {
-                                    datetime = DateTime.Now;
 
-                                    var room = await dbcontext.RoomLocationInfoModels.FindAsync(roomIdByScanner).ConfigureAwait(true);
-                                    studLocation.StudentLocation = $"{room!.RoomNumberMod} - {room!.Teacher!.TeacherFirstNameMod} {room!.Teacher!.TeacherLastNameMod}";
-                                    var timestamp = new TimestampModel
+                                    if (studLocation.StudentLocation == "Out of School (Not in Session)") 
                                     {
-                                        Timestamp = datetime,
-                                        ActionMade = "Student Location Update",
-                                        MadeBy = "Class Kiosk Feature of SAMS",
-                                        Comments = $"Student scanned at the Class Kiosk updating location to {room!.RoomNumberMod} - {room!.Teacher?.TeacherFirstNameMod} {room!.Teacher?.TeacherLastNameMod}"
-                                    };
-                                    finalmessage += "✓✓";
-                                    dbcontext.TimestampModels.Add(timestamp);
-                                    dbcontext.StudentLocationModels.Update(studLocation);
-                                    await dbcontext.SaveChangesAsync().ConfigureAwait(true);
+                                        datetime = DateTime.Now;
+
+                                        var room = await dbcontext.RoomLocationInfoModels.FindAsync(roomIdByScanner).ConfigureAwait(true);
+                                        studLocation.StudentLocation = $"{room!.RoomNumberMod} - {room!.Teacher!.TeacherFirstNameMod} {room!.Teacher!.TeacherLastNameMod}";
+                                        var oldLocation = "Out of School (Not in Session)";
+                                        var timestamp = new TimestampModel
+                                        {
+                                            Timestamp = datetime,
+                                            ActionMade = "Student Location Update",
+                                            MadeBy = "Class Kiosk Feature of SAMS",
+                                            Comments = $"Student {studId} scanned at the Class Kiosk updating location from {oldLocation} to {room!.RoomNumberMod} - {room!.Teacher?.TeacherFirstNameMod} {room!.Teacher?.TeacherLastNameMod}"
+                                        };
+                                        finalmessage += "✓✓";
+                                        dbcontext.TimestampModels.Add(timestamp);
+                                        dbcontext.StudentLocationModels.Update(studLocation);
+                                        await dbcontext.SaveChangesAsync().ConfigureAwait(true);
+                                    }
+                                    else
+                                    {
+                                        datetime = DateTime.Now;
+
+                                        var room = await dbcontext.RoomLocationInfoModels.FindAsync(roomIdByScanner).ConfigureAwait(true);
+                                        studLocation.StudentLocation = $"{room!.RoomNumberMod} - {room!.Teacher!.TeacherFirstNameMod} {room!.Teacher!.TeacherLastNameMod}";
+                                        var oldLocation = studLocation.StudentLocation;
+                                        var timestamp = new TimestampModel
+                                        {
+                                            Timestamp = datetime,
+                                            ActionMade = "Student Location Update",
+                                            MadeBy = "Class Kiosk Feature of SAMS",
+                                            Comments = $"Student {studId} scanned at the Class Kiosk updating location from {oldLocation} to {room!.RoomNumberMod} - {room!.Teacher?.TeacherFirstNameMod} {room!.Teacher?.TeacherLastNameMod}"
+                                        };
+                                        finalmessage += "✓✓";
+                                        dbcontext.TimestampModels.Add(timestamp);
+                                        dbcontext.StudentLocationModels.Update(studLocation);
+                                        await dbcontext.SaveChangesAsync().ConfigureAwait(true);
+                                    }
+
                                 }
                                 else
                                 {

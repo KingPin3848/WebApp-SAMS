@@ -1,0 +1,101 @@
+﻿@model SAMS.Models.StudentInfoModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>StudentInfoModel</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="StudentID" />
+            <div class="form-group">
+                <label asp-for="StudentFirstNameMod" class="control-label"></label>
+                <input asp-for="StudentFirstNameMod" class="form-control" />
+                <span asp-validation-for="StudentFirstNameMod" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="StudentMiddleNameMod" class="control-label"></label>
+                <input asp-for="StudentMiddleNameMod" class="form-control" />
+                <span asp-validation-for="StudentMiddleNameMod" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="StudentLastNameMod" class="control-label"></label>
+                <input asp-for="StudentLastNameMod" class="form-control" />
+                <span asp-validation-for="StudentLastNameMod" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="StudentPreferredNameMod" class="control-label"></label>
+                <input asp-for="StudentPreferredNameMod" class="form-control" />
+                <span asp-validation-for="StudentPreferredNameMod" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="StudentEmailMod" class="control-label"></label>
+                <input asp-for="StudentEmailMod" class="form-control" />
+                <span asp-validation-for="StudentEmailMod" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="StudentPhoneMod" class="control-label"></label>
+                <input asp-for="StudentPhoneMod" class="form-control" />
+                <span asp-validation-for="StudentPhoneMod" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="StudentGradYearMod" class="control-label"></label>
+                <input asp-for="StudentGradYearMod" class="form-control" />
+                <span asp-validation-for="StudentGradYearMod" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="StudentCounselorID" class="control-label"></label>
+                <select asp-for="StudentCounselorID" class="form-control" asp-items="ViewBag.StudentCounselorID"></select>
+                <span asp-validation-for="StudentCounselorID" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="HasEASupport" class="control-label"></label>
+                <input asp-for="HasEASupport" class="form-control" />
+                <span asp-validation-for="HasEASupport" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="StudentEAID" class="control-label"></label>
+                <select asp-for="StudentEAID" class="form-control" asp-items="ViewBag.StudentEAID"></select>
+                <span asp-validation-for="StudentEAID" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Parentguard1NameMod" class="control-label"></label>
+                <input asp-for="Parentguard1NameMod" class="form-control" />
+                <span asp-validation-for="Parentguard1NameMod" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Parentguard1EmailMod" class="control-label"></label>
+                <input asp-for="Parentguard1EmailMod" class="form-control" />
+                <span asp-validation-for="Parentguard1EmailMod" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Parentguard2NameMod" class="control-label"></label>
+                <input asp-for="Parentguard2NameMod" class="form-control" />
+                <span asp-validation-for="Parentguard2NameMod" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Parentguard2EmailMod" class="control-label"></label>
+                <input asp-for="Parentguard2EmailMod" class="form-control" />
+                <span asp-validation-for="Parentguard2EmailMod" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ActivationCode" class="control-label"></label>
+                <input asp-for="ActivationCode" class="form-control" />
+                <span asp-validation-for="ActivationCode" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+

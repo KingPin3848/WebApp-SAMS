@@ -1,0 +1,747 @@
+﻿@{
+    ViewData["Title"] = "Index";
+    var sem1MonWed = ViewBag.Sem1MonWed as List<string>;
+    var sem1TuesThurs = ViewBag.Sem1TuesThurs as List<string>;
+    var sem1Fri = ViewBag.Sem1Fri as List<string>;
+    var sem2MonWed = ViewBag.Sem2MonWed as List<string>;
+    var sem2TuesThurs = ViewBag.Sem2TuesThurs as List<string>;
+    var sem2Fri = ViewBag.Sem2Fri as List<string>;
+    var studentID = ViewBag.StudentId;
+}
+
+<h1>Student Info</h1>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+<style>
+    .card {
+        border: 2px solid #ccc;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 16px;
+        margin: 16px;
+        max-width: 10000px;
+    }
+
+        .card h3 {
+            margin: 16px 0 8px;
+        }
+
+
+        :root {
+	 --numDays: 5;
+	 --numHours: 10;
+	 --timeHeight: 60px;
+	 --calBgColor: #fff1f8;
+	 --eventBorderColor: #f2d3d8;
+	 --eventColor1: #ffd6d1;
+	 --eventColor2: #fafaa3;
+	 --eventColor3: #e2f8ff;
+	 --eventColor4: #d1ffe6;
+}
+ .calendar {
+	 display: grid;
+	 gap: 10px;
+	 grid-template-columns: auto 1fr;
+	 margin: 2rem;
+}
+ .timeline {
+	 display: grid;
+	 grid-template-rows: repeat(var(--numHours), var(--timeHeight));
+}
+ .days {
+	 display: grid;
+	 grid-column: 2;
+	 gap: 5px;
+	 grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+}
+ .events {
+	 display: grid;
+	 grid-template-rows: repeat(var(--numHours), var(--timeHeight));
+	 border-radius: 5px;
+	 background: var(--calBgColor);
+     color: #000000;
+}
+
+ .title {
+	 font-weight: 600;
+	 margin-bottom: 0.25rem;
+}
+ .event {
+	 border: 1px solid var(--eventBorderColor);
+	 border-radius: 5px;
+	 padding: 0.5rem;
+	 margin: 0 0.5rem;
+	 background: white;
+}
+ .space, .date {
+	 height: 60px;
+}
+ body {
+	 font-family: system-ui, sans-serif;
+}
+ .corp-fi {
+	 background: var(--eventColor1);
+}
+ .ent-law {
+	 background: var(--eventColor2);
+}
+ .writing {
+	 background: var(--eventColor3);
+}
+ .securities {
+	 background: var(--eventColor4);
+}
+ .date {
+	 display: flex;
+	 gap: 1em;
+}
+ .date-num {
+	 font-size: 3rem;
+	 font-weight: 600;
+	 display: inline;
+}
+ .date-day {
+	 display: inline;
+	 font-size: 3rem;
+	 font-weight: 100;
+}
+
+    .tabs {
+        margin-right: 20px;
+        margin-left: 20px;
+    }
+
+    .tab {
+        padding: 10px 20px;
+        cursor: pointer;
+        border: 1px solid #ccc;
+        margin-bottom: 5px;
+        background-color: #f1f1f1;
+    }
+
+        .tab:hover {
+            background-color: #ddd;
+        }
+
+        .tab.active {
+            background-color: #000000;
+            border-right: none;
+        }
+
+    .btn-primary {
+        margin-left: 5px;
+    }
+</style>
+
+<body>
+    <div class="card">
+        <div class="card-header">
+            <h3>Name: @ViewBag.studentName</h3>
+        </div>
+        <h5>Student ID: @ViewBag.studentId</h5>
+        <h5>Email: @ViewBag.studentEmail</h5>
+        <br/>
+        <h6>Counselor Name: @ViewBag.counselorName</h6>
+        <h6>Counselor Email: @ViewBag.counselorEmail</h6>
+
+    </div>
+
+
+    <div class="card">
+        <div class="card-header">
+            <h3>Student Schedule</h3>
+        </div>
+        <br />
+    <div class="tabs">
+        <button class="tab" id="tabSem1">Semester 1</button>
+        <button class="tab" id="tabSem2">Semester 2</button>
+    </div>
+
+    <div class="calendar">
+  <div class="timeline">
+    <div class="spacer"></div>
+    <div class="time-marker">Bell 1</div>
+    <div class="time-marker">Bell 2</div>
+    <div class="time-marker">Aves Bell</div>
+    <div class="time-marker">Bell 3</div>
+    <div class="time-marker">Bell 4</div>
+    <div class="time-marker">Bell 5</div>
+    <div class="time-marker">Lunch</div>
+    <div class="time-marker">Bell 6</div>
+    <div class="time-marker">Bell 7</div>
+  </div>
+  <div class="days">
+    <div class="day mon">
+      <div class="date">
+        <p class="date-day">Mon</p>
+      </div>
+      <div class="events">
+      </div>
+    </div>
+    <div class="day tues">
+      <div class="date">
+        <p class="date-day">Tues</p>
+      </div>
+      <div class="events">
+      </div>
+    </div>
+    <div class="day wed">
+      <div class="date">
+        <p class="date-day">Wed</p>
+      </div>
+      <div class="events">
+      </div>
+    </div>
+    <div class="day thurs">
+      <div class="date">
+        <p class="date-day">Thurs</p>
+      </div>
+      <div class="events">
+      </div>
+    </div>
+    <div class="day fri">
+      <div class="date">
+        <p class="date-day">Fri</p>
+      </div>
+      <div class="events">
+      </div>
+    </div>
+  </div>
+</div>
+    </div>
+
+<!-- Student Daily Attendance -->
+
+    <div class="card">
+        <div class="card-header">
+            <h3>Student Daily Attendance</h3>
+        </div>
+
+        <div class="card-body">
+            <div class="form-group">
+                <label for="dailyAttDatePicker">Select Date:</label>
+                <input type="date" id="dailyAttDatePicker">
+            </div>
+            <button class="btn btn-primary" id="dailyAttSearchButton">Search</button>
+            <br />
+            <br />
+            <div id="dailyAttResults"></div>
+        </div>
+    </div>
+
+<!-- Student Bell Attendance -->
+
+        <div class="card">
+            <div class="card-header">
+                <h3>Student Bell Attendance</h3>
+            </div>
+
+            <div class="card-body">
+                <div class="form-group">
+                <label for="bellAttDatePicker">Select Date:</label>
+                    <input type="date" id="bellAttDatePicker">
+                </div>
+            <button class="btn btn-primary" id="bellAttSearchButton">Search</button>
+            <br />
+            <br />
+                <div id="bellAttResults"></div>
+            </div>
+        </div>
+
+    <!-- Student Location -->
+
+    <div class="card">
+        <div class="card-header">
+            <h3>Student Location</h3>
+        </div>
+
+        <div class="card-body">
+            <div class="form-group">
+                <label for="locDatePicker">Select Date:</label>
+                <input type="date" id="locDatePicker">
+            </div>
+            <button class="btn btn-primary" id="locSearchButton">Search</button>
+            <br />
+            <br />
+            <div id="locResults"></div>
+        </div>
+    </div>
+
+</body>
+
+
+<input type="hidden" id="sem1MonWed" value="@string.Join(",", sem1MonWed)" />
+<input type="hidden" id="sem1TuesThurs" value="@string.Join(",", sem1TuesThurs)" />
+<input type="hidden" id="sem1Fri" value="@string.Join(",", sem1Fri)" />
+<input type="hidden" id="sem2MonWed" value="@string.Join(",", sem2MonWed)" />
+<input type="hidden" id="sem2TuesThurs" value="@string.Join(",", sem2TuesThurs)" />
+<input type="hidden" id="sem2Fri" value="@string.Join(",", sem2Fri)" />
+
+<script>
+    class Calendar {
+        constructor() {
+            this.calendarElement = document.querySelector('.calendar');
+            this.days = this.calendarElement.querySelectorAll('.day');
+        }
+
+        addEvent(day, start, end, title) {
+            var event = document.createElement('div');
+            event.classList.add('event');
+            event.classList.add(`start-${start}`);
+            event.classList.add(`end-${end}`);
+            event.innerHTML = `<p class="title">${title}</p>`;
+            this.days[day].querySelector('.events').appendChild(event);
+        }
+
+        addEvents(events) {
+            events.forEach(event => {
+                this.addEvent(event.day, event.start, event.end, event.title);
+            });
+        }
+
+        clearEvents() {
+            this.days.forEach(day => {
+                day.querySelector('.events').innerHTML = '';
+            });
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        var calendar = new Calendar();
+
+        var sem1MonWed = document.getElementById('sem1MonWed').value.split(',');
+        var sem1TuesThurs = document.getElementById('sem1TuesThurs').value.split(',');
+        var sem1Fri = document.getElementById('sem1Fri').value.split(',');
+
+        var sem2MonWed = document.getElementById('sem2MonWed').value.split(',');
+        var sem2TuesThurs = document.getElementById('sem2TuesThurs').value.split(',');
+        var sem2Fri = document.getElementById('sem2Fri').value.split(',');
+
+        function loadSemester(semester) {
+            calendar.clearEvents();
+            var events = [];
+            var i = 1;
+
+            if (semester === 1) {
+                sem1MonWed.forEach(item => {
+                    events.push({ day: 0, start: i, end: i + 1, title: item });
+                    i += 1;
+                });
+
+                sem1MonWed.forEach(item => {
+                    events.push({ day: 2, start: i, end: i + 1, title: item });
+                    i += 1;
+                });
+
+                sem1TuesThurs.forEach(item => {
+                    events.push({ day: 1, start: i, end: i + 1, title: item });
+                    i += 1;
+                });
+
+                sem1TuesThurs.forEach(item => {
+                    events.push({ day: 3, start: i, end: i + 1, title: item });
+                    i += 1;
+                });
+
+                sem1Fri.forEach(item => {
+                    events.push({ day: 4, start: i, end: i + 1, title: item });
+                    i += 1;
+                });
+            } else {
+                sem2MonWed.forEach(item => {
+                    events.push({ day: 0, start: i, end: i + 1, title: item });
+                    i += 1;
+                });
+
+                sem2MonWed.forEach(item => {
+                    events.push({ day: 2, start: i, end: i + 1, title: item });
+                    i += 1;
+                });
+
+                sem2TuesThurs.forEach(item => {
+                    events.push({ day: 1, start: i, end: i + 1, title: item });
+                    i += 1;
+                });
+
+                sem2TuesThurs.forEach(item => {
+                    events.push({ day: 3, start: i, end: i + 1, title: item });
+                    i += 1;
+                });
+
+                sem2Fri.forEach(item => {
+                    events.push({ day: 4, start: i, end: i + 1, title: item });
+                    i += 1;
+                });
+            }
+
+            calendar.addEvents(events);
+        }
+
+        loadSemester(1);
+
+        document.getElementById('tabSem1').addEventListener('click', () => {
+            loadSemester(1);
+        });
+
+        document.getElementById('tabSem2').addEventListener('click', () => {
+            loadSemester(2);
+        });
+    });
+
+</script>
+
+<input type="hidden" id="studentID" value="@ViewBag.StudentId">
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+
+<script>
+    //Stuff for Bell attendance
+
+    $('#bellAttSearchButton').click(function () {
+        var selectedDate = $('#bellAttDatePicker').val();
+        var studentID = $('#studentID').val();
+
+        $.ajax({
+            url: '/StudentViewModel/StudentBellAttendanceSearch',
+            type: 'POST',
+            data: { date: selectedDate, id: studentID },
+            success: function (response) {
+                var resultsDiv = $('#bellAttResults');
+                resultsDiv.empty();
+
+                if (response.length == 0) {
+                    var p = document.createElement("p");
+                    p.textContent = "This date has no existing records.";
+                    resultsDiv.append(p);
+                }
+
+                for (let i = 0; i < response.length; i++) {
+                    var card = document.createElement("div");
+                    card.className = "card";
+
+                    var cardBody = document.createElement("div");
+                    cardBody.className = "card-body";
+
+                    var bellID = document.createElement("p");
+                    bellID.textContent = "Bell Number: " + response[i][0];
+                    cardBody.append(bellID);
+
+                    var courseName = document.createElement("p");
+                    courseName.textContent = "Course Name: " + response[i][2];
+                    cardBody.append(courseName);
+
+                    var status = document.createElement("p");
+                    status.textContent = "Status: " + response[i][1];
+                    status.id = "statusid:" + response[i][5];
+                    cardBody.append(status);
+
+                    var reason = document.createElement("p");
+                    reason.textContent = "Reason For Absence: " + response[i][3];
+                    reason.id = "reasonid:" + response[i][5];
+                    cardBody.append(reason);
+
+                    var schedule = document.createElement("p");
+                    schedule.textContent = "Schedule: " + response[i][4];
+                    cardBody.append(schedule);
+
+                    var editButton = document.createElement("button");
+                    editButton.className = "btn btn-primary";
+                    editButton.innerHTML = '<i class="fa fa-pencil"></i> Edit';
+                    editButton.onclick = function () { editStatus(response[i][5], response[i][1], response[i][3]) };
+                    cardBody.append(editButton);
+
+                    var saveButton = document.createElement("button");
+                    saveButton.id = "saveButton";
+                    saveButton.className = "btn btn-primary";
+                    saveButton.innerHTML = '<i class="fa fa-save"></i> Save';
+                    saveButton.onclick = function () { saveStatus(response[i][5]); };
+                    cardBody.append(saveButton);
+
+                    card.append(cardBody);
+                    resultsDiv.append(card);
+                }
+            },
+            error: function () {
+                var resultsDiv = $('#bellAttResults');
+                resultsDiv.empty();
+
+                var p = document.createElement("p");
+                p.textContent = "You messed up";
+                resultsDiv.append(p);
+            }
+        });
+    });
+
+    // EDITING_______________________________________________________________________________________________________
+
+    // Student Bell Attendance:
+    function editStatus(attendanceId, status, reason) {
+        var statusid = document.getElementById("statusid:" + attendanceId);
+        var reasonid = document.getElementById("reasonid:" + attendanceId);
+
+        var editButton = statusid.nextElementSibling;
+        var saveButton = editButton.nextElementSibling;
+
+        var select = document.createElement("select");
+        select.id = "status-select-" + attendanceId;
+        var options = ["Present", "Absent"];
+
+        options.forEach(function (option) {
+            var option1 = document.createElement("option");
+            option1.value = option;
+            option1.textContent = option;
+            if (option == status) {
+                option1.selected = true;
+            }
+            select.appendChild(option1);
+        });
+
+        var text = document.createElement("textarea");
+        text.id = "reason-text-" + attendanceId;
+        text.value = reason;
+        text.style.display = "block";
+        text.style.width = "100%";
+
+        statusid.replaceWith(select);
+        reasonid.replaceWith(text);
+    }
+
+    function saveStatus(attendanceId) {
+        var select = document.getElementById("status-select-" + attendanceId);
+        var newStatus = select.value;
+
+        var text = document.getElementById("reason-text-" + attendanceId);
+        var newReason = text.value;
+
+        $.ajax({
+            url: '/StudentViewModel/UpdateBellAttendanceStatus',
+            type: 'POST',
+            data: { id: attendanceId, status: newStatus, reason: newReason },
+            success: function () {
+                var statusElement = document.createElement("p");
+                statusElement.id = "statusid:" + attendanceId;
+                statusElement.textContent = "Status: " + newStatus;
+
+                var reasonElement = document.createElement("p");
+                reasonElement.id = "reasonid:" + attendanceId;
+                reasonElement.textContent = "Reason For Absence: " + newReason;
+
+                select.replaceWith(statusElement);
+                text.replaceWith(reasonElement);
+
+                var editButton = statusElement.nextElementSibling;
+                var saveButton = editButton.nextElementSibling;
+                editButton.onclick = function () { editStatus(attendanceId, newStatus, newReason); };
+            },
+            error: function () {
+                var resultsDiv = $('#bellAttResults');
+                resultsDiv.empty();
+
+                var p = document.createElement("p");
+                p.textContent = "did not work";
+                resultsDiv.append(p);
+            }
+        });
+    }
+
+
+        //Stuff for Daily attendance
+    $('#dailyAttSearchButton').click(function () {
+        var selectedDate = $('#dailyAttDatePicker').val();
+        var studentID = $('#studentID').val();
+
+        $.ajax({
+            url: '/StudentViewModel/StudentDailyAttendanceSearch',
+            type: 'POST',
+            data: { date: selectedDate, id: studentID },
+            success: function (response) {
+                var resultsDiv = $('#dailyAttResults');
+                resultsDiv.empty();
+
+                    if(response.length == 0){
+                        var p = document.createElement("p");
+                        p.textContent = "This date has no existing records.";
+                        resultsDiv.append(p);
+                    }
+
+                    var card = document.createElement("div");
+                    card.className = "card";
+
+                    var cardBody = document.createElement("div");
+                    cardBody.className = "card-body";
+
+                    var status = document.createElement("p");
+                    status.textContent = "Status: " + response[0][0];
+                    status.id = "statusid:" + response[0][3];
+                    cardBody.append(status);
+
+                    var reason = document.createElement("p");
+                    reason.textContent = "Reason For Absence: " + response[0][1];
+                    reason.id = "reasonid:" + response[0][3];
+                    cardBody.append(reason);
+
+                    var schedule = document.createElement("p");
+                    schedule.textContent = "Schedule: " + response[0][2];
+                    cardBody.append(schedule);
+
+                    var editButton = document.createElement("button");
+                    editButton.className = "btn btn-primary";
+                    editButton.innerHTML = '<i class="fa fa-pencil"></i> Edit';
+                    editButton.onclick = function () { editDaily(response[0][3], response[0][0], response[0][1]) };
+                    cardBody.append(editButton);
+
+                    var saveButton = document.createElement("button");
+                    saveButton.id = "saveButton";
+                    saveButton.className = "btn btn-primary";
+                    saveButton.innerHTML = '<i class="fa fa-save"></i> Save';
+                    saveButton.onclick = function () { saveDaily(response[0][3]); };
+                    cardBody.append(saveButton);
+
+                    card.append(cardBody);
+                    resultsDiv.append(card);
+
+            },
+            error: function () {
+
+                var resultsDiv = $('#dailyAttResults');
+                resultsDiv.empty();
+
+                var p = document.createElement("p");
+                p.textContent = "You messed up";
+                resultsDiv.append(p);
+            }
+        });
+    });
+
+    //EDITING____________________________________________________________________________
+    function editDaily(attendanceId, status, reason) {
+        var statusid = document.getElementById("statusid:" + attendanceId);
+        var reasonid = document.getElementById("reasonid:" + attendanceId);
+
+        var editButton = statusid.nextElementSibling;
+        var saveButton = editButton.nextElementSibling;
+
+        var select = document.createElement("select");
+        select.id = "status-select-" + attendanceId;
+        var options = ["Present", "Absent"];
+
+        options.forEach(function (option) {
+            var option1 = document.createElement("option");
+            option1.value = option;
+            option1.textContent = option;
+            if (option == status) {
+                option1.selected = true;
+            }
+            select.appendChild(option1);
+        });
+
+        var text = document.createElement("textarea");
+        text.id = "reason-text-" + attendanceId;
+        text.value = reason;
+        text.style.display = "block";
+        text.style.width = "100%";
+
+        statusid.replaceWith(select);
+        reasonid.replaceWith(text);
+    }
+
+    function saveDaily(attendanceId) {
+        var select = document.getElementById("status-select-" + attendanceId);
+        var newStatus = select.value;
+
+        var text = document.getElementById("reason-text-" + attendanceId);
+        var newReason = text.value;
+
+        $.ajax({
+            url: '/StudentViewModel/UpdateDailyAttendanceStatus',
+            type: 'POST',
+            data: { id: attendanceId, status: newStatus, reason: newReason },
+            success: function () {
+                var statusElement = document.createElement("p");
+                statusElement.id = "statusid:" + attendanceId;
+                statusElement.textContent = "Status: " + newStatus;
+
+                var reasonElement = document.createElement("p");
+                reasonElement.id = "reasonid:" + attendanceId;
+                reasonElement.textContent = "Reason For Absence: " + newReason;
+
+                select.replaceWith(statusElement);
+                text.replaceWith(reasonElement);
+
+                var editButton = statusElement.nextElementSibling;
+                var saveButton = editButton.nextElementSibling;
+                editButton.onclick = function () { editStatus(attendanceId, newStatus, newReason); };
+            },
+            error: function () {
+                var resultsDiv = $('#dailyAttResults');
+                resultsDiv.empty();
+
+                var p = document.createElement("p");
+                p.textContent = "did not work";
+                resultsDiv.append(p);
+            }
+        });
+    }
+
+
+    //studentLocation 
+
+    $('#locSearchButton').click(function () {
+        var selectedDate = $('#locDatePicker').val();
+        var studentID = $('#studentID').val();
+
+        $.ajax({
+            url: '/StudentViewModel/StudentLocation',
+            type: 'POST',
+            data: { date: selectedDate, id: studentID },
+            success: function (response) {
+                var resultsDiv = $('#locResults');
+                resultsDiv.empty();
+
+                if (response.length == 0) {
+                    var p = document.createElement("p");
+                    p.textContent = "This date has no existing records.";
+                    resultsDiv.append(p);
+                }
+
+                for (let i = 0; i < response.length; i++) {
+                    var card = document.createElement("div");
+                    card.className = "card";
+
+                    var cardBody = document.createElement("div");
+                    cardBody.className = "card-body";
+
+                    var prevLoc = document.createElement("p");
+                    prevLoc.textContent = "Previous Location: " + response[0][0];
+                    cardBody.append(prevLoc);
+
+                    var currentLoc = document.createElement("p");
+                    currentLoc.textContent = "New Location: " + response[0][1];
+                    cardBody.append(currentLoc);
+
+                    var timestamp = document.createElement("p");
+                    timestamp.textContent = "Update Time: " + response[0][2];
+                    cardBody.append(timestamp);
+
+                    card.append(cardBody);
+                    resultsDiv.append(card);
+                }
+            },
+            error: function () {
+
+                var resultsDiv = $('#locResults');
+                resultsDiv.empty();
+
+                var p = document.createElement("p");
+                p.textContent = "You messed up";
+                resultsDiv.append(p);
+            }
+        });
+    });
+
+</script>
+
+
+
