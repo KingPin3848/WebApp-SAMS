@@ -4,6 +4,21 @@
 
 <style>
 
+    .schedule-card {
+        border: 2px solid #ccc;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 25px;
+        margin: 16px;
+        max-width: 400px;
+        float: right;
+        width: 350px;
+    }
+
+    .card h3 {
+        margin: 16px 0 8px;
+    }
+
     .card {
         border: 2px solid #ccc;
         border-radius: 8px;
@@ -11,16 +26,12 @@
         padding: 16px;
         margin: 16px;
         max-width: 300px;
-        float: right;
-    }
-
-    .card h3 {
-        margin: 16px 0 8px;
     }
 
 </style>
 
 <body>
+    <br/>
 
     <h3>
         Bells
@@ -28,7 +39,7 @@
 
     <br />
 
-    <div class="card">
+    <div class="schedule-card">
         <div class="card-header">
             <h3>Schedule</h3>
         </div>
@@ -57,7 +68,7 @@
             @for (int i = 0; i < ViewBag.Bells.Count; i++)
             {
                 <td class="col">
-                    <div class="card" style="width: 14rem; border-radius:35px; float:left; padding-left: 10px;">
+                    <div class="card" style="width: 14rem; border-radius:35px;">
                         <a class="btn" asp-area="Teacher" asp-controller="TeacherRoster" asp-action="Roster" asp-route-bell="@ViewBag.Bells[i]">
                             <img src="/images/ScanQRCode.png" class="card-img-top" alt="Bell @ViewBag.Bells[i]" style="border-radius:35px;">
                             <div class="card-body">
@@ -77,8 +88,16 @@
         </tr>
         <tr class="row">
             <td class="col">
+                <h3>
+                    <br />
+                    &nbsp
+                    Tools
+                    <br />
+                    &nbsp
+
+                </h3>
                 <div class="card" style="width: 14rem; border-radius:35px;">
-                    <a class="btn" asp-area="Teacher" asp-controller="StudentInfoSearch" asp-action="Index">
+                    <a class="btn" asp-area="" asp-controller="StudentInfoSearch" asp-action="Index">
                         <img src="/images/ScanQRCode.png" class="card-img-top" style="border-radius:35px;">
                         <div class="card-body">
                                 <h5 class="card-title">Student Info Search</h5>
@@ -87,18 +106,33 @@
                 </div>
             </td>
             <td class="col">
+                <h3>
+                    <br />
+                    &nbsp
+                    &nbsp
+                    <br />
+                    &nbsp
+
+                </h3>
                 <div class="card" style="width: 14rem; border-radius:35px;">
-                    <a class="btn" asp-area="Teacher" asp-controller="StudentInfoSearch" asp-action="Index">
+                    <a class="btn" asp-area="Admin" asp-controller="AccountManager" asp-action="Index">
                         <img src="/images/ScanQRCode.png" class="card-img-top"  style="border-radius:35px;">
                         <div class="card-body">
-                            <h5 class="card-title">Student Location (live)</h5>
+                            <h5 class="card-title">Account Management</h5>
                         </div>
                     </a>
                 </div>
             </td>
             <td class="col">
+                <h3>
+                    <br />
+                    &nbsp
+                    &nbsp
+                    <br />
+                    &nbsp
+                </h3>
                 <div class="card" style="width: 14rem; border-radius:35px;">
-                    <a class="btn" asp-area="Teacher" asp-controller="StudentInfoSearch" asp-action="Index">
+                    <a class="btn" asp-area="" asp-controller="StudentInfoSearch" asp-action="Index">
                         <img src="/images/ScanQRCode.png" class="card-img-top" style="border-radius:35px;">
                         <div class="card-body">
                             <h5 class="card-title">Case Management</h5>
