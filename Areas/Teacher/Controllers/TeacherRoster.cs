@@ -1,13 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using SAMS.Controllers;
 using SAMS.Data;
 using SAMS.Interfaces;
 using SAMS.Models;
-using System.Text.RegularExpressions;
+using System.ComponentModel.DataAnnotations;
 
 namespace SAMS.Areas.Teacher.Controllers
 {
@@ -38,19 +36,17 @@ namespace SAMS.Areas.Teacher.Controllers
 
             var activeCourses = _context.ActiveCourseInfoModels.Where(a => a.CourseTeacherID == user.SchoolId).ToList();
 
-            var students = await _userManager.GetUsersInRoleAsync("Student").ConfigureAwait(true);
+            var studentUsers = await _userManager.GetUsersInRoleAsync("Student").ConfigureAwait(true);
 
-            List<StudentInfoModel> studentsInBell = [];
+            List<OutputModel> studentsInBell = [];
 
-            foreach (var student in students)
+            foreach (var studentUser in studentUsers)
             {
-                int studentID = new();
-
-                if (int.TryParse(student.SchoolId, out studentID))
+                if (int.TryParse(studentUser.SchoolId, out int studentID))
                 {
                     //Do nothing
                 }
-                else 
+                else
                 {
                     return NotFound();
                 }
@@ -61,7 +57,7 @@ namespace SAMS.Areas.Teacher.Controllers
                 int bellCourseId;
 
                 if (sem2started)
-                { 
+                {
                     bellCourseId = GetS2BellCourseId(studentSchedule!, bell);
                 }
                 else
@@ -69,20 +65,25 @@ namespace SAMS.Areas.Teacher.Controllers
                     bellCourseId = GetS1BellCourseId(studentSchedule!, bell);
                 }
 
-                foreach(var course in activeCourses)
+                foreach (var course in activeCourses)
                 {
-                    if(course.CourseId == bellCourseId)
+                    if (course.CourseId == bellCourseId)
                     {
-                        studentsInBell.Add(_context.StudentInfoModels.Where(a => a.StudentID == studentID).First());
+                        var wholestudent = _context.StudentInfoModels.Where(a => a.StudentID == studentID).First();
+                        DateOnly date = DateOnly.FromDateTime(DateTime.Now.Date);
+                        var details = new OutputModel()
+                        {
+                            studentId = studentID,
+                            studentFirstAndLastName = $"{wholestudent.StudentFirstNameMod} {wholestudent.StudentLastNameMod}",
+                            studentEmail = wholestudent.StudentEmailMod,
+                            DailyAttStatus = _context.DailyAttendanceModels.Where(a => a.AttendanceDate == date).First().Status,
+                            BellAttStatus = _context.BellAttendanceModels.Where(a => a.DateTime.Date == DateTime.Now.Date).Where(b => b.BellNumId == $"Bell {bell}").First().Status
+                        };
+                        studentsInBell.Add(details);
                     }
                 }
-
-                
-
             }
-
             return View(studentsInBell);
-
         }
 
         private static int GetS1BellCourseId(IStudentSchedule studentSchedule, int bell)
@@ -234,5 +235,19 @@ namespace SAMS.Areas.Teacher.Controllers
                     }
             }
         }
+    }
+
+    public class OutputModel()
+    {
+        [Display(Name = "Student ID")]
+        public required int studentId { get; set; } = 0;
+        [Display(Name = "Name (F/L)")]
+        public required string studentFirstAndLastName { get; set; } = string.Empty;
+        [Display(Name = "School Email Address")]
+        public required string studentEmail { get; set; } = string.Empty;
+        [Display(Name = "Daily Attendance Status")]
+        public required string DailyAttStatus { get; set; } = string.Empty;
+        [Display(Name = "Bell Attendance Status")]
+        public required string BellAttStatus { get; set; } = string.Empty;
     }
 }
