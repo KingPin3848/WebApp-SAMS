@@ -25,7 +25,7 @@ namespace SAMS.Areas.Student.Controllers
             return View();
         }
 
-        [Authorize(Roles = "Student, Developer")]
+        //[Authorize(Roles = "Student, Developer")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Scan(string ScannedCode, string issuedSchoolId)
@@ -41,12 +41,16 @@ namespace SAMS.Areas.Student.Controllers
                 }
 
                 var chosenBellSchedule = _context.ChosenBellSchedModels.Select(a => a.Name).First();
+                if (chosenBellSchedule is null || string.IsNullOrEmpty(chosenBellSchedule))
+                {
+                    return Json(new { dangertext = "Couldn't find today's bell schedule." });
+                }
 
                 var determination = DetermineCurrentBell(chosenBellSchedule);
                 var currentBell = determination[0];
                 TimeSpan startTimeAsDetermined = TimeSpan.Parse(determination[1]);
                 TimeSpan endTimeAsDetermined = TimeSpan.Parse(determination[2]);
-                if (currentBell == "School not in session!")
+                if (currentBell == "School not in session!" || currentBell == "Bell 0")
                 {
                     return Json(new { dangertext = "School is not in session and you cannot sign in right now. If you think this is a mistake, please contact the admin and the developers ASAP." });
                 }
@@ -230,6 +234,7 @@ namespace SAMS.Areas.Student.Controllers
 
                         return Json(new { redirectUrl = Url.Action("Index", "Home") });
                     }
+                    return Json(new { dangertext = $"You have to be in room {roomIdForCourse}, not room {_context.RoomQRCodeModels.Where(a => a.Code == passedCode).First().RoomId}" });
                 }
                 return Json(new { dangertext = "You are a hacker!" });
             }
@@ -282,7 +287,7 @@ namespace SAMS.Areas.Student.Controllers
                     }
                     return studentSchedule.Bell7TueThurCourseIDMod;
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(currentBell), "Invalid bell name provided.");
+                    return 0;
             }
         }
 
