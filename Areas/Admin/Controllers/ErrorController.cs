@@ -18,7 +18,7 @@ namespace SAMS.Areas.Admin.Controllers
         [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AutomatedError(int number, string description, string reference, ApplicationUser? user)
+        internal async Task<IActionResult> AutomatedError(int number, string description, string reference, ApplicationUser? user)
         {
             if (user == null)
             {

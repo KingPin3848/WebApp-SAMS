@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using SAMS;
 using SAMS.Data;
 using SAMS.Models;
 using System.ComponentModel;
@@ -109,7 +110,6 @@ namespace SAMS.Areas.Admin.Controllers
 		 * CHANGES NEEDED:
 		 * 1. New set of event ids and code-identifiers needed.
 		 * 2. Code refactor
-		 * 3. New detailsClass
 		 * 
 		 * ADDITIONS NEEDED:
 		 * 1. 
@@ -117,7 +117,7 @@ namespace SAMS.Areas.Admin.Controllers
 		 */
 		[HttpGet]
 		[RequireHttps]
-		//[Authorize(Roles = "HS School Admin,Synnovation Lab Admin,District Admin")]
+		[Authorize(Roles = "HS School Admin,Synnovation Lab Admin,District Admin")]
 		public async Task<IActionResult> Details(string id)
 		{
 			var loggedInUser = await userManager.GetUserAsync(User).ConfigureAwait(true);
@@ -127,14 +127,49 @@ namespace SAMS.Areas.Admin.Controllers
 			{
                 // change the error and description as necessary.
                 //EventId = 2; CodeIdentifierNumber = Acc100Det
-                return RedirectToAction("AutomatedError", "Error", new { number = 02, description = "No user found.", reference = "Event ID = 2, Identifier = Acc100Det", user = loggedInUser });
+                return RedirectToAction("AutomatedError", "Error", new { number = 02, description = "No user found.", reference = "Event ID = 2, Identifier = Acc100Det", user = loggedInUser!.SchoolId });
             }
-            return View(new detailsClass() { dbid = detailUser.Id, schoolid = detailUser.SchoolId, role = detailUser.Role, activation = detailUser.ActivationCode, email = detailUser.Email });
+            return View(new detailsClass() { dbid = detailUser.Id, schoolid = detailUser.SchoolId, role = detailUser.Role, activation = detailUser.ActivationCode, email = detailUser.Email! });
 		}
 
 
 
-		// GET: AccountManager/Create
+		/* GET: Admin/AccountManager/Create
+		 * Create Function Description:
+		 * Only renders the create page. Allows to create a single, new account within
+		 * the system.
+		 * 
+		 * Identification details collected as follows:
+		 * 1. Role(s)*
+		 * 2. School ID*
+		 * 3. School Issued Email Address*
+		 * 4. One Time Activation Code*
+		 * 5. First Name*
+		 * 6. Middle Name*** (Optional)
+		 * 7. Last Name*
+		 * 8. Preferred Name*** (Optional)
+		 * 9. Phone Number*** (Optional)
+		 * 
+		 * Details collected as applicable is as follows:
+		 * 1. Student Graduation Year* (Student Accounts)
+		 * 2. Student Counselor ID* (Student Accounts)
+		 * 3. EA Support? and EA Support ID*** (Student Accounts) (Optional)
+		 * 4. First Parent/Guardian's Full Name* and Email Address* (Student Accounts)
+		 * 5. Second Parent/Guardian's Full Name* and Email Address* (Student Accounts)
+		 * 6. Teaches all 5-days?*** (Teacher Accounts) (Optional) - False by default
+		 * 7. Room Assigned* (Teacher Accounts)
+		 * 
+		 * Details shown from Database: All available Roles in the system, 
+		 * All Counselor IDs (for student accounts), and all
+		 * room numbers (for teacher accounts).
+		 * 
+		 * CHANGES NEEDED:
+		 * 1. 
+		 * 
+		 * ADDITIONS NEEDED:
+		 * 1. 
+		 * 
+		 */
 		[HttpGet]
 		[RequireHttps]
 		[Authorize(Roles = "HS School Admin,Synnovation Lab Admin,District Admin")]
@@ -147,7 +182,23 @@ namespace SAMS.Areas.Admin.Controllers
 			return View();
 		}
 
-		// POST: AccountManager/Create
+		/* POST: Admin/AccountManager/Create
+		 * Create Function Description:
+		 * Takes in the information, as described in the GET
+		 * Create function description, and creates the account
+		 * in the system. Additional course information to be
+		 * added later by the appropriate users.
+		 * 
+		 * 
+		 * Details shown: None.
+		 * 
+		 * CHANGES NEEDED:
+		 * 1. 
+		 * 
+		 * ADDITIONS NEEDED:
+		 * 1. 
+		 * 
+		 */
 		[HttpPost]
 		[RequireHttps]
 		[ValidateAntiForgeryToken]
@@ -156,18 +207,6 @@ namespace SAMS.Areas.Admin.Controllers
 #pragma warning disable CA1031 // Do not catch general exception types
 			try
 			{
-				//var loggedinuserid = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-				//if (loggedinuserid is null)
-				//{
-				//    return RedirectToAction("Error", "Error", new { number = 01, description = "Are you logged in?", reference = "Event ID = 1, Identifier = Acc72Det"});
-				//}
-
-				//var loggedinuser = await userManager.FindByIdAsync(loggedinuserid).ConfigureAwait(true);
-				//if (loggedinuser is null)
-				//{
-				//    return RedirectToAction("Error", "Error", new { number = 01, description = "Are you an alien? We couldn't authenticate you.", reference = "Event ID = 1, Identifier = Acc78Det"});
-				//}
-
 				if (input is null)
 				{
 					return NotFound();
@@ -530,73 +569,43 @@ namespace SAMS.Areas.Admin.Controllers
 					case "HS School Admin":
 						{
 							var info = context.AdminInfoModels.Where(a => a.AdminID == user.SchoolId).First();
-							inputmodel.SchoolId = info.AdminID;
-							inputmodel.FirstName = info.AdminFirstNameMod;
-							inputmodel.MiddleName = info.AdminMiddleNameMod;
-							inputmodel.LastName = info.AdminLastNameMod;
 							inputmodel.PreferredName = info.AdminPreferredNameMod;
 							inputmodel.PhoneNumber = info.AdminPhoneMod;
-							inputmodel.Email = info.AdminEmailMod;
 							break;
 						}
 					case "Synnovation Lab Admin":
 						{
 							var info = context.AdminInfoModels.Where(a => a.AdminID == user.SchoolId).First();
-							inputmodel.SchoolId = info.AdminID;
-							inputmodel.FirstName = info.AdminFirstNameMod;
-							inputmodel.MiddleName = info.AdminMiddleNameMod;
-							inputmodel.LastName = info.AdminLastNameMod;
 							inputmodel.PreferredName = info.AdminPreferredNameMod;
 							inputmodel.PhoneNumber = info.AdminPhoneMod;
-							inputmodel.Email = info.AdminEmailMod;
 							break;
 						}
 					case "Attendance Office Member":
 						{
 							var info = context.AttendanceOfficeMemberModels.Where(a => a.AoMemberID == user.SchoolId).First();
-							inputmodel.SchoolId = info.AoMemberID;
-							inputmodel.FirstName = info.AoMemberFirstNameMod;
-							inputmodel.MiddleName = info.AoMemberMiddleNameMod;
-							inputmodel.LastName = info.AoMemberLastNameMod;
 							inputmodel.PreferredName = info.AoMemberPreferredNameMod;
 							inputmodel.PhoneNumber = info.AoMemberPhoneMod;
-							inputmodel.Email = info.AoMemberEmailMod;
 							break;
 						}
 					case "Nurse":
 						{
 							var info = context.NurseInfoModels.Where(a => a.NurseID == user.SchoolId).First();
-							inputmodel.SchoolId = info.NurseID;
-							inputmodel.FirstName = info.NurseFirstNameMod;
-							inputmodel.MiddleName = info.NurseMiddleNameMod;
-							inputmodel.LastName = info.NurseLastNameMod;
 							inputmodel.PreferredName = info.NursePreferredNameMod;
 							inputmodel.PhoneNumber = info.NursePhoneMod;
-							inputmodel.Email = info.NurseEmailMod;
 							break;
 						}
 					case "Law Enforcement":
 						{
 							var info = context.LawEnforcementInfoModels.Where(a => a.LawenfID == user.SchoolId).First();
-							inputmodel.SchoolId = info.LawenfID;
-							inputmodel.FirstName = info.LaweFirstNameMod;
-							inputmodel.MiddleName = info.LaweMiddleNameMod;
-							inputmodel.LastName = info.LaweLastNameMod;
 							inputmodel.PreferredName = info.LawePreferredNameMod;
 							inputmodel.PhoneNumber = info.LawePhoneMod;
-							inputmodel.Email = info.LaweEmailMod;
 							break;
 						}
 					case "Teacher":
 						{
 							var info = context.TeacherInfoModels.Where(a => a.TeacherID == user.SchoolId).First();
-							inputmodel.SchoolId = info.TeacherID;
-							inputmodel.FirstName = info.TeacherFirstNameMod;
-							inputmodel.MiddleName = info.TeacherMiddleNameMod;
-							inputmodel.LastName = info.TeacherLastNameMod;
 							inputmodel.PreferredName = info.TeacherPreferredNameMod;
 							inputmodel.PhoneNumber = info.TeacherPhoneMod;
-							inputmodel.Email = info.TeacherEmailMod;
 							inputmodel.Teaches5Days = info.Teaches5Days;
 							inputmodel.RoomAssignedId = info.RoomAssignedId;
 							break;
@@ -606,16 +615,9 @@ namespace SAMS.Areas.Admin.Controllers
 							if (int.TryParse(user.SchoolId, out int studentid))
 							{
 								var info = context.StudentInfoModels.Where(a => a.StudentID == studentid).First();
-								inputmodel.SchoolId = studentid.ToString(CultureInfo.CurrentCulture);
-								inputmodel.FirstName = info.StudentFirstNameMod;
-								inputmodel.MiddleName = info.StudentMiddleNameMod;
-								inputmodel.LastName = info.StudentLastNameMod;
 								inputmodel.PreferredName = info.StudentPreferredNameMod;
 								inputmodel.PhoneNumber = info.StudentPhoneMod;
-								inputmodel.Email = info.StudentEmailMod;
-								inputmodel.Parentguard1NameMod = info.Parentguard1NameMod;
 								inputmodel.Parentguard1EmailMod = info.Parentguard1EmailMod;
-								inputmodel.Parentguard2NameMod = info.Parentguard2NameMod;
 								inputmodel.Parentguard2EmailMod = info.Parentguard2EmailMod;
 							}
 							break;
@@ -623,25 +625,15 @@ namespace SAMS.Areas.Admin.Controllers
 					case "District Admin":
 						{
 							var info = context.AttendanceOfficeMemberModels.Where(a => a.AoMemberID == user.SchoolId).First();
-							inputmodel.SchoolId = info.AoMemberID;
-							inputmodel.FirstName = info.AoMemberFirstNameMod;
-							inputmodel.MiddleName = info.AoMemberMiddleNameMod;
-							inputmodel.LastName = info.AoMemberLastNameMod;
 							inputmodel.PreferredName = info.AoMemberPreferredNameMod;
 							inputmodel.PhoneNumber = info.AoMemberPhoneMod;
-							inputmodel.Email = info.AoMemberEmailMod;
 							break;
 						}
 					case "Counselor":
 						{
 							var info = context.CounselorModels.Where(a => a.CounselorId == user.SchoolId).First();
-							inputmodel.SchoolId = info.CounselorId;
-							inputmodel.FirstName = info.CounselorFirstName;
-							inputmodel.MiddleName = info.CounselorMiddleName;
-							inputmodel.LastName = info.CounselorLastName;
 							inputmodel.PreferredName = info.CounselorPreferredName;
 							inputmodel.PhoneNumber = info.CounselorPhone;
-							inputmodel.Email = info.CounselorEmail;
 							break;
 						}
 					default:
@@ -870,7 +862,7 @@ namespace SAMS.Areas.Admin.Controllers
 				AdminFirstNameMod = input.FirstName,
 				AdminMiddleNameMod = input.MiddleName,
 				AdminLastNameMod = input.LastName,
-				AdminEmailMod = newappuser.Email,
+				AdminEmailMod = newappuser.Email!,
 				AdminPhoneMod = input.PhoneNumber,
 				AdminLabelMod = label
 			};
@@ -1646,21 +1638,21 @@ namespace SAMS.Areas.Admin.Controllers
 
 	/* A custom model for the Create Action(s) to make sure the data is not directly affected through the HTTP requests.
 		*/
-	public class InputModel
+	internal class InputModel
 	{
 		//ALL REQUIRED ACCOUNT INFORMATION STARTS FROM HERE
 		[EmailAddress]
 		[Display(Name = "Email")]
-		public required string Email { get; set; }
+		public required string Email { get; init; }
 
 
 		[StringLength(32, ErrorMessage = "The Unique Code must be at least {2} and at max {1} characters long.", MinimumLength = 32)]
 		[Display(Name = "Unique Code")]
-		public required string ActivationCode { get; set; }
+		public required string ActivationCode { get; init; }
 
 
 		[Display(Name = "School Id")]
-		public required string SchoolId { get; set; }
+		public required string SchoolId { get; init; }
 
 
 		[Display(Name = "Role(s)")]
@@ -1673,15 +1665,15 @@ namespace SAMS.Areas.Admin.Controllers
 		//ALL COMMON REQUIRED AND OPTIONAL PERSONALLY IDENTIFIABLE INFORMATION OR PROTECTED PERSONAL INFORMATION STARTS HERE
 		[Display(Name = "First Name")]
 		[Required]
-		public required string FirstName { get; set; }
+		public required string FirstName { get; init; }
 
 
 		[Display(Name = "Middle Name (Optional)")]
-		public string? MiddleName { get; set; }
+		public string? MiddleName { get; init; }
 
 
 		[Display(Name = "Last Name")]
-		public required string LastName { get; set; }
+		public required string LastName { get; init; }
 
 
 		[Display(Name = "Preferred Name (Optional)")]
@@ -1726,7 +1718,7 @@ namespace SAMS.Areas.Admin.Controllers
 
 		//ALL STUDENT REQUIRED INFORMATION STARTS HERE
 		[Display(Name = ("Student Graduation Year (Required)"))]
-		public DateTime StudentGradYearMod { get; set; } = new();
+		public DateTime StudentGradYearMod { get; init; } = new();
 
 
 		[Display(Name = ("Assigned Counselor (Required)"))]
@@ -1742,7 +1734,7 @@ namespace SAMS.Areas.Admin.Controllers
 
 
 		[Display(Name = ("Parent/Guardian 1 Name (Required)"))]
-		public string? Parentguard1NameMod { get; set; }
+		public string? Parentguard1NameMod { get; init; }
 
 
 		[Display(Name = ("Parent/Guardian 1 Email Address (Required)"))]
@@ -1751,7 +1743,7 @@ namespace SAMS.Areas.Admin.Controllers
 
 
 		[Display(Name = ("Parent/Guardian 2 Name (Optional)"))]
-		public string? Parentguard2NameMod { get; set; }
+		public string? Parentguard2NameMod { get; init; }
 
 
 		[Display(Name = ("Parent/Guardian 2 Email Address (Optional)"))]
@@ -1771,7 +1763,7 @@ namespace SAMS.Areas.Admin.Controllers
 
 	/* A custom model for the Edit Action(s) to make sure the data is not directly affected through the HTTP requests.
 	*/
-	public class EditAccountModel
+	internal class EditAccountModel
 	{
 		public required ApplicationUser User { get; set; }
 		public required InputModel Input { get; set; }

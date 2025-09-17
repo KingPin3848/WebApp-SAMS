@@ -25,7 +25,7 @@ namespace SAMS
         [Required]
         [Display(Name = "Role(s)")]
         [ProtectedPersonalData]
-        public IList<string> Role { get; } = [];
+        public IList<string> Role { get; set; }
         
         [Required]
         [EmailAddress]
