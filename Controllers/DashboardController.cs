@@ -222,7 +222,7 @@ namespace SAMS.Controllers
         }
 
         //GET: ClassAttendance
-
+        [HttpGet]
         public IActionResult ClassAttendance(string id)
         {
             string passedId = id;

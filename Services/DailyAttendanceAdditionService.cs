@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using SAMS.Controllers;
 using SAMS.Data;
 using SAMS.Interfaces;
 using SAMS.Models;

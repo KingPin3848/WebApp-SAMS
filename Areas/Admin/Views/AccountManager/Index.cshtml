@@ -1,6 +1,5 @@
-﻿@using SAMS.Controllers;
-@using SAMS.Areas.Admin.Controllers;
-@model IEnumerable<ApplicationUser>
+﻿@using static SAMS.Areas.Admin.Controllers.AccountManagerController;
+@model IEnumerable<indexClass>
 @{
     ViewData["Title"] = "Index";
 }
@@ -14,16 +13,16 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.SchoolId)
+                @Html.DisplayNameFor(model => model.schoolid)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Role)
+                @Html.DisplayNameFor(model => model.role)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Email)
+                @Html.DisplayNameFor(model => model.email)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ActivationCode)
+                @Html.DisplayNameFor(model => model.activation)
             </th>
             <th></th>
         </tr>
@@ -33,25 +32,25 @@
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.SchoolId)
+                    @Html.DisplayFor(modelItem => item.schoolid)
                 </td>
                 <td>
-                    @foreach (var role in item.Role)
+                    @foreach (var role in item.role)
                     {
                         @Html.DisplayFor(modelItem => role)
                         <br />
                     }
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Email)
+                    @Html.DisplayFor(modelItem => item.email)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.ActivationCode)
+                    @Html.DisplayFor(modelItem => item.activation)
                 </td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    <a asp-action="Edit" asp-route-id="@item.dbid">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.dbid">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.dbid">Delete</a>
                 </td>
             </tr>
         }

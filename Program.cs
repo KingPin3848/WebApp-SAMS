@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.EntityFrameworkCore;
-using SAMS.Controllers;
+using SAMS;
 using SAMS.Data;
 using SAMS.Services;
 using System.Drawing.Text;
@@ -39,6 +39,9 @@ builder.Services.AddAuthentication().AddGoogle(googleOptions =>
        googleOptions.ClientSecret = configuration["Authentication:Google:ClientSecret"]!;
        googleOptions.Scope.Add("email");
    });
+
+// Authentication and Authorization Requirement Policy for all pages
+//builder.Services.AddAuthorizationBuilder().AddFallbackPolicy("Login Required", options => options.RequireAuthenticatedUser().Build());
 
 //Attendance Generation Service
 //builder.Services.AddHostedService<DailyAttendanceAdditionService>();

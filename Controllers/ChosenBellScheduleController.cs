@@ -15,12 +15,14 @@ namespace SAMS.Controllers
         private readonly ApplicationDbContext _context = context;
 
         // GET: ChosenBellSchedule
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             return View(await _context.ChosenBellSchedModels.ToListAsync());
         }
 
         // GET: ChosenBellSchedule/Details/5
+        [HttpGet]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -39,6 +41,7 @@ namespace SAMS.Controllers
         }
 
         // GET: ChosenBellSchedule/Create
+        [HttpGet]
         public IActionResult Create()
         {
             return View();
@@ -72,6 +75,7 @@ namespace SAMS.Controllers
         }
 
         // GET: ChosenBellSchedule/Edit/5
+        [HttpGet]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)

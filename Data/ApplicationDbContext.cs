@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using SAMS.Models;
-using SAMS.Controllers;
 
 namespace SAMS.Data
 {

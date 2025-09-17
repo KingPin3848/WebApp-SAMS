@@ -3,30 +3,43 @@ using SAMS.Models;
 using System.ComponentModel.DataAnnotations;
 using System.Security.Cryptography;
 
-namespace SAMS.Controllers
+namespace SAMS
 {
-    public class ApplicationUser : IdentityUser
+    internal class ApplicationUser : IdentityUser
     {
         [Required]
         [Display(Name = "School Id")]
+        [ProtectedPersonalData]
         public string SchoolId { get; set; } = null!;
+
         [Required]
         [StringLength(32, ErrorMessage = "The Unique Code must be at least {2} and at max {1} characters long.", MinimumLength = 32)]
         [Display(Name = "Unique Code")]
+        [ProtectedPersonalData]
         public string ActivationCode {  get; set; } = null!;
+        
         [Display(Name = "Enable User Experience")]
-        public Boolean? UserExperienceEnabled { get; set; }
+        [ProtectedPersonalData]
+        public bool? UserExperienceEnabled { get; set; }
+
         [Required]
         [Display(Name = "Role(s)")]
-        public IList<string> Role { get; set; }
+        [ProtectedPersonalData]
+        public IList<string> Role { get; } = [];
+        
         [Required]
         [EmailAddress]
-        [Display(Name = "School Issued Email Address")]
-        public override string? Email { get => base.Email; set => base.Email = value; }
+        [Display(Name = "School Email Address")]
+        [ProtectedPersonalData]
+        public override required string? Email { get; set; }
 
         [Required]
         [Range(0000, 9999)]
+        [ProtectedPersonalData]
         public int StudentPin { get; private set; }
 
+        [Required]
+        [ProtectedPersonalData]
+        public required string FullName { get; set; }
     }
 }

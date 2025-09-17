@@ -15,6 +15,7 @@ namespace SAMS.Controllers
         private readonly ApplicationDbContext _context = context;
 
         // GET: DailyBellScheduleModels
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
               return _context.DailyBellScheduleModels != null ? 

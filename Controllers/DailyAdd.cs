@@ -11,6 +11,7 @@ namespace SAMS.Controllers
         private readonly ILogger<DailyAdd> _logger = logger;
         private readonly IServiceScopeFactory _scopeFactory = scopeFactory;
 
+        [HttpGet]
         public IActionResult Index()
         {
             HolidayRun();

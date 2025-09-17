@@ -1,4 +1,5 @@
-﻿@model SAMS.Controllers.ApplicationUser
+﻿@using static SAMS.Areas.Admin.Controllers.AccountManagerController;
+@model detailsClass
 @{
     ViewData["Title"] = "Details";
 }
@@ -10,36 +11,36 @@
     <hr />
     <dl class="row">
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.SchoolId)
+            @Html.DisplayNameFor(model => model.schoolid)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.SchoolId)
+            @Html.DisplayFor(model => model.schoolid)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Role)
+            @Html.DisplayNameFor(model => model.role)
         </dt>
         <dd class="col-sm-10">
-            @foreach (var role in Model.Role.ToList())
+            @foreach (var role in Model.role.ToList())
             {
                 @Html.Raw(role)
                 <br />
             }
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Email)
+            @Html.DisplayNameFor(model => model.email)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Email)
+            @Html.DisplayFor(model => model.email)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.ActivationCode)
+            @Html.DisplayNameFor(model => model.activation)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.ActivationCode)
+            @Html.DisplayFor(model => model.activation)
         </dd>
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
+    <a asp-action="Edit" asp-route-id="@Model?.dbid">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>

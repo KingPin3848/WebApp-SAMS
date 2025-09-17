@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SAMS.Controllers;
 using SAMS.Data;
 using SAMS.Models;
 
@@ -17,6 +16,8 @@ namespace SAMS.Areas.Student.Controllers
         }
 
         [Authorize(Roles = "Student")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> AutomatedError(int number, string description, string reference, ApplicationUser? user)
         {
             if (user == null)

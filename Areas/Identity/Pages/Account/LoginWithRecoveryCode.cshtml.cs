@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
-using SAMS.Controllers;
 namespace SAMS.Areas.Identity.Pages.Account
 {
     public class LoginWithRecoveryCodeModel(

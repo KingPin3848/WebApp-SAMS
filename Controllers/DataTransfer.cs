@@ -12,6 +12,7 @@ namespace SAMS.Controllers
         private readonly ILogger<DataTransfer> _logger = logger;
         private readonly ApplicationDbContext _context = context;
 
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             try
