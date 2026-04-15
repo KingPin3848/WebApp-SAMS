@@ -99,6 +99,8 @@
     <_ContentIncludedByDefault Remove="Views\Dashboard\_SynLabAdminPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Microsoft.Build" Version="17.10.46" />
+    <PackageReference Include="NuGet.Packaging" Version="6.11.2" />
     <None Include="Views\Dashboard\_SynLabAdminPartial.cshtml" />
   </ItemGroup>
 </Project>
