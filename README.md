@@ -121,6 +121,12 @@ Run restore:
 - `Services/` - background and domain services
 - `wwwroot/` - static assets
 
+## 11) Role-based behavior documentation
+
+For detailed behavior by user role (Student, Teacher, Admin, Class Kiosk, Attendance Office, and account-management roles), see:
+
+- [docs/ROLE_BEHAVIORS.md](docs/ROLE_BEHAVIORS.md)
+
 ---
 
 If you are new to this codebase, follow Sections **1 -> 7** in order and the app should run locally.
