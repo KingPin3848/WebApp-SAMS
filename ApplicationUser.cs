@@ -5,7 +5,7 @@ using System.Security.Cryptography;
 
 namespace SAMS
 {
-    internal class ApplicationUser : IdentityUser
+    public class ApplicationUser : IdentityUser
     {
         [Required]
         [Display(Name = "School Id")]
