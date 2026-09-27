@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Logging;
 
 namespace SAMS.Areas.Identity.Pages.Account
 {
@@ -34,12 +33,14 @@ namespace SAMS.Areas.Identity.Pages.Account
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
         ///     directly from your code. This API may change or be removed in future releases.
         /// </summary>
+        [BindProperty]
         public bool RememberMe { get; set; }
 
         /// <summary>
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
         ///     directly from your code. This API may change or be removed in future releases.
         /// </summary>
+        [BindProperty]
         public string ReturnUrl { get; set; }
 
         /// <summary>
@@ -72,25 +73,25 @@ namespace SAMS.Areas.Identity.Pages.Account
 #pragma warning disable IDE0059 // Unnecessary assignment of a value
             var user = await _signInManager.GetTwoFactorAuthenticationUserAsync() ?? throw new InvalidOperationException($"Unable to load two-factor authentication user.");
 #pragma warning restore IDE0059 // Unnecessary assignment of a value
-            ReturnUrl = returnUrl;
+            ReturnUrl = GetSafeReturnUrl(returnUrl);
             RememberMe = rememberMe;
 
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync(bool rememberMe, string returnUrl = null)
+        public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
             {
                 return Page();
             }
 
-            returnUrl ??= Url.Content("~/");
+            ReturnUrl = GetSafeReturnUrl(ReturnUrl);
 
             var user = await _signInManager.GetTwoFactorAuthenticationUserAsync() ?? throw new InvalidOperationException($"Unable to load two-factor authentication user.");
             var authenticatorCode = Input.TwoFactorCode.Replace(" ", string.Empty).Replace("-", string.Empty);
 
-            var result = await _signInManager.TwoFactorAuthenticatorSignInAsync(authenticatorCode, rememberMe, Input.RememberMachine);
+            var result = await _signInManager.TwoFactorAuthenticatorSignInAsync(authenticatorCode, RememberMe, Input.RememberMachine);
 
 #pragma warning disable IDE0059 // Unnecessary assignment of a value
             var userId = await _userManager.GetUserIdAsync(user);
@@ -99,7 +100,7 @@ namespace SAMS.Areas.Identity.Pages.Account
             if (result.Succeeded)
             {
                 SAMS.IdentityLogging.IdentityPageLog.UserLoggedInWith2fa(_logger, user.Id);
-                return LocalRedirect(returnUrl);
+                return LocalRedirect(ReturnUrl);
             }
             else if (result.IsLockedOut)
             {
@@ -112,6 +113,13 @@ namespace SAMS.Areas.Identity.Pages.Account
                 ModelState.AddModelError(string.Empty, "Invalid authenticator code.");
                 return Page();
             }
+        }
+
+        private string GetSafeReturnUrl(string returnUrl)
+        {
+            return !string.IsNullOrWhiteSpace(returnUrl) && Url.IsLocalUrl(returnUrl)
+                ? returnUrl
+                : Url.Content("~/");
         }
     }
 }

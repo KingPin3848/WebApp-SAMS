@@ -25,6 +25,7 @@ namespace SAMS.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Search(string filter, string SearchQuery)
         {
             List<StudentInfoModel> search_results = new List<StudentInfoModel>();
