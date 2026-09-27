@@ -81,12 +81,12 @@ namespace SAMS.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnPostAsync()
         {
+            ReturnUrl = GetSafeReturnUrl(ReturnUrl);
+
             if (!ModelState.IsValid)
             {
                 return Page();
             }
-
-            ReturnUrl = GetSafeReturnUrl(ReturnUrl);
 
             var user = await _signInManager.GetTwoFactorAuthenticationUserAsync() ?? throw new InvalidOperationException($"Unable to load two-factor authentication user.");
             var authenticatorCode = Input.TwoFactorCode.Replace(" ", string.Empty).Replace("-", string.Empty);
