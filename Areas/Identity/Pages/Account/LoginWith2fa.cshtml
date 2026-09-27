@@ -2,7 +2,7 @@
 @model LoginWith2faModel
 @{
     ViewData["Title"] = "Two-factor authentication";
-    var recoveryCodeUrl = $"{Url.Page("./LoginWithRecoveryCode")}?ReturnUrl={System.Uri.EscapeDataString(Model.ReturnUrl ?? string.Empty)}";
+    var recoveryCodeUrl = Url.Page("./LoginWithRecoveryCode", new { ReturnUrl = Model.ReturnUrl, RememberMe = Model.RememberMe });
 }
 
 <h1>@ViewData["Title"]</h1>
