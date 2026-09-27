@@ -10,6 +10,7 @@
 }
 
 <h1>Student Info</h1>
+@Html.AntiForgeryToken()
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
@@ -397,6 +398,8 @@
 
 
 <script>
+    const requestVerificationToken = document.querySelector('input[name="__RequestVerificationToken"]').value;
+
     //Stuff for Bell attendance
 
     $('#bellAttSearchButton').click(function () {
@@ -407,6 +410,9 @@
             url: '/StudentViewModel/StudentBellAttendanceSearch',
             type: 'POST',
             data: { date: selectedDate, id: studentID },
+            headers: {
+                'RequestVerificationToken': requestVerificationToken
+            },
             success: function (response) {
                 var resultsDiv = $('#bellAttResults');
                 resultsDiv.empty();
@@ -519,6 +525,9 @@
             url: '/StudentViewModel/UpdateBellAttendanceStatus',
             type: 'POST',
             data: { id: attendanceId, status: newStatus, reason: newReason },
+            headers: {
+                'RequestVerificationToken': requestVerificationToken
+            },
             success: function () {
                 var statusElement = document.createElement("p");
                 statusElement.id = "statusid:" + attendanceId;
@@ -556,6 +565,9 @@
             url: '/StudentViewModel/StudentDailyAttendanceSearch',
             type: 'POST',
             data: { date: selectedDate, id: studentID },
+            headers: {
+                'RequestVerificationToken': requestVerificationToken
+            },
             success: function (response) {
                 var resultsDiv = $('#dailyAttResults');
                 resultsDiv.empty();
@@ -658,6 +670,9 @@
             url: '/StudentViewModel/UpdateDailyAttendanceStatus',
             type: 'POST',
             data: { id: attendanceId, status: newStatus, reason: newReason },
+            headers: {
+                'RequestVerificationToken': requestVerificationToken
+            },
             success: function () {
                 var statusElement = document.createElement("p");
                 statusElement.id = "statusid:" + attendanceId;
@@ -696,6 +711,9 @@
             url: '/StudentViewModel/StudentLocation',
             type: 'POST',
             data: { date: selectedDate, id: studentID },
+            headers: {
+                'RequestVerificationToken': requestVerificationToken
+            },
             success: function (response) {
                 var resultsDiv = $('#locResults');
                 resultsDiv.empty();
@@ -742,6 +760,5 @@
     });
 
 </script>
-
 
 

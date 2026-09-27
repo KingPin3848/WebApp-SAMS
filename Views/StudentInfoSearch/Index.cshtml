@@ -5,6 +5,7 @@
 <h1>Student Info</h1>
 
 <form method="post" asp-area="" asp-controller="StudentInfoSearch" asp-action="Search">
+    @Html.AntiForgeryToken()
 
     <div>
         <input type="radio" name="filter" value="StudentID" id="studentid" />
@@ -30,6 +31,7 @@
 </style>
 
 <script>
+    const requestVerificationToken = document.querySelector('input[name="__RequestVerificationToken"]').value;
 
     function getData() {
         var filter = $('input[name="filter"]:checked').val();
@@ -46,6 +48,9 @@
             url: '/StudentInfoSearch/Search',
             type: 'POST',
             data: sendData,
+            headers: {
+                'RequestVerificationToken': requestVerificationToken
+            },
             success: function (response) {
 
                 console.log("Response received:", response);

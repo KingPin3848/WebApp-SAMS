@@ -181,6 +181,7 @@ namespace SAMS.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult UpdateBellAttendanceStatus(int id, string status, string reason)
         {
             var query = _context.BellAttendanceModels.FirstOrDefault(a => a.BellAttendanceId == id);
@@ -196,6 +197,7 @@ namespace SAMS.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult UpdateDailyAttendanceStatus(int id, string status, string reason)
         {
             var query = _context.DailyAttendanceModels.FirstOrDefault(a => a.AttendanceId == id);

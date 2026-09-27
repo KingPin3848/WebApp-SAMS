@@ -2,6 +2,7 @@
 @model LoginWith2faModel
 @{
     ViewData["Title"] = "Two-factor authentication";
+    var recoveryCodeUrl = Url.Page("./LoginWithRecoveryCode", new { ReturnUrl = Model.ReturnUrl, RememberMe = Model.RememberMe });
 }
 
 <h1>@ViewData["Title"]</h1>
@@ -9,7 +10,8 @@
 <p>Your login is protected with an authenticator app. Enter your authenticator code below.</p>
 <div class="row">
     <div class="col-md-4">
-        <form method="post" asp-route-returnUrl="@Model.ReturnUrl">
+        <form method="post">
+            <input id="login-return-url" name="ReturnUrl" type="hidden" value="@Model.ReturnUrl" />
             <input asp-for="RememberMe" type="hidden" />
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-floating">
@@ -31,10 +33,10 @@
         </form>
     </div>
 </div>
-<p>
+<div>
     Don't have access to your authenticator device? You can
-    <a id="recovery-code-login" asp-page="./LoginWithRecoveryCode" asp-route-returnUrl="@Model.ReturnUrl">log in with a recovery code</a>.
-</p>
+    <a id="recovery-code-login" href="@recoveryCodeUrl">log in with a recovery code</a>.
+</div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

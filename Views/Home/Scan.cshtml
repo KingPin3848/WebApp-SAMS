@@ -16,6 +16,7 @@
 <br />
 
 <h5 id="textdanger" class="text-danger"></h5>
+@Html.AntiForgeryToken()
 
 <b>Detected QR code: </b>
 <span id="cam-qr-result">None</span>
@@ -44,6 +45,7 @@
     const camQrResultTimestamp = document.getElementById(
         "cam-qr-result-timestamp"
     );
+    const requestVerificationToken = document.querySelector('input[name="__RequestVerificationToken"]').value;
     const fileSelector = document.getElementById("file-selector");
     const fileQrResult = document.getElementById("file-qr-result");
     function setResult(label, result) {
@@ -159,6 +161,9 @@
             url: '@Url.Action("Scan", "Home")',
             type: 'POST',
             data: data,
+            headers: {
+                'RequestVerificationToken': requestVerificationToken
+            },
             success: function (response) {
                 if (response.redirectUrl) {
                     window.location.href = response.redirectUrl;

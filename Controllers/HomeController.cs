@@ -53,7 +53,7 @@ namespace SAMS.Controllers
 
         //[Authorize(Roles = "Student, Developer")]
         [HttpPost]
-        //[ValidateAntiForgeryToken]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Scan(string ScannedCode, string issuedSchoolId)
         {
             try
