@@ -10,14 +10,9 @@ using SAMS.Models;
 
 namespace SAMS.Controllers.InfoManagement
 {
-    public class BellAttendanceModelsController : Controller
+    public class BellAttendanceModelsController(ApplicationDbContext context) : Controller
     {
-        private readonly ApplicationDbContext _context;
-
-        public BellAttendanceModelsController(ApplicationDbContext context)
-        {
-            _context = context;
-        }
+        private readonly ApplicationDbContext _context = context;
 
         // GET: BellAttendanceModels
         public async Task<IActionResult> Index()

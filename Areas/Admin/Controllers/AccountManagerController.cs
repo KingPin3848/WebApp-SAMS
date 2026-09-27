@@ -15,24 +15,16 @@ using System.Security.Claims;
 namespace SAMS.Areas.Admin.Controllers
 {
 	[Area("Admin")]
-	internal sealed class AccountManagerController : Controller
+	internal sealed class AccountManagerController(ILogger<AccountManagerController> logger, ApplicationDbContext Context, UserManager<ApplicationUser> UserManager, SignInManager<ApplicationUser> SignInManager) : Controller
 	{
-		private readonly ILogger<AccountManagerController> _logger;
-		private readonly ApplicationDbContext context;
-		private readonly UserManager<ApplicationUser> userManager;
-		private readonly SignInManager<ApplicationUser> signInManager;
+		private readonly ILogger<AccountManagerController> _logger = logger;
+		private readonly ApplicationDbContext context = Context;
+		private readonly UserManager<ApplicationUser> userManager = UserManager;
+		private readonly SignInManager<ApplicationUser> signInManager = SignInManager;
 
 		private ReportModel report { get; set; } = default!;
 
 		//private readonly IEmailSender<ApplicationUser> _emailSender = emailSender;
-
-		public AccountManagerController(ILogger<AccountManagerController> logger, ApplicationDbContext Context, UserManager<ApplicationUser> UserManager, SignInManager<ApplicationUser> SignInManager)
-		{
-			_logger = logger;
-			context = Context;
-			userManager = UserManager;
-			signInManager = SignInManager;
-		}
 
 		internal sealed class indexClass
 		{

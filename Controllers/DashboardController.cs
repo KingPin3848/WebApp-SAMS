@@ -7,20 +7,12 @@ using System.Text.RegularExpressions;
 
 namespace SAMS.Controllers
 {
-    public class DashboardController : Controller
+    public class DashboardController(ILogger<DashboardController> logger, ApplicationDbContext context, SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager) : Controller
     {
-        private readonly ILogger<DashboardController> _logger;
-        private readonly ApplicationDbContext _context;
-        private readonly SignInManager<ApplicationUser> _signInManager;
-        private readonly UserManager<ApplicationUser> _userManager;
-
-        public DashboardController(ILogger<DashboardController> logger, ApplicationDbContext context, SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager)
-        {
-            _logger = logger;
-            _context = context;
-            _signInManager = signInManager;
-            _userManager = userManager;
-        }
+        private readonly ILogger<DashboardController> _logger = logger;
+        private readonly ApplicationDbContext _context = context;
+        private readonly SignInManager<ApplicationUser> _signInManager = signInManager;
+        private readonly UserManager<ApplicationUser> _userManager = userManager;
 
 
         [HttpGet]

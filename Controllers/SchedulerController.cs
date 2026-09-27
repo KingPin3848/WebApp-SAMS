@@ -5,14 +5,9 @@ using SAMS.Models;
 
 namespace SAMS.Controllers
 {
-    public class SchedulerController : Controller
+    public class SchedulerController(ApplicationDbContext context) : Controller
     {
-        private readonly ApplicationDbContext _context;
-
-        public SchedulerController(ApplicationDbContext context)
-        {
-            _context = context;
-        }
+        private readonly ApplicationDbContext _context = context;
 
         // GET: Scheduler
         public async Task<IActionResult> Index()

@@ -10,14 +10,9 @@ using SAMS.Models;
 
 namespace SAMS.Controllers.InfoManagement
 {
-    public class ReportController : Controller
+    public class ReportController(ApplicationDbContext context) : Controller
     {
-        private readonly ApplicationDbContext _context;
-
-        public ReportController(ApplicationDbContext context)
-        {
-            _context = context;
-        }
+        private readonly ApplicationDbContext _context = context;
 
         // GET: Report
         public async Task<IActionResult> Index()

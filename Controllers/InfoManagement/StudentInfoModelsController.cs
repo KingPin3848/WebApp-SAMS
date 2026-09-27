@@ -10,14 +10,9 @@ using SAMS.Models;
 
 namespace SAMS.Controllers.InfoManagement
 {
-    public class StudentInfoModelsController : Controller
+    public class StudentInfoModelsController(ApplicationDbContext context) : Controller
     {
-        private readonly ApplicationDbContext _context;
-
-        public StudentInfoModelsController(ApplicationDbContext context)
-        {
-            _context = context;
-        }
+        private readonly ApplicationDbContext _context = context;
         
 
         //AUTOCOMPLETE

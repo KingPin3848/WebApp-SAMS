@@ -11,17 +11,10 @@ using SAMS.Models;
 
 namespace SAMS.Controllers
 {
-    public class StudentInfoSearchController : Controller
+    public class StudentInfoSearchController(ILogger<StudentInfoSearchController> logger, ApplicationDbContext context) : Controller
     {
-        private readonly ApplicationDbContext _context;
-        private readonly ILogger<StudentInfoSearchController> _logger;
-
-
-        public StudentInfoSearchController(ILogger<StudentInfoSearchController> logger, ApplicationDbContext context)
-        {
-            _context = context;
-            _logger = logger;
-        }
+        private readonly ApplicationDbContext _context = context;
+        private readonly ILogger<StudentInfoSearchController> _logger = logger;
 
 
         // GET: StudentInfoSearch
