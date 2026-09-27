@@ -5,6 +5,7 @@
 <h1>Student Info</h1>
 
 <form method="post" asp-area="" asp-controller="StudentInfoSearch" asp-action="Search">
+    @Html.AntiForgeryToken()
 
     <div>
         <input type="radio" name="filter" value="StudentID" id="studentid" />
