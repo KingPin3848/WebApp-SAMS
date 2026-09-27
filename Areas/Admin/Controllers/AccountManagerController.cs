@@ -62,7 +62,7 @@ namespace SAMS.Areas.Admin.Controllers
 		{
 			var users = userManager.Users.ToList();
 			//Developers removed
-			users.RemoveAll(a => a.Role.Contains("Developer"));
+			_ = users.RemoveAll(a => a.Role.Contains("Developer"));
 
 			List<indexClass> condensedList = [];
 			foreach (var user in users)
@@ -217,14 +217,14 @@ namespace SAMS.Areas.Admin.Controllers
 					user.UserExperienceEnabled = false;
 					user.Email = input.Email;
 					user.EmailConfirmed = true;
-					await userManager.SetUserNameAsync(user, input.SchoolId).ConfigureAwait(true);
-					await userManager.SetEmailAsync(user, input.Email).ConfigureAwait(true);
+					_ = await userManager.SetUserNameAsync(user, input.SchoolId).ConfigureAwait(true);
+					_ = await userManager.SetEmailAsync(user, input.Email).ConfigureAwait(true);
 					var result = await userManager.CreateAsync(user).ConfigureAwait(true);
 					var roadroller = await userManager.AddToRolesAsync(user, listRoles).ConfigureAwait(true);
 
 					if (result.Succeeded)
 					{
-						LoggerMessage.Define(logLevel: LogLevel.Information, eventId: new EventId(30, "User creation"), "User created a new account without a password.");
+						AccountManagerControllerLog.UserCreated(_logger);
 						//SNIPPET 1 FOR EMAIL GOES HERE
 
 						foreach (var role in input.Role)
@@ -322,38 +322,22 @@ namespace SAMS.Areas.Admin.Controllers
 			}
 			catch (ArgumentNullException ex)
 			{
-				LoggerMessage.Define(logLevel: LogLevel.Critical, eventId: new EventId(1, "Argument Null Exc."), $"An exception occurred. Please contact the admins or developers for the issue to be resolved. \n\n Message = {ex.Message}");
-				LoggerMessage.Define(logLevel: LogLevel.Critical, eventId: new EventId(1, "Argument Null Exc."), $"Source: \n\n {ex.Source}");
-				LoggerMessage.Define(logLevel: LogLevel.Critical, eventId: new EventId(1, "Argument Null Exc."), $"Inner Exception: \n\n {ex.InnerException}");
-				LoggerMessage.Define(logLevel: LogLevel.Critical, eventId: new EventId(1, "Argument Null Exc."), $"Stack Trace: \n\n {ex.StackTrace}");
-				LoggerMessage.Define(logLevel: LogLevel.Critical, eventId: new EventId(1, "Argument Null Exc."), $"Target Site/Method: \n\n {ex.TargetSite}");
+				AccountManagerControllerLog.CriticalException(_logger, ex.ToString());
 				return View();
 			}
 			catch (ArgumentException ex)
 			{
-				LoggerMessage.Define(logLevel: LogLevel.Critical, eventId: new EventId(1, "Argument Exc."), $"Argument Exception occurred. \n\n Message = {ex.Message}");
-				LoggerMessage.Define(logLevel: LogLevel.Critical, eventId: new EventId(1, "Argument Exc."), $"Source: \n\n {ex.Source}");
-				LoggerMessage.Define(logLevel: LogLevel.Critical, eventId: new EventId(1, "Argument Exc."), $"Inner Exception: \n\n {ex.InnerException}");
-				LoggerMessage.Define(logLevel: LogLevel.Critical, eventId: new EventId(1, "Argument Exc."), $"Stack Trace: \n\n {ex.StackTrace}");
-				LoggerMessage.Define(logLevel: LogLevel.Critical, eventId: new EventId(1, "Argument Exc."), $"Target Site/Method: \n\n {ex.TargetSite}");
+				AccountManagerControllerLog.CriticalException(_logger, ex.ToString());
 				return View();
 			}
 			catch (InvalidOperationException ex)
 			{
-				LoggerMessage.Define(logLevel: LogLevel.Critical, eventId: new EventId(1, "Invalid Operation Exc."), $"Invalid Operation Exception occurred. \n\n Message = {ex.Message}");
-				LoggerMessage.Define(logLevel: LogLevel.Critical, eventId: new EventId(1, "Invalid Operation Exc."), $"Source: \n\n {ex.Source}");
-				LoggerMessage.Define(logLevel: LogLevel.Critical, eventId: new EventId(1, "Invalid Operation Exc."), $"Inner Exception: \n\n {ex.InnerException}");
-				LoggerMessage.Define(logLevel: LogLevel.Critical, eventId: new EventId(1, "Invalid Operation Exc."), $"Stack Trace: \n\n {ex.StackTrace}");
-				LoggerMessage.Define(logLevel: LogLevel.Critical, eventId: new EventId(1, "Invalid Operation Exc."), $"Target Site/Method: \n\n {ex.TargetSite}");
+				AccountManagerControllerLog.CriticalException(_logger, ex.ToString());
 				return View();
 			}
 			catch (Exception ex)
 			{
-				LoggerMessage.Define(logLevel: LogLevel.Critical, eventId: new EventId(1, "Exception"), $"Exception occurred. \n\n Message = {ex.Message}");
-				LoggerMessage.Define(logLevel: LogLevel.Critical, eventId: new EventId(1, "Exception"), $"Source: \n\n {ex.Source}");
-				LoggerMessage.Define(logLevel: LogLevel.Critical, eventId: new EventId(1, "Exception"), $"Inner Exception: \n\n {ex.InnerException}");
-				LoggerMessage.Define(logLevel: LogLevel.Critical, eventId: new EventId(1, "Exception"), $"Stack Trace: \n\n {ex.StackTrace}");
-				LoggerMessage.Define(logLevel: LogLevel.Critical, eventId: new EventId(1, "Exception"), $"Target Site/Method: \n\n {ex.TargetSite}");
+				AccountManagerControllerLog.CriticalException(_logger, ex.ToString());
 				return View();
 			}
 #pragma warning restore CA1031 // Do not catch general exception types
@@ -389,7 +373,7 @@ namespace SAMS.Areas.Admin.Controllers
 				RoomAssignedId = room
 			};
 
-			await context.TeacherInfoModels.AddAsync(teacher).ConfigureAwait(true);
+			_ = await context.TeacherInfoModels.AddAsync(teacher).ConfigureAwait(true);
 			return (context.SaveChangesAsync().IsCompletedSuccessfully);
 		}
 		private async Task<bool> AdminCreator(string id, string fname, string? mname, string lname, string? pname, string email, string? phone, string label)
@@ -406,7 +390,7 @@ namespace SAMS.Areas.Admin.Controllers
 				AdminLabelMod = label
 			};
 
-			await context.AdminInfoModels.AddAsync(admin).ConfigureAwait(true);
+			_ = await context.AdminInfoModels.AddAsync(admin).ConfigureAwait(true);
 			return (context.SaveChangesAsync().IsCompletedSuccessfully);
 		}
 		private async Task<bool> AttOfficeMemberCreator(string id, string fname, string? mname, string lname, string? pname, string email, string? phone)
@@ -422,7 +406,7 @@ namespace SAMS.Areas.Admin.Controllers
 				AoMemberPhoneMod = phone
 			};
 
-			await context.AttendanceOfficeMemberModels.AddAsync(attendanceMember).ConfigureAwait(true);
+			_ = await context.AttendanceOfficeMemberModels.AddAsync(attendanceMember).ConfigureAwait(true);
 			return (context.SaveChangesAsync().IsCompletedSuccessfully);
 		}
 		private async Task<bool> NurseCreator(string id, string fname, string? mname, string lname, string? pname, string email, string? phone)
@@ -438,7 +422,7 @@ namespace SAMS.Areas.Admin.Controllers
 				NursePhoneMod = phone
 			};
 
-			await context.NurseInfoModels.AddAsync(nurse).ConfigureAwait(true);
+			_ = await context.NurseInfoModels.AddAsync(nurse).ConfigureAwait(true);
 			return (context.SaveChangesAsync().IsCompletedSuccessfully);
 		}
 		private async Task<bool> LawEnfCreator(string id, string fname, string? mname, string lname, string? pname, string email, string? phone)
@@ -454,7 +438,7 @@ namespace SAMS.Areas.Admin.Controllers
 				LawePhoneMod = phone
 			};
 
-			await context.LawEnforcementInfoModels.AddAsync(lawenf).ConfigureAwait(true);
+			_ = await context.LawEnforcementInfoModels.AddAsync(lawenf).ConfigureAwait(true);
 			return (context.SaveChangesAsync().IsCompletedSuccessfully);
 		}
 		private async Task<bool> StudentCreator(int id, string fname, string? mname, string lname, string? pname, string email, string? phone, DateTime date, string cslrid, string p1name, string p1email, string? p2name, string? p2email)
@@ -476,7 +460,7 @@ namespace SAMS.Areas.Admin.Controllers
 				Parentguard2EmailMod = p2email
 			};
 
-			await context.StudentInfoModels.AddAsync(student).ConfigureAwait(true);
+			_ = await context.StudentInfoModels.AddAsync(student).ConfigureAwait(true);
 			return (context.SaveChangesAsync().IsCompletedSuccessfully);
 		}
 		private string CounselorIdReturn(string fname)
@@ -496,7 +480,7 @@ namespace SAMS.Areas.Admin.Controllers
 				CounselorPhone = phone
 			};
 
-			await context.CounselorModels.AddAsync(counselor).ConfigureAwait(true);
+			_ = await context.CounselorModels.AddAsync(counselor).ConfigureAwait(true);
 			return (context.SaveChangesAsync().IsCompletedSuccessfully);
 		}
 		/*private async Task<bool> SubCreator(string id, string fname, string? mname, string lname, string? pname, string email, string? phone, bool? days, int? room)
@@ -720,7 +704,7 @@ namespace SAMS.Areas.Admin.Controllers
 				{
 					foreach (var modelError in modelState.Errors)
 					{
-						LoggerMessage.Define(logLevel: LogLevel.Critical, eventId: new EventId(3, "ModelState error."), $"{modelError.ErrorMessage}, \n\n {modelError.Exception}");
+						AccountManagerControllerLog.ModelStateError(_logger, $"{modelError.ErrorMessage}, {modelError.Exception}");
 					}
 				}
 			}
@@ -826,18 +810,18 @@ namespace SAMS.Areas.Admin.Controllers
 				else
 				{
 					context.Entry(newteacher).State = EntityState.Unchanged;
-					await context.SaveChangesAsync().ConfigureAwait(false);
+					_ = await context.SaveChangesAsync().ConfigureAwait(false);
 					return false;
 				}
 			}
 			catch (DbUpdateException ex)
 			{
-				LoggerMessage.Define(logLevel: LogLevel.Error, eventId: new EventId(1, "Database could not be updated."), $"Something went wrong. Following are the details. \n\n {ex.Message} \n\n {ex.Data} \n\n {ex.InnerException} \n\n {ex.Source} \n\n {ex.StackTrace} \n\n {ex.TargetSite}");
+				AccountManagerControllerLog.DatabaseUpdateFailed(_logger, ex.ToString());
 				return false;
 			}
 			catch (OperationCanceledException ex)
 			{
-				LoggerMessage.Define(logLevel: LogLevel.Error, eventId: new EventId(1, "Database could not be updated."), $"Something went wrong. Following are the details. \n\n {ex.Message} \n\n {ex.Data} \n\n {ex.InnerException} \n\n {ex.Source} \n\n {ex.StackTrace} \n\n {ex.TargetSite}");
+				AccountManagerControllerLog.DatabaseUpdateFailed(_logger, ex.ToString());
 				return false;
 			}
 		}
@@ -870,18 +854,18 @@ namespace SAMS.Areas.Admin.Controllers
 				else
 				{
 					context.Entry(newadmin).State = EntityState.Unchanged;
-					await context.SaveChangesAsync().ConfigureAwait(false);
+					_ = await context.SaveChangesAsync().ConfigureAwait(false);
 					return false;
 				}
 			}
 			catch (DbUpdateException ex)
 			{
-				LoggerMessage.Define(logLevel: LogLevel.Error, eventId: new EventId(1, "Database could not be updated."), $"Something went wrong. Following are the details. \n\n {ex.Message} \n\n {ex.Data} \n\n {ex.InnerException} \n\n {ex.Source} \n\n {ex.StackTrace} \n\n {ex.TargetSite}");
+				AccountManagerControllerLog.DatabaseUpdateFailed(_logger, ex.ToString());
 				return false;
 			}
 			catch (OperationCanceledException ex)
 			{
-				LoggerMessage.Define(logLevel: LogLevel.Error, eventId: new EventId(1, "Database could not be updated."), $"Something went wrong. Following are the details. \n\n {ex.Message} \n\n {ex.Data} \n\n {ex.InnerException} \n\n {ex.Source} \n\n {ex.StackTrace} \n\n {ex.TargetSite}");
+				AccountManagerControllerLog.DatabaseUpdateFailed(_logger, ex.ToString());
 				return false;
 			}
 		}
@@ -914,18 +898,18 @@ namespace SAMS.Areas.Admin.Controllers
 				else
 				{
 					context.Entry(newattofficemem).State = EntityState.Unchanged;
-					await context.SaveChangesAsync().ConfigureAwait(false);
+					_ = await context.SaveChangesAsync().ConfigureAwait(false);
 					return false;
 				}
 			}
 			catch (DbUpdateException ex)
 			{
-				LoggerMessage.Define(logLevel: LogLevel.Error, eventId: new EventId(1, "Database could not be updated."), $"Something went wrong. Following are the details. \n\n {ex.Message} \n\n {ex.Data} \n\n {ex.InnerException} \n\n {ex.Source} \n\n {ex.StackTrace} \n\n {ex.TargetSite}");
+				AccountManagerControllerLog.DatabaseUpdateFailed(_logger, ex.ToString());
 				return false;
 			}
 			catch (OperationCanceledException ex)
 			{
-				LoggerMessage.Define(logLevel: LogLevel.Error, eventId: new EventId(1, "Database could not be updated."), $"Something went wrong. Following are the details. \n\n {ex.Message} \n\n {ex.Data} \n\n {ex.InnerException} \n\n {ex.Source} \n\n {ex.StackTrace} \n\n {ex.TargetSite}");
+				AccountManagerControllerLog.DatabaseUpdateFailed(_logger, ex.ToString());
 				return false;
 			}
 		}
@@ -958,18 +942,18 @@ namespace SAMS.Areas.Admin.Controllers
 				else
 				{
 					context.Entry(newnurse).State = EntityState.Unchanged;
-					await context.SaveChangesAsync().ConfigureAwait(false);
+					_ = await context.SaveChangesAsync().ConfigureAwait(false);
 					return false;
 				}
 			}
 			catch (DbUpdateException ex)
 			{
-				LoggerMessage.Define(logLevel: LogLevel.Error, eventId: new EventId(1, "Database could not be updated."), $"Something went wrong. Following are the details. \n\n {ex.Message} \n\n {ex.Data} \n\n {ex.InnerException} \n\n {ex.Source} \n\n {ex.StackTrace} \n\n {ex.TargetSite}");
+				AccountManagerControllerLog.DatabaseUpdateFailed(_logger, ex.ToString());
 				return false;
 			}
 			catch (OperationCanceledException ex)
 			{
-				LoggerMessage.Define(logLevel: LogLevel.Error, eventId: new EventId(1, "Database could not be updated."), $"Something went wrong. Following are the details. \n\n {ex.Message} \n\n {ex.Data} \n\n {ex.InnerException} \n\n {ex.Source} \n\n {ex.StackTrace} \n\n {ex.TargetSite}");
+				AccountManagerControllerLog.DatabaseUpdateFailed(_logger, ex.ToString());
 				return false;
 			}
 		}
@@ -1002,18 +986,18 @@ namespace SAMS.Areas.Admin.Controllers
 				else
 				{
 					context.Entry(newlawenf).State = EntityState.Unchanged;
-					await context.SaveChangesAsync().ConfigureAwait(false);
+					_ = await context.SaveChangesAsync().ConfigureAwait(false);
 					return false;
 				}
 			}
 			catch (DbUpdateException ex)
 			{
-				LoggerMessage.Define(logLevel: LogLevel.Error, eventId: new EventId(1, "Database could not be updated."), $"Something went wrong. Following are the details. \n\n {ex.Message} \n\n {ex.Data} \n\n {ex.InnerException} \n\n {ex.Source} \n\n {ex.StackTrace} \n\n {ex.TargetSite}");
+				AccountManagerControllerLog.DatabaseUpdateFailed(_logger, ex.ToString());
 				return false;
 			}
 			catch (OperationCanceledException ex)
 			{
-				LoggerMessage.Define(logLevel: LogLevel.Error, eventId: new EventId(1, "Database could not be updated."), $"Something went wrong. Following are the details. \n\n {ex.Message} \n\n {ex.Data} \n\n {ex.InnerException} \n\n {ex.Source} \n\n {ex.StackTrace} \n\n {ex.TargetSite}");
+				AccountManagerControllerLog.DatabaseUpdateFailed(_logger, ex.ToString());
 				return false;
 			}
 		}
@@ -1055,18 +1039,18 @@ namespace SAMS.Areas.Admin.Controllers
 					else
 					{
 						context.Entry(newstudent).State = EntityState.Unchanged;
-						await context.SaveChangesAsync().ConfigureAwait(false);
+						_ = await context.SaveChangesAsync().ConfigureAwait(false);
 						return false;
 					}
 				}
 				catch (DbUpdateException ex)
 				{
-					LoggerMessage.Define(logLevel: LogLevel.Error, eventId: new EventId(1, "Database could not be updated."), $"Something went wrong. Following are the details. \n\n {ex.Message} \n\n {ex.Data} \n\n {ex.InnerException} \n\n {ex.Source} \n\n {ex.StackTrace} \n\n {ex.TargetSite}");
+					AccountManagerControllerLog.DatabaseUpdateFailed(_logger, ex.ToString());
 					return false;
 				}
 				catch (OperationCanceledException ex)
 				{
-					LoggerMessage.Define(logLevel: LogLevel.Error, eventId: new EventId(1, "Database could not be updated."), $"Something went wrong. Following are the details. \n\n {ex.Message} \n\n {ex.Data} \n\n {ex.InnerException} \n\n {ex.Source} \n\n {ex.StackTrace} \n\n {ex.TargetSite}");
+					AccountManagerControllerLog.DatabaseUpdateFailed(_logger, ex.ToString());
 					return false;
 				}
 			}
@@ -1101,18 +1085,18 @@ namespace SAMS.Areas.Admin.Controllers
 				else
 				{
 					context.Entry(newcounselor).State = EntityState.Unchanged;
-					await context.SaveChangesAsync().ConfigureAwait(false);
+					_ = await context.SaveChangesAsync().ConfigureAwait(false);
 					return false;
 				}
 			}
 			catch (DbUpdateException ex)
 			{
-				LoggerMessage.Define(logLevel: LogLevel.Error, eventId: new EventId(1, "Database could not be updated."), $"Something went wrong. Following are the details. \n\n {ex.Message} \n\n {ex.Data} \n\n {ex.InnerException} \n\n {ex.Source} \n\n {ex.StackTrace} \n\n {ex.TargetSite}");
+				AccountManagerControllerLog.DatabaseUpdateFailed(_logger, ex.ToString());
 				return false;
 			}
 			catch (OperationCanceledException ex)
 			{
-				LoggerMessage.Define(logLevel: LogLevel.Error, eventId: new EventId(1, "Database could not be updated."), $"Something went wrong. Following are the details. \n\n {ex.Message} \n\n {ex.Data} \n\n {ex.InnerException} \n\n {ex.Source} \n\n {ex.StackTrace} \n\n {ex.TargetSite}");
+				AccountManagerControllerLog.DatabaseUpdateFailed(_logger, ex.ToString());
 				return false;
 			}
 		}
@@ -1145,7 +1129,7 @@ namespace SAMS.Areas.Admin.Controllers
 			var removeResult = await userManager.RemoveFromRolesAsync(user, currentRoles).ConfigureAwait(false);
 			if (!removeResult.Succeeded)
 			{
-				LoggerMessage.Define(logLevel: LogLevel.Error, eventId: new EventId(2, "Task failure."), "Failed to remove user roles.");
+				AccountManagerControllerLog.RoleRemovalFailed(_logger);
 				// Handle the error
 				return false;
 			}
@@ -1166,7 +1150,7 @@ namespace SAMS.Areas.Admin.Controllers
 						report.DeveloperReference = "AccEdt1139";
 						report.UserId = useridforreporting;
 						report.Number = 01;
-						await context.ErrorProcessingModel.AddAsync(report).ConfigureAwait(true);
+						_ = await context.ErrorProcessingModel.AddAsync(report).ConfigureAwait(true);
 						return false;
 					}
 					return true;
@@ -1181,7 +1165,7 @@ namespace SAMS.Areas.Admin.Controllers
 					report.DeveloperReference = "AccEdt1154";
 					report.UserId = useridforreporting;
 					report.Number = 01;
-					await context.ErrorProcessingModel.AddAsync(report).ConfigureAwait(true);
+					_ = await context.ErrorProcessingModel.AddAsync(report).ConfigureAwait(true);
 					return false;
 				}
 				catch (DbUpdateException ex)
@@ -1194,7 +1178,7 @@ namespace SAMS.Areas.Admin.Controllers
 					report.DeveloperReference = "AccEdt1167";
 					report.UserId = useridforreporting;
 					report.Number = 01;
-					await context.ErrorProcessingModel.AddAsync(report).ConfigureAwait(true);
+					_ = await context.ErrorProcessingModel.AddAsync(report).ConfigureAwait(true);
 					return false;
 				}
 				catch (Exception ex)
@@ -1207,7 +1191,7 @@ namespace SAMS.Areas.Admin.Controllers
 					report.DeveloperReference = "AccEdt1162";
 					report.UserId = useridforreporting;
 					report.Number = 01;
-					await context.ErrorProcessingModel.AddAsync(report).ConfigureAwait(true);
+					_ = await context.ErrorProcessingModel.AddAsync(report).ConfigureAwait(true);
 					return false;
 				}
 			}
@@ -1223,7 +1207,7 @@ namespace SAMS.Areas.Admin.Controllers
 					report.DeveloperReference = "AccEdt1196";
 					report.UserId = useridforreporting;
 					report.Number = 01;
-					await context.ErrorProcessingModel.AddAsync(report).ConfigureAwait(true);
+					_ = await context.ErrorProcessingModel.AddAsync(report).ConfigureAwait(true);
 					return false;
 				}
 				report.Severity = ReportModel.SeverityLevel.High;
@@ -1233,7 +1217,7 @@ namespace SAMS.Areas.Admin.Controllers
 				report.DeveloperReference = "AccEdt1206";
 				report.UserId = useridforreporting;
 				report.Number = 01;
-				await context.ErrorProcessingModel.AddAsync(report).ConfigureAwait(true);
+				_ = await context.ErrorProcessingModel.AddAsync(report).ConfigureAwait(true);
 				return false;
 			}
 		}
@@ -1392,7 +1376,7 @@ namespace SAMS.Areas.Admin.Controllers
 									else
 									{
 										var sem1schedDeletion = context.Sem1StudSchedules.Remove(sem1sched);
-										await context.SaveChangesAsync().ConfigureAwait(true);
+										_ = await context.SaveChangesAsync().ConfigureAwait(true);
 									}
 
 									var sem2sched = context.Sem2StudSchedules.Where(a => a.StudentID == studId).First();
@@ -1403,7 +1387,7 @@ namespace SAMS.Areas.Admin.Controllers
 									else
 									{
 										var sem2schedDeletion = context.Sem2StudSchedules.Remove(sem2sched);
-										await context.SaveChangesAsync().ConfigureAwait(true);
+										_ = await context.SaveChangesAsync().ConfigureAwait(true);
 									}
 
 									var studentInfo = await context.StudentInfoModels.FindAsync(studId).ConfigureAwait(true);
@@ -1414,7 +1398,7 @@ namespace SAMS.Areas.Admin.Controllers
 									else
 									{
 										var studInfoDeletion = context.StudentInfoModels.Remove(studentInfo);
-										await context.SaveChangesAsync().ConfigureAwait(true);
+										_ = await context.SaveChangesAsync().ConfigureAwait(true);
 									}
 									break;
 								}
@@ -1431,7 +1415,7 @@ namespace SAMS.Areas.Admin.Controllers
 									else
 									{
 										var deletion1 = context.Remove(courses);
-										await context.SaveChangesAsync().ConfigureAwait(true);
+										_ = await context.SaveChangesAsync().ConfigureAwait(true);
 									}
 
 									if (teacherInfo.Count == 0)
@@ -1441,7 +1425,7 @@ namespace SAMS.Areas.Admin.Controllers
 									else
 									{
 										var deletion2 = context.Remove(teacherInfo);
-										await context.SaveChangesAsync().ConfigureAwait(true);
+										_ = await context.SaveChangesAsync().ConfigureAwait(true);
 									}
 
 									break;
@@ -1457,7 +1441,7 @@ namespace SAMS.Areas.Admin.Controllers
 									else
 									{
 										var deletion = context.Remove(attinfo);
-										await context.SaveChangesAsync().ConfigureAwait(true);
+										_ = await context.SaveChangesAsync().ConfigureAwait(true);
 									}
 									break;
 								}
@@ -1472,7 +1456,7 @@ namespace SAMS.Areas.Admin.Controllers
 									else
 									{
 										var deletion = context.Remove(admininfo);
-										await context.SaveChangesAsync().ConfigureAwait(true);
+										_ = await context.SaveChangesAsync().ConfigureAwait(true);
 									}
 									break;
 								}
@@ -1483,12 +1467,12 @@ namespace SAMS.Areas.Admin.Controllers
 
 									if (admininfo.Count == 0)
 									{
-										LoggerMessage.Define(logLevel: LogLevel.Critical, eventId: new EventId(700, "Data retrieval failed."), $"Something went wrong. Following are the details. adminInfo is empty.");
+										AccountManagerControllerLog.AdminInfoRetrievalFailed(_logger);
 									}
 									else
 									{
 										var deletion = context.Remove(admininfo);
-										await context.SaveChangesAsync().ConfigureAwait(true);
+										_ = await context.SaveChangesAsync().ConfigureAwait(true);
 									}
 
 									break;
@@ -1504,7 +1488,7 @@ namespace SAMS.Areas.Admin.Controllers
 									else
 									{
 										var deletion = context.Remove(nurseinfo);
-										await context.SaveChangesAsync().ConfigureAwait(true);
+										_ = await context.SaveChangesAsync().ConfigureAwait(true);
 									}
 									break;
 								}
@@ -1518,7 +1502,7 @@ namespace SAMS.Areas.Admin.Controllers
 									}
 
 									var deletion = context.Remove(lawenfinfo);
-									await context.SaveChangesAsync().ConfigureAwait(true);
+									_ = await context.SaveChangesAsync().ConfigureAwait(true);
 									break;
 								}
 							/*case "Synnovation Lab QR Code Scanner Management":
@@ -1541,7 +1525,7 @@ namespace SAMS.Areas.Admin.Controllers
 									else
 									{
 										var deletion1 = context.Remove(courses);
-										await context.SaveChangesAsync().ConfigureAwait(true);
+										_ = await context.SaveChangesAsync().ConfigureAwait(true);
 									}
 									var teacherInfo = context.TeacherInfoModels.Where(a => a.TeacherID == teacherid).ToList();
 									if (teacherInfo.Count <= 0)
@@ -1551,7 +1535,7 @@ namespace SAMS.Areas.Admin.Controllers
 									else
 									{
 										var deletion2 = context.Remove(teacherInfo);
-										await context.SaveChangesAsync().ConfigureAwait(true);
+										_ = await context.SaveChangesAsync().ConfigureAwait(true);
 									}
 									break;
 								}
@@ -1566,7 +1550,7 @@ namespace SAMS.Areas.Admin.Controllers
 									else
 									{
 										var deletion = context.Remove(admininfo);
-										await context.SaveChangesAsync().ConfigureAwait(true);
+										_ = await context.SaveChangesAsync().ConfigureAwait(true);
 									}
 									break;
 								}
@@ -1581,7 +1565,7 @@ namespace SAMS.Areas.Admin.Controllers
 									else
 									{
 										var deletion = context.Remove(cslrinfo);
-										await context.SaveChangesAsync().ConfigureAwait(true);
+										_ = await context.SaveChangesAsync().ConfigureAwait(true);
 									}
 									break;
 								}
@@ -1609,12 +1593,12 @@ namespace SAMS.Areas.Admin.Controllers
 			}
 			catch (InvalidOperationException ex)
 			{
-				LoggerMessage.Define(logLevel: LogLevel.Critical, eventId: new EventId(1, "Data retrieval failed."), $"Something went wrong. Following are the details. \n\n {ex.Message} \n\n {ex.Data} \n\n {ex.InnerException} \n\n {ex.Source} \n\n {ex.StackTrace} \n\n {ex.TargetSite}");
+				AccountManagerControllerLog.CriticalException(_logger, ex.ToString());
 				return View();
 			}
 			catch (Exception ex)
 			{
-				LoggerMessage.Define(logLevel: LogLevel.Critical, eventId: new EventId(1, "Data retrieval failed."), $"Something went wrong. Following are the details. \n\n {ex.Message} \n\n {ex.Data} \n\n {ex.InnerException} \n\n {ex.Source} \n\n {ex.StackTrace} \n\n {ex.TargetSite}");
+				AccountManagerControllerLog.CriticalException(_logger, ex.ToString());
 
 				return View();
 			}
@@ -1762,6 +1746,21 @@ namespace SAMS.Areas.Admin.Controllers
 			{
 				[LoggerMessage(EventId = 1800, Level = LogLevel.Critical, Message = "{Message}")]
 				internal static partial void CriticalException(ILogger logger, string message);
+
+				[LoggerMessage(EventId = 30, Level = LogLevel.Information, Message = "User created a new account without a password.")]
+				internal static partial void UserCreated(ILogger logger);
+
+				[LoggerMessage(EventId = 3, Level = LogLevel.Critical, Message = "{Message}")]
+				internal static partial void ModelStateError(ILogger logger, string message);
+
+				[LoggerMessage(EventId = 1, Level = LogLevel.Error, Message = "{Message}")]
+				internal static partial void DatabaseUpdateFailed(ILogger logger, string message);
+
+				[LoggerMessage(EventId = 2, Level = LogLevel.Error, Message = "Failed to remove user roles.")]
+				internal static partial void RoleRemovalFailed(ILogger logger);
+
+				[LoggerMessage(EventId = 700, Level = LogLevel.Critical, Message = "Admin information is empty.")]
+				internal static partial void AdminInfoRetrievalFailed(ILogger logger);
 
 				[LoggerMessage(EventId = 1801, Level = LogLevel.Information, Message = "Unable to retrieve student schedule 1 for deletion.")]
 				internal static partial void StudentSchedule1DeletionRetrieveFailed(ILogger logger);
