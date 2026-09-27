@@ -322,22 +322,22 @@ namespace SAMS.Areas.Admin.Controllers
 			}
 			catch (ArgumentNullException ex)
 			{
-				AccountManagerControllerLog.CriticalException(_logger, ex.ToString());
+				AccountManagerControllerLog.CriticalException(_logger, ex);
 				return View();
 			}
 			catch (ArgumentException ex)
 			{
-				AccountManagerControllerLog.CriticalException(_logger, ex.ToString());
+				AccountManagerControllerLog.CriticalException(_logger, ex);
 				return View();
 			}
 			catch (InvalidOperationException ex)
 			{
-				AccountManagerControllerLog.CriticalException(_logger, ex.ToString());
+				AccountManagerControllerLog.CriticalException(_logger, ex);
 				return View();
 			}
 			catch (Exception ex)
 			{
-				AccountManagerControllerLog.CriticalException(_logger, ex.ToString());
+				AccountManagerControllerLog.CriticalException(_logger, ex);
 				return View();
 			}
 #pragma warning restore CA1031 // Do not catch general exception types
@@ -704,7 +704,7 @@ namespace SAMS.Areas.Admin.Controllers
 				{
 					foreach (var modelError in modelState.Errors)
 					{
-						AccountManagerControllerLog.ModelStateError(_logger, $"{modelError.ErrorMessage}, {modelError.Exception}");
+						AccountManagerControllerLog.ModelStateError(_logger, modelError.ErrorMessage, modelError.Exception);
 					}
 				}
 			}
@@ -816,12 +816,12 @@ namespace SAMS.Areas.Admin.Controllers
 			}
 			catch (DbUpdateException ex)
 			{
-				AccountManagerControllerLog.DatabaseUpdateFailed(_logger, ex.ToString());
+				AccountManagerControllerLog.DatabaseUpdateFailed(_logger, ex);
 				return false;
 			}
 			catch (OperationCanceledException ex)
 			{
-				AccountManagerControllerLog.DatabaseUpdateFailed(_logger, ex.ToString());
+				AccountManagerControllerLog.DatabaseUpdateFailed(_logger, ex);
 				return false;
 			}
 		}
@@ -860,12 +860,12 @@ namespace SAMS.Areas.Admin.Controllers
 			}
 			catch (DbUpdateException ex)
 			{
-				AccountManagerControllerLog.DatabaseUpdateFailed(_logger, ex.ToString());
+				AccountManagerControllerLog.DatabaseUpdateFailed(_logger, ex);
 				return false;
 			}
 			catch (OperationCanceledException ex)
 			{
-				AccountManagerControllerLog.DatabaseUpdateFailed(_logger, ex.ToString());
+				AccountManagerControllerLog.DatabaseUpdateFailed(_logger, ex);
 				return false;
 			}
 		}
@@ -904,12 +904,12 @@ namespace SAMS.Areas.Admin.Controllers
 			}
 			catch (DbUpdateException ex)
 			{
-				AccountManagerControllerLog.DatabaseUpdateFailed(_logger, ex.ToString());
+				AccountManagerControllerLog.DatabaseUpdateFailed(_logger, ex);
 				return false;
 			}
 			catch (OperationCanceledException ex)
 			{
-				AccountManagerControllerLog.DatabaseUpdateFailed(_logger, ex.ToString());
+				AccountManagerControllerLog.DatabaseUpdateFailed(_logger, ex);
 				return false;
 			}
 		}
@@ -948,12 +948,12 @@ namespace SAMS.Areas.Admin.Controllers
 			}
 			catch (DbUpdateException ex)
 			{
-				AccountManagerControllerLog.DatabaseUpdateFailed(_logger, ex.ToString());
+				AccountManagerControllerLog.DatabaseUpdateFailed(_logger, ex);
 				return false;
 			}
 			catch (OperationCanceledException ex)
 			{
-				AccountManagerControllerLog.DatabaseUpdateFailed(_logger, ex.ToString());
+				AccountManagerControllerLog.DatabaseUpdateFailed(_logger, ex);
 				return false;
 			}
 		}
@@ -992,12 +992,12 @@ namespace SAMS.Areas.Admin.Controllers
 			}
 			catch (DbUpdateException ex)
 			{
-				AccountManagerControllerLog.DatabaseUpdateFailed(_logger, ex.ToString());
+				AccountManagerControllerLog.DatabaseUpdateFailed(_logger, ex);
 				return false;
 			}
 			catch (OperationCanceledException ex)
 			{
-				AccountManagerControllerLog.DatabaseUpdateFailed(_logger, ex.ToString());
+				AccountManagerControllerLog.DatabaseUpdateFailed(_logger, ex);
 				return false;
 			}
 		}
@@ -1045,12 +1045,12 @@ namespace SAMS.Areas.Admin.Controllers
 				}
 				catch (DbUpdateException ex)
 				{
-					AccountManagerControllerLog.DatabaseUpdateFailed(_logger, ex.ToString());
+					AccountManagerControllerLog.DatabaseUpdateFailed(_logger, ex);
 					return false;
 				}
 				catch (OperationCanceledException ex)
 				{
-					AccountManagerControllerLog.DatabaseUpdateFailed(_logger, ex.ToString());
+					AccountManagerControllerLog.DatabaseUpdateFailed(_logger, ex);
 					return false;
 				}
 			}
@@ -1091,12 +1091,12 @@ namespace SAMS.Areas.Admin.Controllers
 			}
 			catch (DbUpdateException ex)
 			{
-				AccountManagerControllerLog.DatabaseUpdateFailed(_logger, ex.ToString());
+				AccountManagerControllerLog.DatabaseUpdateFailed(_logger, ex);
 				return false;
 			}
 			catch (OperationCanceledException ex)
 			{
-				AccountManagerControllerLog.DatabaseUpdateFailed(_logger, ex.ToString());
+				AccountManagerControllerLog.DatabaseUpdateFailed(_logger, ex);
 				return false;
 			}
 		}
@@ -1157,7 +1157,7 @@ namespace SAMS.Areas.Admin.Controllers
 				}
 				catch (DbUpdateConcurrencyException ex)
 				{
-					AccountManagerControllerLog.CriticalException(_logger, ex.ToString());
+					AccountManagerControllerLog.CriticalException(_logger, ex);
 					report.Severity = ReportModel.SeverityLevel.High;
 					report.TypeOfReport = ReportModel.ErrorType.ProcessingError;
 					report.StatusOfReport = ReportModel.Status.SubmittedToAppropriatePersonnel;
@@ -1170,7 +1170,7 @@ namespace SAMS.Areas.Admin.Controllers
 				}
 				catch (DbUpdateException ex)
 				{
-					AccountManagerControllerLog.CriticalException(_logger, ex.ToString());
+					AccountManagerControllerLog.CriticalException(_logger, ex);
 					report.Severity = ReportModel.SeverityLevel.High;
 					report.TypeOfReport = ReportModel.ErrorType.ProcessingError;
 					report.StatusOfReport = ReportModel.Status.SubmittedToAppropriatePersonnel;
@@ -1183,7 +1183,7 @@ namespace SAMS.Areas.Admin.Controllers
 				}
 				catch (Exception ex)
 				{
-					AccountManagerControllerLog.CriticalException(_logger, ex.ToString());
+					AccountManagerControllerLog.CriticalException(_logger, ex);
 					report.Severity = ReportModel.SeverityLevel.High;
 					report.TypeOfReport = ReportModel.ErrorType.ProcessingError;
 					report.StatusOfReport = ReportModel.Status.SubmittedToAppropriatePersonnel;
@@ -1593,12 +1593,12 @@ namespace SAMS.Areas.Admin.Controllers
 			}
 			catch (InvalidOperationException ex)
 			{
-				AccountManagerControllerLog.CriticalException(_logger, ex.ToString());
+				AccountManagerControllerLog.CriticalException(_logger, ex);
 				return View();
 			}
 			catch (Exception ex)
 			{
-				AccountManagerControllerLog.CriticalException(_logger, ex.ToString());
+				AccountManagerControllerLog.CriticalException(_logger, ex);
 
 				return View();
 			}
@@ -1744,17 +1744,17 @@ namespace SAMS.Areas.Admin.Controllers
 
 			internal static partial class AccountManagerControllerLog
 			{
-				[LoggerMessage(EventId = 1800, Level = LogLevel.Critical, Message = "{Message}")]
-				internal static partial void CriticalException(ILogger logger, string message);
+				[LoggerMessage(EventId = 1800, Level = LogLevel.Critical, Message = "An exception occurred.")]
+				internal static partial void CriticalException(ILogger logger, Exception exception);
 
 				[LoggerMessage(EventId = 30, Level = LogLevel.Information, Message = "User created a new account without a password.")]
 				internal static partial void UserCreated(ILogger logger);
 
 				[LoggerMessage(EventId = 3, Level = LogLevel.Critical, Message = "{Message}")]
-				internal static partial void ModelStateError(ILogger logger, string message);
+				internal static partial void ModelStateError(ILogger logger, string message, Exception? exception);
 
-				[LoggerMessage(EventId = 1, Level = LogLevel.Error, Message = "{Message}")]
-				internal static partial void DatabaseUpdateFailed(ILogger logger, string message);
+				[LoggerMessage(EventId = 1, Level = LogLevel.Error, Message = "Database update failed.")]
+				internal static partial void DatabaseUpdateFailed(ILogger logger, Exception exception);
 
 				[LoggerMessage(EventId = 2, Level = LogLevel.Error, Message = "Failed to remove user roles.")]
 				internal static partial void RoleRemovalFailed(ILogger logger);
