@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Logging;
 using SAMS.Data;
 using SAMS.Interfaces;
 using SAMS.Models;
@@ -32,7 +33,7 @@ namespace SAMS.Services
 
             if (holidayDates == null)
             {
-                _logger.LogWarning("Holidays is null and the task is delayed by 1 DAY. Done by the if statement in holidayRun");
+                Bell2BellAdditionServiceLog.HolidaysNull(_logger);
                 await Task.Delay(TimeSpan.FromDays(1));
             }
             else
@@ -41,7 +42,7 @@ namespace SAMS.Services
                 {
                     if (date == todayDate)
                     {
-                        _logger.LogWarning("Today is a holiday and the task is delayed by 1 DAY. Done by the if statement in holidayRun");
+                        Bell2BellAdditionServiceLog.TodayIsHoliday(_logger);
                         await Task.Delay(TimeSpan.FromDays(1));
                     }
                     else
@@ -118,7 +119,7 @@ namespace SAMS.Services
                         }
                     default:
                         {
-                            _logger.LogInformation("The task is supposed to be delayed for 5 MINUTES. Done by default case in ScheduleRunner");
+                            Bell2BellAdditionServiceLog.ScheduleRunnerDefaultDelay(_logger);
                             await Task.Delay(TimeSpan.FromMinutes(5));
                             //await Task.Delay(TimeSpan.FromMinutes(5), token);
                             break;
@@ -243,12 +244,12 @@ namespace SAMS.Services
                         }
                         else
                         {
-                            _logger.LogInformation("Entry exists already in B2BAttendance.");
+                            Bell2BellAdditionServiceLog.EntryExists(_logger);
                         }
                     }
                     else
                     {
-                        _logger.LogInformation("Course is inside the noncheck courses.");
+                        Bell2BellAdditionServiceLog.CourseInNoncheck(_logger);
                     }
                 }
             }
@@ -578,5 +579,23 @@ namespace SAMS.Services
                     }
             }
         }
+    }
+
+    internal static partial class Bell2BellAdditionServiceLog
+    {
+        [LoggerMessage(EventId = 1600, Level = LogLevel.Warning, Message = "Holidays is null and the task is delayed by 1 DAY. Done by the if statement in holidayRun")]
+        internal static partial void HolidaysNull(ILogger logger);
+
+        [LoggerMessage(EventId = 1601, Level = LogLevel.Warning, Message = "Today is a holiday and the task is delayed by 1 DAY. Done by the if statement in holidayRun")]
+        internal static partial void TodayIsHoliday(ILogger logger);
+
+        [LoggerMessage(EventId = 1602, Level = LogLevel.Information, Message = "The task is supposed to be delayed for 5 MINUTES. Done by default case in ScheduleRunner")]
+        internal static partial void ScheduleRunnerDefaultDelay(ILogger logger);
+
+        [LoggerMessage(EventId = 1603, Level = LogLevel.Information, Message = "Entry exists already in B2BAttendance.")]
+        internal static partial void EntryExists(ILogger logger);
+
+        [LoggerMessage(EventId = 1604, Level = LogLevel.Information, Message = "Course is inside the noncheck courses.")]
+        internal static partial void CourseInNoncheck(ILogger logger);
     }
 }

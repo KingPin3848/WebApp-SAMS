@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Logging;
 using SAMS.Data;
 using SAMS.Interfaces;
 using SAMS.Models;
@@ -31,7 +32,7 @@ namespace SAMS.Services
 
             if (holidayDates == null)
             {
-                _logger.LogWarning("Holidays is null and the task if delayed by 1 DAY. Done by the if statement in holidayRun");
+                AutomaticBellAbsentLog.HolidaysNull(_logger);
                 await Task.Delay(TimeSpan.FromDays(1)).ConfigureAwait(true);
             }
             else
@@ -40,7 +41,7 @@ namespace SAMS.Services
                 {
                     if (date == todayDate)
                     {
-                        _logger.LogWarning("Today is a holiday and the task is delayed by 1 DAY. Done by the if statement in holidayRun");
+                        AutomaticBellAbsentLog.TodayIsHoliday(_logger);
                         await Task.Delay(TimeSpan.FromDays(1)).ConfigureAwait(true);
                     }
                     else
@@ -89,7 +90,7 @@ namespace SAMS.Services
                     break;
                 default:
                     chosenBellSched = null;
-                    _logger.LogInformation("A schedule was chosen other than the ones offered. Possible breach try.");
+                    AutomaticBellAbsentLog.UnexpectedSchedule(_logger);
                     break;
             }
         }
@@ -101,7 +102,7 @@ namespace SAMS.Services
 
             if (chosenBellSched == null)
             {
-                _logger.LogCritical("A schedule or option was chosen other than the ones offered. Possible breach try.");
+                AutomaticBellAbsentLog.UnexpectedScheduleOrOption(_logger);
             }
             else
             {
@@ -135,7 +136,7 @@ namespace SAMS.Services
                             // If the course for this bell is in noncheckDailyCourses, skip to the next student
                             if (noncheckBelltrue || noncheckDailytrue)
                             {
-                                _logger.LogInformation("Course was found inside the noncheck course list. noncheckBell list: {NoncheckBelltrue}, noncheckDaily list: {NoncheckDailytrue} Cannot mark absent for that class.", noncheckBelltrue, noncheckDailytrue);
+                                AutomaticBellAbsentLog.NoncheckCourseFound(_logger, noncheckBelltrue, noncheckDailytrue);
                             }
                             else
                             {
@@ -184,7 +185,7 @@ namespace SAMS.Services
 
             if (chosenBellSched == null)
             {
-                _logger.LogCritical("A schedule or option was chosen other than the ones offered. Possible breach try.");
+                AutomaticBellAbsentLog.UnexpectedScheduleOrOption(_logger);
             }
             else
             {
@@ -218,7 +219,7 @@ namespace SAMS.Services
                             // If the course for this bell is in noncheckDailyCourses, skip to the next student
                             if (noncheckBelltrue || noncheckDailytrue)
                             {
-                                _logger.LogInformation("Course was found inside the noncheck course list. noncheckBell list: {NoncheckBelltrue}, noncheckDaily list: {NoncheckDailytrue} Cannot mark absent for that class.", noncheckBelltrue, noncheckDailytrue);
+                                AutomaticBellAbsentLog.NoncheckCourseFound(_logger, noncheckBelltrue, noncheckDailytrue);
                             }
                             else
                             {
@@ -414,5 +415,23 @@ namespace SAMS.Services
                     throw new ArgumentOutOfRangeException(nameof(bellName), "Invalid bell name provided.");
             }
         }
+    }
+
+    internal static partial class AutomaticBellAbsentLog
+    {
+        [LoggerMessage(EventId = 1200, Level = LogLevel.Warning, Message = "Holidays is null and the task if delayed by 1 DAY. Done by the if statement in holidayRun")]
+        internal static partial void HolidaysNull(ILogger logger);
+
+        [LoggerMessage(EventId = 1201, Level = LogLevel.Warning, Message = "Today is a holiday and the task is delayed by 1 DAY. Done by the if statement in holidayRun")]
+        internal static partial void TodayIsHoliday(ILogger logger);
+
+        [LoggerMessage(EventId = 1202, Level = LogLevel.Information, Message = "A schedule was chosen other than the ones offered. Possible breach try.")]
+        internal static partial void UnexpectedSchedule(ILogger logger);
+
+        [LoggerMessage(EventId = 1203, Level = LogLevel.Critical, Message = "A schedule or option was chosen other than the ones offered. Possible breach try.")]
+        internal static partial void UnexpectedScheduleOrOption(ILogger logger);
+
+        [LoggerMessage(EventId = 1204, Level = LogLevel.Information, Message = "Course was found inside the noncheck course list. noncheckBell list: {NoncheckBelltrue}, noncheckDaily list: {NoncheckDailytrue} Cannot mark absent for that class.")]
+        internal static partial void NoncheckCourseFound(ILogger logger, bool noncheckBelltrue, bool noncheckDailytrue);
     }
 }

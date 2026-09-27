@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Logging;
 using SAMS.Data;
 using SAMS.Interfaces;
 using SAMS.Models;
@@ -31,7 +32,7 @@ namespace SAMS.Services
 
             if (holidayDates == null)
             {
-                _logger.LogWarning("Holidays is null and the task if delayed by 1 DAY. Done by the if statement in holidayRun");
+                AutomaticDailyAbsentLog.HolidaysNull(_logger);
                 await Task.Delay(TimeSpan.FromDays(1));
             }
             else
@@ -40,7 +41,7 @@ namespace SAMS.Services
                 {
                     if (date == todayDate)
                     {
-                        _logger.LogWarning("Today is a holiday and the task is delayed by 1 DAY. Done by the if statement in holidayRun");
+                        AutomaticDailyAbsentLog.TodayIsHoliday(_logger);
                         await Task.Delay(TimeSpan.FromDays(1));
                     }
                     else
@@ -117,7 +118,7 @@ namespace SAMS.Services
 
                 if (bell.BellName.Contains("Transition"))
                 {
-                    _logger.LogInformation("Student is not marked absent during transition period.");
+                    AutomaticDailyAbsentLog.TransitionPeriodSkip(_logger);
                 }
                 else
                 {
@@ -145,7 +146,7 @@ namespace SAMS.Services
                             // If the course for this bell is in noncheckDailyCourses, skip to the next student
                             if (noncheckDailyCourses.Any(course => course.CourseId == bellCourseId))
                             {
-                                _logger.LogInformation("The course is inside noncheckdaily course list. Automatic Absence Service doesn't mark students absent for {BellCourseId}", bellCourseId);
+                                AutomaticDailyAbsentLog.CourseInNoncheck(_logger, bellCourseId);
                             }
                             else
                             {
@@ -178,7 +179,7 @@ namespace SAMS.Services
                                 }
                                 else
                                 {
-                                    _logger.LogInformation("Couldn't find entry for {StudentId}.", studentId);
+                                    AutomaticDailyAbsentLog.CouldNotFindEntry(_logger, studentId);
                                 }
                             }
                         }
@@ -460,5 +461,23 @@ namespace SAMS.Services
         //    return chosenBellSched;
         //}
 
+    }
+
+    internal static partial class AutomaticDailyAbsentLog
+    {
+        [LoggerMessage(EventId = 1700, Level = LogLevel.Warning, Message = "Holidays is null and the task if delayed by 1 DAY. Done by the if statement in holidayRun")]
+        internal static partial void HolidaysNull(ILogger logger);
+
+        [LoggerMessage(EventId = 1701, Level = LogLevel.Warning, Message = "Today is a holiday and the task is delayed by 1 DAY. Done by the if statement in holidayRun")]
+        internal static partial void TodayIsHoliday(ILogger logger);
+
+        [LoggerMessage(EventId = 1702, Level = LogLevel.Information, Message = "Student is not marked absent during transition period.")]
+        internal static partial void TransitionPeriodSkip(ILogger logger);
+
+        [LoggerMessage(EventId = 1703, Level = LogLevel.Information, Message = "The course is inside noncheckdaily course list. Automatic Absence Service doesn't mark students absent for {BellCourseId}")]
+        internal static partial void CourseInNoncheck(ILogger logger, int bellCourseId);
+
+        [LoggerMessage(EventId = 1704, Level = LogLevel.Information, Message = "Couldn't find entry for {StudentId}.")]
+        internal static partial void CouldNotFindEntry(ILogger logger, int studentId);
     }
 }

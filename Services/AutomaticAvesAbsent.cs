@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using SAMS.Data;
 using SAMS.Interfaces;
 using SAMS.Models;
@@ -32,7 +33,7 @@ namespace SAMS.Services
             var isHoliday = context.SchedulerModels.Any(a => a.Type == SchedulerModel.Types.NoSchool && a.Date == today);
             if (isHoliday)
             {
-                _logger.LogInformation("Skipping automatic Aves attendance because today is marked as a no-school day.");
+                AutomaticAvesAbsentLog.SkippingForNoSchoolDay(_logger);
                 return;
             }
 
@@ -84,7 +85,7 @@ namespace SAMS.Services
                     var hasAvesBell = context.CustomSchedules.Any(a => a.BellName.Contains("Aves Bell"));
                     if (!hasAvesBell)
                     {
-                        _logger.LogInformation("No Aves bell found in the custom bell schedule.");
+                        AutomaticAvesAbsentLog.NoAvesBellInCustom(_logger);
                         return [];
                     }
 
@@ -94,7 +95,7 @@ namespace SAMS.Services
                         .Cast<IBellSchedule>()];
 
                 default:
-                    _logger.LogInformation("Unsupported schedule selected for automatic Aves attendance processing.");
+                    AutomaticAvesAbsentLog.UnsupportedSchedule(_logger);
                     return [];
             }
         }
@@ -113,7 +114,7 @@ namespace SAMS.Services
             var avesBell = chosenBellSchedule.FirstOrDefault(b => b.BellName == "Aves Bell");
             if (avesBell is null)
             {
-                _logger.LogInformation("No exact Aves Bell slot found in selected schedule.");
+                AutomaticAvesAbsentLog.NoExactAvesBellSlot(_logger);
                 return;
             }
 
@@ -134,7 +135,7 @@ namespace SAMS.Services
             {
                 if (!int.TryParse(student.SchoolId, out var studentId))
                 {
-                    _logger.LogWarning("Unable to parse SchoolId for student {UserId}.", student.Id);
+                    AutomaticAvesAbsentLog.UnableToParseSchoolId(_logger, student.Id);
                     continue;
                 }
 
@@ -152,10 +153,7 @@ namespace SAMS.Services
 
                 if (nonCheckDailyCourseIds.Contains(bellCourseId) || nonCheckBellCourseIds.Contains(bellCourseId))
                 {
-                    _logger.LogInformation(
-                        "Skipping automatic absence for non-check course {CourseId} {CourseName}.",
-                        bellCourseId,
-                        bellCourseName);
+                    AutomaticAvesAbsentLog.SkippingNonCheckCourse(_logger, bellCourseId, bellCourseName);
                     continue;
                 }
 
@@ -197,5 +195,26 @@ namespace SAMS.Services
         {
             return studentSchedule.AvesBellCourseIDMod;
         }
+    }
+
+    internal static partial class AutomaticAvesAbsentLog
+    {
+        [LoggerMessage(EventId = 1300, Level = LogLevel.Information, Message = "Skipping automatic Aves attendance because today is marked as a no-school day.")]
+        internal static partial void SkippingForNoSchoolDay(ILogger logger);
+
+        [LoggerMessage(EventId = 1301, Level = LogLevel.Information, Message = "No Aves bell found in the custom bell schedule.")]
+        internal static partial void NoAvesBellInCustom(ILogger logger);
+
+        [LoggerMessage(EventId = 1302, Level = LogLevel.Information, Message = "Unsupported schedule selected for automatic Aves attendance processing.")]
+        internal static partial void UnsupportedSchedule(ILogger logger);
+
+        [LoggerMessage(EventId = 1303, Level = LogLevel.Information, Message = "No exact Aves Bell slot found in selected schedule.")]
+        internal static partial void NoExactAvesBellSlot(ILogger logger);
+
+        [LoggerMessage(EventId = 1304, Level = LogLevel.Warning, Message = "Unable to parse SchoolId for student {UserId}.")]
+        internal static partial void UnableToParseSchoolId(ILogger logger, string userId);
+
+        [LoggerMessage(EventId = 1305, Level = LogLevel.Information, Message = "Skipping automatic absence for non-check course {CourseId} {CourseName}.")]
+        internal static partial void SkippingNonCheckCourse(ILogger logger, int courseId, string courseName);
     }
 }

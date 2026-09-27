@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using SAMS;
 using SAMS.Data;
 using SAMS.Models;
@@ -1180,7 +1181,7 @@ namespace SAMS.Areas.Admin.Controllers
 				}
 				catch (DbUpdateConcurrencyException ex)
 				{
-					_logger.LogCritical(ex.ToString());
+					AccountManagerControllerLog.CriticalException(_logger, ex.ToString());
 					report.Severity = ReportModel.SeverityLevel.High;
 					report.TypeOfReport = ReportModel.ErrorType.ProcessingError;
 					report.StatusOfReport = ReportModel.Status.SubmittedToAppropriatePersonnel;
@@ -1193,7 +1194,7 @@ namespace SAMS.Areas.Admin.Controllers
 				}
 				catch (DbUpdateException ex)
 				{
-					_logger.LogCritical(ex.ToString());
+					AccountManagerControllerLog.CriticalException(_logger, ex.ToString());
 					report.Severity = ReportModel.SeverityLevel.High;
 					report.TypeOfReport = ReportModel.ErrorType.ProcessingError;
 					report.StatusOfReport = ReportModel.Status.SubmittedToAppropriatePersonnel;
@@ -1206,7 +1207,7 @@ namespace SAMS.Areas.Admin.Controllers
 				}
 				catch (Exception ex)
 				{
-					_logger.LogCritical(ex.ToString());
+					AccountManagerControllerLog.CriticalException(_logger, ex.ToString());
 					report.Severity = ReportModel.SeverityLevel.High;
 					report.TypeOfReport = ReportModel.ErrorType.ProcessingError;
 					report.StatusOfReport = ReportModel.Status.SubmittedToAppropriatePersonnel;
@@ -1394,7 +1395,7 @@ namespace SAMS.Areas.Admin.Controllers
 									var sem1sched = context.Sem1StudSchedules.Where(a => a.StudentID == studId).First();
 									if (sem1sched is null)
 									{
-										_logger.LogInformation("Unable to retrieve student schedule 1 for deletion.");
+										AccountManagerControllerLog.StudentSchedule1DeletionRetrieveFailed(_logger);
 									}
 									else
 									{
@@ -1405,7 +1406,7 @@ namespace SAMS.Areas.Admin.Controllers
 									var sem2sched = context.Sem2StudSchedules.Where(a => a.StudentID == studId).First();
 									if (sem2sched is null)
 									{
-										_logger.LogInformation("Unable to retrieve student schedule 2 for deletion.");
+										AccountManagerControllerLog.StudentSchedule2DeletionRetrieveFailed(_logger);
 									}
 									else
 									{
@@ -1416,7 +1417,7 @@ namespace SAMS.Areas.Admin.Controllers
 									var studentInfo = await context.StudentInfoModels.FindAsync(studId).ConfigureAwait(true);
 									if (studentInfo is null)
 									{
-										_logger.LogInformation("Unable to retrieve student data for deletion.");
+										AccountManagerControllerLog.StudentDataDeletionRetrieveFailed(_logger);
 									}
 									else
 									{
@@ -1433,9 +1434,7 @@ namespace SAMS.Areas.Admin.Controllers
 
 									if (courses.Count == 0)
 									{
-#pragma warning disable CA1848 // Use the LoggerMessage delegates
-										_logger.LogInformation("Courses couldn't be found. Unable to retrieve teacher's courses for deletion.");
-#pragma warning restore CA1848 // Use the LoggerMessage delegates
+										AccountManagerControllerLog.TeacherCoursesDeletionRetrieveFailed(_logger);
 									}
 									else
 									{
@@ -1445,9 +1444,7 @@ namespace SAMS.Areas.Admin.Controllers
 
 									if (teacherInfo.Count == 0)
 									{
-#pragma warning disable CA1848 // Use the LoggerMessage delegates
-										_logger.LogInformation("Teacher information couldn't be found. Unable to retrieve teacher data for deletion.");
-#pragma warning restore CA1848 // Use the LoggerMessage delegates
+										AccountManagerControllerLog.TeacherDataDeletionRetrieveFailed(_logger);
 									}
 									else
 									{
@@ -1463,7 +1460,7 @@ namespace SAMS.Areas.Admin.Controllers
 									var attinfo = context.AttendanceOfficeMemberModels.Where(a => a.AoMemberID == attid).ToList();
 									if (attinfo.Count <= 0)
 									{
-										_logger.LogInformation("Unable to retrieve attendance office member data for deletion.");
+										AccountManagerControllerLog.AttendanceOfficeDeletionRetrieveFailed(_logger);
 									}
 									else
 									{
@@ -1478,7 +1475,7 @@ namespace SAMS.Areas.Admin.Controllers
 									var admininfo = context.AdminInfoModels.Where(a => a.AdminID == adminid).ToList();
 									if (admininfo.Count <= 0)
 									{
-										_logger.LogInformation("Unable to retrieve admin data for deletion.");
+										AccountManagerControllerLog.AdminDeletionRetrieveFailed(_logger);
 									}
 									else
 									{
@@ -1510,7 +1507,7 @@ namespace SAMS.Areas.Admin.Controllers
 									var nurseinfo = context.NurseInfoModels.Where(a => a.NurseID == nurseid).ToList();
 									if (nurseinfo.Count <= 0)
 									{
-										_logger.LogInformation("Unable to retrieve nurse data for deletion.");
+										AccountManagerControllerLog.NurseDeletionRetrieveFailed(_logger);
 									}
 									else
 									{
@@ -1525,7 +1522,7 @@ namespace SAMS.Areas.Admin.Controllers
 									var lawenfinfo = context.LawEnforcementInfoModels.Where(a => a.LawenfID == lawenfid).ToList();
 									if (lawenfinfo.Count <= 0)
 									{
-										_logger.LogInformation("Unable to retrieve law enforcement officer data for deletion.");
+										AccountManagerControllerLog.LawEnforcementDeletionRetrieveFailed(_logger);
 									}
 
 									var deletion = context.Remove(lawenfinfo);
@@ -1547,7 +1544,7 @@ namespace SAMS.Areas.Admin.Controllers
 									var courses = context.ActiveCourseInfoModels.Where(a => a.CourseTeacherID == teacherid).ToList();
 									if (courses.Count <= 0)
 									{
-										_logger.LogInformation("Unable to retrieve teacher's courses for deletion.");
+										AccountManagerControllerLog.TeacherCoursesDeletionRetrieveFailedShort(_logger);
 									}
 									else
 									{
@@ -1557,7 +1554,7 @@ namespace SAMS.Areas.Admin.Controllers
 									var teacherInfo = context.TeacherInfoModels.Where(a => a.TeacherID == teacherid).ToList();
 									if (teacherInfo.Count <= 0)
 									{
-										_logger.LogInformation("Unable to retrieve teacher data for deletion.");
+										AccountManagerControllerLog.TeacherDataDeletionRetrieveFailedShort(_logger);
 									}
 									else
 									{
@@ -1572,7 +1569,7 @@ namespace SAMS.Areas.Admin.Controllers
 									var admininfo = context.AdminInfoModels.Where(a => a.AdminID == adminid).ToList();
 									if (admininfo.Count <= 0)
 									{
-										_logger.LogInformation("Unable to retrieve admin data for deletion.");
+										AccountManagerControllerLog.AdminDeletionRetrieveFailedShort(_logger);
 									}
 									else
 									{
@@ -1587,7 +1584,7 @@ namespace SAMS.Areas.Admin.Controllers
 									var cslrinfo = context.CounselorModels.Where(a => a.CounselorId == cslrid).ToList();
 									if (cslrinfo.Count <= 0)
 									{
-										_logger.LogInformation("Unable to retrieve counselor data for deletion.");
+										AccountManagerControllerLog.CounselorDeletionRetrieveFailed(_logger);
 									}
 									else
 									{
@@ -1765,7 +1762,52 @@ namespace SAMS.Areas.Admin.Controllers
 	*/
 	internal sealed class EditAccountModel
 	{
-		public required ApplicationUser User { get; set; }
-		public required InputModel Input { get; set; }
-	}
-}
+			public required ApplicationUser User { get; set; }
+			public required InputModel Input { get; set; }
+			}
+
+			internal static partial class AccountManagerControllerLog
+			{
+				[LoggerMessage(EventId = 1800, Level = LogLevel.Critical, Message = "{Message}")]
+				internal static partial void CriticalException(ILogger logger, string message);
+
+				[LoggerMessage(EventId = 1801, Level = LogLevel.Information, Message = "Unable to retrieve student schedule 1 for deletion.")]
+				internal static partial void StudentSchedule1DeletionRetrieveFailed(ILogger logger);
+
+				[LoggerMessage(EventId = 1802, Level = LogLevel.Information, Message = "Unable to retrieve student schedule 2 for deletion.")]
+				internal static partial void StudentSchedule2DeletionRetrieveFailed(ILogger logger);
+
+				[LoggerMessage(EventId = 1803, Level = LogLevel.Information, Message = "Unable to retrieve student data for deletion.")]
+				internal static partial void StudentDataDeletionRetrieveFailed(ILogger logger);
+
+				[LoggerMessage(EventId = 1804, Level = LogLevel.Information, Message = "Courses couldn't be found. Unable to retrieve teacher's courses for deletion.")]
+				internal static partial void TeacherCoursesDeletionRetrieveFailed(ILogger logger);
+
+				[LoggerMessage(EventId = 1805, Level = LogLevel.Information, Message = "Teacher information couldn't be found. Unable to retrieve teacher data for deletion.")]
+				internal static partial void TeacherDataDeletionRetrieveFailed(ILogger logger);
+
+				[LoggerMessage(EventId = 1806, Level = LogLevel.Information, Message = "Unable to retrieve attendance office member data for deletion.")]
+				internal static partial void AttendanceOfficeDeletionRetrieveFailed(ILogger logger);
+
+				[LoggerMessage(EventId = 1807, Level = LogLevel.Information, Message = "Unable to retrieve admin data for deletion.")]
+				internal static partial void AdminDeletionRetrieveFailed(ILogger logger);
+
+				[LoggerMessage(EventId = 1808, Level = LogLevel.Information, Message = "Unable to retrieve nurse data for deletion.")]
+				internal static partial void NurseDeletionRetrieveFailed(ILogger logger);
+
+				[LoggerMessage(EventId = 1809, Level = LogLevel.Information, Message = "Unable to retrieve law enforcement officer data for deletion.")]
+				internal static partial void LawEnforcementDeletionRetrieveFailed(ILogger logger);
+
+				[LoggerMessage(EventId = 1810, Level = LogLevel.Information, Message = "Unable to retrieve teacher's courses for deletion.")]
+				internal static partial void TeacherCoursesDeletionRetrieveFailedShort(ILogger logger);
+
+				[LoggerMessage(EventId = 1811, Level = LogLevel.Information, Message = "Unable to retrieve teacher data for deletion.")]
+				internal static partial void TeacherDataDeletionRetrieveFailedShort(ILogger logger);
+
+				[LoggerMessage(EventId = 1812, Level = LogLevel.Information, Message = "Unable to retrieve admin data for deletion.")]
+				internal static partial void AdminDeletionRetrieveFailedShort(ILogger logger);
+
+				[LoggerMessage(EventId = 1813, Level = LogLevel.Information, Message = "Unable to retrieve counselor data for deletion.")]
+				internal static partial void CounselorDeletionRetrieveFailed(ILogger logger);
+			}
+		}

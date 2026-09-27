@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Logging;
 using SAMS.Data;
 using SAMS.Interfaces;
 using SAMS.Models;
@@ -34,7 +35,7 @@ namespace SAMS.Services
             //Null reference check for holidayDates
             if (holidayDates == null)
             {
-                _logger.LogWarning("Holidays is null and the task if delayed by 1 DAY. Done by the if statement in holidayRun");
+                AvesBellAdditionServiceLog.HolidaysNull(_logger);
                 await Task.Delay(TimeSpan.FromDays(1));
             }
             else
@@ -44,7 +45,7 @@ namespace SAMS.Services
                 {
                     if (date == todayDate)
                     {
-                        _logger.LogWarning("Today is a holiday and the task is delayed by 1 DAY. Done by the if statement in holidayRun");
+                        AvesBellAdditionServiceLog.TodayIsHoliday(_logger);
                         await Task.Delay(TimeSpan.FromDays(1));
                     }
                     else
@@ -99,7 +100,7 @@ namespace SAMS.Services
                             TimeSpan avesstart = context.CustomSchedules.Where(a => a.BellName == "Aves Bell").Select(a => a.StartTime).DefaultIfEmpty(TimeSpan.Zero).First();
                             if (avesstart == TimeSpan.Zero)
                             {
-                                _logger.LogInformation("There is no aves bell start present in the custom schedule. The service will now be delayed for ONE DAY.");
+                                AvesBellAdditionServiceLog.NoAvesBellStartInCustom(_logger);
                                 await Task.Delay(TimeSpan.FromDays(1.0));
                             }
                             else
@@ -159,7 +160,7 @@ namespace SAMS.Services
                     }
                 default:
                     {
-                        _logger.LogInformation("A schedule was chosen other than daily, extended, and custom which doesn't have aves bell. No need to further generate fields. If somehow the service reached here, task is delayed by ONE DAY.");
+                        AvesBellAdditionServiceLog.UnexpectedScheduleAtGenerate(_logger);
                         await Task.Delay(TimeSpan.FromDays(1));
                         break;
                     }
@@ -205,7 +206,7 @@ namespace SAMS.Services
                     {
                         foreach (var item in courses)
                         {
-                            _logger.LogInformation("We don't add this courseId {CourseId} for aves bell.", bellCourseId);
+                            AvesBellAdditionServiceLog.SkipAvesBellCourse(_logger, bellCourseId);
                         }
                         continue;
                     }
@@ -220,7 +221,7 @@ namespace SAMS.Services
                     //Checking if the start time is zero if it could not be found, and delay the task for ONE Day.
                     if (customAvesStart == TimeSpan.Zero)
                     {
-                        _logger.LogInformation("No start for Aves Bell available in the entered data. Task will be delayed by ONE DAY.");
+                        AvesBellAdditionServiceLog.NoAvesBellStartInData(_logger);
                         await Task.Delay(TimeSpan.FromDays(1));
                     }
                     else
@@ -253,7 +254,7 @@ namespace SAMS.Services
                             }
                             else
                             {
-                                _logger.LogInformation("It isn't a custom bell schedule. Something went wrong with the request and data changes.");
+                                AvesBellAdditionServiceLog.NotCustomScheduleDuringCustomRunner(_logger);
                                 break;
                             }
                         }
@@ -298,7 +299,7 @@ namespace SAMS.Services
                     {
                         foreach (var item in courses)
                         {
-                            _logger.LogInformation("We don't add this courseId {CourseId} for aves bell.", bellCourseId);
+                            AvesBellAdditionServiceLog.SkipAvesBellCourse(_logger, bellCourseId);
                         }
                         continue;
                     };
@@ -348,7 +349,7 @@ namespace SAMS.Services
                                 }
                             default:
                                 {
-                                    _logger.LogInformation("A schedule was chosen other than Daily, Extended Aves, and Custom bell schedules.");
+                                    AvesBellAdditionServiceLog.UnexpectedScheduleAtNormalRunner(_logger);
                                     break;
                                 }
                         }
@@ -417,13 +418,13 @@ namespace SAMS.Services
                         var custBells = context.CustomSchedules.OrderBy(a => a.StartTime).ToList();
                         if (custBells == null)
                         {
-                            _logger.LogCritical("There is no Aves Bell.");
+                            AvesBellAdditionServiceLog.NoAvesBellFound(_logger);
                             return false;
                         }
                         int indexAves = custBells.FindIndex(a => a.BellName == "Aves Bell");
                         if (indexAves == -1)
                         {
-                            _logger.LogCritical("Null reference. Couldn't find the index of Aves Bell");
+                            AvesBellAdditionServiceLog.AvesBellIndexNotFound(_logger);
                         }
                         var hasAvesTransition = custBells[indexAves - 1].BellName.Contains("Transition");
                         if (hasAvesTransition)
@@ -451,7 +452,7 @@ namespace SAMS.Services
                     }
                 default:
                     {
-                        _logger.LogInformation("Some other schedule was chosen, and hence IsTransitionPeriod will return false since schedules other than Daily, Extended Aves, and Custom (exceptions excluded) don't have Aves Bell.");
+                        AvesBellAdditionServiceLog.TransitionPeriodUnsupportedSchedule(_logger);
                         return false;
                     }
             }
@@ -465,5 +466,41 @@ namespace SAMS.Services
                 }
             }*/
         }
+    }
+
+    internal static partial class AvesBellAdditionServiceLog
+    {
+        [LoggerMessage(EventId = 1000, Level = LogLevel.Warning, Message = "Holidays is null and the task if delayed by 1 DAY. Done by the if statement in holidayRun")]
+        internal static partial void HolidaysNull(ILogger logger);
+
+        [LoggerMessage(EventId = 1001, Level = LogLevel.Warning, Message = "Today is a holiday and the task is delayed by 1 DAY. Done by the if statement in holidayRun")]
+        internal static partial void TodayIsHoliday(ILogger logger);
+
+        [LoggerMessage(EventId = 1002, Level = LogLevel.Information, Message = "There is no aves bell start present in the custom schedule. The service will now be delayed for ONE DAY.")]
+        internal static partial void NoAvesBellStartInCustom(ILogger logger);
+
+        [LoggerMessage(EventId = 1003, Level = LogLevel.Information, Message = "A schedule was chosen other than daily, extended, and custom which doesn't have aves bell. No need to further generate fields. If somehow the service reached here, task is delayed by ONE DAY.")]
+        internal static partial void UnexpectedScheduleAtGenerate(ILogger logger);
+
+        [LoggerMessage(EventId = 1004, Level = LogLevel.Information, Message = "We don't add this courseId {CourseId} for aves bell.")]
+        internal static partial void SkipAvesBellCourse(ILogger logger, int courseId);
+
+        [LoggerMessage(EventId = 1005, Level = LogLevel.Information, Message = "No start for Aves Bell available in the entered data. Task will be delayed by ONE DAY.")]
+        internal static partial void NoAvesBellStartInData(ILogger logger);
+
+        [LoggerMessage(EventId = 1006, Level = LogLevel.Information, Message = "It isn't a custom bell schedule. Something went wrong with the request and data changes.")]
+        internal static partial void NotCustomScheduleDuringCustomRunner(ILogger logger);
+
+        [LoggerMessage(EventId = 1007, Level = LogLevel.Information, Message = "A schedule was chosen other than Daily, Extended Aves, and Custom bell schedules.")]
+        internal static partial void UnexpectedScheduleAtNormalRunner(ILogger logger);
+
+        [LoggerMessage(EventId = 1008, Level = LogLevel.Critical, Message = "There is no Aves Bell.")]
+        internal static partial void NoAvesBellFound(ILogger logger);
+
+        [LoggerMessage(EventId = 1009, Level = LogLevel.Critical, Message = "Null reference. Couldn't find the index of Aves Bell")]
+        internal static partial void AvesBellIndexNotFound(ILogger logger);
+
+        [LoggerMessage(EventId = 1010, Level = LogLevel.Information, Message = "Some other schedule was chosen, and hence IsTransitionPeriod will return false since schedules other than Daily, Extended Aves, and Custom (exceptions excluded) don't have Aves Bell.")]
+        internal static partial void TransitionPeriodUnsupportedSchedule(ILogger logger);
     }
 }

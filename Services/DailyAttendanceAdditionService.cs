@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using SAMS.Data;
 using SAMS.Interfaces;
 using SAMS.Models;
@@ -34,7 +35,7 @@ namespace SAMS.Services
 
             if (holidayDates == null)
             {
-                _logger.LogWarning("Holidays is null and the task if delayed by 1 DAY. Done by the if statement in holidayRun");
+                DailyAttendanceAdditionServiceLog.HolidaysNull(_logger);
                 await Task.Delay(TimeSpan.FromDays(1));
             }
             else
@@ -43,7 +44,7 @@ namespace SAMS.Services
                 {
                     if (date == todayDate)
                     {
-                        _logger.LogWarning("Today is a holiday and the task is delayed by 1 DAY. Done by the if statement in holidayRun");
+                        DailyAttendanceAdditionServiceLog.TodayIsHoliday(_logger);
                         await Task.Delay(TimeSpan.FromDays(1));
                     }
                     else
@@ -131,7 +132,7 @@ namespace SAMS.Services
 
                     default:
                         {
-                            _logger.LogInformation("The task is supposed to be delayed for 1 DAY. Done by default case in ScheduleRunner");
+                            DailyAttendanceAdditionServiceLog.ScheduleRunnerDefaultDelay(_logger);
                             await Task.Delay(TimeSpan.FromDays(1));
                             break;
                         }
@@ -139,7 +140,7 @@ namespace SAMS.Services
             }
             else
             {
-                _logger.LogWarning("The task is going to be delayed for 1 DAY. Done the by the else statement @line 136 in ScheduleRunner.");
+                DailyAttendanceAdditionServiceLog.ScheduleRunnerWeekendDelay(_logger);
                 await Task.Delay(TimeSpan.FromDays(1));
             }
         }
@@ -219,9 +220,9 @@ namespace SAMS.Services
                     {
                         foreach (var item in courses)
                         {
-                            _logger.LogInformation("We don't add this courseId {CourseId}.", bellCourseId);
+                            DailyAttendanceAdditionServiceLog.SkipCourseId(_logger, bellCourseId);
                             // If the course for this bell is in noncheckDailyCourses, skip to the next student
-                            _logger.LogInformation("Course for this bell is in the noncheckDailyCourses.");
+                            DailyAttendanceAdditionServiceLog.CourseInNoncheckDaily(_logger);
                         }
                     }
                     else
@@ -232,7 +233,7 @@ namespace SAMS.Services
 
                         if (entryExists)
                         {
-                            _logger.LogInformation("Entry exists.");
+                            DailyAttendanceAdditionServiceLog.EntryExists(_logger);
                             continue;
                         }
                         else
@@ -310,7 +311,7 @@ namespace SAMS.Services
                     if (courses.Any(course => course.CourseId == bellCourseId))
                     {
                         // If the course for this bell is in noncheckDailyCourses, skip to the next student
-                        _logger.LogInformation("Course for this bell is in the noncheckDailyCourses.");
+                        DailyAttendanceAdditionServiceLog.CourseInNoncheckDaily(_logger);
                     }
                     else
                     {
@@ -320,7 +321,7 @@ namespace SAMS.Services
 
                         if (entryExists)
                         {
-                            _logger.LogInformation("Entry exists.");
+                            DailyAttendanceAdditionServiceLog.EntryExists(_logger);
                             continue;
                         }
                         else
@@ -506,5 +507,29 @@ namespace SAMS.Services
                     }
             }
         }
+    }
+
+    internal static partial class DailyAttendanceAdditionServiceLog
+    {
+        [LoggerMessage(EventId = 1100, Level = LogLevel.Warning, Message = "Holidays is null and the task if delayed by 1 DAY. Done by the if statement in holidayRun")]
+        internal static partial void HolidaysNull(ILogger logger);
+
+        [LoggerMessage(EventId = 1101, Level = LogLevel.Warning, Message = "Today is a holiday and the task is delayed by 1 DAY. Done by the if statement in holidayRun")]
+        internal static partial void TodayIsHoliday(ILogger logger);
+
+        [LoggerMessage(EventId = 1102, Level = LogLevel.Information, Message = "The task is supposed to be delayed for 1 DAY. Done by default case in ScheduleRunner")]
+        internal static partial void ScheduleRunnerDefaultDelay(ILogger logger);
+
+        [LoggerMessage(EventId = 1103, Level = LogLevel.Warning, Message = "The task is going to be delayed for 1 DAY. Done the by the else statement @line 136 in ScheduleRunner.")]
+        internal static partial void ScheduleRunnerWeekendDelay(ILogger logger);
+
+        [LoggerMessage(EventId = 1104, Level = LogLevel.Information, Message = "We don't add this courseId {CourseId}.")]
+        internal static partial void SkipCourseId(ILogger logger, int courseId);
+
+        [LoggerMessage(EventId = 1105, Level = LogLevel.Information, Message = "Course for this bell is in the noncheckDailyCourses.")]
+        internal static partial void CourseInNoncheckDaily(ILogger logger);
+
+        [LoggerMessage(EventId = 1106, Level = LogLevel.Information, Message = "Entry exists.")]
+        internal static partial void EntryExists(ILogger logger);
     }
 }

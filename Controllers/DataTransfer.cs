@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using OfficeOpenXml;
 using SAMS.Data;
 using SAMS.Models;
@@ -122,9 +123,9 @@ namespace SAMS.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogCritical("Message: \n {Message}", ex.Message);
-                _logger.LogDebug("Stack Trace \n {StackTrace}", ex.StackTrace);
-                _logger.LogWarning("Message: \n {Message}", ex.Message);
+                DataTransferLog.CriticalMessage(_logger, ex.Message);
+                DataTransferLog.DebugStackTrace(_logger, ex.StackTrace);
+                DataTransferLog.WarningMessage(_logger, ex.Message);
             }
 
             return View();
@@ -161,12 +162,24 @@ namespace SAMS.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogCritical("Message: \n {Message}", ex.Message);
-                _logger.LogDebug("Stack Trace \n {StackTrace}", ex.StackTrace);
-                _logger.LogWarning("Message: \n {Message}", ex.Message);
+                DataTransferLog.CriticalMessage(_logger, ex.Message);
+                DataTransferLog.DebugStackTrace(_logger, ex.StackTrace);
+                DataTransferLog.WarningMessage(_logger, ex.Message);
             }
 
             return View("Index");
         }
+    }
+
+    internal static partial class DataTransferLog
+    {
+        [LoggerMessage(EventId = 1400, Level = LogLevel.Critical, Message = "Message: \n {Message}")]
+        internal static partial void CriticalMessage(ILogger logger, string? message);
+
+        [LoggerMessage(EventId = 1401, Level = LogLevel.Debug, Message = "Stack Trace \n {StackTrace}")]
+        internal static partial void DebugStackTrace(ILogger logger, string? stackTrace);
+
+        [LoggerMessage(EventId = 1402, Level = LogLevel.Warning, Message = "Message: \n {Message}")]
+        internal static partial void WarningMessage(ILogger logger, string? message);
     }
 }

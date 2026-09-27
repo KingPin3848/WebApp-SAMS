@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using SAMS.Data;
 using SAMS.Models;
 using SAMS.Services;
@@ -30,7 +31,7 @@ namespace SAMS.Controllers
 
             if (holidayDates == null)
             {
-                _logger.LogWarning("Holidays is null and the task if delayed by 1 DAY. Done by the if statement in holidayRun");
+                DailyAddLog.HolidaysNull(_logger);
                 //Task.Delay(TimeSpan.FromDays(1));
             }
             else
@@ -39,7 +40,7 @@ namespace SAMS.Controllers
                 {
                     if (date == todayDate)
                     {
-                        _logger.LogWarning("Today is a holiday and the task is delayed by 1 DAY. Done by the if statement in holidayRun");
+                        DailyAddLog.TodayIsHoliday(_logger);
                         //await Task.Delay(TimeSpan.FromDays(1));
                     }
                     else
@@ -114,7 +115,7 @@ namespace SAMS.Controllers
                         }
                     default:
                         {
-                            _logger.LogWarning("The task is supposed to be delayed for 1 DAY. Done by default case in ScheduleRunner");
+                            DailyAddLog.ScheduleRunnerDefaultDelay(_logger);
                             //await Task.Delay(TimeSpan.FromDays(1), token);
                             break;
                         }
@@ -122,7 +123,7 @@ namespace SAMS.Controllers
             }
             else
             {
-                _logger.LogWarning("The task is going to be delayed for 1 DAY. Done the by the else statement @line 126 in ScheduleRunner.");
+                DailyAddLog.ScheduleRunnerElseDelay(_logger);
                 //await Task.Delay(TimeSpan.FromDays(1), token);
             }
         }
@@ -162,7 +163,7 @@ namespace SAMS.Controllers
                     if (matchingCourse == true)
                     {
                         // If the course for this bell is in noncheckDailyCourses, skip to the next student
-                        _logger.LogInformation("Course for this bell is in the noncheckDailyCourses.");
+                        DailyAddLog.CourseInNoncheckDaily(_logger);
                     }
                     else
                     {
@@ -340,5 +341,23 @@ namespace SAMS.Controllers
                     }
             }
         }
+    }
+
+    internal static partial class DailyAddLog
+    {
+        [LoggerMessage(EventId = 1500, Level = LogLevel.Warning, Message = "Holidays is null and the task if delayed by 1 DAY. Done by the if statement in holidayRun")]
+        internal static partial void HolidaysNull(ILogger logger);
+
+        [LoggerMessage(EventId = 1501, Level = LogLevel.Warning, Message = "Today is a holiday and the task is delayed by 1 DAY. Done by the if statement in holidayRun")]
+        internal static partial void TodayIsHoliday(ILogger logger);
+
+        [LoggerMessage(EventId = 1502, Level = LogLevel.Warning, Message = "The task is supposed to be delayed for 1 DAY. Done by default case in ScheduleRunner")]
+        internal static partial void ScheduleRunnerDefaultDelay(ILogger logger);
+
+        [LoggerMessage(EventId = 1503, Level = LogLevel.Warning, Message = "The task is going to be delayed for 1 DAY. Done the by the else statement @line 126 in ScheduleRunner.")]
+        internal static partial void ScheduleRunnerElseDelay(ILogger logger);
+
+        [LoggerMessage(EventId = 1504, Level = LogLevel.Information, Message = "Course for this bell is in the noncheckDailyCourses.")]
+        internal static partial void CourseInNoncheckDaily(ILogger logger);
     }
 }
