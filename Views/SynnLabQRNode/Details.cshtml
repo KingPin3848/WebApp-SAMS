@@ -1,4 +1,4 @@
-﻿@model SAMS.Models.HandheldScannerNodeModel
+@model SAMS.Models.HandheldScannerNodeModel
 
 @{
     ViewData["Title"] = "Details";
@@ -11,16 +11,16 @@
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.SerialNumberMod)
+            @Html.DisplayNameFor(model => model!.SerialNumberMod)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.SerialNumberMod)
+            @Html.DisplayFor(model => model!.SerialNumberMod)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Room)
+            @Html.DisplayNameFor(model => model!.Room)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Room.RoomNumberMod)
+            @Html.DisplayFor(model => model!.Room!.RoomNumberMod)
         </dd>
     </dl>
 </div>

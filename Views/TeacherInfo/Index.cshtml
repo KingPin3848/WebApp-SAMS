@@ -1,4 +1,4 @@
-﻿@model IEnumerable<SAMS.Models.TeacherInfoModel>
+@model IEnumerable<SAMS.Models.TeacherInfoModel>
 
 @{
     ViewData["Title"] = "Index";
@@ -13,28 +13,28 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.TeacherFirstNameMod)
+                @Html.DisplayNameFor(model => model!.TeacherFirstNameMod)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.TeacherMiddleNameMod)
+                @Html.DisplayNameFor(model => model!.TeacherMiddleNameMod)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.TeacherLastNameMod)
+                @Html.DisplayNameFor(model => model!.TeacherLastNameMod)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.TeacherPreferredNameMod)
+                @Html.DisplayNameFor(model => model!.TeacherPreferredNameMod)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.TeacherEmailMod)
+                @Html.DisplayNameFor(model => model!.TeacherEmailMod)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.TeacherPhoneMod)
+                @Html.DisplayNameFor(model => model!.TeacherPhoneMod)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Teaches5Days)
+                @Html.DisplayNameFor(model => model!.Teaches5Days)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Room)
+                @Html.DisplayNameFor(model => model!.Room)
             </th>
             <th></th>
         </tr>
@@ -43,28 +43,28 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.TeacherFirstNameMod)
+                @Html.DisplayFor(modelItem => item!.TeacherFirstNameMod)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.TeacherMiddleNameMod)
+                @Html.DisplayFor(modelItem => item!.TeacherMiddleNameMod)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.TeacherLastNameMod)
+                @Html.DisplayFor(modelItem => item!.TeacherLastNameMod)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.TeacherPreferredNameMod)
+                @Html.DisplayFor(modelItem => item!.TeacherPreferredNameMod)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.TeacherEmailMod)
+                @Html.DisplayFor(modelItem => item!.TeacherEmailMod)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.TeacherPhoneMod)
+                @Html.DisplayFor(modelItem => item!.TeacherPhoneMod)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Teaches5Days)
+                @Html.DisplayFor(modelItem => item!.Teaches5Days)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Room.RoomNumberMod)
+                @Html.DisplayFor(modelItem => item!.Room!.RoomNumberMod)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.TeacherID">Edit</a> |

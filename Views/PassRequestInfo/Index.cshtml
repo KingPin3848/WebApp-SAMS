@@ -1,4 +1,4 @@
-﻿@model IEnumerable<SAMS.Models.PassRequestInfoModel>
+@model IEnumerable<SAMS.Models.PassRequestInfoModel>
 
 @{
     ViewData["Title"] = "Index";
@@ -13,67 +13,67 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.StudentNameMod)
+                @Html.DisplayNameFor(model => model!.StudentNameMod)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.StartDateTime)
+                @Html.DisplayNameFor(model => model!.StartDateTime)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.EndDateTime)
+                @Html.DisplayNameFor(model => model!.EndDateTime)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Duration)
+                @Html.DisplayNameFor(model => model!.Duration)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.BellNumber)
+                @Html.DisplayNameFor(model => model!.BellNumber)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.StartLocation)
+                @Html.DisplayNameFor(model => model!.StartLocation)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.EndLocation)
+                @Html.DisplayNameFor(model => model!.EndLocation)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.RequestStatus)
+                @Html.DisplayNameFor(model => model!.RequestStatus)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Student)
+                @Html.DisplayNameFor(model => model!.Student)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.AssignedByAdmin)
+                @Html.DisplayNameFor(model => model!.AssignedByAdmin)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.AddressedByAdmin)
+                @Html.DisplayNameFor(model => model!.AddressedByAdmin)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.AssignedByNurse)
+                @Html.DisplayNameFor(model => model!.AssignedByNurse)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.AddressedByNurse)
+                @Html.DisplayNameFor(model => model!.AddressedByNurse)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.AssignedByTeacher)
+                @Html.DisplayNameFor(model => model!.AssignedByTeacher)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.AddressedByTeacher)
+                @Html.DisplayNameFor(model => model!.AddressedByTeacher)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.AssignedByLawEnf)
+                @Html.DisplayNameFor(model => model!.AssignedByLawEnf)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.AddressedByLawEnf)
+                @Html.DisplayNameFor(model => model!.AddressedByLawEnf)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.AssignedByAttendanceOfficeMember)
+                @Html.DisplayNameFor(model => model!.AssignedByAttendanceOfficeMember)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.AddressedByAttendanceOfficeMember)
+                @Html.DisplayNameFor(model => model!.AddressedByAttendanceOfficeMember)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.AssignedByCounselor)
+                @Html.DisplayNameFor(model => model!.AssignedByCounselor)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.AddressedByCounselor)
+                @Html.DisplayNameFor(model => model!.AddressedByCounselor)
             </th>
             <th></th>
         </tr>
@@ -82,67 +82,67 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.StudentNameMod)
+                @Html.DisplayFor(modelItem => item!.StudentNameMod)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.StartDateTime)
+                @Html.DisplayFor(modelItem => item!.StartDateTime)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.EndDateTime)
+                @Html.DisplayFor(modelItem => item!.EndDateTime)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Duration)
+                @Html.DisplayFor(modelItem => item!.Duration)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.BellNumber)
+                @Html.DisplayFor(modelItem => item!.BellNumber)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.StartLocation)
+                @Html.DisplayFor(modelItem => item!.StartLocation)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.EndLocation)
+                @Html.DisplayFor(modelItem => item!.EndLocation)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.RequestStatus)
+                @Html.DisplayFor(modelItem => item!.RequestStatus)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Student.StudentID)
+                @Html.DisplayFor(modelItem => item!.Student!.StudentID)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.AssignedByAdmin.AdminID)
+                @Html.DisplayFor(modelItem => item!.AssignedByAdmin!.AdminID)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.AddressedByAdmin.AdminID)
+                @Html.DisplayFor(modelItem => item!.AddressedByAdmin!.AdminID)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.AssignedByNurse.NurseID)
+                @Html.DisplayFor(modelItem => item!.AssignedByNurse!.NurseID)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.AddressedByNurse.NurseID)
+                @Html.DisplayFor(modelItem => item!.AddressedByNurse!.NurseID)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.AssignedByTeacher.TeacherID)
+                @Html.DisplayFor(modelItem => item!.AssignedByTeacher!.TeacherID)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.AddressedByTeacher.TeacherID)
+                @Html.DisplayFor(modelItem => item!.AddressedByTeacher!.TeacherID)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.AssignedByLawEnf.LawenfID)
+                @Html.DisplayFor(modelItem => item!.AssignedByLawEnf!.LawenfID)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.AddressedByLawEnf.LawenfID)
+                @Html.DisplayFor(modelItem => item!.AddressedByLawEnf!.LawenfID)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.AssignedByAttendanceOfficeMember.AoMemberID)
+                @Html.DisplayFor(modelItem => item!.AssignedByAttendanceOfficeMember!.AoMemberID)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.AddressedByAttendanceOfficeMember.AoMemberID)
+                @Html.DisplayFor(modelItem => item!.AddressedByAttendanceOfficeMember!.AoMemberID)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.AssignedByCounselor.CounselorId)
+                @Html.DisplayFor(modelItem => item!.AssignedByCounselor!.CounselorId)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.AddressedByCounselor.CounselorId)
+                @Html.DisplayFor(modelItem => item!.AddressedByCounselor!.CounselorId)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.PassRequestId">Edit</a> |

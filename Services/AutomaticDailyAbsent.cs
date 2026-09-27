@@ -145,7 +145,7 @@ namespace SAMS.Services
                             // If the course for this bell is in noncheckDailyCourses, skip to the next student
                             if (noncheckDailyCourses.Any(course => course.CourseId == bellCourseId))
                             {
-                                _logger.LogInformation("The course is inside noncheckdaily course list. Automatic Absence Service doesn't mark students absent for {bellCourseId}", bellCourseId);
+                                _logger.LogInformation("The course is inside noncheckdaily course list. Automatic Absence Service doesn't mark students absent for {BellCourseId}", bellCourseId);
                             }
                             else
                             {
@@ -178,7 +178,7 @@ namespace SAMS.Services
                                 }
                                 else
                                 {
-                                    _logger.LogInformation("Couldn't find entry for {studentId}.", studentId);
+                                    _logger.LogInformation("Couldn't find entry for {StudentId}.", studentId);
                                 }
                             }
                         }

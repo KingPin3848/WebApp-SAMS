@@ -1,4 +1,4 @@
-﻿@model IEnumerable<SAMS.Models.FastPassModel>
+@model IEnumerable<SAMS.Models.FastPassModel>
 
 @{
     ViewData["Title"] = "Index";
@@ -13,34 +13,34 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.StudentNameMod)
+                @Html.DisplayNameFor(model => model!.StudentNameMod)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.StartDateTime)
+                @Html.DisplayNameFor(model => model!.StartDateTime)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.EndDateTime)
+                @Html.DisplayNameFor(model => model!.EndDateTime)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Duration)
+                @Html.DisplayNameFor(model => model!.Duration)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.BellNumber)
+                @Html.DisplayNameFor(model => model!.BellNumber)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.StartLocationID)
+                @Html.DisplayNameFor(model => model!.StartLocationID)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Student)
+                @Html.DisplayNameFor(model => model!.Student)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Room)
+                @Html.DisplayNameFor(model => model!.Room)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Sem1StudSchedule)
+                @Html.DisplayNameFor(model => model!.Sem1StudSchedule)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Sem2StudSchedule)
+                @Html.DisplayNameFor(model => model!.Sem2StudSchedule)
             </th>
             <th></th>
         </tr>
@@ -49,34 +49,34 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.StudentNameMod)
+                @Html.DisplayFor(modelItem => item!.StudentNameMod)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.StartDateTime)
+                @Html.DisplayFor(modelItem => item!.StartDateTime)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.EndDateTime)
+                @Html.DisplayFor(modelItem => item!.EndDateTime)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Duration)
+                @Html.DisplayFor(modelItem => item!.Duration)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.BellNumber)
+                @Html.DisplayFor(modelItem => item!.BellNumber)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.StartLocationID)
+                @Html.DisplayFor(modelItem => item!.StartLocationID)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Student.StudentID)
+                @Html.DisplayFor(modelItem => item!.Student!.StudentID)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Room.RoomNumberMod)
+                @Html.DisplayFor(modelItem => item!.Room!.RoomNumberMod)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Sem1StudSchedule.StudentID)
+                @Html.DisplayFor(modelItem => item!.Sem1StudSchedule!.StudentID)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Sem2StudSchedule.StudentID)
+                @Html.DisplayFor(modelItem => item!.Sem2StudSchedule!.StudentID)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.FastPassIDMod">Edit</a> |

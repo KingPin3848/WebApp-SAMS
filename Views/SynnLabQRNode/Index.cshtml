@@ -1,4 +1,4 @@
-﻿@model IEnumerable<SAMS.Models.HandheldScannerNodeModel>
+@model IEnumerable<SAMS.Models.HandheldScannerNodeModel>
 
 @{
     ViewData["Title"] = "Index";
@@ -13,10 +13,10 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.SerialNumberMod)
+                @Html.DisplayNameFor(model => model!.SerialNumberMod)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Room)
+                @Html.DisplayNameFor(model => model!.Room)
             </th>
             <th></th>
         </tr>
@@ -25,10 +25,10 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.SerialNumberMod)
+                @Html.DisplayFor(modelItem => item!.SerialNumberMod)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Room.RoomNumberMod)
+                @Html.DisplayFor(modelItem => item!.Room!.RoomNumberMod)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.ScannerID">Edit</a> |

@@ -14,7 +14,7 @@ using System.Security.Claims;
 namespace SAMS.Areas.Admin.Controllers
 {
 	[Area("Admin")]
-	internal class AccountManagerController : Controller
+	internal sealed class AccountManagerController : Controller
 	{
 		private readonly ILogger<AccountManagerController> _logger;
 		private readonly ApplicationDbContext context;
@@ -33,7 +33,7 @@ namespace SAMS.Areas.Admin.Controllers
 			signInManager = SignInManager;
 		}
 
-		internal class indexClass
+		internal sealed class indexClass
 		{
 			public required string dbid { get; set; }
 			[DisplayName("School ID")]
@@ -88,7 +88,7 @@ namespace SAMS.Areas.Admin.Controllers
 		}
 
 
-		internal class detailsClass
+		internal sealed class detailsClass
 		{
 			public required string dbid { get; set; }
 			[DisplayName("School ID")]
@@ -1638,7 +1638,7 @@ namespace SAMS.Areas.Admin.Controllers
 
 	/* A custom model for the Create Action(s) to make sure the data is not directly affected through the HTTP requests.
 		*/
-	internal class InputModel
+	internal sealed class InputModel
 	{
 		//ALL REQUIRED ACCOUNT INFORMATION STARTS FROM HERE
 		[EmailAddress]
@@ -1763,7 +1763,7 @@ namespace SAMS.Areas.Admin.Controllers
 
 	/* A custom model for the Edit Action(s) to make sure the data is not directly affected through the HTTP requests.
 	*/
-	internal class EditAccountModel
+	internal sealed class EditAccountModel
 	{
 		public required ApplicationUser User { get; set; }
 		public required InputModel Input { get; set; }

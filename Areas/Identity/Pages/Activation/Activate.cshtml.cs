@@ -31,7 +31,7 @@ namespace SAMS.Areas.Identity.Pages.Activation
         }
 
         [BindProperty]
-        public InputModel Input { get; set; }
+        public InputModel Input { get; set; } = new();
         public class InputModel
         {
             [Required]

@@ -1,4 +1,4 @@
-﻿@model IEnumerable<SAMS.Models.DailyAttendanceModel>
+@model IEnumerable<SAMS.Models.DailyAttendanceModel>
 
 @{
     ViewData["Title"] = "Index";
@@ -13,19 +13,19 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.AttendanceDate)
+                @Html.DisplayNameFor(model => model!.AttendanceDate)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Status)
+                @Html.DisplayNameFor(model => model!.Status)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ReasonForAbsence)
+                @Html.DisplayNameFor(model => model!.ReasonForAbsence)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ChosenBellSchedule)
+                @Html.DisplayNameFor(model => model!.ChosenBellSchedule)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Student)
+                @Html.DisplayNameFor(model => model!.Student)
             </th>
             <th></th>
         </tr>
@@ -34,19 +34,19 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.AttendanceDate)
+                @Html.DisplayFor(modelItem => item!.AttendanceDate)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Status)
+                @Html.DisplayFor(modelItem => item!.Status)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.ReasonForAbsence)
+                @Html.DisplayFor(modelItem => item!.ReasonForAbsence)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.ChosenBellSchedule)
+                @Html.DisplayFor(modelItem => item!.ChosenBellSchedule)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Student.StudentID)
+                @Html.DisplayFor(modelItem => item!.Student!.StudentID)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.AttendanceId">Edit</a> |

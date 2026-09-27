@@ -33,7 +33,7 @@ namespace SAMS.Controllers
 			return View(model);
 		}
 
-		private static IReadOnlyList<RoleHelpSection> BuildSections(IReadOnlySet<string> roleSet)
+		private static List<RoleHelpSection> BuildSections(HashSet<string> roleSet)
 		{
 			var sections = new List<RoleHelpSection>
 			{

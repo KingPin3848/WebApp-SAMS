@@ -1,4 +1,4 @@
-﻿@model IEnumerable<SAMS.Models.StudentInfoModel>
+@model IEnumerable<SAMS.Models.StudentInfoModel>
 
 @{
     ViewData["Title"] = "Index";
@@ -13,49 +13,49 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.StudentFirstNameMod)
+                @Html.DisplayNameFor(model => model!.StudentFirstNameMod)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.StudentMiddleNameMod)
+                @Html.DisplayNameFor(model => model!.StudentMiddleNameMod)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.StudentLastNameMod)
+                @Html.DisplayNameFor(model => model!.StudentLastNameMod)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.StudentPreferredNameMod)
+                @Html.DisplayNameFor(model => model!.StudentPreferredNameMod)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.StudentEmailMod)
+                @Html.DisplayNameFor(model => model!.StudentEmailMod)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.StudentPhoneMod)
+                @Html.DisplayNameFor(model => model!.StudentPhoneMod)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.StudentGradYearMod)
+                @Html.DisplayNameFor(model => model!.StudentGradYearMod)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.HasEASupport)
+                @Html.DisplayNameFor(model => model!.HasEASupport)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Parentguard1NameMod)
+                @Html.DisplayNameFor(model => model!.Parentguard1NameMod)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Parentguard1EmailMod)
+                @Html.DisplayNameFor(model => model!.Parentguard1EmailMod)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Parentguard2NameMod)
+                @Html.DisplayNameFor(model => model!.Parentguard2NameMod)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Parentguard2EmailMod)
+                @Html.DisplayNameFor(model => model!.Parentguard2EmailMod)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ActivationCode)
+                @Html.DisplayNameFor(model => model!.ActivationCode)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Counselor)
+                @Html.DisplayNameFor(model => model!.Counselor)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.AssignedEASuport)
+                @Html.DisplayNameFor(model => model!.AssignedEASuport)
             </th>
             <th></th>
         </tr>
@@ -64,49 +64,49 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.StudentFirstNameMod)
+                @Html.DisplayFor(modelItem => item!.StudentFirstNameMod)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.StudentMiddleNameMod)
+                @Html.DisplayFor(modelItem => item!.StudentMiddleNameMod)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.StudentLastNameMod)
+                @Html.DisplayFor(modelItem => item!.StudentLastNameMod)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.StudentPreferredNameMod)
+                @Html.DisplayFor(modelItem => item!.StudentPreferredNameMod)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.StudentEmailMod)
+                @Html.DisplayFor(modelItem => item!.StudentEmailMod)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.StudentPhoneMod)
+                @Html.DisplayFor(modelItem => item!.StudentPhoneMod)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.StudentGradYearMod)
+                @Html.DisplayFor(modelItem => item!.StudentGradYearMod)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.HasEASupport)
+                @Html.DisplayFor(modelItem => item!.HasEASupport)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Parentguard1NameMod)
+                @Html.DisplayFor(modelItem => item!.Parentguard1NameMod)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Parentguard1EmailMod)
+                @Html.DisplayFor(modelItem => item!.Parentguard1EmailMod)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Parentguard2NameMod)
+                @Html.DisplayFor(modelItem => item!.Parentguard2NameMod)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Parentguard2EmailMod)
+                @Html.DisplayFor(modelItem => item!.Parentguard2EmailMod)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.ActivationCode)
+                @Html.DisplayFor(modelItem => item!.ActivationCode)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Counselor.CounselorId)
+                @Html.DisplayFor(modelItem => item!.Counselor!.CounselorId)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.AssignedEASuport.EaID)
+                @Html.DisplayFor(modelItem => item!.AssignedEASuport!.EaID)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.StudentID">Edit</a> |

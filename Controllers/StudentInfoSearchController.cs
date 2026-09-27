@@ -42,7 +42,7 @@ namespace SAMS.Controllers
             }
             else if (filter == "Name")
             {
-                search_results = await _context.StudentInfoModels.Where(a => a.StudentPreferredNameMod.Contains(SearchQuery)).ToListAsync();
+                search_results = await _context.StudentInfoModels.Where(a => (a.StudentPreferredNameMod ?? string.Empty).Contains(SearchQuery)).ToListAsync();
             }
             else
             {

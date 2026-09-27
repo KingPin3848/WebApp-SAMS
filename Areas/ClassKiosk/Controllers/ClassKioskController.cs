@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.Operations;
 using Microsoft.Extensions.FileSystemGlobbing.Internal;
@@ -12,12 +11,10 @@ using System.Text.RegularExpressions;
 namespace SAMS.Areas.ClassKiosk.Controllers
 {
     [Area("ClassKiosk")]
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
     public class ClassKioskController(IServiceScopeFactory serviceScopeFactory) : Controller
-#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
     {
         private readonly IServiceScopeFactory _serviceScopeFactory = serviceScopeFactory;
-        private string MessAge { get; set; }
+        private string MessAge { get; set; } = string.Empty;
         private bool ReFresh { get; set; }
 
         [HttpGet]

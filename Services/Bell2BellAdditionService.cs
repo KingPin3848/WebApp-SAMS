@@ -261,7 +261,7 @@ namespace SAMS.Services
             using var scope = _scopeFactory.CreateAsyncScope();
             var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
-            var bellsList = context.CustomSchedules.Where(a => a.BellName.Contains("Bell")).ToList() ?? throw new NullReferenceException();
+            var bellsList = context.CustomSchedules.Where(a => a.BellName.Contains("Bell")).ToList();
             List<int> todayBells = [];
 
             foreach (var bell in bellsList)

@@ -1,4 +1,4 @@
-﻿@model SAMS.Models.RoomQRCodeModel
+@model SAMS.Models.RoomQRCodeModel
 
 @{
     ViewData["Title"] = "Details";
@@ -11,16 +11,16 @@
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Code)
+            @Html.DisplayNameFor(model => model!.Code)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Code)
+            @Html.DisplayFor(model => model!.Code)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Room)
+            @Html.DisplayNameFor(model => model!.Room)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Room.RoomNumberMod)
+            @Html.DisplayFor(model => model!.Room!.RoomNumberMod)
         </dd>
     </dl>
 </div>

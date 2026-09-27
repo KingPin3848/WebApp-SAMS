@@ -1,4 +1,4 @@
-﻿@model SAMS.Models.DailyAttendanceModel
+@model SAMS.Models.DailyAttendanceModel
 
 @{
     ViewData["Title"] = "Details";
@@ -11,34 +11,34 @@
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.AttendanceDate)
+            @Html.DisplayNameFor(model => model!.AttendanceDate)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.AttendanceDate)
+            @Html.DisplayFor(model => model!.AttendanceDate)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Status)
+            @Html.DisplayNameFor(model => model!.Status)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Status)
+            @Html.DisplayFor(model => model!.Status)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ReasonForAbsence)
+            @Html.DisplayNameFor(model => model!.ReasonForAbsence)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ReasonForAbsence)
+            @Html.DisplayFor(model => model!.ReasonForAbsence)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ChosenBellSchedule)
+            @Html.DisplayNameFor(model => model!.ChosenBellSchedule)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ChosenBellSchedule)
+            @Html.DisplayFor(model => model!.ChosenBellSchedule)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Student)
+            @Html.DisplayNameFor(model => model!.Student)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Student.StudentID)
+            @Html.DisplayFor(model => model!.Student!.StudentID)
         </dd>
     </dl>
 </div>

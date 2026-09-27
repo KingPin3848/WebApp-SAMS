@@ -136,11 +136,6 @@ namespace SAMS.Controllers
 
         public IActionResult StudentLocation(DateTime Date, int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
 #pragma warning disable CA1305 // Specify IFormatProvider
             var query = _context.TimestampModels.Where(a => a.ActionMade == "Student Location Update").Where(b => b.Comments.Contains(id.ToString())).Where(c => c.Timestamp.Date == Date.Date).ToList();
 #pragma warning restore CA1305 // Specify IFormatProvider

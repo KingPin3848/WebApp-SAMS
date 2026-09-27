@@ -1,11 +1,11 @@
 ﻿@{
     ViewData["Title"] = "Index";
-    var sem1MonWed = ViewBag.Sem1MonWed as List<string>;
-    var sem1TuesThurs = ViewBag.Sem1TuesThurs as List<string>;
-    var sem1Fri = ViewBag.Sem1Fri as List<string>;
-    var sem2MonWed = ViewBag.Sem2MonWed as List<string>;
-    var sem2TuesThurs = ViewBag.Sem2TuesThurs as List<string>;
-    var sem2Fri = ViewBag.Sem2Fri as List<string>;
+    var sem1MonWed = ViewBag.Sem1MonWed as List<string> ?? [];
+    var sem1TuesThurs = ViewBag.Sem1TuesThurs as List<string> ?? [];
+    var sem1Fri = ViewBag.Sem1Fri as List<string> ?? [];
+    var sem2MonWed = ViewBag.Sem2MonWed as List<string> ?? [];
+    var sem2TuesThurs = ViewBag.Sem2TuesThurs as List<string> ?? [];
+    var sem2Fri = ViewBag.Sem2Fri as List<string> ?? [];
     var studentID = ViewBag.StudentId;
 }
 

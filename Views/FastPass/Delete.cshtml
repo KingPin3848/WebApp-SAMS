@@ -1,4 +1,4 @@
-﻿@model SAMS.Models.FastPassModel
+@model SAMS.Models.FastPassModel
 
 @{
     ViewData["Title"] = "Delete";
@@ -12,64 +12,64 @@
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.StudentNameMod)
+            @Html.DisplayNameFor(model => model!.StudentNameMod)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.StudentNameMod)
+            @Html.DisplayFor(model => model!.StudentNameMod)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.StartDateTime)
+            @Html.DisplayNameFor(model => model!.StartDateTime)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.StartDateTime)
+            @Html.DisplayFor(model => model!.StartDateTime)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.EndDateTime)
+            @Html.DisplayNameFor(model => model!.EndDateTime)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.EndDateTime)
+            @Html.DisplayFor(model => model!.EndDateTime)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Duration)
+            @Html.DisplayNameFor(model => model!.Duration)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Duration)
+            @Html.DisplayFor(model => model!.Duration)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.BellNumber)
+            @Html.DisplayNameFor(model => model!.BellNumber)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.BellNumber)
+            @Html.DisplayFor(model => model!.BellNumber)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.StartLocationID)
+            @Html.DisplayNameFor(model => model!.StartLocationID)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.StartLocationID)
+            @Html.DisplayFor(model => model!.StartLocationID)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Student)
+            @Html.DisplayNameFor(model => model!.Student)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Student.StudentID)
+            @Html.DisplayFor(model => model!.Student!.StudentID)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Room)
+            @Html.DisplayNameFor(model => model!.Room)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Room.RoomNumberMod)
+            @Html.DisplayFor(model => model!.Room!.RoomNumberMod)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Sem1StudSchedule)
+            @Html.DisplayNameFor(model => model!.Sem1StudSchedule)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Sem1StudSchedule.StudentID)
+            @Html.DisplayFor(model => model!.Sem1StudSchedule!.StudentID)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Sem2StudSchedule)
+            @Html.DisplayNameFor(model => model!.Sem2StudSchedule)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Sem2StudSchedule.StudentID)
+            @Html.DisplayFor(model => model!.Sem2StudSchedule!.StudentID)
         </dd>
     </dl>
     

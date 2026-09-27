@@ -9,9 +9,9 @@ namespace SAMS.Models
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public IEnumerable<StudentInfoModel> StudentInfo { get; set; }
-        public IEnumerable<BellAttendanceModel> AttendanceHistory { get; set; }
-        public IEnumerable<TimestampModel> Location { get; set; }
+        public IEnumerable<StudentInfoModel> StudentInfo { get; set; } = [];
+        public IEnumerable<BellAttendanceModel> AttendanceHistory { get; set; } = [];
+        public IEnumerable<TimestampModel> Location { get; set; } = [];
 
     }
 }

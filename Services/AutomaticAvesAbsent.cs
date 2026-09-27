@@ -175,7 +175,7 @@ namespace SAMS.Services
                 : await context.Sem1StudSchedules.FindAsync(studentId);
         }
 
-        private async Task<bool> MarkUnknownAvesEntryAbsentAsync(ApplicationDbContext context, int studentId, DateTime date)
+        private static async Task<bool> MarkUnknownAvesEntryAbsentAsync(ApplicationDbContext context, int studentId, DateTime date)
         {
             var attendanceEntry = await context.BellAttendanceModels.FirstOrDefaultAsync(a =>
                 a.StudentId == studentId &&

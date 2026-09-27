@@ -180,7 +180,7 @@ namespace SAMS.Controllers
                                 AttendanceDate = date,
                                 Status = "Unknown",
                                 ReasonForAbsence = "NA",
-                                ChosenBellSchedule = chosenBellSched.ToString()
+                                ChosenBellSchedule = string.Join(",", chosenBellSched)
                             };
                             _context.DailyAttendanceModels.Add(newEntry);
                             await _context.SaveChangesAsync();

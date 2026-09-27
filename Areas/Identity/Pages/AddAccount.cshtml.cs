@@ -75,7 +75,7 @@ namespace SAMS.Areas.Identity.Pages
 
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
-                user.Role = input.AssignedRole;
+                user.Role = input.AssignedRole ?? [];
                 user.SchoolId = input.SchoolIssuedId!;
                 user.ActivationCode = input.ActivationCode!;
                 user.UserExperienceEnabled = false;
