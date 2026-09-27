@@ -89,7 +89,7 @@ namespace SAMS.Controllers
                                     break;
                                 default:
                                     chosenBellSched = null;
-                                    _logger.LogInformation("A schedule was chosen other than the ones offered. Possible breach try.");
+                                    DashboardControllerLog.UnrecognizedSchedule(_logger);
                                     break;
                             }
 
@@ -187,7 +187,7 @@ namespace SAMS.Controllers
                     break;
                 default:
                     chosenBellSched = null;
-                    _logger.LogInformation("A schedule was chosen other than the ones offered. Possible breach try.");
+                    DashboardControllerLog.UnrecognizedSchedule(_logger);
                     return -1;
             }
 
@@ -256,5 +256,11 @@ namespace SAMS.Controllers
     public class QRCodeModel
     {
         public required string Code { get; set; }
+    }
+
+    internal static partial class DashboardControllerLog
+    {
+        [LoggerMessage(LogLevel.Information, "A schedule was chosen other than the ones offered. Possible breach try.")]
+        internal static partial void UnrecognizedSchedule(ILogger logger);
     }
 }

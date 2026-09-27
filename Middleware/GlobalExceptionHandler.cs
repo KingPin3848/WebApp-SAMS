@@ -13,9 +13,9 @@ namespace SAMS.Middleware
 			var (statusCode, errorCode, title, detail) = MapException(exception);
 			var traceId = Activity.Current?.Id ?? httpContext.TraceIdentifier;
 
-			_logger.LogError(
+			GlobalExceptionHandlerLog.UnhandledException(
+				_logger,
 				exception,
-				"Unhandled exception occurred. ErrorCode: {ErrorCode}, TraceId: {TraceId}, Path: {Path}",
 				errorCode,
 				traceId,
 				httpContext.Request.Path);
@@ -75,5 +75,12 @@ namespace SAMS.Middleware
 					"An unexpected error occurred. Please contact support with the provided trace identifier.")
 			};
 		}
+
+	}
+
+	internal static partial class GlobalExceptionHandlerLog
+	{
+		[LoggerMessage(LogLevel.Error, "Unhandled exception occurred. ErrorCode: {ErrorCode}, TraceId: {TraceId}, Path: {Path}")]
+		internal static partial void UnhandledException(ILogger logger, Exception exception, string errorCode, string traceId, string path);
 	}
 }

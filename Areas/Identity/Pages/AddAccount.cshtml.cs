@@ -101,7 +101,7 @@ namespace SAMS.Areas.Identity.Pages
                             }
                         }
                     }
-                    _logger.LogInformation("User created a new account WITHOUT password.");
+                    SAMS.IdentityLogging.IdentityPageLog.AccountCreatedWithoutPassword(_logger);
                     //SNIPPET 1 FOR EMAIL GOES HERE
                     return Page();
                 } else

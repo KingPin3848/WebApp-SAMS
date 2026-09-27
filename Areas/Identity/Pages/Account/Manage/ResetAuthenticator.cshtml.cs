@@ -52,7 +52,7 @@ namespace SAMS.Areas.Identity.Pages.Account.Manage
 #pragma warning disable IDE0059 // Unnecessary assignment of a value
             var userId = await _userManager.GetUserIdAsync(user);
 #pragma warning restore IDE0059 // Unnecessary assignment of a value
-            _logger.LogInformation("User with ID '{UserId}' has reset their authentication app key.", user.Id);
+            SAMS.IdentityLogging.IdentityPageLog.AuthenticatorReset(_logger, user.Id);
 
             await _signInManager.RefreshSignInAsync(user);
             StatusMessage = "Your authenticator app key has been reset, you will need to configure your authenticator app using the new key.";

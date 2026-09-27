@@ -118,7 +118,7 @@ namespace SAMS.Areas.Identity.Pages.Activation
                 {
                     foreach (var modelError in modelState.Errors)
                     {
-                        _logger.LogCritical("Error message: \n {ErrorMessage}", modelError.ErrorMessage);
+                        SAMS.IdentityLogging.IdentityPageLog.ActivationModelError(_logger, modelError.ErrorMessage);
                     }
                 }
             }
@@ -193,7 +193,7 @@ namespace SAMS.Areas.Identity.Pages.Activation
                 }
                 else
                 {
-                    _logger.LogInformation("The email address from the Google Account was not found with the one in the database.");
+                    SAMS.IdentityLogging.IdentityPageLog.GoogleEmailMismatch(_logger);
                     inputUser.UserExperienceEnabled = false;
                     await userManager.UpdateAsync(inputUser);
                     scope.Dispose();
@@ -204,7 +204,7 @@ namespace SAMS.Areas.Identity.Pages.Activation
             }
             else
             {
-                _logger.LogInformation("Couldn't find the user from the Google Account email address in our database.");
+                SAMS.IdentityLogging.IdentityPageLog.GoogleUserNotFound(_logger);
                 inputUser.UserExperienceEnabled = false;
                 await userManager.UpdateAsync(inputUser);
                 scope.Dispose();

@@ -98,17 +98,17 @@ namespace SAMS.Areas.Identity.Pages.Account
 
             if (result.Succeeded)
             {
-                _logger.LogInformation("User with ID '{UserId}' logged in with 2fa.", user.Id);
+                SAMS.IdentityLogging.IdentityPageLog.UserLoggedInWith2fa(_logger, user.Id);
                 return LocalRedirect(returnUrl);
             }
             else if (result.IsLockedOut)
             {
-                _logger.LogWarning("User with ID '{UserId}' account locked out.", user.Id);
+                SAMS.IdentityLogging.IdentityPageLog.UserAccountLockedOutWith2fa(_logger, user.Id);
                 return RedirectToPage("./Lockout");
             }
             else
             {
-                _logger.LogWarning("Invalid authenticator code entered for user with ID '{UserId}'.", user.Id);
+                SAMS.IdentityLogging.IdentityPageLog.InvalidAuthenticatorCode(_logger, user.Id);
                 ModelState.AddModelError(string.Empty, "Invalid authenticator code.");
                 return Page();
             }

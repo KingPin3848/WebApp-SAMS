@@ -88,7 +88,7 @@ namespace SAMS.Areas.Identity.Pages.Account.Manage
 
             await _signInManager.SignOutAsync();
 
-            _logger.LogInformation("User with ID '{UserId}' deleted themselves.", userId);
+            SAMS.IdentityLogging.IdentityPageLog.PersonalDataDeleted(_logger, userId);
 
             return Redirect("~/");
         }

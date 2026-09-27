@@ -111,7 +111,7 @@ namespace SAMS.Areas.Identity.Pages.Account.Manage
             }
 
             await _signInManager.RefreshSignInAsync(user);
-            _logger.LogInformation("User changed their password successfully.");
+            SAMS.IdentityLogging.IdentityPageLog.PasswordChanged(_logger);
             StatusMessage = "Your password has been changed.";
 
             return RedirectToPage();

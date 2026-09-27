@@ -141,8 +141,8 @@ namespace SAMS.Areas.Identity.Pages.Account
                         }
                         else
                         {
-                            _logger.LogInformation("THE ACCOUNT IS NOT LOCKED OUT.");
-                            _logger.LogInformation("{Name} logged in with {LoginProvider} provider.", info.Principal.Identity.Name, info.LoginProvider);
+                            SAMS.IdentityLogging.IdentityPageLog.ExternalAccountNotLockedOut(_logger);
+                            SAMS.IdentityLogging.IdentityPageLog.ExternalUserLoggedIn(_logger, info.Principal.Identity.Name, info.LoginProvider);
                             if (User.IsInRole("Teacher"))
                             {
                                 returnUrl = "~/Dashboard/Dashboard";
