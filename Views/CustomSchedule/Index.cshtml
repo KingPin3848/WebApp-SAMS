@@ -37,9 +37,9 @@
                 @Html.DisplayFor(modelItem => item.Duration)
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.StartTime }) |
-                @Html.ActionLink("Details", "Details", new { id = item.StartTime }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.StartTime })
+                <a asp-action="Edit" asp-route-id="@item.StartTime">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.StartTime">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.StartTime">Delete</a>
             </td>
         </tr>
 }

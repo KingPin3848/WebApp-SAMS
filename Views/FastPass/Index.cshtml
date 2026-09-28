@@ -79,9 +79,9 @@
                 @Html.DisplayFor(modelItem => item!.Sem2StudSchedule!.StudentID)
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.FastPassIDMod }) |
-                @Html.ActionLink("Details", "Details", new { id = item.FastPassIDMod }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.FastPassIDMod })
+                <a asp-action="Edit" asp-route-id="@item.FastPassIDMod">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.FastPassIDMod">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.FastPassIDMod">Delete</a>
             </td>
         </tr>
 }
