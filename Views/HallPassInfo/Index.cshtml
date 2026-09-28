@@ -133,9 +133,9 @@
                 @Html.DisplayFor(modelItem => item!.AddressedByCounselor!.CounselorId)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.HallPassID">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.HallPassID">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.HallPassID">Delete</a>
+                @Html.ActionLink("Edit", "Edit", new { id = item.HallPassID }) |
+                @Html.ActionLink("Details", "Details", new { id = item.HallPassID }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.HallPassID })
             </td>
         </tr>
 }
