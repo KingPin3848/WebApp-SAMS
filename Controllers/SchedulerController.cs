@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SAMS.Data;
 using SAMS.Models;
 
 namespace SAMS.Controllers
 {
+    [Authorize]
     public class SchedulerController(ApplicationDbContext context) : Controller
     {
         private readonly ApplicationDbContext _context = context;
