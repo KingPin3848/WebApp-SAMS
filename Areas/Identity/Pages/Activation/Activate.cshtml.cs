@@ -162,46 +162,34 @@ namespace SAMS.Areas.Identity.Pages.Activation
                 TempData["Messaage"] = StatusMessage;
                 return LocalRedirect("~/Identity/Account/Login");                
             }
-            var googleuseremail = googleuser.Email;
-            if (googleuseremail != null)
+            if (inputUser.Email == googleemail)
             {
-                if (inputUser.Email == googleemail)
+                var result = await userManager.AddLoginAsync(inputUser, info);
+                if (!result.Succeeded)
                 {
-                    var result = await userManager.AddLoginAsync(inputUser, info);
-                    if (!result.Succeeded)
-                    {
-                        StatusMessage = "The external login was not added. External logins can only be associated with one account.";
-                        inputUser.UserExperienceEnabled = false;
-                        await userManager.UpdateAsync(inputUser);
-                        scope.Dispose();
-                        TempData["Messaage"] = StatusMessage;
-                        return LocalRedirect("~/Identity/Account/Login");
-                    }
-                    // Clear the existing external cookie to ensure a clean login process
-                    await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
-                    StatusMessage = "The external login was added.";
-                    scope.Dispose();
-                    TempData["Messaage"] = StatusMessage;
-                    return RedirectToPage("ActivationSuccessfull");
-                }
-                else
-                {
-                    SAMS.IdentityLogging.IdentityPageLog.GoogleEmailMismatch(_logger);
+                    StatusMessage = "The external login was not added. External logins can only be associated with one account.";
                     inputUser.UserExperienceEnabled = false;
                     await userManager.UpdateAsync(inputUser);
                     scope.Dispose();
-                    StatusMessage = "Email mismatch. The entered email and Google Account email did not match. Please contact the administrators.";
                     TempData["Messaage"] = StatusMessage;
                     return LocalRedirect("~/Identity/Account/Login");
                 }
+                // Clear the existing external cookie to ensure a clean login process
+                await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
+                StatusMessage = "The external login was added.";
+                scope.Dispose();
+                TempData["Messaage"] = StatusMessage;
+                return RedirectToPage("ActivationSuccessfull");
             }
             else
             {
-                SAMS.IdentityLogging.IdentityPageLog.GoogleUserNotFound(_logger);
+                SAMS.IdentityLogging.IdentityPageLog.GoogleEmailMismatch(_logger);
                 inputUser.UserExperienceEnabled = false;
                 await userManager.UpdateAsync(inputUser);
                 scope.Dispose();
-                return RedirectToPage("UserNotFound");
+                StatusMessage = "Email mismatch. The entered email and Google Account email did not match. Please contact the administrators.";
+                TempData["Messaage"] = StatusMessage;
+                return LocalRedirect("~/Identity/Account/Login");
             }
         }
     }
