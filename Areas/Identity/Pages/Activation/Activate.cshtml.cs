@@ -71,33 +71,26 @@ namespace SAMS.Areas.Identity.Pages.Activation
                     var foundSchID = foundUser.SchoolId;
                     if ((foundActCode == Input.ActivationCode) && (foundSchID == Input.SchoolId) && (foundEmail == Input.Email))
                     {
-                        if (foundUser.UserExperienceEnabled != true)
+                        foundUser.UserExperienceEnabled = true;
+                        var savechanges = await userManager.UpdateAsync(foundUser);
+
+                        if (savechanges.Succeeded)
                         {
-                            foundUser.UserExperienceEnabled = true;
-                            var savechanges = await userManager.UpdateAsync(foundUser);
+                            Console.WriteLine("Changes were saved and everything worked until here.");
+                            // Clear the existing external cookie to ensure a clean login process
+                            await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
+                            var provider = "Google";
 
-                            if (savechanges.Succeeded)
-                            {
-                                Console.WriteLine("Changes were saved and everything worked until here.");
-                                // Clear the existing external cookie to ensure a clean login process
-                                await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
-                                var provider = "Google";
+                            // Request a redirect to the external login provider to link a login for the current user
+                            var redirectUrl = Url.Page("./Activate", pageHandler: "LinkLoginCallback");
+                            var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl, foundUserID);
 
-                                // Request a redirect to the external login provider to link a login for the current user
-                                var redirectUrl = Url.Page("./Activate", pageHandler: "LinkLoginCallback");
-                                var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl, foundUserID);
-
-                                return new ChallengeResult(provider, properties);
-                            }
-                            else
-                            {
-                                ModelState.AddModelError("", "Failed to save changes.");
-                                return Page();
-                            }
+                            return new ChallengeResult(provider, properties);
                         }
                         else
                         {
-                            ModelState.AddModelError("", "Your account has been activated already. Please login with Google or your password to login.");
+                            ModelState.AddModelError("", "Failed to save changes.");
+                            return Page();
                         }
                     }
                     else
