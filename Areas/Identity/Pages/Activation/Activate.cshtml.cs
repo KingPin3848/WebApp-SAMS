@@ -164,8 +164,11 @@ namespace SAMS.Areas.Identity.Pages.Activation
             }
             if (inputUser.Email == googleemail)
             {
-                var result = await userManager.AddLoginAsync(inputUser, info);
-                if (!result.Succeeded)
+                var existingLogin = await userManager.FindByLoginAsync(info.LoginProvider, info.ProviderKey);
+                var result = existingLogin == null
+                    ? await userManager.AddLoginAsync(inputUser, info)
+                    : IdentityResult.Success;
+                if (!result.Succeeded || (existingLogin != null && existingLogin.Id != inputUser.Id))
                 {
                     StatusMessage = "The external login was not added. External logins can only be associated with one account.";
                     inputUser.UserExperienceEnabled = false;
