@@ -1,0 +1,100 @@
+name: CodeQL and .NET Analysis
+
+on:
+  push:
+    branches:
+      - '**'
+  pull_request:
+  schedule:
+    - cron: '17 2 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: codeql-${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  analyze:
+    name: Analyze (${{ matrix.language }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    permissions:
+      contents: read
+      security-events: write
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - language: actions
+            build-mode: none
+          - language: csharp
+            build-mode: manual
+          - language: javascript-typescript
+            build-mode: none
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up .NET
+        if: matrix.language == 'csharp'
+        uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@793b778da9c9275a0f276522b27cb5fc14bba279 # v4
+        with:
+          languages: ${{ matrix.language }}
+          build-mode: ${{ matrix.build-mode }}
+          # Includes security-extended as well as code-quality queries.
+          queries: security-and-quality
+
+      - name: Restore .NET dependencies
+        if: matrix.language == 'csharp'
+        run: dotnet restore SAMS.sln
+
+      - name: Build .NET and run SDK analyzers
+        if: matrix.language == 'csharp'
+        run: >-
+          dotnet build SAMS.sln
+          --configuration Release
+          --no-restore
+          --no-incremental
+          -p:EnableNETAnalyzers=true
+          -p:AnalysisLevel=latest
+          -p:AnalysisMode=All
+          -p:EnforceCodeStyleInBuild=true
+
+      - name: Perform CodeQL analysis
+        uses: github/codeql-action/analyze@793b778da9c9275a0f276522b27cb5fc14bba279 # v4
+        with:
+          category: '/language:${{ matrix.language }}'
+
+  dependency-audit:
+    name: Audit direct and transitive NuGet dependencies
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Fail on vulnerable dependencies or incomplete audit
+        run: >-
+          dotnet restore SAMS.sln
+          -p:NuGetAudit=true
+          -p:NuGetAuditMode=all
+          -p:NuGetAuditLevel=low
+          -warnaserror:NU1900,NU1901,NU1902,NU1903,NU1904,NU1905
