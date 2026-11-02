@@ -127,6 +127,36 @@ For detailed behavior by user role (Student, Teacher, Admin, Class Kiosk, Attend
 
 - [docs/ROLE_BEHAVIORS.md](docs/ROLE_BEHAVIORS.md)
 
+## 12) Security and code-quality scanning
+
+`.github/workflows/codeql.yml` runs on every branch push, pull requests, manual
+dispatch, and daily at 02:17 UTC (scheduled runs use `master`).
+
+- **CodeQL:** scans C#, JavaScript/TypeScript, and GitHub Actions using
+  `security-and-quality`, which includes the extended security queries. C# uses
+  an explicit .NET 10 Release build after CodeQL initialization, not autobuild.
+  Findings appear under the repository's code scanning alerts and in pull requests.
+- **.NET SDK analyzers:** the same C# build enables all SDK analyzer rules and
+  build-time code-style analysis. Diagnostics appear in the build log; existing
+  `.editorconfig` severities and project suppressions still apply. Warnings are
+  reported without making all existing warnings build failures.
+- **NuGet audit:** an independent job checks direct and transitive dependencies
+  for known vulnerabilities at every severity. Vulnerability findings, unavailable
+  audit data, and audit communication errors fail this job without preventing
+  CodeQL from running.
+- **Dependabot:** checks NuGet packages daily and pinned GitHub Actions weekly.
+
+Use **advanced setup** for CodeQL. If default setup is already enabled under
+**Settings > Security > Code security**, disable it before enabling this workflow;
+default and advanced setup must not both upload CodeQL results. GitHub Actions
+and code scanning must be allowed by the repository/organization settings.
+
+This is broad static analysis, not a guarantee of finding every issue. It does
+not replace automated tests, runtime/penetration testing, secret scanning, or
+review of bundled third-party JavaScript. Enable secret scanning and push
+protection separately in repository settings where available. There is currently
+no JavaScript package manifest for Dependabot to audit bundled browser libraries.
+
 ---
 
 If you are new to this codebase, follow Sections **1 -> 7** in order and the app should run locally.
