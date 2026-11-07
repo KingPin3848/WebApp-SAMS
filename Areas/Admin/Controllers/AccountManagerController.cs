@@ -15,7 +15,8 @@ using System.Security.Claims;
 namespace SAMS.Areas.Admin.Controllers
 {
 	[Area("Admin")]
-	internal sealed class AccountManagerController(ILogger<AccountManagerController> logger, ApplicationDbContext Context, UserManager<ApplicationUser> UserManager, SignInManager<ApplicationUser> SignInManager) : Controller
+	[Authorize(Roles = "HS School Admin, Synnovation Lab Admin, District Admin")]
+	public sealed class AccountManagerController(ILogger<AccountManagerController> logger, ApplicationDbContext Context, UserManager<ApplicationUser> UserManager, SignInManager<ApplicationUser> SignInManager) : Controller
 	{
 		private readonly ILogger<AccountManagerController> _logger = logger;
 		private readonly ApplicationDbContext context = Context;
@@ -26,7 +27,7 @@ namespace SAMS.Areas.Admin.Controllers
 
 		//private readonly IEmailSender<ApplicationUser> _emailSender = emailSender;
 
-		internal sealed class indexClass
+		public sealed class indexClass
 		{
 			public required string dbid { get; set; }
 			[DisplayName("School ID")]
@@ -81,7 +82,7 @@ namespace SAMS.Areas.Admin.Controllers
 		}
 
 
-		internal sealed class detailsClass
+		public sealed class detailsClass
 		{
 			public required string dbid { get; set; }
 			[DisplayName("School ID")]
@@ -532,12 +533,12 @@ namespace SAMS.Areas.Admin.Controllers
 			var userroles = await userManager.GetRolesAsync(user).ConfigureAwait(true);
 			InputModel inputmodel = new()
 			{
-				Email = string.Empty,
+				Email = user.Email!,
 				FirstName = string.Empty,
 				LastName = string.Empty,
 				ActivationCode = user.ActivationCode,
 				Role = user.Role,
-				SchoolId = string.Empty,
+				SchoolId = user.SchoolId,
 				StudentPin = user.StudentPin
 			};
 			foreach (var role in userroles)
@@ -593,9 +594,18 @@ namespace SAMS.Areas.Admin.Controllers
 							if (int.TryParse(user.SchoolId, out int studentid))
 							{
 								var info = context.StudentInfoModels.Where(a => a.StudentID == studentid).First();
+								inputmodel.FirstName = info.StudentFirstNameMod;
+								inputmodel.MiddleName = info.StudentMiddleNameMod;
+								inputmodel.LastName = info.StudentLastNameMod;
 								inputmodel.PreferredName = info.StudentPreferredNameMod;
 								inputmodel.PhoneNumber = info.StudentPhoneMod;
+								inputmodel.StudentGradYearMod = info.StudentGradYearMod;
+								inputmodel.StudentCounselorID = info.StudentCounselorID;
+								inputmodel.HasEASupport = info.HasEASupport;
+								inputmodel.StudentEAID = info.StudentEAID;
+								inputmodel.Parentguard1NameMod = info.Parentguard1NameMod;
 								inputmodel.Parentguard1EmailMod = info.Parentguard1EmailMod;
+								inputmodel.Parentguard2NameMod = info.Parentguard2NameMod;
 								inputmodel.Parentguard2EmailMod = info.Parentguard2EmailMod;
 							}
 							break;
@@ -622,6 +632,7 @@ namespace SAMS.Areas.Admin.Controllers
 			}
 			var model = new EditAccountModel()
 			{
+				UserId = user.Id,
 				User = user,
 				Input = inputmodel
 			};
@@ -673,6 +684,12 @@ namespace SAMS.Areas.Admin.Controllers
 				return NotFound();
 			}
 
+			var user = await userManager.FindByIdAsync(accountmodel.UserId).ConfigureAwait(true);
+			if (user is null)
+			{
+				return NotFound();
+			}
+			accountmodel.User = user;
 
 			if (ModelState.IsValid)
 			{
@@ -1618,7 +1635,7 @@ namespace SAMS.Areas.Admin.Controllers
 
 	/* A custom model for the Create Action(s) to make sure the data is not directly affected through the HTTP requests.
 		*/
-	internal sealed class InputModel
+	public sealed class InputModel
 	{
 		//ALL REQUIRED ACCOUNT INFORMATION STARTS FROM HERE
 		[EmailAddress]
@@ -1645,15 +1662,15 @@ namespace SAMS.Areas.Admin.Controllers
 		//ALL COMMON REQUIRED AND OPTIONAL PERSONALLY IDENTIFIABLE INFORMATION OR PROTECTED PERSONAL INFORMATION STARTS HERE
 		[Display(Name = "First Name")]
 		[Required]
-		public required string FirstName { get; init; }
+		public required string FirstName { get; set; }
 
 
 		[Display(Name = "Middle Name (Optional)")]
-		public string? MiddleName { get; init; }
+		public string? MiddleName { get; set; }
 
 
 		[Display(Name = "Last Name")]
-		public required string LastName { get; init; }
+		public required string LastName { get; set; }
 
 
 		[Display(Name = "Preferred Name (Optional)")]
@@ -1698,7 +1715,7 @@ namespace SAMS.Areas.Admin.Controllers
 
 		//ALL STUDENT REQUIRED INFORMATION STARTS HERE
 		[Display(Name = ("Student Graduation Year (Required)"))]
-		public DateTime StudentGradYearMod { get; init; } = new();
+		public DateTime StudentGradYearMod { get; set; } = new();
 
 		[Required]
 		[Range(-1, 9999)]
@@ -1719,7 +1736,7 @@ namespace SAMS.Areas.Admin.Controllers
 
 
 		[Display(Name = ("Parent/Guardian 1 Name (Required)"))]
-		public string? Parentguard1NameMod { get; init; }
+		public string? Parentguard1NameMod { get; set; }
 
 
 		[Display(Name = ("Parent/Guardian 1 Email Address (Required)"))]
@@ -1728,7 +1745,7 @@ namespace SAMS.Areas.Admin.Controllers
 
 
 		[Display(Name = ("Parent/Guardian 2 Name (Optional)"))]
-		public string? Parentguard2NameMod { get; init; }
+		public string? Parentguard2NameMod { get; set; }
 
 
 		[Display(Name = ("Parent/Guardian 2 Email Address (Optional)"))]
@@ -1748,8 +1765,12 @@ namespace SAMS.Areas.Admin.Controllers
 
 	/* A custom model for the Edit Action(s) to make sure the data is not directly affected through the HTTP requests.
 	*/
-	internal sealed class EditAccountModel
+	public sealed class EditAccountModel
 	{
+			[Required]
+			public string UserId { get; set; } = string.Empty;
+			[Microsoft.AspNetCore.Mvc.ModelBinding.BindNever]
+			[Microsoft.AspNetCore.Mvc.ModelBinding.Validation.ValidateNever]
 			public required ApplicationUser User { get; set; }
 			public required InputModel Input { get; set; }
 			}
