@@ -35,6 +35,8 @@ body:
         - HS School Admin
         - Synnovation Lab Admin
         - District Admin
+        - Multiple roles
+        - Other
         - Not sure
     validations:
       required: true
