@@ -261,6 +261,14 @@ Expected outcome:
 
 - These role groups are the primary intended operators for account administration workflows.
 
+### 7.2 Internal data and schedule maintenance
+
+**Sources:** `Controllers/InfoManagement/*`, `Controllers/ChosenBellScheduleController.cs`, `Controllers/DailyBellScheduleModelsController.cs`, other bell schedule controllers, `Controllers/DataTransfer.cs`, and `Controllers/DailyAdd.cs`
+
+- These management and maintenance endpoints require one of `Admin`, `HS School Admin`, `Synnovation Lab Admin`, or `District Admin`.
+- Attendance maintenance endpoints and `StudentViewModelController` also allow the `Attendance Office Member` role.
+- The `AddAccount` Identity page uses the administrator role group above.
+
 ---
 
 ## 8) Background attendance and automation dependencies
