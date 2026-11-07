@@ -132,7 +132,7 @@ namespace SAMS.Areas.Identity.Pages.Account
                 if (dbuseremail == googleemail)
                 {
                     // Sign in the user with this external login provider if the user already has a login.
-                    var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
+                    var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor: false);
                     if (result.Succeeded)
                     {
                         if (result.IsLockedOut)
@@ -149,6 +149,10 @@ namespace SAMS.Areas.Identity.Pages.Account
                             }
                             return LocalRedirect(returnUrl);
                         }
+                    }
+                    else if (result.RequiresTwoFactor)
+                    {
+                        return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, RememberMe = false });
                     }
                     else
                     {

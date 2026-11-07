@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SAMS.Data;
 using System.Text.RegularExpressions;
 
 namespace SAMS.Controllers
 {
+    [Authorize(Roles = "Admin, Attendance Office Member, HS School Admin, Synnovation Lab Admin, District Admin")]
     public class StudentViewModelController(ApplicationDbContext context) : Controller
     {
 

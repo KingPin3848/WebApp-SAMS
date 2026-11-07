@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using OfficeOpenXml;
@@ -8,6 +9,7 @@ using SQLitePCL;
 
 namespace SAMS.Controllers
 {
+    [Authorize(Roles = "Admin, HS School Admin, Synnovation Lab Admin, District Admin")]
     public class DataTransfer(ILogger<DataTransfer> logger, ApplicationDbContext context) : Controller
     {
         private readonly ILogger<DataTransfer> _logger = logger;

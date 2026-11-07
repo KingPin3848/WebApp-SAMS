@@ -40,18 +40,17 @@ namespace SAMS.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
+        [Authorize(Roles = "Student")]
         [HttpGet]
-        //[Authorize(Roles = "Student, Developer")]
         public async Task<IActionResult> Scan()
         {
-            //var user = await _userManager.GetUserAsync(User);
-            //ViewBag.Schoolid = user?.SchoolId;
-            ViewBag.Schoolid = 245177;
+            var user = await _userManager.GetUserAsync(User);
+            ViewBag.Schoolid = user?.SchoolId;
             return View();
 
         }
 
-        //[Authorize(Roles = "Student, Developer")]
+        [Authorize(Roles = "Student")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Scan(string ScannedCode, string issuedSchoolId)
@@ -59,7 +58,7 @@ namespace SAMS.Controllers
             try
             {
                 var time = DateTime.Now.TimeOfDay;
-                var user = await _userManager.FindByEmailAsync("245177@sycamoreschools.org").ConfigureAwait(true);
+                var user = await _userManager.GetUserAsync(User).ConfigureAwait(true);
 
                 if (user == null)
                 {
