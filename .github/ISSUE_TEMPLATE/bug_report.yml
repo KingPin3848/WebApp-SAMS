@@ -1,0 +1,77 @@
+name: Bug report
+description: Report a reproducible problem in SAMS.
+title: "[Bug]: "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Issues are public. Do not include student or staff names, school IDs, email addresses, attendance records, credentials, connection strings, tokens, or other personal or confidential information. Remove sensitive details from screenshots and logs.
+  - type: dropdown
+    id: role
+    attributes:
+      label: Affected SAMS role
+      options:
+        - Student
+        - Teacher
+        - Class Kiosk Operator
+        - Attendance Office Member
+        - Admin
+        - HS School Admin
+        - Synnovation Lab Admin
+        - District Admin
+        - Multiple roles
+        - Not sure
+    validations:
+      required: true
+  - type: textarea
+    id: summary
+    attributes:
+      label: What happened?
+      description: Describe the problem without identifying a person or school.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to reproduce
+      description: Include the page or workflow and the actions taken. Use test or anonymized data only.
+      placeholder: |
+        1. Open ...
+        2. Select ...
+        3. Observe ...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected and actual behavior
+      description: What did you expect, and what happened instead?
+    validations:
+      required: true
+  - type: dropdown
+    id: frequency
+    attributes:
+      label: How often does this happen?
+      options:
+        - Every time
+        - Sometimes
+        - Happened once
+        - Not sure
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      description: Include OS, browser, .NET version if relevant, and app version or commit. Do not include private URLs or configuration values.
+      placeholder: "Windows 11, Chrome version ..., SAMS commit ..."
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Sanitized errors or screenshots
+      description: Remove personal data, IDs, private hostnames, tokens, and secrets before sharing.
+      render: text
