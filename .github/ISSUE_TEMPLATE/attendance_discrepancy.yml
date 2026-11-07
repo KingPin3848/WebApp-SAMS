@@ -64,4 +64,3 @@ body:
     attributes:
       label: Sanitized logs or screenshots
       description: Remove names, IDs, QR codes, PINs, attendance data, private URLs, and secrets.
-      render: text

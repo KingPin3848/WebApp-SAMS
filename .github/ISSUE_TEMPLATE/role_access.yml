@@ -8,6 +8,8 @@ body:
     attributes:
       value: |
         Issues are public. Never include a person's name, email, school ID, account details, password, recovery code, token, or private screenshot. For help with an actual school account, use your school's approved support channel rather than posting account details here.
+
+        Use this form for non-security sign-in or role/access defects. If you can access data or perform actions your role should not allow, do not report details publicly; report it privately through [GitHub's private vulnerability reporting](https://github.com/KingPin3848/WebApp-SAMS/security/advisories/new).
   - type: dropdown
     id: category
     attributes:

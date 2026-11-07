@@ -74,4 +74,3 @@ body:
     attributes:
       label: Sanitized errors or screenshots
       description: Remove personal data, IDs, private hostnames, tokens, and secrets before sharing.
-      render: text
