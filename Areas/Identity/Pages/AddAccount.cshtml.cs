@@ -10,7 +10,7 @@ using System.Text;
 
 namespace SAMS.Areas.Identity.Pages
 {
-    [Authorize(Roles = "Admin, HS School Admin, Synnovation Lab Admin, District Admin")]
+    [Authorize(Roles = "HS School Admin, Synnovation Lab Admin, District Admin")]
     public class AddAccountModel : PageModel
     {
         //PRIVATE VARIABLES

@@ -154,6 +154,10 @@ namespace SAMS.Areas.Identity.Pages.Account
                     {
                         return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, RememberMe = false });
                     }
+                    else if (result.IsLockedOut)
+                    {
+                        return RedirectToPage("./Lockout");
+                    }
                     else
                     {
                         return RedirectToPage("LoginUnsuccessfull");

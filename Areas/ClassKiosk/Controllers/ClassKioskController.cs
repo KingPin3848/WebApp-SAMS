@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.Operations;
 using Microsoft.Extensions.FileSystemGlobbing.Internal;
@@ -24,6 +25,7 @@ namespace SAMS.Areas.ClassKiosk.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Synnovation Lab QR Code Scanner Management")]
         [ValidateAntiForgeryToken]
         public IActionResult Index(string LocalScannedCode, string LocalStudentPin)
         {
