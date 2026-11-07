@@ -218,7 +218,7 @@ namespace SAMS.Data.Migrations
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("StudentPin")
+                    b.Property<int?>("StudentPin")
                         .HasColumnType("int");
 
                     b.Property<bool>("TwoFactorEnabled")

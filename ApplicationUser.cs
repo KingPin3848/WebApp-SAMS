@@ -33,10 +33,9 @@ namespace SAMS
         [ProtectedPersonalData]
         public override required string? Email { get; set; }
 
-        [Required]
         [Range(0000, 9999)]
         [ProtectedPersonalData]
-        public int StudentPin { get; private set; }
+        public int? StudentPin { get; set; }
 
         [Required]
         [ProtectedPersonalData]

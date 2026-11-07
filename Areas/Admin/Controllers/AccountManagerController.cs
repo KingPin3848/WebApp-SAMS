@@ -504,7 +504,7 @@ namespace SAMS.Areas.Admin.Controllers
 		// GET: AccountManager/Edit/5
 		[HttpGet]
 		[RequireHttps]
-		[Authorize]
+		[Authorize(Roles = "HS School Admin, Synnovation Lab Admin, District Admin")]
 		public async Task<IActionResult> Edit(string id)
 		{
 			//var loggedinuserid = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -537,7 +537,8 @@ namespace SAMS.Areas.Admin.Controllers
 				LastName = string.Empty,
 				ActivationCode = user.ActivationCode,
 				Role = user.Role,
-				SchoolId = string.Empty
+				SchoolId = string.Empty,
+				StudentPin = user.StudentPin
 			};
 			foreach (var role in userroles)
 			{
@@ -632,6 +633,7 @@ namespace SAMS.Areas.Admin.Controllers
 		// POST: AccountManager/Edit/5
 		[HttpPost]
 		[RequireHttps]
+		[Authorize(Roles = "HS School Admin, Synnovation Lab Admin, District Admin")]
 		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> Edit(EditAccountModel accountmodel)
 		{
@@ -1004,57 +1006,62 @@ namespace SAMS.Areas.Admin.Controllers
 
 		private async Task<bool> StudentEditor(InputModel input, ApplicationUser newappuser)
 		{
-			if (int.TryParse(input.SchoolId, out int studentid))
+			if (newappuser is null || input is null)
 			{
-				if (newappuser is null || input is null)
-				{
-					return false;
-				}
-				var newstudent = new StudentInfoModel()
-				{
-					StudentID = studentid,
-					StudentFirstNameMod = input.FirstName,
-					StudentMiddleNameMod = input.MiddleName,
-					StudentLastNameMod = input.LastName,
-					StudentPreferredNameMod = input.PreferredName,
-					StudentEmailMod = newappuser.Email!,
-					StudentPhoneMod = input.PhoneNumber,
-					StudentGradYearMod = input.StudentGradYearMod,
-					StudentCounselorID = input.StudentCounselorID!,
-					HasEASupport = input.HasEASupport,
-					StudentEAID = input.StudentEAID,
-					Parentguard1NameMod = input.Parentguard1NameMod!,
-					Parentguard1EmailMod = input.Parentguard1EmailMod!,
-					Parentguard2NameMod = input.Parentguard2NameMod,
-					Parentguard2EmailMod = input.Parentguard2EmailMod
-				};
-				context.Entry(newstudent).State = EntityState.Modified;
+				return false;
+			}
 
-				try
+			var studentUser = await userManager.FindByIdAsync(newappuser.Id).ConfigureAwait(true);
+			if (studentUser is null || !await userManager.IsInRoleAsync(studentUser, "Student").ConfigureAwait(true) || !int.TryParse(studentUser.SchoolId, out int studentid))
+			{
+				return false;
+			}
+
+			var newstudent = new StudentInfoModel()
+			{
+				StudentID = studentid,
+				StudentFirstNameMod = input.FirstName,
+				StudentMiddleNameMod = input.MiddleName,
+				StudentLastNameMod = input.LastName,
+				StudentPreferredNameMod = input.PreferredName,
+				StudentEmailMod = studentUser.Email!,
+				StudentPhoneMod = input.PhoneNumber,
+				StudentGradYearMod = input.StudentGradYearMod,
+				StudentCounselorID = input.StudentCounselorID!,
+				HasEASupport = input.HasEASupport,
+				StudentEAID = input.StudentEAID,
+				Parentguard1NameMod = input.Parentguard1NameMod!,
+				Parentguard1EmailMod = input.Parentguard1EmailMod!,
+				Parentguard2NameMod = input.Parentguard2NameMod,
+				Parentguard2EmailMod = input.Parentguard2EmailMod
+			};
+			studentUser.StudentPin = input.StudentPin;
+			context.Entry(studentUser).Property(user => user.StudentPin).IsModified = true;
+			context.Entry(newstudent).State = EntityState.Modified;
+
+			try
+			{
+				if (await context.SaveChangesAsync().ConfigureAwait(false) > 0)
 				{
-					if (await context.SaveChangesAsync().ConfigureAwait(false) > 0)
-					{
-						return true;
-					}
-					else
-					{
-						context.Entry(newstudent).State = EntityState.Unchanged;
-						_ = await context.SaveChangesAsync().ConfigureAwait(false);
-						return false;
-					}
+					return true;
 				}
-				catch (DbUpdateException ex)
+				else
 				{
-					AccountManagerControllerLog.DatabaseUpdateFailed(_logger, ex);
-					return false;
-				}
-				catch (OperationCanceledException ex)
-				{
-					AccountManagerControllerLog.DatabaseUpdateFailed(_logger, ex);
+					context.Entry(newstudent).State = EntityState.Unchanged;
+					_ = await context.SaveChangesAsync().ConfigureAwait(false);
 					return false;
 				}
 			}
-			return false;
+			catch (DbUpdateException ex)
+			{
+				AccountManagerControllerLog.DatabaseUpdateFailed(_logger, ex);
+				return false;
+			}
+			catch (OperationCanceledException ex)
+			{
+				AccountManagerControllerLog.DatabaseUpdateFailed(_logger, ex);
+				return false;
+			}
 		}
 
 		private async Task<bool> CounselorEditor(InputModel input, ApplicationUser newappuser)
@@ -1692,6 +1699,10 @@ namespace SAMS.Areas.Admin.Controllers
 		//ALL STUDENT REQUIRED INFORMATION STARTS HERE
 		[Display(Name = ("Student Graduation Year (Required)"))]
 		public DateTime StudentGradYearMod { get; init; } = new();
+
+		[Range(0, 9999)]
+		[Display(Name = "Student PIN (leave blank to unset)")]
+		public int? StudentPin { get; set; }
 
 
 		[Display(Name = ("Assigned Counselor (Required)"))]

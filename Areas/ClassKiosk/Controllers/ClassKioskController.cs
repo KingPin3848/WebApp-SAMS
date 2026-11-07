@@ -19,6 +19,7 @@ namespace SAMS.Areas.ClassKiosk.Controllers
         private bool ReFresh { get; set; }
 
         [HttpGet]
+        [Authorize(Roles = "Synnovation Lab QR Code Scanner Management")]
         public IActionResult Index()
         {
             return View();
@@ -108,7 +109,7 @@ namespace SAMS.Areas.ClassKiosk.Controllers
 
         private static bool PinVerifier(int pin, ApplicationUser student)
         {
-            return pin == student.StudentPin;
+            return student.StudentPin.HasValue && pin == student.StudentPin.Value;
         }
 
         private async Task<bool> AttendanceMarker(ApplicationUser student, int scannernumber, DateTime datetime)
