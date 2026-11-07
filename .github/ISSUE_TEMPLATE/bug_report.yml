@@ -21,7 +21,14 @@ body:
         - HS School Admin
         - Synnovation Lab Admin
         - District Admin
+        - Education Support (EA)
+        - Nurse
+        - Law Enforcement
+        - Synnovation Lab QR Code Scanner Management
+        - Substitute Teacher
+        - Developer
         - Multiple roles
+        - Other
         - Not sure
     validations:
       required: true
