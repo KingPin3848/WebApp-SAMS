@@ -684,6 +684,9 @@ $.extend( $.validator, {
 		},
 
 		clean: function( selector ) {
+			if ( typeof selector === "string" ) {
+				return $.find( selector )[ 0 ];
+			}
 			return $( selector )[ 0 ];
 		},
 
@@ -1065,7 +1068,9 @@ $.extend( $.validator, {
 
 			// If radio/checkbox, validate first element in group instead
 			if ( this.checkable( element ) ) {
-				element = this.findByName( element.name );
+				element = this.findByName( element.name ).get();
+			} else {
+				element = [ element ];
 			}
 
 			// Always apply ignore filter
