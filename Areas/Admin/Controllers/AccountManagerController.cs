@@ -638,6 +638,7 @@ namespace SAMS.Areas.Admin.Controllers
 			};
 
 			ViewData["RoleId"] = new SelectList(context.Roles, "Name", "Name", user.Role);
+			ViewData["Counselors"] = new SelectList(context.CounselorModels, "CounselorId", "CounselorId", inputmodel.StudentCounselorID);
 			return View(model);
 		}
 
@@ -730,6 +731,7 @@ namespace SAMS.Areas.Admin.Controllers
 
 
 			ViewData["RoleId"] = new SelectList(context.Roles, "Name", "Name", accountmodel.Input.Role);
+			ViewData["Counselors"] = new SelectList(context.CounselorModels, "CounselorId", "CounselorId", accountmodel.Input.StudentCounselorID);
 			return View(accountmodel);
 
 		}
