@@ -1,0 +1,30 @@
+name: Development task or maintenance
+description: Propose a bounded engineering, testing, or maintenance task.
+title: "[Task]: "
+body:
+  - type: textarea
+    id: goal
+    attributes:
+      label: Goal
+      description: What outcome should this task achieve?
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope
+      description: List the main work items or affected SAMS areas.
+      placeholder: |
+        - [ ]
+        - [ ]
+  - type: textarea
+    id: completion
+    attributes:
+      label: Definition of done
+      description: State how the result can be verified.
+    validations:
+      required: true
+  - type: textarea
+    id: dependencies
+    attributes:
+      label: Dependencies or blockers

@@ -1,0 +1,66 @@
+name: Attendance or location discrepancy
+description: Report an unexpected attendance or student-location result using anonymized data.
+title: "[Attendance]: "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Privacy:** Issues are public. Never include a student's name, school ID, email, actual attendance record, QR code, PIN, or identifiable screenshot. Describe the behavior with synthetic or anonymized data only. For a real student record correction, use your school's approved private process instead.
+  - type: dropdown
+    id: workflow
+    attributes:
+      label: Affected workflow
+      options:
+        - Student QR attendance scan
+        - Class kiosk attendance scan
+        - Teacher roster
+        - Automated attendance processing
+        - Student location update
+        - Other or not sure
+    validations:
+      required: true
+  - type: dropdown
+    id: record_type
+    attributes:
+      label: Affected result
+      options:
+        - Daily attendance
+        - Bell attendance
+        - Tardy or absence calculation
+        - Student location
+        - Schedule, course, room, or QR mapping
+        - Other or not sure
+    validations:
+      required: true
+  - type: textarea
+    id: observed
+    attributes:
+      label: What result did SAMS produce?
+      description: State the result/status only. Do not paste a real record or identify the student.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What result did you expect, and why?
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Anonymized reproduction steps
+      description: Provide the schedule/workflow context needed to reproduce this with test data.
+    validations:
+      required: true
+  - type: input
+    id: time_context
+    attributes:
+      label: Relevant timing or schedule context
+      description: Use a general or synthetic time and timezone; do not identify a student's actual attendance.
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Sanitized logs or screenshots
+      description: Remove names, IDs, QR codes, PINs, attendance data, private URLs, and secrets.
