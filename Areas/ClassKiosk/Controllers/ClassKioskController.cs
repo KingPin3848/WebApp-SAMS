@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.Operations;
 using Microsoft.Extensions.FileSystemGlobbing.Internal;
@@ -24,6 +25,7 @@ namespace SAMS.Areas.ClassKiosk.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Synnovation Lab QR Code Scanner Management")]
         [ValidateAntiForgeryToken]
         public IActionResult Index(string LocalScannedCode, string LocalStudentPin)
         {
@@ -60,7 +62,7 @@ namespace SAMS.Areas.ClassKiosk.Controllers
                     return Json(new { success = false, message = "Authentication unsuccessful because student details could not be found. Please make sure the student is registered in the system.", refresh = true, seconds = 10000 });
                 }
 
-                if (CodeVerifier(localScannedCode) && PinVerifier(localStudPin))
+                if (CodeVerifier(localScannedCode) && PinVerifier(localStudPin, dbStudentUser))
                 {
                     var dbname = dbStudentUser.UserName;
                     bool marker = AttendanceMarker(dbStudentUser, scannernumber, datetime).Result;
@@ -104,20 +106,9 @@ namespace SAMS.Areas.ClassKiosk.Controllers
             }
         }
 
-        private bool PinVerifier(int pin)
+        private static bool PinVerifier(int pin, ApplicationUser student)
         {
-            using var scope = _serviceScopeFactory.CreateScope();
-            using var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-            ApplicationUser dbStudentUser = userManager.Users.Where(a => a.StudentPin == pin).First();
-
-            if (pin == dbStudentUser.StudentPin)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return pin == student.StudentPin;
         }
 
         private async Task<bool> AttendanceMarker(ApplicationUser student, int scannernumber, DateTime datetime)
