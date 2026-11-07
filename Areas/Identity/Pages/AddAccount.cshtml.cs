@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.ComponentModel.DataAnnotations;
@@ -9,6 +10,7 @@ using System.Text;
 
 namespace SAMS.Areas.Identity.Pages
 {
+    [Authorize(Roles = "HS School Admin, Synnovation Lab Admin, District Admin")]
     public class AddAccountModel : PageModel
     {
         //PRIVATE VARIABLES
