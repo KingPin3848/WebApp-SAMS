@@ -48,6 +48,10 @@
                     @Html.DisplayFor(modelItem => item.activation)
                 </td>
                 <td>
+                    @if (item.role.Contains("Student"))
+                    {
+                        <a asp-action="StudentPin" asp-route-id="@item.dbid">Edit PIN</a> @:|
+                    }
                     <a asp-action="Edit" asp-route-id="@item.dbid">Edit</a> |
                     <a asp-action="Details" asp-route-id="@item.dbid">Details</a> |
                     <a asp-action="Delete" asp-route-id="@item.dbid">Delete</a>

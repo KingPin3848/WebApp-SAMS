@@ -642,6 +642,61 @@ namespace SAMS.Areas.Admin.Controllers
 			return View(model);
 		}
 
+		[HttpGet]
+		[RequireHttps]
+		public async Task<IActionResult> StudentPin(string id)
+		{
+			if (string.IsNullOrWhiteSpace(id))
+			{
+				return NotFound();
+			}
+
+			var user = await userManager.FindByIdAsync(id).ConfigureAwait(false);
+			if (user is null || !await userManager.IsInRoleAsync(user, "Student").ConfigureAwait(false))
+			{
+				return NotFound();
+			}
+
+			ViewData["UserId"] = user.Id;
+			return View(new StudentPinInputModel { StudentPin = user.StudentPin });
+		}
+
+		[HttpPost]
+		[RequireHttps]
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult> StudentPin(string id, StudentPinInputModel input)
+		{
+			if (string.IsNullOrWhiteSpace(id) || input is null)
+			{
+				return NotFound();
+			}
+
+			var user = await userManager.FindByIdAsync(id).ConfigureAwait(false);
+			if (user is null || !await userManager.IsInRoleAsync(user, "Student").ConfigureAwait(false))
+			{
+				return NotFound();
+			}
+
+			ViewData["UserId"] = user.Id;
+			if (!ModelState.IsValid)
+			{
+				return View(input);
+			}
+
+			user.StudentPin = input.StudentPin;
+			var result = await userManager.UpdateAsync(user).ConfigureAwait(false);
+			if (result.Succeeded)
+			{
+				return RedirectToAction(nameof(Index));
+			}
+
+			foreach (var error in result.Errors)
+			{
+				ModelState.AddModelError(string.Empty, error.Description);
+			}
+			return View(input);
+		}
+
 		// POST: AccountManager/Edit/5
 		[HttpPost]
 		[RequireHttps]
@@ -1776,6 +1831,14 @@ namespace SAMS.Areas.Admin.Controllers
 			public required ApplicationUser User { get; set; }
 			public required InputModel Input { get; set; }
 			}
+
+	public sealed class StudentPinInputModel
+	{
+		[Microsoft.AspNetCore.Mvc.ModelBinding.BindRequired]
+		[Range(-1, 9999)]
+		[Display(Name = "Student PIN (-1 to unset)")]
+		public int StudentPin { get; set; } = -1;
+	}
 
 			internal static partial class AccountManagerControllerLog
 			{

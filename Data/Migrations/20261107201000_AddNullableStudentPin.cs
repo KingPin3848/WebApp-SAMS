@@ -1,10 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace SAMS.Data.Migrations
 {
-    [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20261107201000_AddNullableStudentPin")]
     public partial class AddNullableStudentPin : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
