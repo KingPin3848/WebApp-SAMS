@@ -1700,9 +1700,10 @@ namespace SAMS.Areas.Admin.Controllers
 		[Display(Name = ("Student Graduation Year (Required)"))]
 		public DateTime StudentGradYearMod { get; init; } = new();
 
-		[Range(0, 9999)]
-		[Display(Name = "Student PIN (leave blank to unset)")]
-		public int? StudentPin { get; set; }
+		[Required]
+		[Range(-1, 9999)]
+		[Display(Name = "Student PIN (-1 to unset)")]
+		public int StudentPin { get; set; } = -1;
 
 
 		[Display(Name = ("Assigned Counselor (Required)"))]

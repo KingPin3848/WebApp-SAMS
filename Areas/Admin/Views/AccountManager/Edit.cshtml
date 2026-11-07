@@ -158,7 +158,7 @@
             </div>
 
             <div class="form-floating pb-2 students" id="stud9div" style="display: none;">
-                <input asp-for="Input.StudentPin" id="stud9input" class="form-control" type="number" min="0" max="9999" disabled autocomplete="off" aria-required="false" style="display: none;" />
+                <input asp-for="Input.StudentPin" id="stud9input" class="form-control" type="number" min="-1" max="9999" disabled autocomplete="off" aria-required="true" style="display: none;" />
                 <label asp-for="Input.StudentPin" id="stud9label" style="display: none;"></label>
                 <span asp-validation-for="Input.StudentPin" id="stud9span" class="text-danger" style="display: none;"></span>
             </div>

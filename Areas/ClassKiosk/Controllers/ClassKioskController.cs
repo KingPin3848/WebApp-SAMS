@@ -109,7 +109,7 @@ namespace SAMS.Areas.ClassKiosk.Controllers
 
         private static bool PinVerifier(int pin, ApplicationUser student)
         {
-            return student.StudentPin.HasValue && pin == student.StudentPin.Value;
+            return student.StudentPin is >= 0 and <= 9999 && pin == student.StudentPin;
         }
 
         private async Task<bool> AttendanceMarker(ApplicationUser student, int scannernumber, DateTime datetime)
