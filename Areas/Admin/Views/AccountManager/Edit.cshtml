@@ -12,11 +12,7 @@
             @*
                 All required "User" properties that cannot be seen to the user at all, but are just there somewhere and possibly stored in the server.
             *@
-            <input type="hidden" asp-for="User.Id" />
-            <input type="hidden" asp-for="User.ActivationCode" />
-            <input type="hidden" asp-for="User.Role" />
-            <input type="hidden" asp-for="User.Email" />
-            <input type="hidden" asp-for="User.SchoolId" />
+            <input type="hidden" asp-for="UserId" />
 
             @*
                 All required "Input" properties that cannot be seen to the user at all, but are just there somwhere and possibly stored in the server.
@@ -157,6 +153,12 @@
                 <span asp-validation-for="Input.Parentguard2EmailMod" id="stud8span" class="text-danger" style="display: none;"></span>
             </div>
 
+            <div class="form-floating pb-2 students" id="stud9div" style="display: none;">
+                <input asp-for="Input.StudentPin" id="stud9input" class="form-control" type="number" min="-1" max="9999" disabled autocomplete="off" aria-required="true" style="display: none;" />
+                <label asp-for="Input.StudentPin" id="stud9label" style="display: none;"></label>
+                <span asp-validation-for="Input.StudentPin" id="stud9span" class="text-danger" style="display: none;"></span>
+            </div>
+
 
             @* ALL STUDENT REQUIRED INFORMATION ENDS HERE *@
 
@@ -190,7 +192,7 @@
 </div>
 
 <script>
-    document.addEventListener("DOMContentLoad", function () {
+    document.addEventListener("DOMContentLoaded", function () {
         var selectElement = document.getElementById('roleSelect');
         var currentValues = Array.from(selectElement.selectedOptions).map(option => option.value);
 
@@ -228,8 +230,8 @@
                     break;
                 }
                 case "Student": {
-                    var studentVisibility = ["stud1div", "stud1input", "stud1label", "stud1span", "stud2div", "stud2input", "stud2label", "stud2span", "stud3div", "stud3input", "stud3label", "stud3span", "stud4div", "stud4input", "stud4label", "stud4span", "stud5div", "stud5input", "stud5label", "stud5span", "stud6div", "stud6input", "stud6label", "stud6span", "stud7div", "stud7input", "stud7label", "stud7span", "stud8div", "stud8input", "stud8label", "stud8span"];
-                    var studentInputsEnabled = ["stud1input", "stud2input", "stud3input", "stud4input", "stud5input", "stud6input", "stud7input", "stud8input"];
+                    var studentVisibility = ["stud1div", "stud1input", "stud1label", "stud1span", "stud2div", "stud2input", "stud2label", "stud2span", "stud3div", "stud3input", "stud3label", "stud3span", "stud4div", "stud4input", "stud4label", "stud4span", "stud5div", "stud5input", "stud5label", "stud5span", "stud6div", "stud6input", "stud6label", "stud6span", "stud7div", "stud7input", "stud7label", "stud7span", "stud8div", "stud8input", "stud8label", "stud8span", "stud9div", "stud9input", "stud9label", "stud9span"];
+                    var studentInputsEnabled = ["stud1input", "stud2input", "stud3input", "stud4input", "stud5input", "stud6input", "stud7input", "stud8input", "stud9input"];
 
                     for (let i = 0; i < studentVisibility.length; i++) {
                         document.getElementById(studentVisibility[i]).style.display = "block";
@@ -261,8 +263,8 @@
                     break;
                 }
                 case "Student": {
-                    var studentVisibility = ["stud1div", "stud1input", "stud1label", "stud1span", "stud2div", "stud2input", "stud2label", "stud2span", "stud3div", "stud3input", "stud3label", "stud3span", "stud4div", "stud4input", "stud4label", "stud4span", "stud5div", "stud5input", "stud5label", "stud5span", "stud6div", "stud6input", "stud6label", "stud6span", "stud7div", "stud7input", "stud7label", "stud7span", "stud8div", "stud8input", "stud8label", "stud8span"];
-                    var studentInputsEnabled = ["stud1input", "stud2input", "stud3input", "stud4input", "stud5input", "stud6input", "stud7input", "stud8input"];
+                    var studentVisibility = ["stud1div", "stud1input", "stud1label", "stud1span", "stud2div", "stud2input", "stud2label", "stud2span", "stud3div", "stud3input", "stud3label", "stud3span", "stud4div", "stud4input", "stud4label", "stud4span", "stud5div", "stud5input", "stud5label", "stud5span", "stud6div", "stud6input", "stud6label", "stud6span", "stud7div", "stud7input", "stud7label", "stud7span", "stud8div", "stud8input", "stud8label", "stud8span", "stud9div", "stud9input", "stud9label", "stud9span"];
+                    var studentInputsEnabled = ["stud1input", "stud2input", "stud3input", "stud4input", "stud5input", "stud6input", "stud7input", "stud8input", "stud9input"];
 
                     for (let i = 0; i < studentVisibility.length; i++) {
                         document.getElementById(studentVisibility[i]).style.display = "none";

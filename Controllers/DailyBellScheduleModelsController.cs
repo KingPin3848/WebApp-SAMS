@@ -11,7 +11,7 @@ using SAMS.Models;
 
 namespace SAMS.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Admin, HS School Admin, Synnovation Lab Admin, District Admin")]
     public class DailyBellScheduleModelsController(ApplicationDbContext context) : Controller
     {
         private readonly ApplicationDbContext _context = context;

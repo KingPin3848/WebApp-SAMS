@@ -11,7 +11,7 @@ using SAMS.Models;
 
 namespace SAMS.Controllers.InfoManagement
 {
-    [Authorize]
+    [Authorize(Roles = "Admin, HS School Admin, Synnovation Lab Admin, District Admin")]
     public class SynnLabQRNodeController(IServiceScopeFactory serviceScopeFactory) : Controller
     {
         private readonly IServiceScopeFactory _scopeFactory = serviceScopeFactory;

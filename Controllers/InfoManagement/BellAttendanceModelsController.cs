@@ -11,7 +11,7 @@ using SAMS.Models;
 
 namespace SAMS.Controllers.InfoManagement
 {
-    [Authorize]
+    [Authorize(Roles = "Admin, Attendance Office Member, HS School Admin, Synnovation Lab Admin, District Admin")]
     public class BellAttendanceModelsController(ApplicationDbContext context) : Controller
     {
         private readonly ApplicationDbContext _context = context;
