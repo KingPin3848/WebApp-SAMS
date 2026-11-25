@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SAMS.Models;
 
 namespace SAMS.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class RoleController(RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager) : Controller
     {
         private readonly RoleManager<IdentityRole> _roleManager = roleManager;

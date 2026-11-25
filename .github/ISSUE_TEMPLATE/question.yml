@@ -1,0 +1,33 @@
+name: General question
+description: Ask a non-account-specific question about developing or using SAMS.
+title: "[Question]: "
+labels:
+  - question
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Issues are public. Do not include student or staff information, credentials, private configuration, or details about a real account.
+  - type: dropdown
+    id: topic
+    attributes:
+      label: Topic
+      options:
+        - Student workflow
+        - Teacher workflow
+        - Class kiosk
+        - Attendance office or administration
+        - Development or architecture
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: question
+    attributes:
+      label: What would you like to know?
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: What have you already checked or tried?

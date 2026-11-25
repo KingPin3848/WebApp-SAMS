@@ -34,9 +34,9 @@ namespace SAMS
         public override required string? Email { get; set; }
 
         [Required]
-        [Range(0000, 9999)]
+        [Range(-1, 9999)]
         [ProtectedPersonalData]
-        public int StudentPin { get; private set; }
+        public int StudentPin { get; set; } = -1;
 
         [Required]
         [ProtectedPersonalData]

@@ -1,0 +1,47 @@
+name: Local setup or configuration help
+description: Ask for help running or configuring a local SAMS development environment.
+title: "[Setup help]: "
+labels:
+  - question
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This form is for local development setup only. Issues are public: never post passwords, client secrets, tokens, connection strings, private URLs, or production data. Replace sensitive values with `<redacted>`. For help with a real school account, use your school's approved support channel.
+  - type: dropdown
+    id: setup_step
+    attributes:
+      label: Where are you blocked?
+      options:
+        - Installing prerequisites or .NET SDK
+        - Restoring or building the solution
+        - Configuring User Secrets or local settings
+        - Applying Entity Framework migrations
+        - Running the app
+        - Google sign-in in local development
+        - Other
+    validations:
+      required: true
+  - type: input
+    id: sdk
+    attributes:
+      label: .NET SDK version
+      description: Run `dotnet --version`.
+  - type: input
+    id: operating_system
+    attributes:
+      label: Operating system and version
+    validations:
+      required: true
+  - type: textarea
+    id: tried
+    attributes:
+      label: What have you tried?
+    validations:
+      required: true
+  - type: textarea
+    id: error
+    attributes:
+      label: Sanitized error output
+      description: Redact secrets, connection strings, private URLs, and personal data.
+      render: text

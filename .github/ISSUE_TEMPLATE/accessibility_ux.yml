@@ -1,0 +1,48 @@
+name: Accessibility or usability improvement
+description: Suggest an accessibility or usability improvement to a SAMS workflow.
+title: "[Accessibility/UX]: "
+labels:
+  - enhancement
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Describe the interface and task without sharing personal or sensitive information. Issues are public.
+  - type: input
+    id: page
+    attributes:
+      label: Page or workflow
+      description: Identify the SAMS area or role workflow.
+    validations:
+      required: true
+  - type: dropdown
+    id: concern
+    attributes:
+      label: What would you like to improve?
+      options:
+        - Keyboard navigation
+        - Screen reader support
+        - Contrast, text, or visual clarity
+        - Mobile or responsive layout
+        - Forms, validation, or error messages
+        - General usability
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: current
+    attributes:
+      label: What is difficult or inaccessible today?
+    validations:
+      required: true
+  - type: textarea
+    id: improvement
+    attributes:
+      label: What change would help?
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Relevant device, browser, or assistive technology
+      description: Share only what is needed to reproduce the experience.

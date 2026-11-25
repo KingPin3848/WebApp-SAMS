@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SAMS.Data;
 using System.Text.RegularExpressions;
 
 namespace SAMS.Controllers
 {
+    [Authorize(Roles = "Admin, Attendance Office Member, Teacher, HS School Admin, Synnovation Lab Admin, District Admin")]
     public class StudentViewModelController(ApplicationDbContext context) : Controller
     {
 
@@ -181,6 +183,7 @@ namespace SAMS.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin, Attendance Office Member, HS School Admin, Synnovation Lab Admin, District Admin")]
         [ValidateAntiForgeryToken]
         public IActionResult UpdateBellAttendanceStatus(int id, string status, string reason)
         {
@@ -197,6 +200,7 @@ namespace SAMS.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin, Attendance Office Member, HS School Admin, Synnovation Lab Admin, District Admin")]
         [ValidateAntiForgeryToken]
         public IActionResult UpdateDailyAttendanceStatus(int id, string status, string reason)
         {

@@ -12,7 +12,7 @@ using SAMS.Models;
 
 namespace SAMS.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Admin, Attendance Office Member, Teacher, HS School Admin, Synnovation Lab Admin, District Admin")]
     public class StudentInfoSearchController(ILogger<StudentInfoSearchController> logger, ApplicationDbContext context) : Controller
     {
         private readonly ApplicationDbContext _context = context;
@@ -70,6 +70,7 @@ namespace SAMS.Controllers
         }
 
         // GET: StudentInfoSearch/Create
+        [Authorize(Roles = "Admin, HS School Admin, Synnovation Lab Admin, District Admin")]
         public IActionResult Create()
         {
             ViewData["StudentEAID"] = new SelectList(_context.EASuportInfoModels, "EaID", "EaID");
@@ -81,6 +82,7 @@ namespace SAMS.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Authorize(Roles = "Admin, HS School Admin, Synnovation Lab Admin, District Admin")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("StudentID,StudentFirstNameMod,StudentMiddleNameMod,StudentLastNameMod,StudentPreferredNameMod,StudentEmailMod,StudentPhoneMod,StudentGradYearMod,StudentCounselorID,HasEASupport,StudentEAID,Parentguard1NameMod,Parentguard1EmailMod,Parentguard2NameMod,Parentguard2EmailMod,ActivationCode")] StudentInfoModel studentInfoModel)
         {
@@ -96,6 +98,7 @@ namespace SAMS.Controllers
         }
 
         // GET: StudentInfoSearch/Edit/5
+        [Authorize(Roles = "Admin, HS School Admin, Synnovation Lab Admin, District Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -117,6 +120,7 @@ namespace SAMS.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Authorize(Roles = "Admin, HS School Admin, Synnovation Lab Admin, District Admin")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("StudentID,StudentFirstNameMod,StudentMiddleNameMod,StudentLastNameMod,StudentPreferredNameMod,StudentEmailMod,StudentPhoneMod,StudentGradYearMod,StudentCounselorID,HasEASupport,StudentEAID,Parentguard1NameMod,Parentguard1EmailMod,Parentguard2NameMod,Parentguard2EmailMod,ActivationCode")] StudentInfoModel studentInfoModel)
         {
@@ -151,6 +155,7 @@ namespace SAMS.Controllers
         }
 
         // GET: StudentInfoSearch/Delete/5
+        [Authorize(Roles = "Admin, HS School Admin, Synnovation Lab Admin, District Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -172,6 +177,7 @@ namespace SAMS.Controllers
 
         // POST: StudentInfoSearch/Delete/5
         [HttpPost, ActionName("Delete")]
+        [Authorize(Roles = "Admin, HS School Admin, Synnovation Lab Admin, District Admin")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {

@@ -138,7 +138,7 @@
     });
 
     function sendScannedData(result) {
-        var schoolId = @ViewBag.Schoolid;
+        var schoolId = @Html.Raw(System.Text.Json.JsonSerializer.Serialize((string)ViewBag.Schoolid));
 
         //Transferring qr code string to controller
         var qrCodeData = result.data;

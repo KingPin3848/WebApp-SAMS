@@ -1,0 +1,47 @@
+name: Feature request
+description: Suggest a capability or improvement for SAMS.
+title: "[Feature]: "
+labels:
+  - enhancement
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please describe the workflow, not a specific student's or staff member's situation. Issues are public; do not include personal, attendance, or confidential information.
+  - type: dropdown
+    id: role
+    attributes:
+      label: Primary role affected
+      options:
+        - Student
+        - Teacher
+        - Class Kiosk Operator
+        - Attendance Office Member
+        - Admin
+        - School or District Admin
+        - Multiple roles
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem or need would this address?
+    validations:
+      required: true
+  - type: textarea
+    id: solution
+    attributes:
+      label: What would you like SAMS to do?
+      description: Describe the desired behavior or workflow.
+    validations:
+      required: true
+  - type: textarea
+    id: benefit
+    attributes:
+      label: Who benefits, and how?
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Example or acceptance criteria
+      description: List observable outcomes that would make this request complete.

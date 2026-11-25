@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SAMS.Data;
@@ -7,6 +8,7 @@ using SAMS.Services;
 
 namespace SAMS.Controllers
 {
+    [Authorize(Roles = "Admin, HS School Admin, Synnovation Lab Admin, District Admin")]
     public class DailyAdd(ILogger<DailyAdd> logger, IServiceScopeFactory scopeFactory) : Controller
     {
         private readonly ILogger<DailyAdd> _logger = logger;

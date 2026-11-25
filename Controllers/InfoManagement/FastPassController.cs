@@ -11,7 +11,7 @@ using SAMS.Models;
 
 namespace SAMS.Controllers.InfoManagement
 {
-    [Authorize]
+    [Authorize(Roles = "Admin, HS School Admin, Synnovation Lab Admin, District Admin")]
     public class FastPassController(ApplicationDbContext context) : Controller
     {
         private readonly ApplicationDbContext _context = context;

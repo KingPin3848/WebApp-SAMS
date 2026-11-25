@@ -1,0 +1,68 @@
+name: Role or account-access defect
+description: Report a reproducible sign-in, authorization, or role-specific behavior defect.
+title: "[Access]: "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Issues are public. Never include a person's name, email, school ID, account details, password, recovery code, token, or private screenshot. For help with an actual school account, use your school's approved support channel rather than posting account details here.
+
+        Use this form for non-security sign-in or role/access defects. If you can access data or perform actions your role should not allow, do not report details publicly; report it privately through [GitHub's private vulnerability reporting](https://github.com/KingPin3848/WebApp-SAMS/security/advisories/new).
+  - type: dropdown
+    id: category
+    attributes:
+      label: What kind of access behavior is affected?
+      options:
+        - Sign-in or sign-out
+        - Role assignment or role recognition
+        - Permission to open a page or perform an action
+        - Google authentication
+        - Other
+    validations:
+      required: true
+  - type: dropdown
+    id: role
+    attributes:
+      label: Affected SAMS role
+      options:
+        - Student
+        - Teacher
+        - Class Kiosk Operator
+        - Attendance Office Member
+        - Admin
+        - HS School Admin
+        - Synnovation Lab Admin
+        - District Admin
+        - Education Support (EA)
+        - Nurse
+        - Law Enforcement
+        - Synnovation Lab QR Code Scanner Management
+        - Substitute Teacher
+        - Developer
+        - Multiple roles
+        - Other
+        - Not sure
+    validations:
+      required: true
+  - type: textarea
+    id: behavior
+    attributes:
+      label: What were you trying to do, and what happened?
+      description: Describe the page or action and any sanitized error message.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect to happen?
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      description: Include OS, browser, and app version or commit. Do not include private URLs or account identifiers.
+    validations:
+      required: true
